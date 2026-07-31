@@ -1,8 +1,8 @@
 {
   "input": "/Users/sniper/Desktop/temp/testDunHong/index.html",
-  "inputBytes": 1544198,
-  "inputSha256": "a610be346b037bae15801f064749700aa947167fcec4871da29c4b95cab01a86",
-  "startedAt": "2026-07-31T22:10:07.099Z",
+  "inputBytes": 1544201,
+  "inputSha256": "bc0725eed10538d81365a6be2c35ad358400f2227618ce19e66a8e05c445a9af",
+  "startedAt": "2026-07-31T23:50:27.814Z",
   "checks": {
     "ready-hook": {
       "pass": true,
@@ -27,7 +27,7 @@
     "chapter-seek-and-play": {
       "pass": true,
       "detail": {
-        "time": 20.747100000143053,
+        "time": 20.763400000095363,
         "playing": true
       }
     },
@@ -50,7 +50,7 @@
       "pass": true,
       "detail": {
         "width": 390,
-        "height": 693,
+        "height": 506,
         "viewport": [
           390,
           844
@@ -72,12 +72,12 @@
         "triangles": 2,
         "lines": 0,
         "points": 0,
-        "geometries": 199,
+        "geometries": 218,
         "textures": 36,
         "pixelRatio": 1,
         "canvas": {
-          "width": 753,
-          "height": 1340
+          "width": 760,
+          "height": 427
         },
         "construction": {
           "stage": "tower-reveal",
@@ -92,7 +92,7 @@
         }
       },
       "file": "t000.png",
-      "sha256": "4c9c47a87d2587276157aa8f40446659686719ebee83ef4a6a9b463a940ff6f6"
+      "sha256": "d2eab52e66a301060ef6d3a45cc14d0c2d73cf0fdf5db93ef7002d1b8eb93bc5"
     },
     {
       "requestedTime": 20,
@@ -103,12 +103,12 @@
         "triangles": 2,
         "lines": 0,
         "points": 0,
-        "geometries": 428,
+        "geometries": 451,
         "textures": 38,
         "pixelRatio": 1,
         "canvas": {
-          "width": 753,
-          "height": 1340
+          "width": 760,
+          "height": 427
         },
         "construction": {
           "stage": "bare-cliff",
@@ -123,7 +123,7 @@
         }
       },
       "file": "t020.png",
-      "sha256": "0446a0cf5b0325acf0b79020fe127720aca5c318ed7da92fdebdb6d7b46ad509"
+      "sha256": "54da761ad63ca29b8100cd3f6c7f940e9781b481605e9a1711823cb7d93be392"
     },
     {
       "requestedTime": 25,
@@ -134,12 +134,12 @@
         "triangles": 2,
         "lines": 0,
         "points": 0,
-        "geometries": 778,
+        "geometries": 801,
         "textures": 39,
         "pixelRatio": 1,
         "canvas": {
-          "width": 753,
-          "height": 1340
+          "width": 760,
+          "height": 427
         },
         "construction": {
           "stage": "excavate-door",
@@ -154,7 +154,7 @@
         }
       },
       "file": "t025.png",
-      "sha256": "ee2b54817f3d24bc0b15428000575dd58b8035ead448ae987bbc0c9c3cb70471"
+      "sha256": "62b818a4d48b55be24e861f8384f7cb7d15f6c98955faa413930265ca042863c"
     },
     {
       "requestedTime": 33,
@@ -165,12 +165,12 @@
         "triangles": 2,
         "lines": 0,
         "points": 0,
-        "geometries": 783,
+        "geometries": 806,
         "textures": 39,
         "pixelRatio": 1,
         "canvas": {
-          "width": 753,
-          "height": 1340
+          "width": 760,
+          "height": 427
         },
         "construction": {
           "stage": "excavate-arch",
@@ -185,7 +185,7 @@
         }
       },
       "file": "t033.png",
-      "sha256": "32a5190b3fdb227524f74cc58d6eb2b03d45de131cc615530bfeb9e3146ca8e9"
+      "sha256": "c3237e42b466fb7b5591dd5ad8e210d4ca589b2dcd6a2dfa6509b30f2472f328"
     },
     {
       "requestedTime": 40,
@@ -196,12 +196,12 @@
         "triangles": 2,
         "lines": 0,
         "points": 0,
-        "geometries": 783,
+        "geometries": 806,
         "textures": 39,
         "pixelRatio": 1,
         "canvas": {
-          "width": 753,
-          "height": 1340
+          "width": 760,
+          "height": 427
         },
         "construction": {
           "stage": "excavate-main",
@@ -216,7 +216,7 @@
         }
       },
       "file": "t040.png",
-      "sha256": "eed91534eb36691ed6f7d5a86bba67d6a69219323130bc4d06e664cfd0dd6ec7"
+      "sha256": "17f930f23f47670a9e8571a0cc6f7d1ea47f946e107301b214607df0882de2f9"
     },
     {
       "requestedTime": 49,
@@ -227,12 +227,12 @@
         "triangles": 2,
         "lines": 0,
         "points": 0,
-        "geometries": 783,
+        "geometries": 806,
         "textures": 39,
         "pixelRatio": 1,
         "canvas": {
-          "width": 753,
-          "height": 1340
+          "width": 760,
+          "height": 427
         },
         "construction": {
           "stage": "excavate-lower",
@@ -247,7 +247,7 @@
         }
       },
       "file": "t049.png",
-      "sha256": "78a16237d7a787ee221000ead6ddd7e9e8f583b251b67e74bcf08b484b4f530c"
+      "sha256": "74ef37faca0362dd2e77c3f677716a7c4a302fbb4dde16b3c4e70e8234600503"
     },
     {
       "requestedTime": 60,
@@ -258,12 +258,12 @@
         "triangles": 2,
         "lines": 0,
         "points": 0,
-        "geometries": 788,
+        "geometries": 815,
         "textures": 39,
         "pixelRatio": 1,
         "canvas": {
-          "width": 753,
-          "height": 1340
+          "width": 760,
+          "height": 427
         },
         "construction": {
           "stage": "peg-insertion",
@@ -278,7 +278,7 @@
         }
       },
       "file": "t060.png",
-      "sha256": "ce18a1893ebf9bdae4123b51466003b35ef43156afbfdfa19e522556ee0eadc1"
+      "sha256": "66e42a5ecdc3539f56dbcb46de34efef9c5eb69c52c89131041822cd66e6d25d"
     },
     {
       "requestedTime": 65,
@@ -289,12 +289,12 @@
         "triangles": 2,
         "lines": 0,
         "points": 0,
-        "geometries": 794,
+        "geometries": 821,
         "textures": 39,
         "pixelRatio": 1,
         "canvas": {
-          "width": 753,
-          "height": 1340
+          "width": 760,
+          "height": 427
         },
         "construction": {
           "stage": "mud-layer",
@@ -309,7 +309,7 @@
         }
       },
       "file": "t065.png",
-      "sha256": "157547bfc20cff3a64b77f18f6e5cbfc3d45d39fde8f5fc35e4889d95d1aba3c"
+      "sha256": "646ea4082ba08801c2e239fa0c811018c65174bd22ec9e0fe9fcddd66ab245ef"
     },
     {
       "requestedTime": 70,
@@ -320,12 +320,12 @@
         "triangles": 2,
         "lines": 0,
         "points": 0,
-        "geometries": 794,
+        "geometries": 821,
         "textures": 39,
         "pixelRatio": 1,
         "canvas": {
-          "width": 753,
-          "height": 1340
+          "width": 760,
+          "height": 427
         },
         "construction": {
           "stage": "mud-layer",
@@ -340,7 +340,7 @@
         }
       },
       "file": "t070.png",
-      "sha256": "547eccf56d42f01271d51b35235766f33e1c4e221001259367bacc3006d20657"
+      "sha256": "4030ce69a1d33da3199b2543ad260e31a6a9b0ed7aef5e2e842267d0c9dfc8a8"
     },
     {
       "requestedTime": 79,
@@ -351,12 +351,12 @@
         "triangles": 2,
         "lines": 0,
         "points": 0,
-        "geometries": 794,
+        "geometries": 821,
         "textures": 39,
         "pixelRatio": 1,
         "canvas": {
-          "width": 753,
-          "height": 1340
+          "width": 760,
+          "height": 427
         },
         "construction": {
           "stage": "mud-layer",
@@ -371,7 +371,7 @@
         }
       },
       "file": "t079.png",
-      "sha256": "2c8f26a01ccff351c8fe93809457677432e505fa1938e834d50953048d5e6d51"
+      "sha256": "c010d964de396322a365d64a89dd72e9ff760c632a3f37b6659d1e8a54519170"
     },
     {
       "requestedTime": 86,
@@ -382,12 +382,12 @@
         "triangles": 2,
         "lines": 0,
         "points": 0,
-        "geometries": 797,
+        "geometries": 824,
         "textures": 39,
         "pixelRatio": 1,
         "canvas": {
-          "width": 753,
-          "height": 1340
+          "width": 760,
+          "height": 427
         },
         "construction": {
           "stage": "surface-polish",
@@ -402,7 +402,7 @@
         }
       },
       "file": "t086.png",
-      "sha256": "af6ad4d927d72944baf3311830272acab95c361b9efcf6cd98aedaeba9db6ce0"
+      "sha256": "b5fe36628e3c03b390810fbb738d8612b053b1c9caf3f0a8677c529af654dcbb"
     },
     {
       "requestedTime": 92,
@@ -413,12 +413,12 @@
         "triangles": 2,
         "lines": 0,
         "points": 0,
-        "geometries": 801,
+        "geometries": 828,
         "textures": 40,
         "pixelRatio": 1,
         "canvas": {
-          "width": 753,
-          "height": 1340
+          "width": 760,
+          "height": 427
         },
         "construction": {
           "stage": "paint-buddha",
@@ -433,7 +433,7 @@
         }
       },
       "file": "t092.png",
-      "sha256": "2721c32eba285311863e138332898bae78de8d9708c33fa09952d0554019edb4"
+      "sha256": "94e4317f241a6d7230e81e3a0d7bd4d4285c7dce96c2b05ad325a6ea218044ae"
     },
     {
       "requestedTime": 101,
@@ -444,12 +444,12 @@
         "triangles": 2,
         "lines": 0,
         "points": 0,
-        "geometries": 817,
+        "geometries": 844,
         "textures": 40,
         "pixelRatio": 1,
         "canvas": {
-          "width": 753,
-          "height": 1340
+          "width": 760,
+          "height": 427
         },
         "construction": {
           "stage": "whitewash",
@@ -464,7 +464,7 @@
         }
       },
       "file": "t101.png",
-      "sha256": "e5b2260891d93471af9444b84302e41408bd3d834a40156366273cf549e457c3"
+      "sha256": "493b8dce669162f4b9fb7f1a72d32763cff4200b1404118768ac3b138ef143df"
     },
     {
       "requestedTime": 106,
@@ -475,12 +475,12 @@
         "triangles": 2,
         "lines": 0,
         "points": 0,
-        "geometries": 817,
+        "geometries": 844,
         "textures": 40,
         "pixelRatio": 1,
         "canvas": {
-          "width": 753,
-          "height": 1340
+          "width": 760,
+          "height": 427
         },
         "construction": {
           "stage": "mural",
@@ -495,7 +495,7 @@
         }
       },
       "file": "t106.png",
-      "sha256": "78ab9ecd7b09feb7ca74b4d2f8d7bc2085ddaf6e431ca728d319aca92f72e26c"
+      "sha256": "78c483705201f7efae959c106a2ea2c8f55dadaea513d8e5deb400cdbbb4031b"
     },
     {
       "requestedTime": 112,
@@ -506,12 +506,12 @@
         "triangles": 2,
         "lines": 0,
         "points": 0,
-        "geometries": 817,
+        "geometries": 844,
         "textures": 40,
         "pixelRatio": 1,
         "canvas": {
-          "width": 753,
-          "height": 1340
+          "width": 760,
+          "height": 427
         },
         "construction": {
           "stage": "tower-reassembly",
@@ -526,7 +526,7 @@
         }
       },
       "file": "t112.png",
-      "sha256": "521f4853c9d5d815fafb436fb928117cb73166503b75b911b68eac01b990a5bf"
+      "sha256": "584c5b64936ea628052b639f13a1962a39983518fad05f1d88aca1e063181633"
     },
     {
       "requestedTime": 116,
@@ -537,12 +537,12 @@
         "triangles": 2,
         "lines": 0,
         "points": 0,
-        "geometries": 817,
+        "geometries": 844,
         "textures": 40,
         "pixelRatio": 1,
         "canvas": {
-          "width": 753,
-          "height": 1340
+          "width": 760,
+          "height": 427
         },
         "construction": {
           "stage": "tower-reassembly",
@@ -557,29 +557,29 @@
         }
       },
       "file": "t116.png",
-      "sha256": "f066a554c7cd2896df24420ff9d3eb4f03275e7611baeefb71c2688ebfb568fa"
+      "sha256": "331fa6c0dd899896e0f751b90bb28608c90679d7dc3c99b0296f52503929ab2a"
     }
   ],
   "console": [
     {
       "type": "warn",
-      "text": "[.WebGL-0x13c001ac800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x10c001afe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x13c001ac800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x10c001afe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x13c001ac800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x10c001afe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x13c001ac800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+      "text": "[.WebGL-0x10c001afe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
     }
   ],
   "pageErrors": [],
   "remoteRequests": [],
-  "finishedAt": "2026-07-31T22:11:12.577Z",
+  "finishedAt": "2026-07-31T23:52:24.443Z",
   "pass": true
 }
