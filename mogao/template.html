@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>敦煌莫高窟第96窟大佛 · 开凿与塑造全过程（3D 实时复刻）</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:#0b0d10;color:#e8e4dc;
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    overflow:hidden;-webkit-font-smoothing:antialiased}
+  #app{display:flex;flex-direction:column;height:100%}
+  #stage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;min-height:0;
+    background:radial-gradient(ellipse at 50% 35%,#161b20 0%,#08090b 75%)}
+  #stage>*{position:absolute}
+  canvas#c{display:block;border-radius:6px;box-shadow:0 18px 60px rgba(0,0,0,.7)}
+  svg#anno{pointer-events:none}
+  #hud{pointer-events:none;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8.5%}
+  #sub{
+    font-size:clamp(15px,2.35vh,30px);font-weight:800;letter-spacing:.5px;
+    color:#fff;text-align:center;line-height:1.4;max-width:88%;
+    text-shadow:0 0 5px rgba(0,0,0,.95),0 2px 7px rgba(0,0,0,.9),0 0 22px rgba(0,0,0,.7);
+    padding:0 12px;
+  }
+  /* 控制条 */
+  #ui{display:flex;align-items:center;gap:12px;padding:11px 16px;background:#12151a;
+    border-top:1px solid #232830;flex-wrap:wrap}
+  #ui button,#ui select{
+    background:#1d222a;color:#d8d4cc;border:1px solid #2e3540;border-radius:7px;
+    padding:7px 13px;font-size:13px;cursor:pointer;font-family:inherit;transition:.15s}
+  #ui button:hover,#ui select:hover{background:#28303a;color:#fff}
+  #ui button.on{background:#8a5a2a;border-color:#b4763a;color:#fff}
+  #play{font-size:16px!important;min-width:44px}
+  #bar{flex:1;height:9px;background:#242a33;border-radius:5px;cursor:pointer;position:relative;min-width:140px}
+  #barfill{height:100%;background:linear-gradient(90deg,#c2853d,#e8b25e);border-radius:5px;width:0}
+  #time{font-size:12px;color:#8c94a0;font-variant-numeric:tabular-nums;min-width:82px;text-align:right}
+  #chapters{display:flex;gap:6px;padding:9px 16px 13px;background:#0e1114;overflow-x:auto;
+    border-top:1px solid #1b1f26;scrollbar-width:thin}
+  #chapters button{
+    background:#171c22;color:#9aa3af;border:1px solid #262c35;border-radius:14px;
+    padding:5px 13px;font-size:12px;white-space:nowrap;cursor:pointer;font-family:inherit;transition:.15s}
+  #chapters button:hover{background:#2a3340;color:#f0c78a;border-color:#4a5462}
+  /* 纯净模式 */
+  body.clean #ui,body.clean #chapters{display:none}
+  /* 加载 */
+  #loading{position:fixed;inset:0;background:#0b0d10;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:20px;z-index:99;transition:opacity .5s}
+  #loading.gone{opacity:0;pointer-events:none}
+  #ltitle{font-size:20px;font-weight:800;letter-spacing:3px;color:#e0c08a}
+  #lsub{font-size:12.5px;color:#6b7280;letter-spacing:1px}
+  #lwrap{width:min(340px,72vw);height:4px;background:#1e242c;border-radius:2px;overflow:hidden}
+  #lbar{height:100%;width:0;background:linear-gradient(90deg,#a9702f,#e8b25e);transition:width .2s}
+  #ltxt{font-size:11.5px;color:#586170;font-variant-numeric:tabular-nums}
+  #hint{position:absolute;left:14px;top:12px;font-size:11px;color:#79818e;line-height:1.7;
+    background:rgba(10,12,15,.55);padding:8px 11px;border-radius:7px;backdrop-filter:blur(6px);
+    pointer-events:none;opacity:.75}
+  body.clean #hint{display:none}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="stage">
+    <canvas id="c"></canvas>
+    <svg id="anno" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div id="hud"><div id="sub"></div></div>
+    <div id="hint">空格 播放/暂停 &nbsp;·&nbsp; ←→ 快进退<br>自由视角：拖拽旋转 / 滚轮缩放 / WASD-QE 平移</div>
+  </div>
+  <div id="ui">
+    <button id="play">⏸</button>
+    <div id="bar"><div id="barfill"></div></div>
+    <span id="time">0:00 / 1:56</span>
+    <select id="speed">
+      <option value="0.25">0.25×</option>
+      <option value="0.5">0.5×</option>
+      <option value="1" selected>1×</option>
+      <option value="1.5">1.5×</option>
+      <option value="2">2×</option>
+    </select>
+    <button id="freebtn">自由视角</button>
+    <button id="hidebtn">纯净模式</button>
+  </div>
+  <div id="chapters"></div>
+</div>
+
+<div id="loading">
+  <div id="ltitle">敦煌莫高窟 · 第96窟大佛</div>
+  <div id="lsub">开凿与塑造全过程 · 3D 实时复刻</div>
+  <div id="lwrap"><div id="lbar"></div></div>
+  <div id="ltxt">正在烘焙材质…</div>
+</div>
+
+<script type="module">
+/*__BUNDLE__*/
+</script>
+</body>
+</html>

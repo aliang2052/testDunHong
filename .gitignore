@@ -1,0 +1,16 @@
+.DS_Store
+.env
+.env.*
+node_modules/
+dist/
+build/
+.cache/
+coverage/
+*.log
+*.db
+*.sqlite
+*.sqlite3
+*.mp4
+*.mov
+*.webm
+mogao-evidence/
