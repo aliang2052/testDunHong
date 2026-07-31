@@ -9,6 +9,9 @@
 - 已成功生成单文件 HTML，约 1.37 MiB。
 - 已在 1、4、8、13、17、21、26、28、33、35、41、45、49、53、57、60、64、69、74、79、84、88、91、94、97、104、107、110、114 秒生成截图。
 - 关键帧合成图保存在本地 `mogao-evidence/baseline-contact.jpg`，未进入 Git。
+- 1、60、116 秒浏览器冒烟检查成功，未出现阻断性 console error / pageerror。
+- 116 秒渲染统计：389 draw calls、642,610 triangles、325 geometries、37 textures。
+- 浏览器报告两条截图 ReadPixels 引起的 GPU stall 警告；这是截图读取路径的性能警告，不等同于生产帧率验证。
 
 ## 阻断性视觉问题
 
