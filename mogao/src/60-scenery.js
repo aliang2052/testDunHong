@@ -341,59 +341,187 @@ function buildTree(h = 9, seed = 1) {
    ------------------------------------------------------------ */
 function buildWalkway() {
   const G = new THREE.Group();
+  G.name = 'HistoricCliffScaffold';
   const woodMat = new THREE.MeshStandardMaterial({
-    map: TEX.wood.map, normalMap: TEX.wood.normal, roughness: 0.9, side: THREE.DoubleSide,
+    map: TEX.wood.map, normalMap: TEX.wood.normal, roughness: 0.91,
   });
-  const railMat = new THREE.MeshStandardMaterial({ color: 0x8A3428, roughness: 0.85 });
-
+  const darkWood = new THREE.MeshStandardMaterial({
+    map: TEX.wood.map, normalMap: TEX.wood.normal, color: 0x6B4024, roughness: 0.94,
+  });
+  const ropeMat = new THREE.MeshStandardMaterial({ color: 0x6D553A, roughness: 1.0 });
+  const ironMat = new THREE.MeshStandardMaterial({ color: 0x3E3A35, roughness: 0.65, metalness: 0.34 });
+  const rnd = mulberry32(2406);
+  const components = [];
   const segs = [];
-  /* 之字形：从广场（右下）折返上升到窟门（y≈35） */
-  const runs = [
-    { x0: 68, x1: 40, y0: 1.0, y1: 12.0 },
-    { x0: 40, x1: 66, y0: 12.0, y1: 22.0 },
-    { x0: 66, x1: 38, y0: 22.0, y1: 31.5 },
-    { x0: 42, x1: 24, y0: 31.5, y1: 34.6 },
+  const materialYard = new THREE.Vector3(-43, 0.55, CLIFF_Z + 34);
+  const hoistTop = new THREE.Vector3(-23.5, 41.0, CLIFF_Z + 16.5);
+  let order = 0;
+
+  const register = (mesh, parent, type, stage = 0) => {
+    mesh.userData.finalPosition = mesh.position.clone();
+    mesh.userData.finalQuaternion = mesh.quaternion.clone();
+    mesh.userData.finalScale = mesh.scale.clone();
+    const fp = mesh.userData.finalPosition;
+    /*
+      构件从对应跨的正下方起吊，而不是所有木料从画面左侧横穿天空。
+      横屏中这样才能读成“逐跨搭设”，而不是黑色碎片飞行。
+    */
+    mesh.userData.startPosition = new THREE.Vector3(
+      fp.x + (rnd() - 0.5) * 3.8,
+      0.18 + rnd() * 1.35,
+      materialYard.z + (rnd() - 0.5) * 4.8);
+    mesh.userData.startQuaternion = new THREE.Quaternion().setFromEuler(
+      new THREE.Euler((rnd() - 0.5) * 0.9, (rnd() - 0.5) * 2.2, (rnd() - 0.5) * 0.8));
+    mesh.userData.hoistPosition = new THREE.Vector3(
+      fp.x + (rnd() - 0.5) * 0.85,
+      Math.max(fp.y + 5.0, 7.5 + stage * 1.4) + (rnd() - 0.5) * 0.8,
+      fp.z + 1.65 + (rnd() - 0.5) * 0.9);
+    mesh.userData.order = order++ + stage * 0.32;
+    mesh.userData.type = type;
+    mesh.userData.stage = stage;
+    mesh.position.copy(mesh.userData.startPosition);
+    mesh.quaternion.copy(mesh.userData.startQuaternion);
+    mesh.scale.copy(mesh.userData.finalScale).multiplyScalar(0.035);
+    mesh.visible = false;
+    mesh.castShadow = true;
+    mesh.receiveShadow = type === 'plank' || type === 'platform';
+    parent.add(mesh);
+    components.push(mesh);
+    return mesh;
+  };
+
+  const beamBetween = (a, b, r, mat = woodMat, radial = 8) => {
+    const d = new THREE.Vector3().subVectors(b, a);
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.92, r, d.length(), radial), mat);
+    m.position.copy(a).add(b).multiplyScalar(0.5);
+    m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize());
+    return m;
+  };
+  const boxBeam = (x, y, z, sx, sy, sz, mat = woodMat) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, sz), mat);
+    m.position.set(x, y, z);
+    return m;
+  };
+
+  /* 四层贴崖施工架：锚杆、挑梁、横梁、踏板、立柱、斜撑、栏杆按真实受力顺序安装。 */
+  const levels = [
+    { y: 5.2, x0: -28.5, x1: 28.5, z0: CLIFF_Z + 1.0, z1: CLIFF_Z + 7.4, nx: 12 },
+    { y: 13.8, x0: -26.0, x1: 26.0, z0: CLIFF_Z + 1.0, z1: CLIFF_Z + 7.0, nx: 11 },
+    { y: 22.4, x0: -23.0, x1: 23.0, z0: CLIFF_Z + 0.9, z1: CLIFF_Z + 6.6, nx: 10 },
+    { y: 30.8, x0: -19.5, x1: 19.5, z0: CLIFF_Z + 0.8, z1: CLIFF_Z + 6.3, nx: 9 },
   ];
-  for (let ri = 0; ri < runs.length; ri++) {
-    const r = runs[ri];
+
+  levels.forEach((L, li) => {
     const grp = new THREE.Group();
-    const n = 18;
-    for (let i = 0; i < n; i++) {
-      const t = i / (n - 1);
-      const x = lerp(r.x0, r.x1, t), y = lerp(r.y0, r.y1, t);
-      const z = cliffFaceZ(x, y) + 1.5;
-      const step = new THREE.Mesh(new THREE.BoxGeometry(Math.abs(r.x1 - r.x0) / n * 1.25, 0.34, 3.4), woodMat);
-      step.position.set(x, y, z);
-      step.castShadow = true; step.receiveShadow = true;
-      grp.add(step);
-      if (i % 3 === 0) {
-        const post = new THREE.Mesh(new THREE.BoxGeometry(0.24, 2.6, 0.24), railMat);
-        post.position.set(x, y + 1.3, z + 1.5);
-        grp.add(post);
+    grp.name = 'ScaffoldLevel' + li;
+    const dx = (L.x1 - L.x0) / (L.nx - 1);
+    const zFront = L.z1;
+
+    for (let i = 0; i < L.nx; i++) {
+      const x = L.x0 + i * dx;
+      const wallZ = cliffFaceZ(x, L.y) + 0.12;
+      const outerZ = zFront;
+      const anchor = beamBetween(new THREE.Vector3(x, L.y - 0.18, wallZ - 1.2),
+        new THREE.Vector3(x, L.y - 0.18, outerZ), 0.135, darkWood, 7);
+      register(anchor, grp, 'anchor', li);
+
+      const postBottom = li === 0 ? 0.35 : levels[li - 1].y + 0.18;
+      const post = beamBetween(new THREE.Vector3(x, postBottom, outerZ - 0.18),
+        new THREE.Vector3(x, L.y + 2.45, outerZ - 0.18), 0.17, woodMat, 8);
+      register(post, grp, 'post', li + 0.08);
+
+      if (i < L.nx - 1) {
+        const x2 = x + dx;
+        for (const z of [L.z0 + 0.25, zFront - 0.22]) {
+          const long = beamBetween(new THREE.Vector3(x, L.y - 0.10, z),
+            new THREE.Vector3(x2, L.y - 0.10, z), 0.16, woodMat, 8);
+          register(long, grp, 'long-beam', li + 0.13);
+        }
+      }
+
+      if (i < L.nx - 1 && i % 2 === 0) {
+        const x2 = x + dx;
+        const brace = beamBetween(new THREE.Vector3(x, Math.max(0.4, L.y - 7.2), zFront - 0.4),
+          new THREE.Vector3(x2, L.y - 0.22, zFront - 0.4), 0.11, darkWood, 7);
+        register(brace, grp, 'brace', li + 0.18);
       }
     }
-    /* 扶手 */
-    const len = Math.hypot(r.x1 - r.x0, r.y1 - r.y0);
-    const rail = new THREE.Mesh(new THREE.BoxGeometry(len, 0.2, 0.2), railMat);
-    rail.position.set((r.x0 + r.x1) / 2, (r.y0 + r.y1) / 2 + 2.4,
-      cliffFaceZ((r.x0 + r.x1) / 2, (r.y0 + r.y1) / 2) + 3.0);
-    rail.rotation.z = Math.atan2(r.y1 - r.y0, r.x1 - r.x0);
-    grp.add(rail);
 
-    grp.userData.order = ri;
-    segs.push(grp);
-    G.add(grp);
-  }
-  /* 窟门口平台 */
-  {
-    const p = new THREE.Mesh(new THREE.BoxGeometry(20, 0.5, 4.2), woodMat);
-    p.position.set(29, 34.6, cliffFaceZ(29, 34.6) + 2.0);
-    p.castShadow = true;
-    const grp = new THREE.Group(); grp.add(p);
-    grp.userData.order = runs.length;
+    const plankCount = Math.max(18, Math.round((L.x1 - L.x0) / 2.2));
+    for (let i = 0; i < plankCount; i++) {
+      const x = lerp(L.x0, L.x1, (i + 0.5) / plankCount);
+      const w = (L.x1 - L.x0) / plankCount * 0.94;
+      for (let d = 0; d < 3; d++) {
+        const plank = boxBeam(x, L.y, lerp(L.z0 + 0.9, zFront - 0.9, d / 2), w, 0.20, 1.48, woodMat);
+        plank.rotation.z = (rnd() - 0.5) * 0.012;
+        register(plank, grp, 'plank', li + 0.23 + d * 0.014);
+      }
+    }
+
+    /* 外侧双道栏杆。 */
+    for (const h of [1.25, 2.20]) {
+      const rail = beamBetween(new THREE.Vector3(L.x0, L.y + h, zFront + 0.05),
+        new THREE.Vector3(L.x1, L.y + h, zFront + 0.05), 0.105, darkWood, 7);
+      register(rail, grp, 'rail', li + 0.29 + h * 0.01);
+    }
+
+    /* 麻绳绑扎节点，使连接不再像悬空积木。 */
+    for (let i = 0; i < L.nx; i += 2) {
+      const x = L.x0 + i * dx;
+      const knot = new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.045, 5, 14), ropeMat);
+      knot.position.set(x, L.y - 0.02, zFront - 0.18);
+      knot.rotation.x = Math.PI / 2;
+      register(knot, grp, 'knot', li + 0.35);
+    }
+    grp.userData.order = li;
+    segs.push(grp); G.add(grp);
+  });
+
+  /* 交替折返楼梯，连接四层施工平台。 */
+  for (let li = 0; li < levels.length - 1; li++) {
+    const a = levels[li], b = levels[li + 1];
+    const side = li % 2 === 0 ? 1 : -1;
+    const xBase = side > 0 ? a.x1 - 4.8 : a.x0 + 4.8;
+    const grp = new THREE.Group();
+    const steps = 11;
+    for (let i = 0; i < steps; i++) {
+      const k = i / (steps - 1);
+      const step = boxBeam(xBase - side * k * 7.4, lerp(a.y + 0.35, b.y - 0.35, k),
+        lerp(a.z1 - 0.8, b.z1 - 0.8, k), 2.15, 0.18, 1.00, woodMat);
+      register(step, grp, 'stair-step', li + 0.42 + k * 0.10);
+    }
+    const stringA = beamBetween(new THREE.Vector3(xBase, a.y + 0.05, a.z1 - 1.25),
+      new THREE.Vector3(xBase - side * 7.4, b.y - 0.55, b.z1 - 1.25), 0.12, darkWood, 7);
+    register(stringA, grp, 'stair-stringer', li + 0.40);
+    const stringB = stringA.clone(); stringB.position.z += 0.95;
+    register(stringB, grp, 'stair-stringer', li + 0.40);
     segs.push(grp); G.add(grp);
   }
+
+  /* 窟门正前方的高层作业台和小型吊架。 */
+  {
+    const grp = new THREE.Group();
+    for (let i = 0; i < 9; i++) {
+      const plank = boxBeam(lerp(-8.0, 8.0, i / 8), 35.0, CLIFF_Z + 6.0, 1.85, 0.20, 4.6, woodMat);
+      register(plank, grp, 'platform', 4.0 + i * 0.01);
+    }
+    const mast = beamBetween(new THREE.Vector3(-10.5, 30.7, CLIFF_Z + 6.1),
+      new THREE.Vector3(-10.5, 41.0, CLIFF_Z + 6.1), 0.19, darkWood, 8);
+    register(mast, grp, 'hoist-mast', 4.05);
+    const jib = beamBetween(new THREE.Vector3(-10.5, 40.5, CLIFF_Z + 6.1),
+      new THREE.Vector3(-2.5, 40.5, CLIFF_Z + 6.1), 0.16, darkWood, 8);
+    register(jib, grp, 'hoist-jib', 4.10);
+    const pulley = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.10, 8, 20), ironMat);
+    pulley.position.set(-3.0, 40.1, CLIFF_Z + 6.1); pulley.rotation.y = Math.PI / 2;
+    register(pulley, grp, 'pulley', 4.14);
+    segs.push(grp); G.add(grp);
+  }
+
   G.userData.segs = segs;
+  G.userData.components = components;
+  G.userData.materialYard = materialYard;
+  G.userData.hoistTop = hoistTop;
+  G.userData.levels = levels;
   return G;
 }
 
