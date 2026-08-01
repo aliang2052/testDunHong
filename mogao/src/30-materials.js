@@ -21,6 +21,7 @@ const PHASE = {
 function makeStageMaterial(opts) {
   const {
     finalMap,
+    finalNormal = null,
     finalScale = [1, 1],
     finalTint = new THREE.Color(1, 1, 1),
     mudScale = [3, 6],
@@ -64,7 +65,7 @@ function makeStageMaterial(opts) {
     tMid: { value: TEX.mudMid.map }, nMid: { value: TEX.mudMid.normal },
     tFine: { value: TEX.mudFine.map }, nFine: { value: TEX.mudFine.normal },
     tPolish: { value: TEX.mudPolish.map }, nPolish: { value: TEX.mudPolish.normal },
-    tFinal: { value: finalMap }, uFinalTint: { value: finalTint },
+    tFinal: { value: finalMap }, nFinal: { value: finalNormal || TEX.mudPolish.normal }, uFinalTint: { value: finalTint },
     uRockScale: { value: new THREE.Vector2(rockScale[0], rockScale[1]) },
     uMudScale: { value: new THREE.Vector2(mudScale[0], mudScale[1]) },
     uFinalScale: { value: new THREE.Vector2(finalScale[0], finalScale[1]) },
@@ -154,7 +155,7 @@ function makeStageMaterial(opts) {
       uniform float uRevealOn;
       uniform float uRevealY;
       uniform sampler2D tRock, tCrack, tCoarse, tMid, tFine, tPolish, tFinal;
-      uniform sampler2D nRock, nCrack, nCoarse, nMid, nFine, nPolish;
+      uniform sampler2D nRock, nCrack, nCoarse, nMid, nFine, nPolish, nFinal;
       uniform vec3 uFinalTint;
       uniform vec3 uFrontGlow;
       uniform vec2 uRockScale, uMudScale, uFinalScale;
@@ -242,13 +243,14 @@ function makeStageMaterial(opts) {
       vec3 mapNd = texture2D(nMid,    vUvX * uMudScale).xyz * 2.0 - 1.0;
       vec3 mapNe = texture2D(nFine,   vUvX * uMudScale).xyz * 2.0 - 1.0;
       vec3 mapNf = texture2D(nPolish, vUvX * uMudScale).xyz * 2.0 - 1.0;
+      vec3 mapNg = texture2D(nFinal,  vUvX * uFinalScale).xyz * 2.0 - 1.0;
       vec3 mapN = mapNa;
       mapN = mix(mapN, mapNb, phW(0.0));
       mapN = mix(mapN, mapNc, phW(1.0));
       mapN = mix(mapN, mapNd, phW(2.0));
       mapN = mix(mapN, mapNe, phW(3.0));
       mapN = mix(mapN, mapNf, phW(4.0));
-      mapN = mix(mapN, vec3(0.0, 0.0, 1.0), phW(5.0) * 0.78);
+      mapN = mix(mapN, mapNg, phW(5.0) * 0.88);
       float amt = uNormalAmt * mix(1.0, 0.32, phW(4.0));
       mapN.xy *= amt;
       normal = normalize(tbn * mapN);
@@ -362,13 +364,21 @@ function applyCarve(mat) {
         return all(greaterThan(p, mn)) && all(lessThan(p, mx));
       }
       bool inCave(vec3 p, vec3 mn, vec3 mx){
-        if (p.x <= mn.x || p.x >= mx.x) return false;
-        if (p.z <= mn.z || p.z >= mx.z) return false;
-        if (p.y <= mn.y) return false;
+        if (p.z <= mn.z || p.z >= mx.z || p.y <= mn.y) return false;
         float cx = (mn.x + mx.x) * 0.5;
         float rx = (mx.x - mn.x) * 0.5;
-        float k = clamp(1.0 - pow((p.x - cx) / rx, 2.0), 0.0, 1.0);
-        float top = uArchY + uArchH * sqrt(k);
+        float shift = sin(p.y*0.115 + p.z*0.083) * rx * 0.052
+                    + sin(p.y*0.037 - p.z*0.151) * rx * 0.026;
+        float nx = abs((p.x - cx - shift) / max(0.001, rx));
+        float sideRag = sin(p.y*0.205 + p.z*0.137) * 0.066
+                      + sin(p.y*0.493 - p.z*0.173) * 0.035
+                      + sin(p.y*0.071 + p.z*0.421) * 0.026;
+        if (nx > 0.945 + sideRag) return false;
+        float rough = sin(p.x*0.49 + p.z*0.21) * 0.33
+                    + sin(p.x*1.19 - p.z*0.27) * 0.17
+                    + sin(p.x*0.15 + p.z*0.79) * 0.20;
+        float shoulder = smoothstep(0.73, 0.98, nx);
+        float top = uArchY + uArchH * 0.72 + rough - shoulder * (uArchH * 0.82);
         return p.y < top;
       }
     ` + shader.fragmentShader;
@@ -379,7 +389,10 @@ function applyCarve(mat) {
                           vWorldP.y > -2.0 && vWorldP.y < 43.5 &&
                           vWorldP.z > -14.5 && vWorldP.z < 18.5;
        if (uSectionX < 9000.0 && sectionZone && vWorldP.x > uSectionX) discard;
-       if (inCave(vWorldP, uCarveMin, uCarveMax) && vWorldP.y > uCarveY) discard;
+       float carveRag = sin(vWorldP.x*0.43 + vWorldP.z*0.19) * 0.72
+                      + sin(vWorldP.x*1.07 - vWorldP.z*0.31) * 0.31
+                      + sin(vWorldP.x*0.16 + vWorldP.z*0.73) * 0.24;
+       if (inCave(vWorldP, uCarveMin, uCarveMax) && vWorldP.y > uCarveY + carveRag) discard;
        if (inBox(vWorldP, uCarveMin2, uCarveMax2)) discard;
        if (inBox(vWorldP, uCarveMin3, uCarveMax3)) discard;
        {

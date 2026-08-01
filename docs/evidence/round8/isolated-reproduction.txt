@@ -1,0 +1,20 @@
+Round 8 isolated reproduction
+=============================
+
+Baseline commit: d1520472c4b62749e14b1b40861cf65a0e17cb29
+Tested binary patch SHA-256: bac3d888e9e9b32b4a7333323603a9843e4751795641136689e9b921710deb49
+Tested binary patch size: 21,041,294 bytes
+
+Procedure:
+1. git clone --no-hardlinks <repository> <fresh temporary directory>
+2. git apply --check /private/tmp/testDunHong-round8.patch
+3. git apply /private/tmp/testDunHong-round8.patch
+4. node mogao/build.js index.html
+5. cmp rebuilt index.html against the reviewed final index.html
+
+Result:
+- git apply --check: PASS
+- git apply: PASS
+- clean build: PASS
+- byte comparison: PASS
+- rebuilt index SHA-256: 508611eb7cccc19759d631d364e4b5a8817fed113411d67555c3920a6747a71a

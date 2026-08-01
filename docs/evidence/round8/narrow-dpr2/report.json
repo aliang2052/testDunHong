@@ -1,0 +1,127 @@
+{
+  "input": "/Users/sniper/Desktop/temp/testDunHong/index.html",
+  "inputBytes": 4039506,
+  "inputSha256": "508611eb7cccc19759d631d364e4b5a8817fed113411d67555c3920a6747a71a",
+  "viewport": {
+    "width": 604,
+    "height": 816,
+    "deviceScaleFactor": 2
+  },
+  "checks": {
+    "default-t000-paused": {
+      "pass": true,
+      "detail": {
+        "time": 0,
+        "playing": false,
+        "stage": {
+          "x": 0,
+          "y": 0,
+          "width": 604,
+          "height": 816
+        },
+        "canvas": {
+          "width": 604,
+          "height": 339
+        },
+        "viewport": [
+          604,
+          816,
+          2
+        ],
+        "scrollWidth": 604,
+        "chapterCount": 16
+      }
+    },
+    "viewport-604x816-dpr2": {
+      "pass": true,
+      "detail": [
+        604,
+        816,
+        2
+      ]
+    },
+    "canvas-16x9": {
+      "pass": true,
+      "detail": {
+        "width": 604,
+        "height": 339
+      }
+    },
+    "canvas-fills-viewport-width": {
+      "pass": true,
+      "detail": {
+        "stage": {
+          "x": 0,
+          "y": 0,
+          "width": 604,
+          "height": 816
+        },
+        "canvas": {
+          "width": 604,
+          "height": 339
+        }
+      }
+    },
+    "no-horizontal-page-overflow": {
+      "pass": true,
+      "detail": 604
+    },
+    "sixteen-chapters": {
+      "pass": true,
+      "detail": 16
+    },
+    "offline-no-remote-requests": {
+      "pass": true,
+      "detail": []
+    },
+    "chapter-stops-before-next": {
+      "pass": true,
+      "detail": {
+        "launched": {
+          "index": 0,
+          "from": 0,
+          "until": 15.2
+        },
+        "time": 15.183333333333332,
+        "playing": false,
+        "playUntil": null
+      }
+    },
+    "no-page-errors": {
+      "pass": true,
+      "detail": []
+    }
+  },
+  "remoteRequests": [],
+  "pageErrors": [],
+  "console": [
+    {
+      "type": "warn",
+      "text": "[.WebGL-0x124001b1600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warn",
+      "text": "[.WebGL-0x124001b1600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warn",
+      "text": "[.WebGL-0x124001b1600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warn",
+      "text": "[.WebGL-0x124001b1600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+    }
+  ],
+  "openingScreenshot": {
+    "file": "t000-604x816-dpr2.png",
+    "bytes": 879959,
+    "sha256": "7b085cfb3ad4216826c4684e4d5cf19c66fc97112c80641d83b1cde3f5cef1aa"
+  },
+  "endingScreenshot": {
+    "file": "t116-604x816-dpr2.png",
+    "bytes": 910304,
+    "sha256": "5e78ef5b28c431aba3a7f45c0977fc40c492d6258168d4783c467f751a7f92e2"
+  },
+  "pass": true,
+  "finishedAt": "2026-08-01T15:37:16.245Z"
+}

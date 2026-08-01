@@ -27,84 +27,55 @@ function makeCurve1D(pts) {
    数值由 t8 逐行量宽 + t96 侧影换算而来
    ------------------------------------------------------------ */
 const PROF_RX = makeCurve1D([
-  /* 35.5m倚坐佛：宽阔下身、收腰、斜肩、窄颈与庄严头面。 */
-  [-1.00, 9.15], [0.00, 9.18], [2.00, 9.22], [5.00, 9.18],
-  [8.00, 9.05], [11.00, 8.82], [14.00, 8.45], [17.00, 7.72],
-  [19.00, 6.75], [20.50, 5.95], [22.00, 5.38], [23.50, 5.18],
-  [24.70, 5.32], [25.65, 5.68], [26.45, 6.10], [27.05, 6.25],
-  [27.55, 5.78], [28.05, 4.52], [28.48, 3.05], [28.84, 1.92],
-  [29.35, 1.74], [29.85, 1.92], [30.40, 2.14], [31.20, 2.28],
-  [32.10, 2.34], [33.00, 2.30], [33.80, 2.18], [34.45, 1.95],
-  [34.95, 1.58], [35.38, 0.90], [35.60, 0.18],
+  [-1.0,6.15],[0.0,6.25],[2.0,6.55],[4.0,7.05],[6.0,7.80],[8.0,8.75],
+  [10.0,9.65],[11.5,10.00],[13.0,9.70],[15.0,8.35],[17.0,7.25],[18.5,6.25],
+  [19.5,5.15],[20.5,4.80],[22.0,5.05],[23.5,5.35],[25.0,5.72],[26.2,6.12],
+  [27.0,6.18],[27.65,5.65],[28.20,3.65],[28.70,2.42],[29.10,2.30],[29.55,2.42],
+  [30.10,2.82],[30.80,3.02],[31.60,3.08],[32.45,3.08],[33.25,2.98],[34.00,2.76],
+  [34.62,2.32],[35.10,1.72],[35.43,.82],[35.60,.16],
 ]);
 
 const PROF_RZ = makeCurve1D([
-  [-1.00, 6.22], [0.00, 6.24], [2.00, 6.26], [5.00, 6.22],
-  [8.00, 6.08], [11.00, 5.86], [14.00, 5.55], [17.00, 5.15],
-  [19.00, 4.70], [20.50, 4.30], [22.00, 4.02], [23.50, 3.90],
-  [24.70, 3.96], [25.65, 4.10], [26.45, 4.22], [27.05, 4.26],
-  [27.55, 4.00], [28.05, 3.35], [28.48, 2.45], [28.84, 1.72],
-  [29.35, 1.62], [29.85, 1.82], [30.40, 2.14], [31.20, 2.35],
-  [32.10, 2.46], [33.00, 2.42], [33.80, 2.28], [34.45, 2.02],
-  [34.95, 1.64], [35.38, 0.94], [35.60, 0.18],
+  [-1.0,3.45],[0.0,3.55],[2.0,3.75],[4.0,4.00],[6.0,4.32],[8.0,4.72],
+  [10.0,5.20],[11.5,5.62],[13.0,5.50],[15.0,4.95],[17.0,4.35],[18.5,3.75],
+  [19.5,3.25],[20.5,3.16],[22.0,3.30],[23.5,3.48],[25.0,3.62],[26.2,3.66],
+  [27.0,3.52],[27.65,3.15],[28.20,2.30],[28.70,1.80],[29.10,2.12],[29.55,2.42],
+  [30.10,2.72],[30.80,3.06],[31.60,3.28],[32.45,3.36],[33.25,3.26],[34.00,2.98],
+  [34.62,2.52],[35.10,1.86],[35.43,.90],[35.60,.16],
 ]);
 
 /* 截面中心的前后位移：坐姿下身前倾、头略后靠 */
 const PROF_CZ = makeCurve1D([
-  [0.00, 0.48], [6.00, 0.42], [12.00, 0.34], [18.00, 0.20],
-  [21.50, 0.06], [24.00, -0.02], [26.50, -0.08], [28.20, -0.14],
-  [29.00, -0.04], [30.20, 0.18], [31.80, 0.28], [33.20, 0.22],
-  [34.40, 0.05], [35.55, -0.16],
+  [0.0,.38],[4.0,.50],[8.0,.72],[11.5,.92],[14.0,.82],[17.0,.55],[19.0,.28],
+  [21.0,.10],[23.0,.02],[25.0,-.02],[27.2,-.08],[28.4,.00],[29.3,.38],
+  [30.4,1.05],[32.0,1.55],[33.4,1.42],[34.6,.72],[35.55,-.02],
 ]);
 
 /* ------------------------------------------------------------
    衣褶：下裙的横向 U 形垂褶（t8 可数出 7 道大褶）
    ------------------------------------------------------------ */
-function foldDisp(u, y) {
-  const a = u * TAU;
-  const front = Math.cos(a);                 // +1 正前，-1 背后
-  const side = Math.abs(Math.sin(a));
-
-  let d = 0;
-
-  if (y < 19.5) {
-    /* 主褶：等高线 y = c - K·cos(a) → 正面中央最低，向两侧上翘（U 形垂褶） */
-    const K = 4.75 * smoothstep(19.5, 6.5, y) + 1.20;       // 越靠下 U 形越深
-    const lam = 2.28 + (19.5 - y) * 0.046;                  // 褶距自上而下加大
-    const jig = (fbm2(y * 0.13, 3.7, 3, 21) - 0.5) * 0.42;
-    const phase = (y + K * front + 0.42 * Math.sin(a * 2.0 + 0.7) + jig) / lam;
-    const amp = 0.0305 * smoothstep(19.5, 15.0, y) * smoothstep(0.0, 2.6, y)
-              * (0.80 + 0.34 * fbm2(y * 0.19, 1.3, 3, 7));
-    // 尖底的褶形（|sin| 加权），比纯正弦更像布料堆叠
-    const frontW = 0.30 + 0.70 * smoothstep(-0.35, 0.72, front);
-    const sv = Math.sin(phase * TAU);
-    d += (sv * 0.68 + Math.sign(sv) * Math.pow(Math.abs(sv), 2.2) * 0.32) * amp * frontW;
-
-    /* 次级细褶：同样是水平走向 */
-    d += Math.sin(((y + K * 0.62 * front) / (lam * 0.46)) * TAU) * 0.0072
-       * smoothstep(19.0, 14.0, y) * smoothstep(1.2, 4.5, y);
-
-    /* 侧面的竖向瀑布褶（幅度小，只出现在正侧方） */
-    const sideOnly = Math.pow(side, 2.2) * smoothstep(0.55, -0.2, front);
-    d += Math.sin(a * 8.0 + y * 0.09 + fbm2(a * 1.1, y * 0.05, 2, 5) * 2.0) * 0.020 * sideOnly
-       * smoothstep(0.8, 5.0, y) * smoothstep(19.5, 12.0, y);
-    d += Math.sin(a * 15.0 - y * 0.14) * 0.0088 * sideOnly * smoothstep(1.5, 6.0, y) * smoothstep(19.0, 11.0, y);
-
-    /* 裙摆落地处外撇 */
-    d += smoothstep(3.4, 0.0, y) * 0.045;
+function foldDisp(u,y){
+  const a=u*TAU,front=Math.cos(a),side=Math.abs(Math.sin(a));let d=0;
+  if(y<19.8){
+    const frontW=smoothstep(-.10,.78,front);
+    /* 宽缓 U 形垂褶，仅在正面形成，不再绕成整圈横纹。 */
+    const K=lerp(1.4,4.8,smoothstep(18.5,3.0,y));
+    const spacing=2.55+(19.0-y)*.025;
+    const phase=(y+K*front+.24*Math.sin(a*2.0+.7))/spacing;
+    const sv=Math.sin(phase*TAU);
+    d+=(sv*.66+Math.sign(sv)*Math.pow(Math.abs(sv),2.2)*.34)*.024*frontW*smoothstep(19.5,15.0,y)*smoothstep(.5,3.2,y);
+    /* 两侧受重力形成纵向瀑布褶。 */
+    const sideW=Math.pow(side,2.4)*smoothstep(.50,-.20,front);
+    d+=Math.sin(a*7.0+y*.13)*.020*sideW*smoothstep(19.5,12.0,y);
+    d+=Math.sin(a*13.0-y*.17)*.008*sideW*smoothstep(18.0,8.0,y);
+    d+=smoothstep(3.2,0.0,y)*.030;
   }
-
-  if (y >= 17.0 && y < 29.6) {
-    /* 上身袈裟褶：右肩(-X)垂下的大 U 褶 + 胸前斜披的层叠 */
-    const t = smoothstep(17.0, 20.0, y) * smoothstep(29.6, 27.0, y);
-    d += Math.sin((y / 1.72 + front * 0.42) * TAU) * 0.0210 * t;
-    d += Math.sin(a * 5.0 + y * 0.32) * 0.0120 * t;
+  if(y>=17.0&&y<29.5){
+    const t=smoothstep(17.0,20.0,y)*smoothstep(29.5,27.0,y);
+    d+=Math.sin((y/1.95+front*.30)*TAU)*.014*t*smoothstep(-.05,.72,front);
+    d+=Math.sin(a*4.0+y*.28)*.009*t;
   }
-
-  /* 头颈区不加褶 */
-  if (y > 29.4) d *= smoothstep(30.4, 29.4, y);
-
-  return d;
+  if(y>29.3)d*=smoothstep(30.2,29.3,y);return d;
 }
 
 /* ------------------------------------------------------------
@@ -112,29 +83,29 @@ function foldDisp(u, y) {
    ------------------------------------------------------------ */
 function kneeBulge(u, y) {
   const a = u * TAU;
-  const dz = Math.cos(a), dx = Math.sin(a);
-  if (dz <= 0.02) return 0;
-  const yc = 15.6, ys = 3.4;
-  const gy = Math.exp(-Math.pow((y - yc) / ys, 2));
-  // 双峰：左右各一
-  const off = 3.5;                              // 膝心 X 偏移（米）
-  const px = dx * PROF_RX(y);
-  const gL = Math.exp(-Math.pow((px + off) / 3.9, 2));
-  const gR = Math.exp(-Math.pow((px - off) / 3.9, 2));
-  return (gL + gR) * gy * dz * 1.20;
+  const front = Math.max(0, Math.cos(a));
+  if (front <= 0.002) return 0;
+  const px = Math.sin(a) * PROF_RX(y);
+  const gy = Math.exp(-Math.pow((y - 14.25) / 3.55, 2));
+  const off = 5.45;
+  const left = Math.exp(-Math.pow((px + off) / 3.10, 2));
+  const right = Math.exp(-Math.pow((px - off) / 3.10, 2));
+  const centreValley = Math.exp(-Math.pow(px / 1.65, 2)) * 0.42;
+  return Math.max(0, left + right - centreValley) * gy * Math.pow(front, 1.20) * 2.18;
 }
 
 /* 腿部：膝下小腿向下延伸，裙面在正前方略前凸 */
 function shinBulge(u, y) {
   const a = u * TAU;
-  const dz = Math.cos(a), dx = Math.sin(a);
-  if (dz <= 0.02) return 0;
-  const gy = smoothstep(14.5, 11.0, y) * smoothstep(0.5, 4.0, y);
-  const px = dx * PROF_RX(y);
-  const off = 4.2;
-  const gL = Math.exp(-Math.pow((px + off) / 4.6, 2));
-  const gR = Math.exp(-Math.pow((px - off) / 4.6, 2));
-  return (gL + gR) * gy * dz * 0.42;
+  const front = Math.max(0, Math.cos(a));
+  if (front <= 0.002) return 0;
+  const px = Math.sin(a) * PROF_RX(y);
+  const gy = smoothstep(14.2, 10.6, y) * smoothstep(0.4, 3.1, y);
+  const off = 4.50;
+  const left = Math.exp(-Math.pow((px + off) / 3.25, 2));
+  const right = Math.exp(-Math.pow((px - off) / 3.25, 2));
+  const valley = Math.exp(-Math.pow(px / 1.65, 2)) * 0.20;
+  return Math.max(0, left + right - valley) * gy * Math.pow(front, 1.12) * 0.92;
 }
 
 /* ------------------------------------------------------------
@@ -158,23 +129,23 @@ function faceRelief(u, y) {
     const gy = smoothstep(32.98, 32.50, y) * smoothstep(31.10, 31.40, y);
     const prof = smoothstep(32.90, 31.45, y);
     const w = lerp(0.19, 0.40, prof);
-    d += G(ax, 0, w) * gy * lerp(0.22, 0.68, prof);
-    d += G(ax, 0.39, 0.20) * G(y, 31.44, 0.22) * 0.29;   // 鼻翼
+    d += G(ax, 0, w) * gy * lerp(0.30, 0.88, prof);
+    d += G(ax, 0.42, 0.22) * G(y, 31.44, 0.23) * 0.39;   // 鼻翼
   }
   /* 眉弓 */
   d += G(ax, 0.98, 0.70) * G(y, 32.62, 0.25) * 0.145;
   /* 眼窝（凹）+ 眼睑（凸） */
   d -= G(ax, 0.88, 0.56) * G(y, 32.52, 0.30) * 0.115;
-  d += G(ax, 0.82, 0.43) * G(y, 32.31, 0.160) * 0.245;
+  d += G(ax, 0.84, 0.46) * G(y, 32.31, 0.175) * 0.335;
   /* 唇 + 唇下沟 */
-  d += G(ax, 0, 0.48) * G(y, 30.84, 0.190) * 0.135;
+  d += G(ax, 0, 0.52) * G(y, 30.84, 0.205) * 0.205;
   d -= G(ax, 0, 0.45) * G(y, 30.50, 0.16) * 0.055;
   /* 人中 */
   d -= G(ax, 0, 0.105) * G(y, 31.10, 0.175) * 0.050;
   /* 下巴 */
-  d += G(ax, 0, 0.54) * G(y, 30.34, 0.28) * 0.105;
+  d += G(ax, 0, 0.54) * G(y, 30.34, 0.28) * 0.135;
   /* 颊 */
-  d += G(ax, 1.30, 0.64) * G(y, 31.76, 0.62) * 0.120;
+  d += G(ax, 1.34, 0.70) * G(y, 31.76, 0.66) * 0.205;
 
   return d * fw;
 }
@@ -191,16 +162,16 @@ function anatomyRelief(u, y) {
   const G = (x, c, w) => Math.exp(-Math.pow((x - c) / w, 2));
   const px = Math.sin(a) * PROF_RX(y);
   let d = 0;
-  /* 腹部不是直筒，脐上略前凸、腰际收束。 */
-  d += G(y, 21.7, 2.35) * Math.pow(front, 1.35) * 0.48;
-  d += G(y, 24.7, 2.15) * Math.pow(front, 1.45) * 0.34;
-  /* 双侧胸肌与中央胸骨沟。 */
-  const chestY = G(y, 26.15, 1.85);
-  d += (G(px, -2.35, 2.2) + G(px, 2.35, 2.2)) * chestY * Math.pow(front, 1.15) * 0.46;
-  d -= G(px, 0, 0.78) * chestY * Math.pow(front, 1.8) * 0.16;
-  /* 锁骨下阴影与肩头圆转。 */
-  d -= G(y, 28.02, 0.35) * G(px, 0, 3.8) * Math.pow(front, 1.5) * 0.10;
-  d += G(y, 27.35, 0.72) * Math.pow(side, 2.4) * front * 0.18;
+  /* 坐姿骨盆和腹部从宽大的双膝自然过渡到腰部。 */
+  d += G(y, 18.8, 1.50) * Math.pow(front, 1.22) * 0.44;
+  d += G(y, 21.4, 1.65) * Math.pow(front, 1.30) * 0.48;
+  d += G(y, 24.1, 1.90) * Math.pow(front, 1.38) * 0.60;
+  /* 胸廓为左右两个缓坡，中央胸骨沟极浅。 */
+  const chestY = G(y, 26.10, 1.72);
+  d += (G(px, -2.45, 2.35) + G(px, 2.45, 2.35)) * chestY * Math.pow(front, 1.14) * 0.56;
+  d -= G(px, 0, 0.95) * chestY * Math.pow(front, 1.70) * 0.10;
+  d -= G(y, 27.95, 0.36) * G(px, 0, 4.10) * Math.pow(front, 1.35) * 0.09;
+  d += G(y, 27.15, 0.78) * Math.pow(side, 2.0) * front * 0.25;
   return d;
 }
 
@@ -216,8 +187,11 @@ function bodyPoint(u, v, out) {
   const kb = kneeBulge(u, y) + shinBulge(u, y);
   const fr = faceRelief(u, y);
   const ar = anatomyRelief(u, y);
+  const lower = smoothstep(20.5, 16.8, y);
+  const back = Math.max(0, -dz);
+  const lowerDepth = 1.0 - lower * back * 0.24;
   const p = out || new THREE.Vector3();
-  p.set(dx * (rx * f + fr), y, dz * (rz * f + fr) + cz + kb + ar);
+  p.set(dx * (rx * f + fr), y, dz * (rz * f + fr) * lowerDepth + cz + kb + ar);
   return p;
 }
 
@@ -237,19 +211,79 @@ function bodyNormal(u, v, out) {
 }
 
 /* ------------------------------------------------------------
+   施工接触面：与高密度 lower / torso / head 资产一致的正面近似。
+   工具、木桩、泥团和纤维全部使用该表面，避免继续依赖旧旋转体而悬浮。
+   lateral 为 -1..1 的正面横向参数。
+   ------------------------------------------------------------ */
+const BUDDHA_SURF_RX = makeCurve1D([
+  [0,6.2],[3,6.8],[6,7.7],[9,9.2],[11.5,9.9],[14,9.1],[16.5,7.5],[18.5,6.2],
+  [20,4.8],[22,5.1],[24,5.5],[26,6.1],[27.2,6.0],[28.2,3.7],[29.0,2.35],
+  [30,2.75],[31.5,3.05],[33,3.0],[34.2,2.65],[35.5,.25]
+]);
+const BUDDHA_SURF_RZ = makeCurve1D([
+  [0,3.45],[3,3.8],[6,4.25],[9,4.9],[11.5,5.55],[14,5.05],[16.5,4.35],[18.5,3.55],
+  [20,3.10],[22,3.30],[24,3.48],[26,3.58],[27.2,3.35],[28.2,2.15],[29.0,2.05],
+  [30,2.72],[31.5,3.25],[33,3.22],[34.2,2.72],[35.5,.22]
+]);
+const BUDDHA_SURF_CZ = makeCurve1D([
+  [0,.35],[6,.60],[11.5,.90],[16,.60],[20,.18],[24,.02],[27,-.04],[28.5,.22],
+  [30,1.05],[32,1.70],[33.5,1.34],[35.5,.0]
+]);
+function buddhaSurfacePoint(lateral, y, outP = new THREE.Vector3(), outN = new THREE.Vector3()) {
+  const yy=clamp(y,.08,BUDDHA_H-.05), lat=clamp(lateral,-.96,.96);
+  const rx=BUDDHA_SURF_RX(yy), rz=BUDDHA_SURF_RZ(yy), cz=BUDDHA_SURF_CZ(yy);
+  const x=lat*rx;
+  const ell=Math.sqrt(Math.max(.025,1-lat*lat));
+  let z=cz+rz*ell;
+  if(yy<19.2){
+    const kneeY=Math.exp(-Math.pow((yy-11.4)/3.55,2));
+    const knee=(Math.exp(-Math.pow((x-5.0)/2.55,2))+Math.exp(-Math.pow((x+5.0)/2.55,2)))*kneeY;
+    const valley=Math.exp(-Math.pow(x/.95,2))*kneeY;
+    const apron=Math.exp(-Math.pow(x/2.2,4))*Math.exp(-Math.pow((yy-8.8)/5.5,2));
+    z+=knee*.56-valley*.55+apron*.24;
+  }else if(yy<28.4){
+    const chest=Math.exp(-Math.pow((yy-25.1)/1.5,2))*(Math.exp(-Math.pow((x-2.0)/1.7,2))+Math.exp(-Math.pow((x+2.0)/1.7,2)))*.16;
+    const abdomen=Math.exp(-Math.pow((yy-21.2)/1.7,2))*Math.exp(-Math.pow(x/3.5,4))*.20;
+    z+=chest+abdomen;
+  }else{
+    const nx=x/3.08, ny=(yy-32.18)/3.52;
+    z=1.82+2.66*Math.sqrt(Math.max(.02,1-nx*nx-ny*ny));
+    const face=Math.exp(-Math.pow(x/2.55,6))*smoothstep(29.1,30.0,yy)*smoothstep(35.1,34.2,yy);
+    const plane=4.48+Math.exp(-Math.pow((yy-31.7)/1.05,2))*.13;
+    z=lerp(z,plane,face*.68);
+    z+=Math.exp(-Math.pow(x/.34,2))*smoothstep(33.0,32.5,yy)*smoothstep(31.0,31.4,yy)*.34;
+  }
+  outP.set(x,yy,z);
+  const eps=.018;
+  const pX=new THREE.Vector3(),pY=new THREE.Vector3();
+  const sample=(l,y0)=>{
+    const rxx=BUDDHA_SURF_RX(y0),rzz=BUDDHA_SURF_RZ(y0),czz=BUDDHA_SURF_CZ(y0),xx=l*rxx;
+    let zz=czz+rzz*Math.sqrt(Math.max(.025,1-l*l));
+    if(y0<19.2){const ky=Math.exp(-Math.pow((y0-11.4)/3.55,2));zz+=(Math.exp(-Math.pow((xx-5)/2.55,2))+Math.exp(-Math.pow((xx+5)/2.55,2)))*ky*.56-Math.exp(-Math.pow(xx/.95,2))*ky*.55+Math.exp(-Math.pow(xx/2.2,4))*Math.exp(-Math.pow((y0-8.8)/5.5,2))*.24;}
+    else if(y0<28.4){zz+=Math.exp(-Math.pow((y0-25.1)/1.5,2))*(Math.exp(-Math.pow((xx-2)/1.7,2))+Math.exp(-Math.pow((xx+2)/1.7,2)))*.16+Math.exp(-Math.pow((y0-21.2)/1.7,2))*Math.exp(-Math.pow(xx/3.5,4))*.20;}
+    else{const nx=xx/3.08,ny=(y0-32.18)/3.52;zz=1.82+2.66*Math.sqrt(Math.max(.02,1-nx*nx-ny*ny));const fm=Math.exp(-Math.pow(xx/2.55,6))*smoothstep(29.1,30.0,y0)*smoothstep(35.1,34.2,y0);zz=lerp(zz,4.48+Math.exp(-Math.pow((y0-31.7)/1.05,2))*.13,fm*.68);zz+=Math.exp(-Math.pow(xx/.34,2))*smoothstep(33.0,32.5,y0)*smoothstep(31.0,31.4,y0)*.34;}
+    return [xx,y0,zz];
+  };
+  const sx=sample(clamp(lat+eps,-.97,.97),yy), sy=sample(lat,clamp(yy+eps,.08,BUDDHA_H-.05));
+  pX.set(sx[0]-outP.x,sx[1]-outP.y,sx[2]-outP.z);
+  pY.set(sy[0]-outP.x,sy[1]-outP.y,sy[2]-outP.z);
+  outN.crossVectors(pX,pY).normalize();
+  if(outN.z<0)outN.multiplyScalar(-1);
+  return {p:outP,n:outN};
+}
+
+/* ------------------------------------------------------------
    石胎包络：开凿留下的粗岩柱（t52 侧影）
    ------------------------------------------------------------ */
 const ENV_RX = makeCurve1D([
-  [0.0, 9.72], [5.0, 9.66], [10.0, 9.36], [15.0, 8.85], [19.0, 7.35],
-  [21.5, 6.30], [23.8, 5.86], [25.5, 6.20], [27.0, 6.78], [27.8, 5.82],
-  [28.5, 3.48], [29.0, 2.28], [29.6, 2.14], [30.4, 2.48], [31.5, 2.68],
-  [32.8, 2.72], [33.9, 2.52], [34.7, 2.12], [35.25, 1.42], [35.62, 0.56],
+  [0.0,8.65],[4.0,8.85],[8.0,9.18],[10.5,9.65],[12.4,10.15],[14.5,10.82],[16.5,10.60],
+  [18.5,9.05],[20.0,7.55],[21.5,7.05],[24.0,7.60],[26.5,8.68],[27.8,8.50],[28.6,5.10],
+  [29.2,3.20],[30.2,3.32],[31.8,3.68],[33.3,3.62],[34.5,2.92],[35.25,1.82],[35.62,.58],
 ]);
 const ENV_RZ = makeCurve1D([
-  [0.0, 6.62], [5.0, 6.56], [10.0, 6.30], [15.0, 5.94], [19.0, 5.18],
-  [21.5, 4.66], [23.8, 4.38], [25.5, 4.48], [27.0, 4.62], [27.8, 4.12],
-  [28.5, 2.74], [29.0, 2.06], [29.6, 2.08], [30.4, 2.44], [31.5, 2.68],
-  [32.8, 2.76], [33.9, 2.58], [34.7, 2.18], [35.25, 1.48], [35.62, 0.56],
+  [0.0,4.72],[4.0,4.92],[8.0,5.18],[10.5,5.48],[12.4,5.92],[14.5,6.62],[16.5,6.55],
+  [18.5,5.62],[20.0,4.95],[21.5,4.72],[24.0,5.25],[26.5,5.98],[27.8,5.78],[28.6,3.72],
+  [29.2,2.74],[30.2,3.20],[31.8,3.70],[33.3,3.64],[34.5,2.96],[35.25,1.84],[35.62,.58],
 ]);
 
 /* 石胎位置：把任意佛像顶点投影到包络面并加岩石噪声 */
@@ -388,22 +422,26 @@ function scaleUV(geo, k) {
 /* 给任意已有几何附加石胎 morph 属性（用于手、脚、头饰等零件） */
 function attachRockMorph(geo, shrinkToAxis = 1.0) {
   const p = geo.attributes.position;
+  const normal = geo.attributes.normal;
   const n = p.count;
   const rp = new Float32Array(n * 3);
   const rn = new Float32Array(n * 3);
-  const V = new THREE.Vector3(), R = new THREE.Vector3();
+  const V = new THREE.Vector3(), N = new THREE.Vector3(), R = new THREE.Vector3();
   for (let i = 0; i < n; i++) {
     V.fromBufferAttribute(p, i);
-    rockPoint(V, R);
-    // shrinkToAxis<1 时，零件被更强地吸进包络内部（融进石胎）
-    R.x *= shrinkToAxis; R.z = lerp(R.z, R.z * shrinkToAxis, 0.6);
+    if (normal) N.fromBufferAttribute(normal, i).normalize();
+    else N.set(V.x, 0.18, V.z).normalize();
+    const macro = fbm3(V.x * 0.19 + 7.1, V.y * 0.17 + 3.7, V.z * 0.21 + 5.2, 4) - 0.5;
+    const chip = ridge2(V.x * 0.32 + V.z * 0.16, V.y * 0.24, 3, 23.0) - 0.5;
+    const amp = 0.22 + smoothstep(0.0, 35.5, V.y) * 0.05;
+    R.copy(V).addScaledVector(N, macro * amp - chip * 0.065);
+    /* shrinkToAxis 仅控制零件轻微并入主轮廓，不再把人体压回花瓶包络。 */
+    if (shrinkToAxis < 0.999) {
+      const k = 1.0 - (1.0 - shrinkToAxis) * 0.34;
+      R.x *= k; R.z *= lerp(1.0, k, 0.48);
+    }
     rp[i * 3] = R.x; rp[i * 3 + 1] = R.y; rp[i * 3 + 2] = R.z;
-  }
-  // 用包络的近似法线
-  for (let i = 0; i < n; i++) {
-    const x = rp[i * 3], y = rp[i * 3 + 1], z = rp[i * 3 + 2];
-    const l = Math.hypot(x, z) || 1;
-    rn[i * 3] = x / l * 0.92; rn[i * 3 + 1] = 0.2; rn[i * 3 + 2] = z / l * 0.92;
+    rn[i * 3] = N.x; rn[i * 3 + 1] = N.y; rn[i * 3 + 2] = N.z;
   }
   geo.setAttribute('aRockPos', new THREE.BufferAttribute(rp, 3));
   geo.setAttribute('aRockNrm', new THREE.BufferAttribute(rn, 3));

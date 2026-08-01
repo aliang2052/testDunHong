@@ -1,0 +1,22 @@
+Round 8 credential and runtime-network scan
+===========================================
+
+Scanned paths: repository working tree excluding .git and vendored Three.js source.
+
+Credential filename patterns:
+- .env / .env.*: no matches
+- *.pem / *.key / id_rsa*: no matches
+- cookie-named files: no matches
+
+Credential content patterns:
+- PEM private keys: no matches
+- AWS AKIA identifiers: no matches
+- OpenAI-style sk- tokens: no matches
+- GitHub gh* tokens: no matches
+- Slack xox* tokens: no matches
+
+Runtime network evidence:
+- Browser verification HTTP(S) requests: 0
+- SVG namespace URLs and vendored Three.js source comments are non-requesting literals.
+
+Result: PASS

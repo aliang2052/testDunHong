@@ -28,7 +28,7 @@ const CONSTRUCTION = {
   workPlatform: null,
   scaffoldWorkers: [],
   activeWalkComponent: null,
-  wallBowls: null, wallStrokes: null, wallDrips: null, wallFront: null,
+  wallBowls: null, wallStrokes: null, wallDrips: null, wallFront: null, wallLayers: null,
 };
 
 const _cgM = new THREE.Matrix4();
@@ -38,6 +38,7 @@ const _cgS = new THREE.Vector3();
 const _cgA = new THREE.Vector3();
 const _cgB = new THREE.Vector3();
 const _cgC = new THREE.Vector3();
+const _cgN = new THREE.Vector3();
 const _cgUp = new THREE.Vector3(0, 1, 0);
 const _cgForward = new THREE.Vector3(0, 0, 1);
 
@@ -163,8 +164,8 @@ function makeTrowelRig(scale = 1, brush = false) {
 
 function makeWorkerRig(seed = 1) {
   const root = new THREE.Group();
-  const cloth = new THREE.MeshStandardMaterial({ color: seed % 3 === 0 ? 0x6D3E2B : (seed % 3 === 1 ? 0x8A5A36 : 0x5B4A34), roughness: 0.98 });
-  const skin = new THREE.MeshStandardMaterial({ color: 0xA66E49, roughness: 0.92 });
+  const cloth = new THREE.MeshStandardMaterial({ color: seed % 3 === 0 ? 0x6E5140 : (seed % 3 === 1 ? 0x887047 : 0x48666A), roughness: 0.96 });
+  const skin = new THREE.MeshStandardMaterial({ color: 0xC28B62, roughness: 0.91 });
   const dark = new THREE.MeshStandardMaterial({ color: 0x2F261F, roughness: 1.0 });
   const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 0.52, 4, 8), cloth);
   torso.position.y = 1.03; torso.scale.set(0.92, 1, 0.62); root.add(torso);
@@ -233,12 +234,14 @@ function makeSuspendedPlatform() {
 }
 
 function pointOnFront(y, lateral = 0, outP = new THREE.Vector3(), outN = new THREE.Vector3()) {
-  const a = lateral * 0.62;
-  let u = a / TAU;
-  if (u < 0) u += 1;
-  bodyPoint(u, clamp(y / BUDDHA_H, 0.002, 0.998), outP);
-  bodyNormal(u, clamp(y / BUDDHA_H, 0.002, 0.998), outN);
-  return { p: outP, n: outN };
+  return buddhaSurfacePoint(lateral, y, outP, outN);
+}
+
+function pointOnMorph(y, lateral = 0, morph = 0, outP = new THREE.Vector3(), outN = new THREE.Vector3()) {
+  const surf=buddhaSurfacePoint(lateral,y,_cgB,outN);
+  const rockP=rockPoint(surf.p,_cgC);
+  outP.lerpVectors(surf.p,rockP,clamp(morph,0,1));
+  return {p:outP,n:outN};
 }
 
 function orientZTo(q, n) {
@@ -407,6 +410,7 @@ function buildConstruction(scene, tower, walkway) {
         const h = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.10, 16), mat);
         h.quaternion.copy(peg.userData.finalQuaternion);
         h.position.copy(peg.userData.finalPosition).addScaledVector(peg.userData.axis, -0.86);
+        h.userData.peg = peg;
         holes.add(h);
       }
     }
@@ -430,7 +434,7 @@ function buildConstruction(scene, tower, walkway) {
       const lat = (rnd() - 0.5) * 1.36;
       const p = new THREE.Vector3(), n = new THREE.Vector3();
       pointOnFront(y, lat, p, n);
-      data.push({ p: p.clone(), n: n.clone(), threshold: clamp(y / BUDDHA_H, 0, 1), s: 0.18 + rnd() * 0.34, phase: rnd(), lat });
+      data.push({ p: p.clone(), n: n.clone(), y, lat, threshold: clamp(y / BUDDHA_H, 0, 1), s: 0.12 + rnd() * 0.22, phase: rnd() });
     }
     mesh.userData.data = data;
     G.add(mesh);
@@ -454,7 +458,7 @@ function buildConstruction(scene, tower, walkway) {
       pointOnFront(y, lat, p, n);
       const tangent = new THREE.Vector3(1, (rnd() - 0.5) * 1.5, 0).normalize();
       tangent.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(_cgForward, n));
-      data.push({ p: p.clone().addScaledVector(n, 0.2), dir: tangent, len: 0.55 + rnd() * 1.45, order: rnd(), n: n.clone() });
+      data.push({ p: p.clone().addScaledVector(n, 0.2), dir: tangent, y, lat, spin: rnd()*TAU, len: 0.42 + rnd() * 1.05, order: rnd(), n: n.clone() });
     }
     mesh.userData.data = data;
     G.add(mesh);
@@ -477,7 +481,7 @@ function buildConstruction(scene, tower, walkway) {
       const lat = (rnd() - 0.5) * 1.4;
       const p = new THREE.Vector3(), n = new THREE.Vector3();
       pointOnFront(y, lat, p, n);
-      data.push({ p: p.clone(), n: n.clone(), len: 0.45 + rnd() * 0.9, order: clamp(y / BUDDHA_H + (rnd() - 0.5) * 0.08, 0, 1), spin: rnd() * TAU });
+      data.push({ p: p.clone(), n: n.clone(), y, lat, len: 0.32 + rnd() * 0.62, order: clamp(y / BUDDHA_H + (rnd() - 0.5) * 0.08, 0, 1), spin: rnd() * TAU });
     }
     mesh.userData.data = data;
     G.add(mesh);
@@ -499,7 +503,7 @@ function buildConstruction(scene, tower, walkway) {
       const lat = (rnd() - 0.5) * 1.2;
       const p = new THREE.Vector3(), n = new THREE.Vector3();
       pointOnFront(y, lat, p, n);
-      data.push({ p: p.clone(), n: n.clone(), s: 0.035 + rnd() * 0.070, order: rnd(), phase: rnd() });
+      data.push({ p: p.clone(), n: n.clone(), y, lat, s: 0.026 + rnd() * 0.052, order: rnd(), phase: rnd() });
     }
     mesh.userData.data = data;
     G.add(mesh);
@@ -521,7 +525,7 @@ function buildConstruction(scene, tower, walkway) {
       const lat = (rnd() - 0.5) * 1.0;
       const p = new THREE.Vector3(), n = new THREE.Vector3();
       pointOnFront(y, lat, p, n);
-      data.push({ p: p.clone(), n: n.clone(), s: 0.07 + rnd() * 0.13, order: rnd(), phase: rnd() });
+      data.push({ p: p.clone(), n: n.clone(), y, lat, s: 0.05 + rnd() * 0.09, order: rnd(), phase: rnd() });
     }
     mesh.userData.data = data;
     G.add(mesh);
@@ -553,8 +557,36 @@ function buildConstruction(scene, tower, walkway) {
     const strokes=new THREE.InstancedMesh(new THREE.BoxGeometry(2.85,.34,.075),strokeMat,42);strokes.instanceMatrix.setUsage(THREE.DynamicDrawUsage);strokes.frustumCulled=false;G.add(strokes);CONSTRUCTION.wallStrokes=strokes;hideAllInstances(strokes);
     const dripMat=new THREE.MeshStandardMaterial({color:0xA98661,roughness:.82,transparent:true,opacity:.70,depthWrite:false});
     const drips=new THREE.InstancedMesh(new THREE.CylinderGeometry(.035,.055,1,7),dripMat,28);drips.instanceMatrix.setUsage(THREE.DynamicDrawUsage);drips.frustumCulled=false;G.add(drips);CONSTRUCTION.wallDrips=drips;hideAllInstances(drips);
-    const frontMat=new THREE.MeshStandardMaterial({color:0xF1DFC1,emissive:0x8A4A25,emissiveIntensity:.72,roughness:.76,transparent:true,opacity:.94,depthWrite:false});
-    const front=new THREE.Mesh(new THREE.BoxGeometry(33.5,.34,.12),frontMat);front.visible=false;front.frustumCulled=false;G.add(front);CONSTRUCTION.wallFront=front;
+    const frontMat=new THREE.MeshStandardMaterial({color:0xF1DFC1,emissive:0xB86A32,emissiveIntensity:1.08,roughness:.72,transparent:true,opacity:.96,depthWrite:false});
+    const front=new THREE.Mesh(new THREE.BoxGeometry(9.5,.32,.13),frontMat);front.visible=false;front.frustumCulled=false;G.add(front);CONSTRUCTION.wallFront=front;
+  }
+
+  /* 墙面实体施工层：72 块共享全局 UV 的薄灰泥片，形成连续而清楚的施工前沿。 */
+  {
+    const cols=12,rows=6,tileW=(CAVE.x1-CAVE.x0)/cols,tileH=40.2/rows;
+    const mudMat=new THREE.MeshStandardMaterial({map:TEX.mudFine.map,normalMap:TEX.mudFine.normal,color:0xAD9270,roughness:.98,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-1});
+    const whiteMat=new THREE.MeshStandardMaterial({map:TEX.whitewash.map,normalMap:TEX.whitewash.normal,color:0xE6D8BE,roughness:.93,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2});
+    const muralMat=new THREE.MeshStandardMaterial({map:TEX.mural.map,color:0xC2AA86,roughness:.88,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-3});
+    const layers={mud:new THREE.Group(),white:new THREE.Group(),mural:new THREE.Group(),tiles:{mud:[],white:[],mural:[]}};
+    layers.mud.name='WallMudTiles';layers.white.name='WallWhitewashTiles';layers.mural.name='WallMuralTiles';
+    const createTile=(c,r,mat,zoff,seed)=>{
+      const g=new THREE.PlaneGeometry(tileW*1.035,tileH*1.045,5,5),pa=g.attributes.position,uv=g.attributes.uv;
+      for(let i=0;i<pa.count;i++){
+        let x=pa.getX(i),y=pa.getY(i),z=pa.getZ(i);
+        const edge=Math.max(Math.abs(x)/(tileW*.52),Math.abs(y)/(tileH*.52));
+        z+=(fbm2((x+c*tileW)*.48,(y+r*tileH)*.48,3,seed)-.5)*.055*(.45+edge*.55);
+        x+=(fbm2(y*.31+seed,x*.17,2,seed+5)-.5)*.045*edge;
+        y+=(fbm2(x*.28-seed,y*.19,2,seed+9)-.5)*.045*edge;
+        pa.setXYZ(i,x,y,z);uv.setXY(i,(c+uv.getX(i))/cols,(r+uv.getY(i))/rows);
+      }
+      pa.needsUpdate=true;uv.needsUpdate=true;g.computeVertexNormals();
+      const m=new THREE.Mesh(g,mat);m.position.set(CAVE.x0+tileW*(c+.5),tileH*(r+.5)+.4,CAVE.zBack+zoff);m.userData.order=clamp((r+(r%2?1-(c+.5)/cols:(c+.5)/cols))/rows+(hash3(c,r,seed)-.5)*.055,0,1);m.userData.baseScale=m.scale.clone();m.visible=false;m.receiveShadow=true;return m;
+    };
+    for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+      const a=createTile(c,r,mudMat,.22,610+c+r*17),b=createTile(c,r,whiteMat,.255,710+c+r*17),d=createTile(c,r,muralMat,.29,810+c+r*17);
+      layers.mud.add(a);layers.white.add(b);layers.mural.add(d);layers.tiles.mud.push(a);layers.tiles.white.push(b);layers.tiles.mural.push(d);
+    }
+    G.add(layers.mud,layers.white,layers.mural);CONSTRUCTION.wallLayers=layers;
   }
 
   /* 低开销冲击补光 */
@@ -709,9 +741,14 @@ function updateWalkwayConstruction(t) {
 }
 
 function excavationDescriptor(t) {
-  if (t >= 24.55 && t < 27.0) {
-    const k = easeOut(windowK(t, 24.55, 27.0));
-    return { stage: 'door', k, center: new THREE.Vector3(0, lerp(31.4, 36.5, k), CLIFF_Z + 0.5), normal: new THREE.Vector3(0, 0, 1), scale: 1.0, start: 24.55 };
+  if (t >= 24.20 && t < 27.0) {
+    const k = easeOut(windowK(t, 24.20, 27.0));
+    const path = k * 2.0 + 0.18;
+    let x, y;
+    if (path < 0.62) { x = -1.62; y = lerp(31.15, 33.78, path / 0.62); }
+    else if (path < 1.38) { const a = Math.PI - ((path - 0.62) / 0.76) * Math.PI; x = Math.cos(a) * 1.62; y = 33.78 + Math.sin(a) * 1.12; }
+    else { x = 1.62; y = lerp(33.78, 31.15, (path - 1.38) / 0.62); }
+    return { stage: 'door', k, center: new THREE.Vector3(x, y, CLIFF_Z + 0.48), normal: new THREE.Vector3(0, 0, 1), scale: 0.56, start: 24.20 };
   }
   if (t >= 27.0 && t < 30.2) {
     const k = windowK(t, 27.0, 30.2);
@@ -759,15 +796,15 @@ function updateExcavationBlocks(t, d) {
     let show = age < 0.72;
     if (d.stage === 'door') {
       const row = Math.floor(i / 10), col = i % 10;
-      const x = (col - 4.5) * 0.78;
-      const y = 30.9 + row * 0.68;
-      const archTop = 34.4 + Math.sqrt(Math.max(0, 1 - Math.pow(x / 4.0, 2))) * 4.0;
+      const x = (col - 4.5) * 0.44;
+      const y = 31.05 + row * 0.42;
+      const archTop = 33.78 + Math.sqrt(Math.max(0, 1 - Math.pow(x / 1.82, 2))) * 1.12;
       if (y > archTop + 0.18) { show = false; }
       const order = (row / 11) * 0.64 + (Math.abs(col - 4.5) / 5) * 0.23 + seed * 0.05;
       const life = d.k - order;
-      show = show && life > 0 && life < 0.105 && seed > 0.13;
-      age = clamp(life / 0.105, 0, 1);
-      p.set(x + sx * age * 3.0, y - age * age * 7.5, CLIFF_Z + 0.28 + age * (4.5 + seed * 4.5));
+      show = i < 40 && show && life > 0 && life < 0.060 && seed > 0.38;
+      age = clamp(life / 0.060, 0, 1);
+      p.set(x + sx * age * 1.8, y - age * age * 5.2, CLIFF_Z + 0.28 + age * (3.2 + seed * 3.6));
     } else if (d.stage === 'tunnel') {
       p.copy(d.center).add(_cgB.set(sx * 6.2, sy * 6.0, sz * 1.8));
       p.z += age * (4.0 + seed * 5.0);
@@ -797,12 +834,13 @@ function updateExcavationBlocks(t, d) {
     }
     if (!show) continue;
     q.setFromEuler(new THREE.Euler(age * (2 + seed * 4), age * (3 + sx * 5), age * (1 + sy * 4)));
-    const ss = (0.18 + seed * 0.38) * (1 - smoothstep(0.31, 0.47, age));
+    const ss = (0.18 + seed * 0.38) * (d.stage === 'door' ? 0.28 : 1.0) * (1 - smoothstep(0.31, 0.47, age));
     setInstance(mesh, i, p, q, _cgS.set(ss * (1 + Math.abs(sx)), ss * (0.7 + Math.abs(sy)), ss * (0.75 + Math.abs(sz))));
     visible++;
   }
 
   for (let i = 0; i < chips.count; i++) {
+    if (d.stage === 'door' && i > 16) continue;
     const seed = hash3(i * 19, 23, 5);
     const age = frac(t * (1.35 + seed * 0.7) + seed);
     if (age > 0.38 || seed < 0.18) continue;
@@ -829,13 +867,14 @@ function updateDustCloud(t, d) {
     return;
   }
   cloud.points.visible = true;
-  cloud.points.material.opacity = d.stage === 'main' || d.stage === 'lower' ? 0.74 : 0.62;
+  cloud.points.material.opacity = d.stage === 'door' ? 0.10 : (d.stage === 'tunnel' ? 0.20 : (d.stage === 'main' || d.stage === 'lower' ? 0.30 : 0.24));
+  cloud.points.material.size = d.stage === 'door' ? 0.28 : (d.stage === 'tunnel' ? 0.48 : 0.66);
   const arr = cloud.pos;
   for (let i = 0; i < cloud.count; i++) {
     const s = cloud.seeds[i];
     const age = frac(t * (0.24 + s.phase * 0.18) + s.phase);
     const grow = Math.sin(Math.min(1, age * 1.5) * Math.PI * 0.5);
-    const r = s.r * (0.5 + age * (d.stage === 'main' ? 5.2 : 3.2));
+    const r = s.r * (0.34 + age * (d.stage === 'main' ? 2.7 : (d.stage === 'door' ? 1.15 : 1.9)));
     const x = d.center.x + Math.cos(s.a) * r + s.drift * age * 4;
     const z = d.center.z + Math.sin(s.a) * r + (d.normal.z > 0.5 ? age * 3.5 : 0);
     const y = d.center.y + s.lift * grow + age * (d.normal.y > 0.5 ? 1.1 : 0.2) - age * age * 1.4;
@@ -860,7 +899,7 @@ function updateExcavationTools(t, d) {
     else p.add(new THREE.Vector3(offset * 1.35, i * 0.8, 0.7));
     tool.position.copy(p);
     orientZTo(tool.quaternion, d.normal);
-    tool.scale.setScalar(d.scale * (i === 0 ? 1 : 0.86));
+    tool.scale.setScalar((d.stage==='door'?0.38:d.scale) * (i === 0 ? 1 : 0.86));
     const ph = frac((t - d.start + i * 0.25) / period);
     let swing;
     if (ph < 0.72) swing = lerp(-1.05, 0.10, easeInOut(ph / 0.72));
@@ -871,7 +910,7 @@ function updateExcavationTools(t, d) {
   }
   if (CONSTRUCTION.flash) {
     CONSTRUCTION.flash.position.copy(d.center).addScaledVector(d.normal, 1.1);
-    CONSTRUCTION.flash.intensity = impact * 220;
+    CONSTRUCTION.flash.intensity = impact * (d.stage==='door'?6:(d.stage==='tunnel'?26:72));
   }
   return impact;
 }
@@ -914,17 +953,23 @@ function updatePegConstruction(t) {
     const k = clamp((t - st) / 0.58, 0, 1);
     p.visible = k > 0.001;
     p.scale.setScalar(k > 0.001 ? 1 : 0.001);
+    const surf=pointOnMorph(p.userData.surfaceY,p.userData.surfaceU,CURVE_MORPH(t),_cgA,_cgN);
+    p.userData.axis.copy(surf.n).normalize();
+    p.userData.finalPosition.copy(surf.p).addScaledVector(p.userData.axis,0.28);
+    p.userData.finalQuaternion.setFromUnitVectors(_cgUp,p.userData.axis);
     p.quaternion.copy(p.userData.finalQuaternion);
-    p.position.copy(p.userData.finalPosition).addScaledVector(p.userData.axis, (1 - easeOut(k)) * 1.55);
+    p.position.copy(p.userData.finalPosition).addScaledVector(p.userData.axis, (1 - easeOut(k)) * 0.72);
+    const hole=CONSTRUCTION.pegHoles&&CONSTRUCTION.pegHoles.children[i];
+    if(hole){hole.position.copy(surf.p).addScaledVector(p.userData.axis,-0.055);hole.quaternion.copy(p.userData.finalQuaternion);hole.scale.set(.72,.12,.72);}
     if (k > 0 && k < 1) { active = i; activeK = k; }
   }
   if (active >= 0) {
     const tool = CONSTRUCTION.tools[0];
     const peg = pegs[active];
     tool.visible = true;
-    tool.position.copy(peg.position).addScaledVector(peg.userData.axis, 0.34);
+    tool.position.copy(peg.position).addScaledVector(peg.userData.axis, 0.18);
     orientZTo(tool.quaternion, peg.userData.axis);
-    tool.scale.setScalar(0.52);
+    tool.scale.setScalar(0.38);
     const ph = frac((t - (56.45 + active * 0.52)) / 0.31);
     tool.userData.hammerPivot.rotation.x = ph < 0.68 ? lerp(-0.9, 0.1, easeInOut(ph / 0.68)) : lerp(0.1, -0.55, (ph - 0.68) / 0.32);
     const impact = pulse01((t - (56.45 + active * 0.52)) / 0.31, 0.24);
@@ -938,12 +983,13 @@ function updatePegConstruction(t) {
 }
 
 const MUD_WINDOWS = [
-  { a: 62.4, b: 66.0, fromP: PHASE.ROCK, toP: PHASE.CRACK, fromM: 0.48, toM: 0.26, color: 0xA18D70 },
-  { a: 67.0, b: 72.0, fromP: PHASE.CRACK, toP: PHASE.COARSE, fromM: 0.26, toM: 0.08, color: 0x9D8767 },
-  { a: 72.0, b: 77.2, fromP: PHASE.COARSE, toP: PHASE.MID, fromM: 0.08, toM: 0.03, color: 0xB09A7D },
-  { a: 77.0, b: 83.4, fromP: PHASE.MID, toP: PHASE.FINE, fromM: 0.03, toM: 0.00, color: 0xCBB79B },
+  /* 所有泥层共用同一可信坐佛轮廓，仅保留毫米级表面收紧，不再退回瓶形石柱。 */
+  { a: 62.4, b: 66.0, fromP: PHASE.ROCK, toP: PHASE.CRACK, fromM: 0.12, toM: 0.055, color: 0xA18D70 },
+  { a: 67.0, b: 72.0, fromP: PHASE.CRACK, toP: PHASE.COARSE, fromM: 0.055, toM: 0.015, color: 0x9D8767 },
+  { a: 72.0, b: 77.2, fromP: PHASE.COARSE, toP: PHASE.MID, fromM: 0.015, toM: 0.00, color: 0xB09A7D },
+  { a: 77.0, b: 83.4, fromP: PHASE.MID, toP: PHASE.FINE, fromM: 0.00, toM: 0.00, color: 0xCBB79B },
   { a: 83.4, b: 89.6, fromP: PHASE.FINE, toP: PHASE.POLISH, fromM: 0.00, toM: 0.00, color: 0xDECBAF },
-  { a: 90.2, b: 93.2, fromP: PHASE.POLISH, toP: PHASE.PAINT, fromM: 0.00, toM: 0.00, color: 0xD7B57B, dir: -1 },
+  { a: 90.2, b: 91.82, fromP: PHASE.POLISH, toP: PHASE.PAINT, fromM: 0.00, toM: 0.00, color: 0xD7B57B, dir: -1 },
 ];
 
 function activeMudWindow(t) {
@@ -963,9 +1009,10 @@ function updateMudPatches(t, w) {
     const rel = w.k - threshold;
     if (rel < -0.08 || rel > 0.18) continue;
     const age = clamp((rel + 0.08) / 0.26, 0, 1);
-    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(0.72 + d.phase * 0.34, 0.035, easeOut(age)));
-    p.x += Math.sin(age * Math.PI) * (d.phase - 0.5) * 0.55;
-    const q = orientZTo(_cgQ, d.n);
+    const surf=pointOnMorph(d.y,d.lat,CURVE_MORPH(t),_cgA,_cgN);
+    const p=_cgA.addScaledVector(surf.n,lerp(0.42+d.phase*.18,0.018,easeOut(age)));
+    p.x+=Math.sin(age*Math.PI)*(d.phase-.5)*.22;
+    const q=orientZTo(_cgQ,surf.n);
     q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, d.phase * TAU)));
     const squash = lerp(0.5, 0.18, age);
     setInstance(mesh, i, p, q, _cgS.set(d.s * lerp(0.55, 1.25, age), d.s * lerp(0.55, 1.0, age), d.s * squash));
@@ -984,9 +1031,12 @@ function updateCracks(t) {
     const d = mesh.userData.data[i];
     const q = clamp((k - d.order * 0.72) / 0.28, 0, 1);
     if (q <= 0) continue;
-    const len = d.len * easeOut(q);
-    const mid = _cgA.copy(d.p).addScaledVector(d.dir, len * 0.5);
-    _cgQ.setFromUnitVectors(_cgUp, d.dir.clone().normalize());
+    const len=d.len*easeOut(q);
+    const surf=pointOnMorph(d.y,d.lat,CURVE_MORPH(t),_cgA,_cgN);
+    const tangent=new THREE.Vector3(Math.cos(d.spin),Math.sin(d.spin)*.7,.15).normalize();
+    tangent.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(_cgForward,surf.n));
+    const mid=_cgA.addScaledVector(surf.n,.035).addScaledVector(tangent,len*.5);
+    _cgQ.setFromUnitVectors(_cgUp,tangent);
     setInstance(mesh, i, mid, _cgQ, _cgS.set(1, len, 1));
   }
   mesh.instanceMatrix.needsUpdate = true;
@@ -1001,10 +1051,11 @@ function updateStraw(t) {
     const d = mesh.userData.data[i];
     const qv = clamp((k - d.order * 0.78) / 0.22, 0, 1);
     if (qv <= 0 || (qv >= 1 && t > 72.2)) continue;
-    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(1.15, 0.045, easeOut(qv)));
-    p.x += Math.sin(qv * Math.PI) * Math.cos(d.spin) * 1.3;
-    const tangent = new THREE.Vector3(Math.cos(d.spin), Math.sin(d.spin) * 0.7, 0.3).normalize();
-    tangent.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(_cgForward, d.n));
+    const surf=pointOnMorph(d.y,d.lat,CURVE_MORPH(t),_cgA,_cgN);
+    const p=_cgA.addScaledVector(surf.n,lerp(.48,.025,easeOut(qv)));
+    p.x+=Math.sin(qv*Math.PI)*Math.cos(d.spin)*.36;
+    const tangent=new THREE.Vector3(Math.cos(d.spin),Math.sin(d.spin)*.7,.3).normalize();
+    tangent.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(_cgForward,surf.n));
     _cgQ.setFromUnitVectors(_cgUp, tangent);
     setInstance(mesh, i, p, _cgQ, _cgS.set(1, d.len, 1));
   }
@@ -1020,9 +1071,10 @@ function updateCotton(t) {
     const d = mesh.userData.data[i];
     const qv = clamp((k - d.order * 0.72) / 0.28, 0, 1);
     if (qv <= 0) continue;
-    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(0.95, 0.040, easeOut(qv)));
-    p.y += Math.sin(qv * Math.PI) * (0.5 + d.phase);
-    orientZTo(_cgQ, d.n);
+    const surf=pointOnMorph(d.y,d.lat,CURVE_MORPH(t),_cgA,_cgN);
+    const p=_cgA.addScaledVector(surf.n,lerp(.38,.018,easeOut(qv)));
+    p.y+=Math.sin(qv*Math.PI)*(.18+d.phase*.20);
+    orientZTo(_cgQ,surf.n);
     const ss = d.s * (1 - smoothstep(0.78, 1, qv) * 0.72);
     setInstance(mesh, i, p, _cgQ, _cgS.set(ss * 1.25, ss, ss * 0.72));
   }
@@ -1038,9 +1090,10 @@ function updateDroplets(t) {
     const d = mesh.userData.data[i];
     const age = frac(k * 2.0 + d.phase);
     if (age > 0.82) continue;
-    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(0.85, 0.035, easeInOut(age)));
-    p.y += (1 - age) * (0.6 + d.order) - age * age * 0.9;
-    orientZTo(_cgQ, d.n);
+    const surf=pointOnMorph(d.y,d.lat,CURVE_MORPH(t),_cgA,_cgN);
+    const p=_cgA.addScaledVector(surf.n,lerp(.28,.015,easeInOut(age)));
+    p.y+=(1-age)*(.24+d.order*.28)-age*age*.32;
+    orientZTo(_cgQ,surf.n);
     const ss = d.s * (1 - smoothstep(0.65, 0.85, age));
     setInstance(mesh, i, p, _cgQ, _cgS.set(ss, ss * 1.7, ss));
   }
@@ -1049,7 +1102,7 @@ function updateDroplets(t) {
 
 function placeSurfaceTool(tool, y, lateral, lift, roll) {
   const p = new THREE.Vector3(), n = new THREE.Vector3();
-  pointOnFront(y, lateral, p, n);
+  pointOnMorph(y,lateral,CURVE_MORPH(APP.time),p,n);
   tool.position.copy(p).addScaledVector(n, lift);
   orientZTo(tool.quaternion, n);
   tool.rotateZ(roll);
@@ -1067,8 +1120,8 @@ function updateSurfaceTools(t, w) {
       const local = frac((t - w.a) / 1.9 + i * 0.43);
       const y = lerp(3.2, 33.0, w.dir === -1 ? 1 - w.k : w.k) + Math.sin(local * TAU) * 1.4 + (i - 0.5) * 2.5;
       const lat = Math.sin(t * 1.55 + i * 2.3) * 0.54;
-      placeSurfaceTool(tool, clamp(y, 2.5, 33.4), lat, 0.12, -0.15 + Math.sin(t * 2.4 + i) * 0.34);
-      tool.scale.setScalar(i === 0 ? 0.30 : 0.26);
+      placeSurfaceTool(tool, clamp(y, 2.5, 33.4), lat, 0.010, -0.15 + Math.sin(t * 2.4 + i) * 0.34);
+      tool.scale.setScalar(i === 0 ? 0.18 : 0.16);
     });
   }
   if (t >= 85.0 && t < 90.0) {
@@ -1077,17 +1130,17 @@ function updateSurfaceTools(t, w) {
     const k = windowK(t, 85.0, 89.6);
     const y = lerp(19.5, 33.0, k) + Math.sin(t * 3.4) * 1.6;
     const lat = Math.sin(t * 2.1) * 0.46;
-    placeSurfaceTool(tool, y, lat, 0.08, Math.sin(t * 3.6) * 0.55);
-    tool.scale.setScalar(0.32);
+    placeSurfaceTool(tool, y, lat, 0.008, Math.sin(t * 3.6) * 0.55);
+    tool.scale.setScalar(0.19);
   }
-  if (t >= 90.2 && t < 93.7) {
+  if (t >= 90.2 && t < 92.25) {
     const tool = CONSTRUCTION.paintBrush;
     tool.visible = true;
-    const k = windowK(t, 90.2, 93.5);
+    const k = windowK(t, 90.2, 91.9);
     const y = lerp(34.0, 5.5, k) + Math.sin(t * 4.0) * 0.8;
     const lat = Math.sin(t * 2.5) * 0.55;
-    placeSurfaceTool(tool, y, lat, 0.10, Math.sin(t * 5.1) * 0.26);
-    tool.scale.setScalar(0.30);
+    placeSurfaceTool(tool, y, lat, 0.010, Math.sin(t * 5.1) * 0.26);
+    tool.scale.setScalar(0.17);
     updatePigmentCloud(t, tool.position, 0xD6A13A, 0.72);
   }
 }
@@ -1127,7 +1180,18 @@ function wallSnakePoint(k, lane, out) {
   return out;
 }
 
+function updateWallLayerTiles(t){
+  const L=CONSTRUCTION.wallLayers;if(!L)return;
+  const pm=t<95.4?0:(t<99.35?easeInOut(windowK(t,95.4,99.35)):1);
+  const pw=t<99.35?0:(t<103.45?easeInOut(windowK(t,99.35,103.45)):1);
+  const pp=t<103.45?0:(t<108.6?easeInOut(windowK(t,103.45,108.6)):1);
+  const set=(arr,p)=>arr.forEach((m,i)=>{const q=clamp((p-m.userData.order+.13)/.24,0,1);m.visible=q>.005;m.scale.set(lerp(.82,1,easeOut(q)),lerp(.92,1,easeOut(q)),1);m.material.opacity=1;});
+  set(L.tiles.mud,pm);set(L.tiles.white,pw);set(L.tiles.mural,pp);
+  L.mud.visible=pm>.001;L.white.visible=pw>.001;L.mural.visible=pp>.001;
+}
+
 function updateWallConstruction(t) {
+  updateWallLayerTiles(t);
   const w=wallTransitionAt(t);
   for(const b of CONSTRUCTION.wallBrushes)b.visible=false;
   if(!w){clearWallTransition();return null;}
@@ -1143,7 +1207,7 @@ function updateWallConstruction(t) {
 
   if(CONSTRUCTION.wallBowls){
     CONSTRUCTION.wallBowls.visible=true;
-    CONSTRUCTION.wallBowls.position.set(-7.0,3.10,CAVE.zBack+3.2);
+    CONSTRUCTION.wallBowls.position.set(5.6,3.05,CAVE.zBack+3.4);
     CONSTRUCTION.wallBowls.rotation.y=.08;
   }
   if(CONSTRUCTION.wallStrokes){
@@ -1153,17 +1217,17 @@ function updateWallConstruction(t) {
       p.z=CAVE.zBack+.095;
       const band=Math.floor(clamp(kk,0,.999)*7),dir=band%2===0?1:-1;
       _cgQ.setFromEuler(new THREE.Euler(0,0,dir*(.03+Math.sin(i*1.7)*.025)));
-      const fade=clamp(1-i/mesh.count,0,1),sx=1.05+1.15*fade;
-      setInstance(mesh,i,p,_cgQ,_cgS.set(sx,.90+fade*.72,1));
+      const fade=clamp(1-i/mesh.count,0,1),sx=.34+.52*fade;
+      setInstance(mesh,i,p,_cgQ,_cgS.set(sx,.48+fade*.30,1));
     }
     mesh.instanceMatrix.needsUpdate=true;
   }
   if(CONSTRUCTION.wallFront){
     const front=CONSTRUCTION.wallFront;front.visible=true;front.material.color.setHex(color);
-    if(w.mode===1){front.position.set(0,lerp(1.5,39.5,w.k),CAVE.zBack+.16);front.scale.set(1,1,1);front.rotation.z=0;}
-    else if(w.mode===2){front.position.set(0,lerp(39.5,1.5,w.k),CAVE.zBack+.16);front.scale.set(1,1,1);front.rotation.z=0;}
+    if(w.mode===1){front.position.set(lerp(-10,10,.5+.5*Math.sin(t*.8)),lerp(1.5,39.5,w.k),CAVE.zBack+.16);front.scale.set(1,1,1);front.rotation.z=.02*Math.sin(t*2.2);}
+    else if(w.mode===2){front.position.set(lerp(10,-10,.5+.5*Math.sin(t*.9)),lerp(39.5,1.5,w.k),CAVE.zBack+.16);front.scale.set(1,1,1);front.rotation.z=.02*Math.sin(t*2.4);}
     else {const p=wallSnakePoint(w.k,0,_cgA);front.position.copy(p);front.position.z=CAVE.zBack+.16;front.scale.set(.18,1,1);front.rotation.z=(Math.floor(w.k*7)%2?-.035:.035);}
-    front.material.opacity=w.mode===3?.78:.96;
+    front.material.opacity=w.mode===3?.70:.72;
   }
   if(CONSTRUCTION.wallDrips){
     const mesh=CONSTRUCTION.wallDrips;mesh.material.color.setHex(color);mesh.material.opacity=w.label==='whitewash'?.50:.62;
@@ -1185,7 +1249,7 @@ function updateHairConstruction(t) {
   let mode = 'full', k = 1;
   if (t >= 15.2 && t < 51.6) { mode = 'carve'; k = CURVE_CARVE(t); }
   else if (t >= 56.0 && t < 90.2) { mode = 'hidden'; }
-  else if (t >= 90.2 && t < 93.6) { mode = 'paint'; k = windowK(t, 90.2, 93.6); }
+  else if (t >= 90.2 && t < 91.86) { mode = 'paint'; k = easeOut(windowK(t, 90.2, 91.86)); }
   hair.visible = mode !== 'hidden';
   for (const el of elements) {
     const y = el.userData.revealY || 30.2;
@@ -1208,7 +1272,7 @@ function updateHairConstruction(t) {
 
 function updateConstructionCrew(t, d, w, wall) {
   const workers = CONSTRUCTION.workers || [];
-  workers.forEach(o => { o.visible = false; });
+  workers.forEach(o => { o.visible = false; o.scale.setScalar(1); });
   const platform = CONSTRUCTION.workPlatform;
   if (platform) platform.visible = false;
 
@@ -1228,21 +1292,33 @@ function updateConstructionCrew(t, d, w, wall) {
   }
 
   if (d) {
-    // 顶拱和主窟下降开凿改用侧边作业位，避免吊篮横在镜头与石胎之间。
-    const usePlatform = d.stage === 'door' || d.stage === 'tunnel' || d.stage === 'lower';
+    /* 小窟门直接使用既有窄台，只留一个缩小的工人，避免现代吊篮/脚手架盒子。 */
+    if (d.stage === 'door') {
+      const L = CONSTRUCTION.walkway && CONSTRUCTION.walkway.userData.levels && CONSTRUCTION.walkway.userData.levels[2];
+      if (L && workers[0]) {
+        const W = workers[0]; W.visible = true; W.scale.setScalar(0.72);
+        W.position.set(-2.35, L.y + 0.12, L.z1 - 0.62); W.rotation.y = Math.PI;
+        poseWorker(W, (t - d.start) * 1.35, 'hammer');
+      }
+      return;
+    }
+    /* 甬道只展示贴壁工具和粉尘；不在小入口前额外搭大型吊架。 */
+    if (d.stage === 'tunnel') return;
+
+    const usePlatform = d.stage === 'lower';
     if (platform) {
       platform.visible = usePlatform;
       platform.position.set(d.center.x, d.center.y - 2.35, d.center.z + (d.normal.z > 0.5 ? 3.0 : 1.2));
       platform.rotation.set(0, 0, d.normal.y > 0.5 ? 0.10 : 0);
-      platform.scale.setScalar(0.86);
+      platform.scale.setScalar(0.72);
     }
     for (let i = 0; i < Math.min(2, workers.length); i++) {
-      const W = workers[i]; W.visible = true;
+      const W = workers[i]; W.visible = true; W.scale.setScalar(0.76);
       if (usePlatform) {
-        W.position.set(d.center.x + (i - 0.5) * 1.75, d.center.y - 2.18, d.center.z + (d.normal.z > 0.5 ? 3.2 : 1.4));
+        W.position.set(d.center.x + (i - 0.5) * 1.55, d.center.y - 2.18, d.center.z + (d.normal.z > 0.5 ? 3.2 : 1.4));
       } else {
         const side = i === 0 ? -1 : 1;
-        W.position.set(d.center.x + side * (3.0 + Math.abs(d.center.x) * 0.10), d.center.y - 1.35, d.center.z + 1.0);
+        W.position.set(d.center.x + side * (2.4 + Math.abs(d.center.x) * 0.07), d.center.y - 1.20, d.center.z + 0.8);
       }
       W.rotation.y = d.normal.z > 0.5 ? Math.PI : (i % 2 ? 1.1 : -1.1);
       poseWorker(W, (t - d.start) * 1.25 + i * 0.27, 'hammer');
