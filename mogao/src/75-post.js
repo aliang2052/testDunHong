@@ -21,7 +21,7 @@ function initPostFX(renderer) {
         resolution:{value:new THREE.Vector2(1,1)},
         cameraNear:{value:0.5}, cameraFar:{value:1400},
         focusDistance:{value:70}, focusRange:{value:80},
-        grain:{value:0}, exposureLift:{value:1.0},
+        grain:{value:0}, exposureLift:{value:1.045},
       },
       vertexShader:`varying vec2 vUv; void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}`,
       fragmentShader:`
@@ -50,15 +50,14 @@ function initPostFX(renderer) {
           float lum=dot(c,vec3(.2126,.7152,.0722));
           c=mix(c*vec3(.985,1.00,1.015),c*vec3(1.015,1.005,.985),smoothstep(.23,.78,lum));
           float shadowLift=1.0-smoothstep(.055,.42,lum);
-          c+=shadowLift*vec3(.026,.029,.031);
-          c=pow(max(c,vec3(0.0)),vec3(.985));
-          c=(c-0.5)*1.035+0.5;
+          c+=shadowLift*vec3(.045,.042,.038);
+          c=pow(max(c,vec3(0.0)),vec3(.94));
+          c=(c-0.5)*1.025+0.5;
           c*=exposureLift;
           float vig=1.0-smoothstep(.38,.90,distance(vUv,vec2(.5)));
-          c*=mix(.985,1.0,vig);
-          c+=(hash(gl_FragCoord.xy+grain)-.5)/255.0*1.25;
+          c*=mix(.96,1.0,vig);
+          c+=(hash(gl_FragCoord.xy+grain)-.5)/255.0*1.9;
           gl_FragColor=vec4(c,1.0);
-          #include <colorspace_fragment>
         }`,
     });
     const quad=new THREE.Mesh(new THREE.PlaneGeometry(2,2),mat);

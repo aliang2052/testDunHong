@@ -4,21 +4,20 @@
 
 const APP = {
   time: 0,
-  playing: false,
+  playing: true,
   speed: 1,
   free: false,
   renderSuspended: false,
-  qaNoRender: false,
   quality: 1,
   dirty: true,
   currentStep: -1,
   playUntil: null,
   playFromChapter: -1,
-  baseExposure: 1.06,
+  baseExposure: 1.18,
   focusDistance: 70,
 };
 
-let renderer, scene, camera, freeCam, debris, tower, walkway, decorGroup, forecourt, clock;
+let renderer, scene, camera, freeCam, debris, tower, walkway, decorGroup, clock;
 let elSub, elTime, elBar, elBarFill, elChapters, elPlay, elLoading, elSvg, elHud;
 let elStepNo, elStepTitle, elStepAction, elStepFill;
 let chapterButtons = [];
@@ -31,8 +30,7 @@ function init() {
     alpha: false,
     powerPreference: 'high-performance',
   });
-  const pixelCap = (typeof innerWidth !== 'undefined' && innerWidth <= 680) ? 1.0 : 1.5;
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, pixelCap));
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = APP.baseExposure;
@@ -42,51 +40,49 @@ function init() {
 
   scene = new THREE.Scene();
   APP.skyBackground = TEX.sky.map;
-  APP.skyFogColor = new THREE.Color(0xC7BBA4);
-  APP.sectionBackground = new THREE.Color(0x655747);
-  APP.sectionFogColor = new THREE.Color(0x7C6A57);
+  APP.skyFogColor = new THREE.Color(0xB8B1A4);
+  APP.sectionBackground = new THREE.Color(0x574234);
+  APP.sectionFogColor = new THREE.Color(0x6A5140);
   scene.background = APP.skyBackground;
   scene.environment = null;
-  scene.fog = new THREE.Fog(APP.skyFogColor, 245, 820);
+  scene.fog = new THREE.Fog(APP.skyFogColor, 280, 940);
 
   camera = new THREE.PerspectiveCamera(35, 16 / 9, 0.42, 1400);
   freeCam = new THREE.PerspectiveCamera(45, 16 / 9, 0.42, 1400);
 
   /* ---------------- 电影化日照 + 洞窟反弹光 ---------------- */
-  scene.add(new THREE.AmbientLight(0xFFF8EE, 0.32));
-  scene.add(new THREE.HemisphereLight(0xCFE5EA, 0x9A795D, 0.62));
+  scene.add(new THREE.AmbientLight(0xFFF4E8, 0.43));
+  scene.add(new THREE.HemisphereLight(0xD8E0E2, 0x8A684D, 0.84));
 
-  const sun = new THREE.DirectionalLight(0xFFF2D8, 2.55);
+  const sun = new THREE.DirectionalLight(0xFFF0D2, 2.42);
   sun.position.set(92, 118, 106); sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
   Object.assign(sun.shadow.camera,{left:-100,right:100,top:92,bottom:-55,near:18,far:410});
   sun.shadow.bias=-0.0008; sun.shadow.normalBias=0.38;
   sun.target.position.set(0,20,2); scene.add(sun,sun.target);
 
-  const skyFill = new THREE.DirectionalLight(0xD8E8EC, 0.45);
+  const skyFill = new THREE.DirectionalLight(0xD6E0E4, 0.66);
   skyFill.position.set(-78,54,128); skyFill.target.position.set(0,23,0); scene.add(skyFill,skyFill.target);
-  const sandBounce = new THREE.DirectionalLight(0xDDBB96, 0.26);
+  const sandBounce = new THREE.DirectionalLight(0xE0B080, 0.34);
   sandBounce.position.set(0,-18,86); sandBounce.target.position.set(0,18,0); scene.add(sandBounce,sandBounce.target);
-  const rim = new THREE.DirectionalLight(0xDCE2DF, 0.48);
+  const rim = new THREE.DirectionalLight(0xE5CFAC, 0.58);
   rim.position.set(-82,70,-56); rim.target.position.set(0,26,0); scene.add(rim,rim.target);
 
-  const inner = new THREE.PointLight(0xF6DEC3, 62, 132, 1.62);
+  const inner = new THREE.PointLight(0xF4D3AA, 76, 125, 1.62);
   inner.position.set(0,25,18); scene.add(inner); APP.innerLight=inner;
-  const faceKey = new THREE.SpotLight(0xFFF1E2, 96, 118, Math.PI/4.6,0.72,1.55);
+  const faceKey = new THREE.SpotLight(0xFBEAD8, 116, 110, Math.PI/4.9,0.68,1.65);
   faceKey.position.set(18,36,44); faceKey.target.position.set(0,29.6,-0.5); scene.add(faceKey,faceKey.target);
-  const caveRim = new THREE.SpotLight(0xC9DFE7, 62, 122, Math.PI/4.2,0.76,1.68);
+  const caveRim = new THREE.SpotLight(0xC5D7DE, 84, 115, Math.PI/4.4,0.74,1.75);
   caveRim.position.set(-28,32,-15); caveRim.target.position.set(0,23,2); scene.add(caveRim,caveRim.target);
-  const workFill = new THREE.PointLight(0xFFE2C6, 64, 112, 1.55);
+  const workFill = new THREE.PointLight(0xFFD8AE, 78, 104, 1.55);
   workFill.position.set(-8, 27, 37); scene.add(workFill); APP.workFill = workFill;
-  const wallKey = new THREE.PointLight(0xFFF0D7, 0, 112, 1.28);
+  const wallKey = new THREE.PointLight(0xFFE1BB, 0, 96, 1.28);
   wallKey.position.set(0, 23, 12); scene.add(wallKey); APP.wallKey = wallKey;
-  const bodyFill = new THREE.SpotLight(0xF7E7D6, 0, 120, Math.PI/3.2, 0.82, 1.42);
+  const bodyFill = new THREE.SpotLight(0xF3D7B8, 0, 112, Math.PI/3.4, 0.78, 1.45);
   bodyFill.position.set(-18, 25, 50); bodyFill.target.position.set(0, 22, 0); scene.add(bodyFill, bodyFill.target); APP.bodyFill = bodyFill;
-  const lowerFill = new THREE.PointLight(0xFFE4C5, 0, 96, 1.38);
-  lowerFill.position.set(8, 11, 34); scene.add(lowerFill); APP.lowerFill = lowerFill;
-  const towerKey = new THREE.SpotLight(0xFFE9D4, 0, 285, Math.PI/3.8, 0.76, 1.30);
+  const towerKey = new THREE.SpotLight(0xFFE1C2, 0, 260, Math.PI/4.0, 0.72, 1.35);
   towerKey.position.set(22, 45, 148); towerKey.target.position.set(0, 24, CLIFF_Z + 10); scene.add(towerKey, towerKey.target); APP.towerKey = towerKey;
-  const cliffLift = new THREE.DirectionalLight(0xE3D6C6, 0.46);
+  const cliffLift = new THREE.DirectionalLight(0xE8CDB0, 0.42);
   cliffLift.position.set(-36, 48, 136); cliffLift.target.position.set(0, 24, CLIFF_Z); scene.add(cliffLift, cliffLift.target);
   APP.faceKey = faceKey; APP.caveRim = caveRim;
 
@@ -99,16 +95,12 @@ function init() {
   buildPegs(buddha);
 
   tower = buildNineStorey();
-  tower.position.set(0, 0, CLIFF_Z + 2.4);
-  tower.scale.set(1.42, 1.55, 1.38);
+  tower.position.set(0, 0, CLIFF_Z + 5.2);
+  tower.scale.setScalar(1.10);
   scene.add(tower);
 
   walkway = buildWalkway();
   scene.add(walkway);
-
-  forecourt = buildForecourt();
-  scene.add(forecourt);
-  WORLD.forecourt = forecourt;
 
   decorGroup = new THREE.Group();
   decorGroup.name = 'ExteriorDecor';
@@ -116,10 +108,10 @@ function init() {
   {
     // 只保留疏朗的白塔、枯树和风蚀石，去掉基线里现代园林式花坛与对称寺院。
     const st = [
-      [-34,CLIFF_Z+72,1.05],[42,CLIFF_Z+82,0.92],[-72,CLIFF_Z+110,0.82],[70,CLIFF_Z+122,0.78],
+      [-72,CLIFF_Z+96,1.20],[-43,CLIFF_Z+132,0.82],[70,CLIFF_Z+100,1.10],[46,CLIFF_Z+146,0.78],
     ];
     st.forEach(([x,z,k])=>{const o=buildStupa(k);o.position.set(x,0,z);decorGroup.add(o);});
-    for (const [x,z,h,seed] of [[-40,72,7.8,2],[48,80,7.2,3],[-72,108,6.4,4],[70,116,6.0,5],[-8,150,5.2,6]]) {
+    for (const [x,z,h,seed] of [[-77,92,7.5,2],[-48,126,6.4,3],[74,95,7.0,4],[50,138,5.6,5],[-8,164,5.2,6]]) {
       const tr=buildTree(h,seed);tr.position.set(x,0,CLIFF_Z+z);tr.scale.set(1,0.82,1);decorGroup.add(tr);
     }
   }
@@ -129,8 +121,6 @@ function init() {
   debris.mesh.visible = false;
   buildProps(scene);
   buildConstruction(scene, tower, walkway);
-  buildExhibitStages(scene);
-  installCinematicEnhancements(scene, tower, walkway);
 
   /* ---------------- UI ---------------- */
   elSub = document.getElementById('sub');
@@ -187,17 +177,16 @@ function onResize() {
 function applySculptState(t, carveY) {
   let phase = CURVE_PHASE(t);
   let morph = CURVE_MORPH(t);
-  const revealK = easeInOut(windowK(t, 36.2, 40.8));
   const opts = {
     time: t,
-    revealOn: t >= 36.2 && t < 40.8,
-    revealY: lerp(BUDDHA_H + 2.0, -2.0, revealK),
+    revealOn: t >= 31.0 && t < 51.9,
+    revealY: carveY - 1.10,
   };
 
   const w = activeMudWindow(t);
   if (w) {
     const dir = w.dir || 1;
-    const k = w.a >= 90 ? easeOut(w.k) : easeInOut(w.k);
+    const k = easeInOut(w.k);
     const front = dir > 0
       ? lerp(-3.0, BUDDHA_H + 3.0, k)
       : lerp(BUDDHA_H + 3.0, -3.0, k);
@@ -206,7 +195,7 @@ function applySculptState(t, carveY) {
     Object.assign(opts, {
       spread: true,
       spreadY: front,
-      spreadSoft: dir < 0 ? (w.a >= 90 ? 4.10 : 1.70) : 1.28,
+      spreadSoft: dir < 0 ? (w.a >= 90 ? 2.65 : 1.70) : 1.28,
       spreadDir: dir,
       phaseFrom: w.fromP,
       phaseTo: w.toP,
@@ -227,16 +216,10 @@ function applyCarveState(t) {
   if (t < 15.2 || t >= 27.0) doorProgress = 1;
   else if (t >= 24.55) doorProgress = easeOut(windowK(t, 24.55, 27.0));
   setDoorProgress(doorProgress);
-  /* 小门开凿时先显示贴在崖面后的暗口；甬道阶段再显露真实墙厚，避免悬浮的拱形木板感。 */
-  const doorFaceVisible = t >= 24.50 && t < 31.0 && doorProgress > 0.035;
-  const tunnelVisible = t >= 26.65 && t < 31.0 && doorProgress > 0.82;
-  if (WORLD.doorTunnel) WORLD.doorTunnel.visible = tunnelVisible;
-  if (WORLD.doorBack) {
-    WORLD.doorBack.visible = doorFaceVisible;
-    WORLD.doorBack.position.z = t < 26.65
-      ? CLIFF_Z - 0.82
-      : lerp(CLIFF_Z - 0.82, CLIFF_Z - 17.85, easeInOut(windowK(t, 26.65, 29.7)));
-  }
+  // 这两块只是窟门开凿时的局部施工壳体。洞窟完成后继续显示会在佛像背后形成黑色矩形。
+  const doorShellVisible = t >= 24.50 && t < 31.0 && doorProgress > 0.035;
+  if (WORLD.doorTunnel) WORLD.doorTunnel.visible = doorShellVisible;
+  if (WORLD.doorBack) WORLD.doorBack.visible = doorShellVisible;
 
   const complete = t < 15.2 || t >= 51.6;
   let lower1 = complete ? 1 : 0;
@@ -253,44 +236,18 @@ function applyCarveState(t) {
 
 function applyState(t, dt) {
   const carve = applyCarveState(t);
-  const excavationOn = t >= 26.7 && t < 51.6;
-  /*
-    开凿阶段始终保留完整砂岩实体，洞腔由 carve shader 从真实崖体中挖出。
-    禁用旧的开放式“展箱”断面；甬道、洞顶和下降施工面通过洞口直接观察。
-  */
-  if (WORLD.cliffBody) WORLD.cliffBody.visible = true;
-  if (WORLD.cliffFace) WORLD.cliffFace.visible = true;
-  if (WORLD.dune) WORLD.dune.visible = true;
-  if (WORLD.sectionFrame) WORLD.sectionFrame.visible = false;
-  if (WORLD.excavationCeiling) WORLD.excavationCeiling.visible = false;
-  if (WORLD.caveBackdrop) WORLD.caveBackdrop.visible = excavationOn;
-  if (WORLD.excavationVoid) WORLD.excavationVoid.visible = excavationOn;
-  if (WORLD.excavationRim) {
-    /* 顶板初凿先直接读取真实洞口；下降开凿后再以崩蚀岩缘强化尺度。 */
-    const rimOn = t >= 36.4 && t < 51.6;
-    WORLD.excavationRim.visible = rimOn;
-    if (rimOn && WORLD.excavationRim.userData.bottom) {
-      WORLD.excavationRim.userData.bottom.position.y = clamp(carve.carveY - 1.5, 1.0, 37.8);
-    }
-  }
-  if (WORLD.arch) WORLD.arch.visible = !excavationOn && !(t >= 110.6);
-  if (WORLD.towerCliffWings) WORLD.towerCliffWings.visible = t < 15.2 || t >= 110.6;
-  setSectionX(99999);
-  if (WORLD.sideWalls) {
-    WORLD.sideWalls.left.visible = true;
-    WORLD.sideWalls.right.visible = true;
-  }
-  scene.background = APP.skyBackground;
-  scene.fog.color.copy(APP.skyFogColor);
+  const sectionOn = t >= 26.7 && t < 51.6;
+  if (WORLD.cliffBody) WORLD.cliffBody.visible = !sectionOn;
+  if (WORLD.dune) WORLD.dune.visible = !sectionOn;
+  scene.background = sectionOn ? APP.sectionBackground : APP.skyBackground;
+  scene.fog.color.copy(sectionOn ? APP.sectionFogColor : APP.skyFogColor);
   const sculpt = applySculptState(t, carve.carveY);
 
   /* 佛像在开凿阶段由高度阈值从石胎中显露，不做整尊跳变。 */
-  const excavationReveal = t >= 36.2 && t < 51.9;
-  const wallFocus = 1.0;
-  const towerClosure = t >= 111.4 ? 1 - easeInOut(windowK(t, 111.4, 114.1)) : 1;
-  const preCoreExcavation = t >= 30.2 && t < 36.2;
-  const bop = (preCoreExcavation ? 0 : (excavationReveal ? 1 : CURVE_BOPA(t))) * wallFocus * towerClosure;
-  BUDDHA.group.visible = bop > 0.004;
+  const excavationReveal = t >= 31.0 && t < 51.9;
+  const wallFocus = (t >= 98.7 && t < 108.6) ? lerp(0.38, 0.20, smoothstep(99.0, 104.0, t)) : 1.0;
+  const bop = (excavationReveal ? 1 : CURVE_BOPA(t)) * wallFocus;
+  BUDDHA.group.visible = bop > 0.004 && !(t >= 98.7 && t < 108.6);
   for (const m of STAGE_MATS) {
     if (bop >= 0.999) {
       m.transparent = false; m.opacity = 1; m.depthWrite = true;
@@ -298,44 +255,39 @@ function applyState(t, dt) {
       m.transparent = true; m.opacity = bop; m.depthWrite = bop > 0.6;
     }
   }
-  const detailOpacity = CURVE_DETAIL(t) * bop;
+  const detailOpacity = CURVE_DETAIL(t) * bop * 0.76;
   for (const m of BUDDHA.detailMats) m.opacity = detailOpacity;
-  const haloOpacity = CURVE_HALO(t) * bop * 0.90;
+  const haloOpacity = CURVE_HALO(t) * bop * 0.78;
   for (const m of BUDDHA.haloMats) m.opacity = haloOpacity;
 
   // 螺发的逐颗显露/上色由施工系统接管，避免整组缩放。
   if (BUDDHA.parts.hair) BUDDHA.parts.hair.scale.setScalar(1);
-  if (BUDDHA.parts.robeRelief) BUDDHA.parts.robeRelief.visible = t < 15.2 || t >= 56.0;
 
   setWallPhase(CURVE_WALL(t));
   clearWallTransition();
 
   tower.visible = true;
-  walkway.visible = t >= 19.15 && t < 30.2;
+  walkway.visible = t >= 19.15 && t < 56.25;
   if (decorGroup) decorGroup.visible = t < 26.6 || t >= 108.4;
-  if (forecourt) forecourt.visible = t < 15.2 || t >= 108.4;
 
   const caveOpen = carve.complete
     ? 1
     : clamp((CAVE.yTop + 1 - carve.carveY) / (CAVE.yTop + 1), 0, 1);
-  APP.innerLight.intensity = lerp(76, 158, easeOut(caveOpen));
-  if (APP.workFill) APP.workFill.intensity = (t >= 26.7 && t < 51.6) ? 138 : (t >= 24.2 && t < 95.4 ? 96 : 44);
-  if (APP.faceKey) APP.faceKey.intensity = t >= 56.0 ? (t < 95.4 ? (t>=83.0&&t<90.2?82:94) : 92) : 68;
-  if (APP.bodyFill) APP.bodyFill.intensity = (t >= 56.0 && t < 95.4) ? (t>=83.0&&t<90.2?72:90) : ((t < 15.2 || t >= 108.6) ? 52 : (t >= 98.7 && t < 108.6 ? 48 : 0));
-  if (APP.lowerFill) APP.lowerFill.intensity = (t >= 51.6 && t < 95.4) ? (t>=83.0&&t<90.2?78:96) : ((t < 15.2 || t >= 108.6) ? 34 : 0);
-  if (APP.wallKey) APP.wallKey.intensity = (t >= 98.7 && t < 108.6) ? 84 : 0;
-  if (APP.towerKey) APP.towerKey.intensity = (t < 15.2 || t >= 110.6) ? 176 : 0;
+  APP.innerLight.intensity = lerp(84, 188, easeOut(caveOpen));
+  if (APP.workFill) APP.workFill.intensity = t >= 24.2 && t < 95.4 ? 96 : 50;
+  if (APP.faceKey) APP.faceKey.intensity = t >= 56.0 ? (t < 95.4 ? 136 : 108) : 76;
+  if (APP.bodyFill) APP.bodyFill.intensity = (t >= 56.0 && t < 95.4) ? 126 : ((t < 15.2 || t >= 108.6) ? 54 : 0);
+  if (APP.wallKey) APP.wallKey.intensity = (t >= 98.7 && t < 108.6) ? 112 : 0;
+  if (APP.towerKey) APP.towerKey.intensity = (t < 15.2 || t >= 110.6) ? 168 : 0;
   const finalCliffLift = (t < 15.2 || t >= 110.6);
   for (const cliffMat of [WORLD.cliffMat, WORLD.cliffBody && WORLD.cliffBody.material]) {
     if (!cliffMat || !cliffMat.emissive) continue;
-    cliffMat.emissive.setHex(finalCliffLift ? 0x5E5A52 : 0x000000);
-    cliffMat.emissiveIntensity = finalCliffLift ? 0.10 : 0;
+    cliffMat.emissive.setHex(finalCliffLift ? 0x755B43 : 0x000000);
+    cliffMat.emissiveIntensity = finalCliffLift ? 0.52 : 0;
   }
   WORLD.plinth.visible = t < 15.2 || t >= 51.55;
 
   const construction = updateConstruction(t);
-  updateExhibitStages(t, carve);
-  updateCinematicEnhancements(t);
   APP.lastVisualState = { t, ...sculpt, ...carve, construction };
   return APP.lastVisualState;
 }
@@ -344,45 +296,26 @@ function applyState(t, dt) {
    相机 / 单帧渲染
    ============================================================ */
 function exposureBoostAt(t) {
-  if (t >= 87.2 && t < 90.2) return -0.15;
-  if (t >= 83.0 && t < 90.2) return -0.045;
-  if (t >= 56.0 && t < 95.4) return 0.035;
-  if (t >= 110.6) return 0.12;
-  if (t < 15.2) return 0.06;
-  if (t >= 15.2 && t < 26.7) return 0.04;
-  if (t >= 26.7 && t < 51.6) return 0.18;
-  if (t >= 98.7 && t < 108.6) return 0.045;
-  return 0.04;
+  if (t >= 56.0 && t < 95.4) return 0.23;
+  if (t >= 110.6) return 0.20;
+  if (t < 15.2) return 0.17;
+  if (t >= 15.2 && t < 26.7) return 0.12;
+  if (t >= 26.7 && t < 51.6) return 0.10;
+  if (t >= 98.7 && t < 108.6) return -0.14;
+  return 0.08;
 }
 function setScriptedCamera(t) {
   const s = shotAt(t);
   const fb = constructionCameraFeedback();
-  const look = new THREE.Vector3(s.lx + fb.x * 0.14, s.ly + fb.y * 0.10, s.lz);
-  const pos = new THREE.Vector3(s.px + fb.x, s.py + fb.y, s.pz + fb.z);
-  /* The reference-led relief's face sits lower than the legacy procedural head.  Keep the
-     polishing close-up on the eyes, robe and moving surface tools instead of the halo rim. */
-  const polishCloseup = t >= 87.2 && t < 90.2;
-  if (polishCloseup) {
-    const k = easeInOut(clamp((t - 87.2) / 3.0, 0, 1));
-    pos.set(lerp(6.5,-4.5,k),29.6,32.0);
-    look.set(0,28.3,10.2);
-  }
-  /* Portrait browser windows still host a 16:9 canvas, but the stage card and controls reduce
-     usable height. Pull back opening/final establishing shots so the complete tower remains readable. */
-  const narrow = typeof innerWidth !== 'undefined' && (innerWidth / Math.max(1, innerHeight) < 1.05 || innerWidth <= 680);
-  if (narrow && (t < 15.2 || t >= 108.6)) {
-    const delta = pos.clone().sub(look);
-    pos.copy(look).addScaledVector(delta, 1.42);
-  }
-  camera.position.copy(pos);
-  camera.lookAt(look);
-  const fov = clamp((polishCloseup ? 29.0 : s.fov) - fb.fov + (narrow && (t < 15.2 || t >= 108.6) ? 3.2 : 0), 22, 60);
+  camera.position.set(s.px + fb.x, s.py + fb.y, s.pz + fb.z);
+  camera.lookAt(s.lx + fb.x * 0.14, s.ly + fb.y * 0.10, s.lz);
+  const fov = clamp(s.fov - fb.fov, 22, 58);
   if (Math.abs(camera.fov - fov) > 0.001) {
     camera.fov = fov;
     camera.updateProjectionMatrix();
   }
   renderer.toneMappingExposure = APP.baseExposure + exposureBoostAt(t) + fb.exposure;
-  APP.focusDistance = Math.max(4, camera.position.distanceTo(look));
+  APP.focusDistance = Math.max(4, camera.position.distanceTo(new THREE.Vector3(s.lx,s.ly,s.lz)));
 }
 
 function renderFrame(t, dt) {
@@ -502,7 +435,7 @@ function buildChapterUI() {
       APP.playing = true;
       APP.dirty = true;
       elPlay.textContent = '⏸';
-      if (!APP.qaNoRender) renderFrame(APP.time, 0);
+      renderFrame(APP.time, 0);
     };
     elChapters.appendChild(b);
     chapterButtons.push(b);
@@ -536,7 +469,7 @@ function seekFromPointer(ev) {
   APP.playUntil = null;
   APP.playFromChapter = -1;
   APP.dirty = true;
-  if (!APP.qaNoRender) renderFrame(APP.time, 0);
+  renderFrame(APP.time, 0);
 }
 
 function bindUI() {
@@ -637,10 +570,6 @@ function visualState() {
       z: (APP.free ? freeCam : camera).position.z,
       fov: (APP.free ? freeCam : camera).fov,
     },
-    freeOrbit: {
-      yaw: FREE.yaw, pitch: FREE.pitch, dist: FREE.dist,
-      target: { x: FREE.target.x, y: FREE.target.y, z: FREE.target.z },
-    },
   };
 }
 
@@ -683,7 +612,7 @@ function installDebugAPI() {
     },
     tick(seconds) {
       const advanced = advancePlayback(Number(seconds) || 0);
-      if (!APP.qaNoRender) renderFrame(APP.time, advanced ? Number(seconds) || 0 : 0);
+      renderFrame(APP.time, advanced ? Number(seconds) || 0 : 0);
       return visualState();
     },
     setSpeed(v) {
@@ -693,7 +622,6 @@ function installDebugAPI() {
       return APP.speed;
     },
     setFree(on) { setFreeMode(on); renderFrame(APP.time, 0); return APP.free; },
-    setQANoRender(on) { APP.qaNoRender = !!on; return APP.qaNoRender; },
     setTestMode(on) {
       APP.renderSuspended = !!on;
       if (APP.renderSuspended) { APP.playing = false; elPlay.textContent = '▶'; }

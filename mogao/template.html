@@ -7,18 +7,16 @@
 <title>敦煌莫高窟第96窟 · 实时建造全过程</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  :root{color-scheme:dark;--gold:#d9a85e;--panel:rgba(8,10,12,.82);--line:rgba(255,255,255,.12);--ink:#070807}
+  :root{color-scheme:dark;--gold:#d7a257;--panel:rgba(12,14,17,.78);--line:rgba(255,255,255,.12)}
   html,body{width:100%;height:100%;overflow:hidden;background:#050607;color:#eee7da;
     font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
     -webkit-font-smoothing:antialiased}
   #app,#stage{position:fixed;inset:0}
   #stage{display:flex;align-items:center;justify-content:center;overflow:hidden;
-    background:
-      radial-gradient(ellipse at 50% 42%,rgba(126,91,49,.16) 0%,transparent 42%),
-      radial-gradient(ellipse at 52% 35%,#1a1a17 0%,#0b0c0c 48%,#030404 100%)}
+    background:radial-gradient(ellipse at 52% 35%,#20201c 0%,#0c0d0e 48%,#040506 100%)}
   #stage>*{position:absolute}
   canvas#c{display:block;max-width:100%;max-height:100%;background:#08090a;
-    box-shadow:0 30px 110px rgba(0,0,0,.78),0 0 0 1px rgba(213,168,93,.12)}
+    box-shadow:0 28px 90px rgba(0,0,0,.72)}
   svg#anno{pointer-events:none;overflow:visible}
   #hud{pointer-events:none;display:flex;align-items:flex-end;justify-content:center;padding:0 10% 86px}
   #sub{max-width:72%;padding:7px 17px;border-radius:8px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.48),transparent);
@@ -26,12 +24,12 @@
     text-shadow:0 2px 5px #000,0 0 18px rgba(0,0,0,.8)}
   #hint{left:18px;top:18px;padding:9px 12px;border:1px solid rgba(255,255,255,.09);border-radius:8px;
     background:rgba(7,9,11,.56);backdrop-filter:blur(9px);font-size:11px;line-height:1.65;color:#a8adb2;pointer-events:none}
-  #stepcard{right:18px;top:18px;width:min(340px,38vw);padding:13px 15px;border:1px solid rgba(224,177,96,.30);border-radius:4px 14px 4px 14px;
-    background:linear-gradient(145deg,rgba(10,12,13,.92),rgba(43,31,18,.72));backdrop-filter:blur(12px);
+  #stepcard{right:18px;top:18px;width:min(340px,38vw);padding:13px 15px;border:1px solid rgba(224,177,96,.28);border-radius:11px;
+    background:linear-gradient(145deg,rgba(15,17,19,.88),rgba(34,26,17,.68));backdrop-filter:blur(10px);
     box-shadow:0 15px 42px rgba(0,0,0,.34);pointer-events:none}
   #stepnum{float:left;margin-right:11px;color:#e7b66a;font-size:23px;font-weight:900;line-height:1}
   #stepcopy{overflow:hidden}
-  #steptitle{display:block;color:#fff6e8;font-family:"Songti SC","STSong",serif;font-size:15px;font-weight:800;letter-spacing:.08em}
+  #steptitle{display:block;color:#fff6e8;font-size:14px;font-weight:800;letter-spacing:.04em}
   #stepaction{display:block;margin-top:4px;color:#b8bdc2;font-size:11px;line-height:1.45}
   #stepprogress{display:block;height:3px;margin-top:9px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}
   #stepfill{display:block;width:0;height:100%;background:linear-gradient(90deg,#a96628,#f0c16f);box-shadow:0 0 10px rgba(238,175,77,.7)}
@@ -84,7 +82,7 @@
       <span id="stepnum">01</span><div id="stepcopy"><b id="steptitle">九层楼揭幕</b><span id="stepaction">木构逐层移开，显露彩绘大佛</span><i id="stepprogress"><u id="stepfill"></u></i></div>
     </div>
     <div id="ui">
-      <button id="play">▶</button><div id="bar"><div id="barfill"></div></div><span id="time">0:00 / 1:56</span>
+      <button id="play">⏸</button><div id="bar"><div id="barfill"></div></div><span id="time">0:00 / 1:56</span>
       <select id="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select>
       <button id="freebtn">自由视角</button><button id="hidebtn">纯净模式</button>
     </div>

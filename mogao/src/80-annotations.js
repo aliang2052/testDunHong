@@ -152,10 +152,33 @@ function updateAnnotations(t, cam, w, h) {
     E.rulerText.setAttribute('y', (top.y + bot.y) * 0.5);
   }
 
-  /* Round6：拱顶完全由实时岩体、施工前沿和碎屑表达。
-     旧红色整面填充会把洞腔压成示意图，故不再覆盖真实几何。 */
+  if (t >= 32.0 && t < 36.9) {
+    const o = fadeWin(t, 32.0, 36.9, 0.45) * 0.28;
+    setOp(E.hi, o);
+    const pts = [], N = 26;
+    for (let i = 0; i <= N; i++) {
+      const a = Math.PI * (i / N);
+      pts.push(P(-Math.cos(a) * (CAVE.x1-CAVE.x0)/2, CAVE.yArch + Math.sin(a)*(CAVE.yTop-CAVE.yArch), CAVE.zBack + 1.0));
+    }
+    for (let i = N; i >= 0; i--) {
+      const a = Math.PI * (i / N);
+      pts.push(P(-Math.cos(a) * (CAVE.x1-CAVE.x0)/2, CAVE.yArch + Math.sin(a)*(CAVE.yTop-CAVE.yArch), CAVE.zFront - 0.8));
+    }
+    E.hi.setAttribute('d', 'M ' + pts.map(p => `${p.x} ${p.y}`).join(' L ') + ' Z');
+  }
 
-  /* 石胎轮廓由真实三维岩体与施工前沿表达，不叠加二维示意线。 */
+  if (t >= 39.4 && t < 43.4) {
+    const o = fadeWin(t, 39.4, 43.4, 0.4) * 0.40;
+    setOp(E.outline, o);
+    const pts = [];
+    for (let i = 0; i <= 32; i++) {
+      const y = lerp(17.8, 35.5, i/32); const q = P(ENV_RX(y)*0.63, y, ENV_RZ(y)*0.72); pts.push(`${q.x} ${q.y}`);
+    }
+    for (let i = 32; i >= 0; i--) {
+      const y = lerp(17.8, 35.5, i/32); const q = P(-ENV_RX(y)*0.63, y, ENV_RZ(y)*0.72); pts.push(`${q.x} ${q.y}`);
+    }
+    E.outline.setAttribute('d', 'M ' + pts.join(' L ') + ' Z');
+  }
 }
 
 /* ============================================================

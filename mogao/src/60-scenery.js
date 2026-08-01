@@ -166,68 +166,125 @@ function makeRoof(w, d, h, over, upturn = 1.0, innerScale = 0.30) {
   return g;
 }
 
-function addDougongBand(G,w,d,y,mat){
-  const n=Math.max(5,Math.round(w/3.2));
-  for(let i=0;i<n;i++){
-    const x=lerp(-w*.48,w*.48,i/Math.max(1,n-1));
-    const bracket=new THREE.Group();
-    const arm=new THREE.Mesh(new THREE.BoxGeometry(.72,.18,1.15),mat);arm.position.set(0,.08,.22);bracket.add(arm);
-    const block=new THREE.Mesh(new THREE.BoxGeometry(.38,.34,.52),mat);block.position.set(0,-.12,-.10);bracket.add(block);
-    const arm2=new THREE.Mesh(new THREE.BoxGeometry(1.08,.15,.42),mat);arm2.position.set(0,.28,.42);bracket.add(arm2);
-    bracket.position.set(x,y,d*.38);G.add(bracket);
-  }
-}
-
 /* ------------------------------------------------------------
    九层楼（莫高窟标志性木构，参考 t114）
    每层作为独立 Group，便于「拆解 / 组装」动画
    ------------------------------------------------------------ */
 function buildNineStorey() {
-  const root=new THREE.Group();root.name='NineStoreyFacade';
-  const woodMat=new THREE.MeshStandardMaterial({map:TEX.woodRed.map,normalMap:TEX.woodRed.normal,color:0xB34F3F,roughness:.78});
-  const woodDark=new THREE.MeshStandardMaterial({map:TEX.wood.map,normalMap:TEX.wood.normal,color:0x6A392A,roughness:.88});
-  const tileMat=new THREE.MeshStandardMaterial({map:TEX.tile.map,color:0x59636B,roughness:.70,metalness:.03});
-  const wallMat=new THREE.MeshStandardMaterial({map:TEX.whitewash.map,normalMap:TEX.whitewash.normal,color:0xD4C2A4,roughness:.94});
-  const recessMat=new THREE.MeshStandardMaterial({color:0x3B2B24,roughness:1});
-  const floors=[];const N=9;let y=0;
-  for(let i=0;i<N;i++){
-    const t=i/(N-1),w=lerp(33.0,13.2,Math.pow(t,.82)),d=lerp(13.5,6.5,Math.pow(t,.80));
-    const fh=i===0?7.2:lerp(4.05,3.15,t);const G=new THREE.Group();G.position.y=y;G.name='TowerFloor'+i;
-    const body=new THREE.Mesh(new THREE.BoxGeometry(w*.96,fh+.35,d*.70),wallMat);body.position.set(0,fh*.50,-d*.16);body.castShadow=body.receiveShadow=true;G.add(body);
-    const recess=new THREE.Mesh(new THREE.BoxGeometry(w*.88,fh*.56,.32),recessMat);recess.position.set(0,fh*.56,d*.205);G.add(recess);
-    const nb=Math.max(7,Math.round(w/2.65));
-    const colGeo=new THREE.CylinderGeometry(.25,.29,fh,10);
-    for(let c=0;c<nb;c++){
-      const x=lerp(-w*.47,w*.47,c/(nb-1));const m=new THREE.Mesh(colGeo,woodMat);m.position.set(x,fh*.50,d*.31);m.castShadow=true;G.add(m);
+  const root = new THREE.Group();
+  const woodMat = new THREE.MeshStandardMaterial({
+    map: TEX.woodRed.map, normalMap: TEX.woodRed.normal, roughness: 0.85,
+  });
+  const tileMat = new THREE.MeshStandardMaterial({ map: TEX.tile.map, roughness: 0.72, metalness: 0.05 });
+  const wallMat = new THREE.MeshStandardMaterial({ color: 0xC4B08C, roughness: 0.96 });
+
+  const floors = [];
+  const N = 9;
+  let y = 0;
+  for (let i = 0; i < N; i++) {
+    const t = i / (N - 1);
+    const w = lerp(30.0, 12.0, Math.pow(t, 0.80));
+    const d = lerp(14.0, 6.6, Math.pow(t, 0.80));
+    const fh = i === 0 ? 7.6 : lerp(3.9, 3.1, t);
+    const G = new THREE.Group();
+    G.position.y = y;
+
+    /* 柱 */
+    if (i === 0) {
+      const nc = 9;
+      const colGeo = new THREE.CylinderGeometry(0.40, 0.46, fh, 10);
+      for (let c = 0; c < nc; c++) {
+        const px = -w / 2 + (w / (nc - 1)) * c;
+        const m = new THREE.Mesh(colGeo, woodMat);
+        m.position.set(px, fh / 2, d / 2 + 0.6);
+        m.castShadow = true;
+        G.add(m);
+      }
     }
-    for(const yy of [.24,fh*.48,fh-.28]){
-      const beam=new THREE.Mesh(new THREE.BoxGeometry(w*.98,.34,.42),woodMat);beam.position.set(0,yy,d*.31);beam.castShadow=true;G.add(beam);
+    /* 楼身：实心墙体（贴崖），让层与层之间不透空 */
+    {
+      const body = new THREE.Mesh(new THREE.BoxGeometry(w * 0.97, fh + 0.6, d * 0.80), wallMat);
+      body.position.set(0, fh / 2, -d * 0.12);
+      body.castShadow = body.receiveShadow = true;
+      G.add(body);
+      /* 木构立面：柱 + 横枋 */
+      const nb = Math.max(5, Math.round(w / 3.4));
+      const pg = new THREE.BoxGeometry(0.42, fh, 0.42);
+      for (let c = 0; c < nb; c++) {
+        const m = new THREE.Mesh(pg, woodMat);
+        m.position.set(-w / 2 + (w / (nb - 1)) * c, fh / 2, d * 0.29);
+        m.castShadow = true;
+        G.add(m);
+      }
+      const lin = new THREE.Mesh(new THREE.BoxGeometry(w, 0.55, 0.5), woodMat);
+      lin.position.set(0, fh - 0.35, d * 0.29); G.add(lin);
+      const lin2 = new THREE.Mesh(new THREE.BoxGeometry(w, 0.45, 0.5), woodMat);
+      lin2.position.set(0, 0.3, d * 0.29); G.add(lin2);
+      /* 窗（深色格心） */
+      const winMat = new THREE.MeshStandardMaterial({ color: 0x4A342A, roughness: 0.9 });
+      const nw = Math.max(3, nb - 2);
+      const wg = new THREE.BoxGeometry(w / nb * 0.62, fh * 0.46, 0.22);
+      for (let c = 0; c < nw; c++) {
+        const m = new THREE.Mesh(wg, winMat);
+        m.position.set(-w / 2 + (w / nw) * (c + 0.5), fh * 0.56, d * 0.29 + 0.16);
+        G.add(m);
+      }
     }
-    /* 深色格扇和竖棂，不再是整块窗口贴片。 */
-    const bay=w/(nb-1);
-    for(let c=0;c<nb-1;c++){
-      const cx=lerp(-w*.47,w*.47,(c+.5)/(nb-1));
-      const frame=new THREE.Mesh(new THREE.BoxGeometry(bay*.76,fh*.37,.18),woodDark);frame.position.set(cx,fh*.58,d*.34);G.add(frame);
-      for(let q=-1;q<=1;q++){const slat=new THREE.Mesh(new THREE.BoxGeometry(.055,fh*.34,.08),woodMat);slat.position.set(cx+q*bay*.19,fh*.58,d*.45);G.add(slat);}
+    /* 栏杆 */
+    if (i > 0) {
+      const rail = new THREE.Mesh(new THREE.BoxGeometry(w + 1.4, 0.34, 0.34), woodMat);
+      rail.position.set(0, 1.35, d * 0.42);
+      G.add(rail);
+      const rail2 = rail.clone(); rail2.position.y = 0.5; G.add(rail2);
+      const bg = new THREE.BoxGeometry(0.19, 1.5, 0.19);
+      for (let c = 0; c < 18; c++) {
+        const m = new THREE.Mesh(bg, woodMat);
+        m.position.set(-w / 2 - 0.6 + ((w + 1.2) / 17) * c, 0.7, d * 0.42);
+        G.add(m);
+      }
+      /* 门窗 */
+      const dm = new THREE.Mesh(new THREE.BoxGeometry(w * 0.20, fh * 0.62, 0.3), woodMat);
+      dm.position.set(0, fh * 0.36, d * 0.30);
+      G.add(dm);
     }
-    if(i>0){
-      const balcony=new THREE.Mesh(new THREE.BoxGeometry(w+1.4,.24,d+1.25),woodDark);balcony.position.set(0,.28,.1);G.add(balcony);
-      for(const yy of [.72,1.38]){const rail=new THREE.Mesh(new THREE.BoxGeometry(w+1.2,.15,.16),woodMat);rail.position.set(0,yy,d*.47);G.add(rail);}
-      for(let c=0;c<Math.max(12,nb*2);c++){const post=new THREE.Mesh(new THREE.BoxGeometry(.10,1.35,.10),woodMat);post.position.set(lerp(-w*.5,w*.5,c/(Math.max(12,nb*2)-1)),.72,d*.47);G.add(post);}
+    /* 屋檐 */
+    {
+      const rh = i === N - 1 ? 3.4 : 1.15;
+      const rg = makeRoof(w, d, rh, i === 0 ? 3.2 : 2.7, i === N - 1 ? 1.3 : 1.05, i === N - 1 ? 0.07 : 0.985);
+      const rm = new THREE.Mesh(rg, tileMat);
+      rm.position.set(0, fh, 0);
+      rm.castShadow = true;
+      G.add(rm);
+      /* 檐下额枋 + 平坐板 */
+      const ab = new THREE.Mesh(new THREE.BoxGeometry(w + 1.4, 0.55, d + 1.4), woodMat);
+      ab.position.set(0, fh - 0.28, 0);
+      G.add(ab);
+      if (i < N - 1) {
+        const dk = new THREE.Mesh(new THREE.BoxGeometry(w + 1.6, 0.32, d + 1.6), woodMat);
+        dk.position.set(0, fh + rh + 0.18, 0);
+        dk.castShadow = true;
+        G.add(dk);
+      }
+      if (i === N - 1) {
+        /* 宝顶 */
+        const sp = new THREE.Mesh(new THREE.ConeGeometry(0.5, 2.4, 8), tileMat);
+        sp.position.set(0, fh + rh + 1.0, 0);
+        G.add(sp);
+        const ball = new THREE.Mesh(new THREE.SphereGeometry(0.55, 12, 10),
+          new THREE.MeshStandardMaterial({ color: 0xC8A24A, roughness: 0.35, metalness: 0.6 }));
+        ball.position.set(0, fh + rh + 2.4, 0);
+        G.add(ball);
+      }
     }
-    const rh=i===N-1?3.1:1.10;
-    const roof=new THREE.Mesh(makeRoof(w,d,rh,i===0?3.4:2.6,i===N-1?1.35:1.08,i===N-1?.08:.88),tileMat);roof.position.y=fh;roof.castShadow=true;G.add(roof);
-    const eave=new THREE.Mesh(new THREE.BoxGeometry(w+2.0,.30,d+1.8),woodDark);eave.position.set(0,fh-.18,0);G.add(eave);
-    addDougongBand(G,w+1.0,d,fh-.62,woodMat);
-    if(i<N-1){const upperPlate=new THREE.Mesh(new THREE.BoxGeometry(w+1.4,.24,d+1.3),woodMat);upperPlate.position.set(0,fh+rh+.10,0);G.add(upperPlate);}
-    if(i===N-1){
-      const ridge=new THREE.Mesh(new THREE.BoxGeometry(w*.34,.24,.34),tileMat);ridge.position.set(0,fh+rh-.12,0);G.add(ridge);
-      const sp=new THREE.Mesh(new THREE.ConeGeometry(.44,2.15,12),tileMat);sp.position.set(0,fh+rh+.95,0);G.add(sp);
-      const ball=new THREE.Mesh(new THREE.SphereGeometry(.48,16,12),new THREE.MeshStandardMaterial({color:0xB89544,roughness:.42,metalness:.38}));ball.position.set(0,fh+rh+2.10,0);G.add(ball);
-    }
-    G.userData.baseY=y;floors.push(G);root.add(G);y+=fh+(i===N-1?0:.90);
+
+    G.userData.baseY = y;
+    floors.push(G);
+    root.add(G);
+    y += fh + (i === N - 1 ? 0 : 1.05);
   }
-  root.userData.floors=floors;root.userData.totalH=y;return root;
+  root.userData.floors = floors;
+  root.userData.totalH = y;
+  return root;
 }
 
 /* ------------------------------------------------------------
@@ -283,138 +340,188 @@ function buildTree(h = 9, seed = 1) {
    木栈道（贴崖的之字形阶梯，视频 20-24s）
    ------------------------------------------------------------ */
 function buildWalkway() {
-  const G = new THREE.Group(); G.name = 'HistoricSwitchbackWalkway';
-  const woodMat = new THREE.MeshStandardMaterial({ map: TEX.wood.map, normalMap: TEX.wood.normal, color: 0x5E371E, roughness: 0.84 });
-  const darkWood = new THREE.MeshStandardMaterial({ map: TEX.wood.map, normalMap: TEX.wood.normal, color: 0x2F1C10, roughness: 0.88 });
-  const ironMat = new THREE.MeshStandardMaterial({ color: 0x34312D, roughness: 0.72, metalness: 0.18 });
-  const components = [], segs = [];
+  const G = new THREE.Group();
+  G.name = 'HistoricCliffScaffold';
+  const woodMat = new THREE.MeshStandardMaterial({
+    map: TEX.wood.map, normalMap: TEX.wood.normal, roughness: 0.91,
+  });
+  const darkWood = new THREE.MeshStandardMaterial({
+    map: TEX.wood.map, normalMap: TEX.wood.normal, color: 0x6B4024, roughness: 0.94,
+  });
+  const ropeMat = new THREE.MeshStandardMaterial({ color: 0x6D553A, roughness: 1.0 });
+  const ironMat = new THREE.MeshStandardMaterial({ color: 0x3E3A35, roughness: 0.65, metalness: 0.34 });
   const rnd = mulberry32(2406);
+  const components = [];
+  const segs = [];
+  const materialYard = new THREE.Vector3(-43, 0.55, CLIFF_Z + 34);
+  const hoistTop = new THREE.Vector3(-23.5, 41.0, CLIFF_Z + 16.5);
   let order = 0;
-  const materialYard = new THREE.Vector3(-39, 0.42, CLIFF_Z + 18);
 
-  const register = (m, parent, type, stage) => {
-    m.userData.finalPosition = m.position.clone();
-    m.userData.finalQuaternion = m.quaternion.clone();
-    m.userData.finalScale = m.scale.clone();
-    const fp = m.userData.finalPosition;
-    m.userData.startPosition = new THREE.Vector3(
-      materialYard.x + (rnd() - 0.5) * 5.0,
-      materialYard.y + rnd() * 0.9,
-      materialYard.z + (rnd() - 0.5) * 3.0);
-    m.userData.startQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler((rnd()-.5)*.45,(rnd()-.5)*1.2,(rnd()-.5)*.45));
-    m.userData.hoistPosition = new THREE.Vector3(fp.x + (rnd()-.5)*.35, fp.y + 2.3 + rnd()*.8, fp.z + .65);
-    m.userData.order = order++ + stage * 100;
-    m.userData.type = type; m.userData.stage = stage;
-    m.position.copy(m.userData.startPosition); m.quaternion.copy(m.userData.startQuaternion);
-    m.scale.copy(m.userData.finalScale).multiplyScalar(.035); m.visible = false;
-    m.castShadow = true; m.receiveShadow = type === 'plank' || type === 'landing';
-    parent.add(m); components.push(m); return m;
+  const register = (mesh, parent, type, stage = 0) => {
+    mesh.userData.finalPosition = mesh.position.clone();
+    mesh.userData.finalQuaternion = mesh.quaternion.clone();
+    mesh.userData.finalScale = mesh.scale.clone();
+    const fp = mesh.userData.finalPosition;
+    /*
+      构件从对应跨的正下方起吊，而不是所有木料从画面左侧横穿天空。
+      横屏中这样才能读成“逐跨搭设”，而不是黑色碎片飞行。
+    */
+    mesh.userData.startPosition = new THREE.Vector3(
+      fp.x + (rnd() - 0.5) * 3.8,
+      0.18 + rnd() * 1.35,
+      materialYard.z + (rnd() - 0.5) * 4.8);
+    mesh.userData.startQuaternion = new THREE.Quaternion().setFromEuler(
+      new THREE.Euler((rnd() - 0.5) * 0.9, (rnd() - 0.5) * 2.2, (rnd() - 0.5) * 0.8));
+    mesh.userData.hoistPosition = new THREE.Vector3(
+      fp.x + (rnd() - 0.5) * 0.85,
+      Math.max(fp.y + 5.0, 7.5 + stage * 1.4) + (rnd() - 0.5) * 0.8,
+      fp.z + 1.65 + (rnd() - 0.5) * 0.9);
+    mesh.userData.order = order++ + stage * 0.32;
+    mesh.userData.type = type;
+    mesh.userData.stage = stage;
+    mesh.position.copy(mesh.userData.startPosition);
+    mesh.quaternion.copy(mesh.userData.startQuaternion);
+    mesh.scale.copy(mesh.userData.finalScale).multiplyScalar(0.035);
+    mesh.visible = false;
+    mesh.castShadow = true;
+    mesh.receiveShadow = type === 'plank' || type === 'platform';
+    parent.add(mesh);
+    components.push(mesh);
+    return mesh;
   };
-  const beam = (a,b,r,mat=woodMat,rad=8) => {
-    const d = new THREE.Vector3().subVectors(b,a);
-    const m = new THREE.Mesh(new THREE.CylinderGeometry(r*.92,r,d.length(),rad),mat);
-    m.position.copy(a).add(b).multiplyScalar(.5);
-    m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());
+
+  const beamBetween = (a, b, r, mat = woodMat, radial = 8) => {
+    const d = new THREE.Vector3().subVectors(b, a);
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.92, r, d.length(), radial), mat);
+    m.position.copy(a).add(b).multiplyScalar(0.5);
+    m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize());
     return m;
   };
-  const box = (x,y,z,sx,sy,sz,mat=woodMat) => { const m=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),mat);m.position.set(x,y,z);return m; };
+  const boxBeam = (x, y, z, sx, sy, sz, mat = woodMat) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, sz), mat);
+    m.position.set(x, y, z);
+    return m;
+  };
 
-  /* 轮廓严格压缩为三段窄挑台和两道反向木梯。没有落地立杆森林。 */
+  /* 四层贴崖施工架：锚杆、挑梁、横梁、踏板、立柱、斜撑、栏杆按真实受力顺序安装。 */
   const levels = [
-    { y:9.6,  x0:-25.0, x1:-11.0, stage:0.0 },
-    { y:21.0, x0:-11.0, x1:  8.0, stage:1.35 },
-    { y:31.10, x0: -3.0, x1:  5.5, stage:2.70 },
+    { y: 5.2, x0: -28.5, x1: 28.5, z0: CLIFF_Z + 1.0, z1: CLIFF_Z + 7.4, nx: 12 },
+    { y: 13.8, x0: -26.0, x1: 26.0, z0: CLIFF_Z + 1.0, z1: CLIFF_Z + 7.0, nx: 11 },
+    { y: 22.4, x0: -23.0, x1: 23.0, z0: CLIFF_Z + 0.9, z1: CLIFF_Z + 6.6, nx: 10 },
+    { y: 30.8, x0: -19.5, x1: 19.5, z0: CLIFF_Z + 0.8, z1: CLIFF_Z + 6.3, nx: 9 },
   ];
 
-  function buildPlatform(L, li) {
-    const grp = new THREE.Group(); grp.name = 'NarrowCliffPlatform' + li;
-    const cx = (L.x0 + L.x1) * .5;
-    const wallZ = cliffFaceZ(cx, L.y) + .14;
-    const innerZ = wallZ + .18, outerZ = wallZ + 1.72;
-    const length = L.x1 - L.x0;
-    /* 两根纵梁、挑梁和短斜撑直接锚入崖体。 */
-    register(beam(new THREE.Vector3(L.x0,L.y-.18,innerZ+.20),new THREE.Vector3(L.x1,L.y-.18,innerZ+.20),.285,darkWood,12),grp,'long-beam',L.stage+.02);
-    register(beam(new THREE.Vector3(L.x0,L.y-.18,outerZ-.16),new THREE.Vector3(L.x1,L.y-.18,outerZ-.16),.305,darkWood,12),grp,'long-beam',L.stage+.03);
-    const anchors = Math.max(4, Math.round(length/4.2));
-    for (let i=0;i<anchors;i++) {
-      const x=lerp(L.x0+.65,L.x1-.65,i/Math.max(1,anchors-1));
-      const localWall=cliffFaceZ(x,L.y)+.08;
-      register(box(x,L.y-.20,localWall+.02,.46,.46,.16,ironMat),grp,'anchor-plate',L.stage+.045+i*.005);
-      register(beam(new THREE.Vector3(x,L.y-.22,localWall-.72),new THREE.Vector3(x,L.y-.22,outerZ),.245,darkWood,12),grp,'anchor',L.stage+.05+i*.005);
-      register(beam(new THREE.Vector3(x,L.y-1.75,localWall-.35),new THREE.Vector3(x,L.y-.30,outerZ-.12),.215,woodMat,12),grp,'brace',L.stage+.10+i*.005);
-    }
-    /* 横向铺板，每块仅约 1.3 米，明确读出窄台尺度。 */
-    const pc=Math.max(10,Math.round(length/1.25));
-    for(let i=0;i<pc;i++){
-      const x=lerp(L.x0,L.x1,(i+.5)/pc),w=length/pc*.92;
-      register(box(x,L.y,lerp(innerZ,outerZ,.52),w,.56,2.78),grp,'plank',L.stage+.18+i*.003);
-    }
-    /* 外侧低护栏；靠崖一侧保持开放，避免现代脚手架盒子。 */
-    const posts=Math.max(4,Math.round(length/4.0));
-    for(let i=0;i<posts;i++){
-      const x=lerp(L.x0,L.x1,i/Math.max(1,posts-1));
-      register(beam(new THREE.Vector3(x,L.y,outerZ+.04),new THREE.Vector3(x,L.y+1.55,outerZ+.04),.165,darkWood,10),grp,'rail-post',L.stage+.28+i*.004);
-    }
-    for(const h of [.78,1.48]) register(beam(new THREE.Vector3(L.x0,L.y+h,outerZ+.04),new THREE.Vector3(L.x1,L.y+h,outerZ+.04),.150,darkWood,10),grp,'rail',L.stage+.34+h*.01);
-    grp.userData.wallZ=wallZ;grp.userData.innerZ=innerZ;grp.userData.outerZ=outerZ;
-    /* dark contact band at the anchoring line makes the timber visibly bite into the cliff. */
-    const shadowMat=new THREE.MeshBasicMaterial({color:0x1F160F,transparent:true,opacity:.34,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-4});
-    const contact=new THREE.Mesh(new THREE.PlaneGeometry(length,1.55),shadowMat);contact.position.set(cx,L.y-.42,wallZ+.06);contact.rotation.x=0;grp.add(contact);
-    L.z0=innerZ; L.z1=outerZ;
-    segs.push(grp);G.add(grp);return grp;
-  }
-  const platformGroups=levels.map(buildPlatform);
+  levels.forEach((L, li) => {
+    const grp = new THREE.Group();
+    grp.name = 'ScaffoldLevel' + li;
+    const dx = (L.x1 - L.x0) / (L.nx - 1);
+    const zFront = L.z1;
 
-  /* 最高工作层的木质遮棚，参考视频中的贴崖屋檐，而非现代门式吊架。 */
+    for (let i = 0; i < L.nx; i++) {
+      const x = L.x0 + i * dx;
+      const wallZ = cliffFaceZ(x, L.y) + 0.12;
+      const outerZ = zFront;
+      const anchor = beamBetween(new THREE.Vector3(x, L.y - 0.18, wallZ - 1.2),
+        new THREE.Vector3(x, L.y - 0.18, outerZ), 0.135, darkWood, 7);
+      register(anchor, grp, 'anchor', li);
+
+      const postBottom = li === 0 ? 0.35 : levels[li - 1].y + 0.18;
+      const post = beamBetween(new THREE.Vector3(x, postBottom, outerZ - 0.18),
+        new THREE.Vector3(x, L.y + 2.45, outerZ - 0.18), 0.17, woodMat, 8);
+      register(post, grp, 'post', li + 0.08);
+
+      if (i < L.nx - 1) {
+        const x2 = x + dx;
+        for (const z of [L.z0 + 0.25, zFront - 0.22]) {
+          const long = beamBetween(new THREE.Vector3(x, L.y - 0.10, z),
+            new THREE.Vector3(x2, L.y - 0.10, z), 0.16, woodMat, 8);
+          register(long, grp, 'long-beam', li + 0.13);
+        }
+      }
+
+      if (i < L.nx - 1 && i % 2 === 0) {
+        const x2 = x + dx;
+        const brace = beamBetween(new THREE.Vector3(x, Math.max(0.4, L.y - 7.2), zFront - 0.4),
+          new THREE.Vector3(x2, L.y - 0.22, zFront - 0.4), 0.11, darkWood, 7);
+        register(brace, grp, 'brace', li + 0.18);
+      }
+    }
+
+    const plankCount = Math.max(18, Math.round((L.x1 - L.x0) / 2.2));
+    for (let i = 0; i < plankCount; i++) {
+      const x = lerp(L.x0, L.x1, (i + 0.5) / plankCount);
+      const w = (L.x1 - L.x0) / plankCount * 0.94;
+      for (let d = 0; d < 3; d++) {
+        const plank = boxBeam(x, L.y, lerp(L.z0 + 0.9, zFront - 0.9, d / 2), w, 0.20, 1.48, woodMat);
+        plank.rotation.z = (rnd() - 0.5) * 0.012;
+        register(plank, grp, 'plank', li + 0.23 + d * 0.014);
+      }
+    }
+
+    /* 外侧双道栏杆。 */
+    for (const h of [1.25, 2.20]) {
+      const rail = beamBetween(new THREE.Vector3(L.x0, L.y + h, zFront + 0.05),
+        new THREE.Vector3(L.x1, L.y + h, zFront + 0.05), 0.105, darkWood, 7);
+      register(rail, grp, 'rail', li + 0.29 + h * 0.01);
+    }
+
+    /* 麻绳绑扎节点，使连接不再像悬空积木。 */
+    for (let i = 0; i < L.nx; i += 2) {
+      const x = L.x0 + i * dx;
+      const knot = new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.045, 5, 14), ropeMat);
+      knot.position.set(x, L.y - 0.02, zFront - 0.18);
+      knot.rotation.x = Math.PI / 2;
+      register(knot, grp, 'knot', li + 0.35);
+    }
+    grp.userData.order = li;
+    segs.push(grp); G.add(grp);
+  });
+
+  /* 交替折返楼梯，连接四层施工平台。 */
+  for (let li = 0; li < levels.length - 1; li++) {
+    const a = levels[li], b = levels[li + 1];
+    const side = li % 2 === 0 ? 1 : -1;
+    const xBase = side > 0 ? a.x1 - 4.8 : a.x0 + 4.8;
+    const grp = new THREE.Group();
+    const steps = 11;
+    for (let i = 0; i < steps; i++) {
+      const k = i / (steps - 1);
+      const step = boxBeam(xBase - side * k * 7.4, lerp(a.y + 0.35, b.y - 0.35, k),
+        lerp(a.z1 - 0.8, b.z1 - 0.8, k), 2.15, 0.18, 1.00, woodMat);
+      register(step, grp, 'stair-step', li + 0.42 + k * 0.10);
+    }
+    const stringA = beamBetween(new THREE.Vector3(xBase, a.y + 0.05, a.z1 - 1.25),
+      new THREE.Vector3(xBase - side * 7.4, b.y - 0.55, b.z1 - 1.25), 0.12, darkWood, 7);
+    register(stringA, grp, 'stair-stringer', li + 0.40);
+    const stringB = stringA.clone(); stringB.position.z += 0.95;
+    register(stringB, grp, 'stair-stringer', li + 0.40);
+    segs.push(grp); G.add(grp);
+  }
+
+  /* 窟门正前方的高层作业台和小型吊架。 */
   {
-    const grp=new THREE.Group(); grp.name='HistoricTopCanopy';
-    const z=platformGroups[2].userData.wallZ+1.18;
-    const roof=box(1.1,35.55,z,8.8,.38,3.35,darkWood);
-    roof.rotation.x=-0.035; register(roof,grp,'canopy-roof',1.80);
-    for(let i=0;i<5;i++){
-      const x=lerp(-2.8,5.0,i/4);
-      register(beam(new THREE.Vector3(x,31.35,z-.85),new THREE.Vector3(x,35.60,z-.35),.085,darkWood,7),grp,'canopy-bracket',1.84+i*.004);
+    const grp = new THREE.Group();
+    for (let i = 0; i < 9; i++) {
+      const plank = boxBeam(lerp(-8.0, 8.0, i / 8), 35.0, CLIFF_Z + 6.0, 1.85, 0.20, 4.6, woodMat);
+      register(plank, grp, 'platform', 4.0 + i * 0.01);
     }
-    G.add(grp);segs.push(grp);
+    const mast = beamBetween(new THREE.Vector3(-10.5, 30.7, CLIFF_Z + 6.1),
+      new THREE.Vector3(-10.5, 41.0, CLIFF_Z + 6.1), 0.19, darkWood, 8);
+    register(mast, grp, 'hoist-mast', 4.05);
+    const jib = beamBetween(new THREE.Vector3(-10.5, 40.5, CLIFF_Z + 6.1),
+      new THREE.Vector3(-2.5, 40.5, CLIFF_Z + 6.1), 0.16, darkWood, 8);
+    register(jib, grp, 'hoist-jib', 4.10);
+    const pulley = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.10, 8, 20), ironMat);
+    pulley.position.set(-3.0, 40.1, CLIFF_Z + 6.1); pulley.rotation.y = Math.PI / 2;
+    register(pulley, grp, 'pulley', 4.14);
+    segs.push(grp); G.add(grp);
   }
 
-  function buildStair(a,b,x0,x1,stage,name){
-    const grp=new THREE.Group();grp.name=name;
-    const z0=platformGroups[a].userData.outerZ-.46;
-    const z1=platformGroups[b].userData.outerZ-.46;
-    const steps=18;
-    for(let i=0;i<steps;i++){
-      const k=i/(steps-1),x=lerp(x0,x1,k),y=lerp(levels[a].y+.20,levels[b].y-.20,k),z=lerp(z0,z1,k);
-      register(box(x,y,z,2.05,.66,2.65),grp,'stair-step',stage+i*.014);
-    }
-    for(const dz of [-.46,.46]) register(beam(new THREE.Vector3(x0,levels[a].y-.05,z0+dz),new THREE.Vector3(x1,levels[b].y-.45,z1+dz),.275,darkWood,12),grp,'stair-stringer',stage-.03);
-    /* 仅外侧单栏杆，形成参考中的轻薄折线。 */
-    register(beam(new THREE.Vector3(x0,levels[a].y+1.20,z0+.62),new THREE.Vector3(x1,levels[b].y+.78,z1+.62),.170,darkWood,10),grp,'stair-rail',stage+.28);
-    segs.push(grp);G.add(grp);
-  }
-  buildStair(0,1,-11.0,8.0,.92,'LowerSwitchbackStair');
-  buildStair(1,2,8.0,-3.0,2.18,'UpperSwitchbackStair');
-
-  /* 窟门前只保留一块短工作台和简单木架，不再出现大型吊装门架。 */
-  {
-    const grp=new THREE.Group();grp.name='EntranceWorkLanding';
-    const wallZ=platformGroups[2].userData.wallZ,outerZ=platformGroups[2].userData.outerZ;
-    for(let i=0;i<6;i++) register(box(lerp(-3.7,3.7,i/5),31.15,(wallZ+outerZ)*.5,1.24,.28,2.35),grp,'landing',3.18+i*.012);
-    for(const sx of [-1,1]){
-      const x=sx*3.85;
-      register(beam(new THREE.Vector3(x,31.05,wallZ-.55),new THREE.Vector3(x,31.05,outerZ),.095,darkWood,7),grp,'anchor',3.14);
-      register(beam(new THREE.Vector3(x,29.55,wallZ-.20),new THREE.Vector3(x,31.05,outerZ-.08),.075,woodMat,7),grp,'brace',3.16);
-    }
-    const handWinch=new THREE.Mesh(new THREE.CylinderGeometry(.23,.23,.82,10),ironMat);
-    handWinch.rotation.z=Math.PI/2;handWinch.position.set(3.15,31.82,outerZ-.10);register(handWinch,grp,'hand-winch',3.30);
-    segs.push(grp);G.add(grp);
-  }
-
-  components.sort((a,b)=>(a.userData.stage-b.userData.stage)||(a.userData.order-b.userData.order));
-  components.forEach((m,i)=>{m.userData.order=i;});
-  G.userData.segs=segs;G.userData.components=components;G.userData.materialYard=materialYard;
-  G.userData.hoistTop=new THREE.Vector3(-3.7,35.8,platformGroups[2].userData.outerZ-.2);
-  G.userData.levels=levels;
+  G.userData.segs = segs;
+  G.userData.components = components;
+  G.userData.materialYard = materialYard;
+  G.userData.hoistTop = hoistTop;
+  G.userData.levels = levels;
   return G;
 }
 
@@ -459,7 +566,6 @@ function buildPlanter(w, d) {
 
 /* 窟门上方的小窟（崖壁点缀） */
 function buildSmallCaves(G) {
-  const small = new THREE.Group(); small.name = 'SmallCaveDetails'; G.add(small); WORLD.smallCaves = small;
   const rnd = mulberry32(31);
   const mat = new THREE.MeshStandardMaterial({ color: 0x3A2C1E, roughness: 1.0 });
   const trim = new THREE.MeshStandardMaterial({ color: 0xC6B592, roughness: 0.95 });
@@ -472,133 +578,9 @@ function buildSmallCaves(G) {
     const z = cliffFaceZ(x, y);
     const hole = new THREE.Mesh(new THREE.BoxGeometry(w, h, 3.0), mat);
     hole.position.set(x, y + h / 2, z - 1.2);
-    small.add(hole);
+    G.add(hole);
     const fr = new THREE.Mesh(new THREE.BoxGeometry(w + 2.4, h + 2.4, 0.8), trim);
     fr.position.set(x, y + h / 2, z + 0.3);
-    small.add(fr);
+    G.add(fr);
   }
-}
-
-/* ------------------------------------------------------------
-   九层楼前场：崖体凹槽、台阶、石铺广场与自然绿化。
-   仅在开场/终景启用，建立“建筑嵌入崖体”与前中后景关系。
-   ------------------------------------------------------------ */
-function buildForecourt() {
-  const G = new THREE.Group();
-  G.name = 'HistoricalForecourt';
-
-  const stoneMat = new THREE.MeshStandardMaterial({
-    map: TEX.ground.map, normalMap: TEX.ground.normal,
-    color: 0xA99F8D, roughness: 0.97, metalness: 0,
-  });
-  stoneMat.normalScale.set(1.2, 1.2);
-
-  /* 略有高差和磨损的广场，不再是无限重复灰砖。 */
-  {
-    const g = new THREE.PlaneGeometry(150, 138, 42, 38);
-    g.rotateX(-Math.PI / 2);
-    const pa = g.attributes.position;
-    for (let i = 0; i < pa.count; i++) {
-      const x = pa.getX(i), z = pa.getZ(i) + CLIFF_Z + 78;
-      const crown = (fbm2(x * 0.025 + 2, z * 0.024 + 9, 3, 31) - 0.5) * 0.26;
-      const worn = smoothstep(22, 4, Math.abs(x)) * smoothstep(CLIFF_Z + 128, CLIFF_Z + 18, z);
-      pa.setXYZ(i, x, 0.10 + crown * (1 - worn * 0.68), z);
-    }
-    pa.needsUpdate = true; g.computeVertexNormals();
-    const uv = g.attributes.uv;
-    for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * 13, uv.getY(i) * 12);
-    const m = new THREE.Mesh(g, stoneMat); m.receiveShadow = true; G.add(m); G.userData.plaza = m;
-  }
-
-  /* 九层楼基座与逐级台阶。 */
-  {
-    const stepMat = new THREE.MeshStandardMaterial({
-      map: TEX.ground.map, normalMap: TEX.ground.normal, color: 0x9B907E, roughness: 0.98,
-    });
-    for (let i = 0; i < 6; i++) {
-      const w = 39 + i * 2.2, d = 2.15, h = 0.28;
-      const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), stepMat);
-      m.position.set(0, 0.14 + i * 0.15, CLIFF_Z + 16.0 + i * 2.05);
-      m.castShadow = m.receiveShadow = true; G.add(m);
-    }
-    const apron = new THREE.Mesh(new THREE.BoxGeometry(43, 0.72, 9.5), stepMat);
-    apron.position.set(0, 0.36, CLIFF_Z + 12.5); apron.castShadow = apron.receiveShadow = true; G.add(apron);
-  }
-
-  /* 深色凹槽和不规则岩框：让塔楼真正“坐进”崖壁。 */
-  {
-    const cliffGroup = new THREE.Group(); cliffGroup.name = 'LegacyForecourtCliffFrame'; G.add(cliffGroup); G.userData.cliffGroup = cliffGroup;
-    const sh = new THREE.Shape();
-    sh.moveTo(-24.0, 0.4); sh.lineTo(-23.6, 32.0); sh.lineTo(-21.5, 43.0);
-    sh.quadraticCurveTo(-13.0, 54.0, 0, 55.5);
-    sh.quadraticCurveTo(13.5, 54.2, 21.8, 42.4);
-    sh.lineTo(23.8, 31.0); sh.lineTo(24.0, 0.4); sh.closePath();
-    const g = new THREE.ShapeGeometry(sh, 44);
-    const mat = new THREE.MeshStandardMaterial({
-      map: TEX.caveWall.map, normalMap: TEX.caveWall.normal,
-      color: 0x635646, roughness: 1, side: THREE.DoubleSide,
-      emissive: 0x1E1813, emissiveIntensity: 0.10,
-    });
-    const m = new THREE.Mesh(g, mat); m.position.set(0, 0, CLIFF_Z + 0.58); m.receiveShadow = true; cliffGroup.add(m); G.userData.recess = m;
-
-    const frameMat = new THREE.MeshStandardMaterial({
-      map: TEX.sandstone.map, normalMap: TEX.sandstone.normal, color: 0xC5AD86, roughness: 0.99,
-    });
-    const makeFrame = (side) => {
-      const sh = new THREE.Shape();
-      const q = side;
-      sh.moveTo(q * 58, 0); sh.lineTo(q * 24.2, 0);
-      sh.lineTo(q * 24.0, 29.0); sh.lineTo(q * 22.4, 39.5);
-      sh.lineTo(q * 17.8, 47.0); sh.lineTo(q * 12.8, 53.0);
-      sh.lineTo(q * 58, 59.5); sh.closePath();
-      const g = new THREE.ExtrudeGeometry(sh,{depth:2.6,bevelEnabled:true,bevelThickness:.55,bevelSize:.55,bevelSegments:2,curveSegments:10});
-      const m = new THREE.Mesh(g, frameMat); m.position.set(0,0,CLIFF_Z-2.0);
-      m.castShadow = m.receiveShadow = true; return m;
-    };
-    cliffGroup.add(makeFrame(-1), makeFrame(1));
-    const topShape = new THREE.Shape();
-    topShape.moveTo(-16.0,52.0); topShape.lineTo(16.5,52.0); topShape.lineTo(26.0,61.5); topShape.lineTo(-27.0,61.5); topShape.closePath();
-    const topRock = new THREE.Mesh(new THREE.ExtrudeGeometry(topShape,{depth:2.8,bevelEnabled:true,bevelThickness:.5,bevelSize:.5,bevelSegments:2}),frameMat);
-    topRock.position.set(0,0,CLIFF_Z-2.1); topRock.castShadow=topRock.receiveShadow=true; cliffGroup.add(topRock);
-  }
-
-  /* 绿化采用不对称布置，作为尺度与前景遮挡。 */
-  const treeData = [
-    [-42, CLIFF_Z + 48, 10.5, 71], [46, CLIFF_Z + 53, 11.5, 72],
-    [-61, CLIFF_Z + 88, 13.0, 73], [58, CLIFF_Z + 96, 12.2, 74],
-    [-27, CLIFF_Z + 118, 9.5, 75], [31, CLIFF_Z + 126, 10.0, 76],
-  ];
-  for (const [x,z,h,seed] of treeData) {
-    const tr = buildTree(h, seed); tr.position.set(x, 0.1, z); tr.scale.set(1.12, 0.98, 1.12); G.add(tr);
-  }
-
-  const shrubMat = new THREE.MeshStandardMaterial({
-    map: TEX.leaf.map, transparent: true, alphaTest: 0.32, side: THREE.DoubleSide, roughness: 0.92,
-  });
-  for (let i = 0; i < 22; i++) {
-    const side = i % 2 ? -1 : 1;
-    const x = side * (24 + hash3(i, 9, 3) * 43);
-    const z = CLIFF_Z + 28 + hash3(i, 17, 5) * 102;
-    const s = 2.5 + hash3(i, 23, 7) * 3.2;
-    const grp = new THREE.Group();
-    for (let j = 0; j < 3; j++) {
-      const p = new THREE.Mesh(new THREE.PlaneGeometry(s, s * 0.72), shrubMat);
-      p.position.set(0, s * 0.25, 0); p.rotation.y = j * Math.PI / 3; grp.add(p);
-    }
-    grp.position.set(x, 0.08, z); G.add(grp);
-  }
-
-  /* 远处山体只露侧翼，保持蓝天轮廓而非整面沙墙。 */
-  const mountainMat = new THREE.MeshStandardMaterial({
-    map: TEX.sandstone.map, normalMap: TEX.sandstone.normal, color: 0xB7A285, roughness: 1,
-  });
-  for (const [x,y,z,sx,sy,sz,seed] of [
-    [-142,31,-12,45,35,24,151],[142,34,-18,50,39,27,152],[-104,54,-31,40,24,25,153],[108,57,-34,43,27,26,154],
-  ]) {
-    const m = new THREE.Mesh(makeErodedRock(seed,sx,sy,sz), mountainMat);
-    m.position.set(x,y,z); m.receiveShadow = m.castShadow = true; G.add(m);
-  }
-
-  G.visible = false;
-  return G;
 }
