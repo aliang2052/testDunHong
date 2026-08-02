@@ -4,70 +4,83 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="icon" href="data:,">
-<title>敦煌莫高窟第96窟 · 实时建造全过程</title>
+<title>敦煌莫高窟第96窟大佛 · 开凿与塑造全过程（3D 实时复刻）</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  :root{color-scheme:dark;--gold:#d7a257;--panel:rgba(12,14,17,.78);--line:rgba(255,255,255,.12)}
-  html,body{width:100%;height:100%;overflow:hidden;background:#050607;color:#eee7da;
+  html,body{height:100%;background:#0b0d10;color:#e8e4dc;
     font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
-    -webkit-font-smoothing:antialiased}
-  #app,#stage{position:fixed;inset:0}
-  #stage{display:flex;align-items:center;justify-content:center;overflow:hidden;
-    background:radial-gradient(ellipse at 52% 35%,#20201c 0%,#0c0d0e 48%,#040506 100%)}
+    overflow:hidden;-webkit-font-smoothing:antialiased}
+  #app{display:flex;flex-direction:column;height:100%}
+  #stage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;min-height:0;
+    background:radial-gradient(ellipse at 50% 35%,#161b20 0%,#08090b 75%)}
   #stage>*{position:absolute}
-  canvas#c{display:block;max-width:100%;max-height:100%;background:#08090a;
-    box-shadow:0 28px 90px rgba(0,0,0,.72)}
-  svg#anno{pointer-events:none;overflow:visible}
-  #hud{pointer-events:none;display:flex;align-items:flex-end;justify-content:center;padding:0 10% 86px}
-  #sub{max-width:72%;padding:7px 17px;border-radius:8px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.48),transparent);
-    color:#fff;font-size:clamp(17px,1.55vw,27px);font-weight:780;line-height:1.38;letter-spacing:.03em;text-align:center;
-    text-shadow:0 2px 5px #000,0 0 18px rgba(0,0,0,.8)}
-  #hint{left:18px;top:18px;padding:9px 12px;border:1px solid rgba(255,255,255,.09);border-radius:8px;
-    background:rgba(7,9,11,.56);backdrop-filter:blur(9px);font-size:11px;line-height:1.65;color:#a8adb2;pointer-events:none}
-  #stepcard{right:18px;top:18px;width:min(340px,38vw);padding:13px 15px;border:1px solid rgba(224,177,96,.28);border-radius:11px;
-    background:linear-gradient(145deg,rgba(15,17,19,.88),rgba(34,26,17,.68));backdrop-filter:blur(10px);
-    box-shadow:0 15px 42px rgba(0,0,0,.34);pointer-events:none}
-  #stepnum{float:left;margin-right:11px;color:#e7b66a;font-size:23px;font-weight:900;line-height:1}
-  #stepcopy{overflow:hidden}
-  #steptitle{display:block;color:#fff6e8;font-size:14px;font-weight:800;letter-spacing:.04em}
-  #stepaction{display:block;margin-top:4px;color:#b8bdc2;font-size:11px;line-height:1.45}
-  #stepprogress{display:block;height:3px;margin-top:9px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}
-  #stepfill{display:block;width:0;height:100%;background:linear-gradient(90deg,#a96628,#f0c16f);box-shadow:0 0 10px rgba(238,175,77,.7)}
-  #ui{left:50%;bottom:51px;transform:translateX(-50%);width:min(980px,calc(100% - 28px));height:46px;
-    display:flex;align-items:center;gap:10px;padding:7px 10px;border:1px solid rgba(255,255,255,.11);border-radius:12px;
-    background:var(--panel);backdrop-filter:blur(13px);box-shadow:0 15px 45px rgba(0,0,0,.45)}
-  #ui button,#ui select{height:31px;padding:0 11px;border:1px solid rgba(255,255,255,.13);border-radius:7px;
-    background:rgba(255,255,255,.055);color:#ddd7cd;font:12px inherit;cursor:pointer}
-  #ui button:hover,#ui select:hover,#ui button.on{background:rgba(212,151,70,.20);border-color:rgba(230,177,104,.45);color:#fff}
-  #play{width:39px;padding:0!important;font-size:15px!important}
-  #bar{position:relative;flex:1;height:8px;border-radius:7px;background:rgba(255,255,255,.12);cursor:pointer;overflow:hidden}
-  #barfill{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#a96a31,#e6b666)}
-  #time{min-width:88px;color:#aeb2b6;font-size:11px;font-variant-numeric:tabular-nums;text-align:right}
-  #chapters{left:50%;bottom:10px;transform:translateX(-50%);width:min(1180px,calc(100% - 26px));height:34px;
-    display:flex;align-items:center;gap:5px;padding:4px 7px;overflow-x:auto;scrollbar-width:none;border-radius:10px;
-    background:rgba(8,10,12,.65);backdrop-filter:blur(10px)}
-  #chapters::-webkit-scrollbar{display:none}
-  #chapters button{height:25px;flex:0 0 auto;padding:0 10px;border:1px solid rgba(255,255,255,.09);border-radius:13px;
-    background:rgba(255,255,255,.04);color:#9ca2a8;font:11px inherit;cursor:pointer;white-space:nowrap}
-  #chapters button:hover{color:#f1d2a2;border-color:rgba(224,174,95,.35)}
-  #chapters button.on{color:#fff;background:#8a5728;border-color:#d19a57}
-  #chapters button.done{color:#d0b482}
-  body.clean #ui,body.clean #chapters,body.clean #hint,body.clean #stepcard{display:none}
-  #loading{position:fixed;inset:0;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:17px;
-    background:radial-gradient(circle at 50% 40%,#241d15,#08090a 57%,#030404);transition:opacity .55s}
+  canvas#c{display:block;border-radius:6px;box-shadow:0 18px 60px rgba(0,0,0,.7)}
+  svg#anno{pointer-events:none}
+  #hud{pointer-events:none;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8.5%}
+  #sub{
+    font-size:clamp(15px,2.35vh,30px);font-weight:800;letter-spacing:.5px;
+    color:#fff;text-align:center;line-height:1.4;max-width:88%;
+    text-shadow:0 0 5px rgba(0,0,0,.95),0 2px 7px rgba(0,0,0,.9),0 0 22px rgba(0,0,0,.7);
+    padding:0 12px;
+  }
+  /* 控制条 */
+  #ui{display:flex;align-items:center;gap:12px;padding:11px 16px;background:#12151a;
+    border-top:1px solid #232830;flex-wrap:wrap}
+  #ui button,#ui select{
+    background:#1d222a;color:#d8d4cc;border:1px solid #2e3540;border-radius:7px;
+    padding:7px 13px;font-size:13px;cursor:pointer;font-family:inherit;transition:.15s}
+  #ui button:hover,#ui select:hover{background:#28303a;color:#fff}
+  #ui button.on{background:#8a5a2a;border-color:#b4763a;color:#fff}
+  #play{font-size:16px!important;min-width:44px}
+  #bar{flex:1;height:9px;background:#242a33;border-radius:5px;cursor:pointer;position:relative;min-width:140px}
+  #barfill{height:100%;background:linear-gradient(90deg,#c2853d,#e8b25e);border-radius:5px;width:0}
+  #time{font-size:12px;color:#8c94a0;font-variant-numeric:tabular-nums;min-width:82px;text-align:right}
+  #chapters{display:flex;gap:6px;padding:9px 16px 13px;background:#0e1114;overflow-x:auto;
+    border-top:1px solid #1b1f26;scrollbar-width:thin}
+  #chapters button{
+    background:#171c22;color:#9aa3af;border:1px solid #262c35;border-radius:14px;
+    padding:5px 13px;font-size:12px;white-space:nowrap;cursor:pointer;font-family:inherit;transition:.15s}
+  #chapters button:hover{background:#2a3340;color:#f0c78a;border-color:#4a5462}
+  /* 纯净模式 */
+  body.clean #ui,body.clean #chapters{display:none}
+  /* 加载 */
+  #loading{position:fixed;inset:0;background:#0b0d10;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:20px;z-index:99;transition:opacity .5s}
   #loading.gone{opacity:0;pointer-events:none}
-  #ltitle{font-size:22px;font-weight:850;letter-spacing:.18em;color:#e5bf7d}
-  #lsub{font-size:12px;color:#898c8e;letter-spacing:.08em}
-  #lwrap{width:min(380px,70vw);height:4px;border-radius:3px;background:#252728;overflow:hidden}
-  #lbar{height:100%;width:0;background:linear-gradient(90deg,#8f592b,#e4b66a);transition:width .16s}
-  #ltxt{font-size:11px;color:#777c80}
-  @media(max-width:760px){
-    #hint{display:none}#stepcard{right:9px;top:9px;width:min(300px,72vw);padding:9px 11px}
-    #stepnum{font-size:18px}#steptitle{font-size:12px}#stepaction{font-size:10px}
-    #hud{padding-bottom:91px}#sub{max-width:90%;font-size:14px;padding:5px 10px}
-    #ui{bottom:45px;height:40px;gap:6px;padding:5px 7px}#ui button,#ui select{height:28px;padding:0 7px;font-size:10px}
-    #time{min-width:72px;font-size:10px}#freebtn,#hidebtn{display:none}
-    #chapters{bottom:6px;height:33px}#chapters button{font-size:10px;padding:0 8px}
+  #ltitle{font-size:20px;font-weight:800;letter-spacing:3px;color:#e0c08a}
+  #lsub{font-size:12.5px;color:#6b7280;letter-spacing:1px}
+  #lwrap{width:min(340px,72vw);height:4px;background:#1e242c;border-radius:2px;overflow:hidden}
+  #lbar{height:100%;width:0;background:linear-gradient(90deg,#a9702f,#e8b25e);transition:width .2s}
+  #ltxt{font-size:11.5px;color:#586170;font-variant-numeric:tabular-nums}
+  #hint{position:absolute;left:14px;top:12px;font-size:11px;color:#79818e;line-height:1.7;
+    background:rgba(10,12,15,.55);padding:8px 11px;border-radius:7px;backdrop-filter:blur(6px);
+    pointer-events:none;opacity:.75}
+  #stepcard{right:14px;top:12px;width:min(270px,52%);display:flex;align-items:flex-start;gap:10px;
+    padding:10px 11px;border:1px solid rgba(231,184,104,.28);border-radius:9px;
+    background:linear-gradient(135deg,rgba(15,18,22,.86),rgba(28,22,16,.66));
+    box-shadow:0 8px 28px rgba(0,0,0,.28);backdrop-filter:blur(8px);pointer-events:none}
+  #stepnum{font-size:18px;font-weight:900;color:#e9b769;letter-spacing:.5px;line-height:1}
+  #stepcopy{min-width:0;flex:1}
+  #steptitle{display:block;font-size:12px;color:#fff;letter-spacing:.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #stepaction{display:block;margin-top:3px;font-size:10px;line-height:1.35;color:#aeb6c1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #stepprogress{display:block;height:2px;margin-top:7px;background:rgba(255,255,255,.12);overflow:hidden;border-radius:2px}
+  #stepfill{display:block;width:0;height:100%;background:linear-gradient(90deg,#d38a35,#f2c979);box-shadow:0 0 8px rgba(240,180,80,.7)}
+  #chapters button.on{background:#8a5a2a;border-color:#d69a50;color:#fff;box-shadow:0 0 0 1px rgba(232,178,94,.18) inset}
+  #chapters button.done{color:#d4b987;border-color:#3d4651}
+  body.clean #hint{display:none}
+  body.clean #stepcard{display:none}
+  @media (max-width:620px){
+    #hint{display:none}
+    #stepcard{right:8px;top:8px;width:calc(100% - 16px);max-width:300px;padding:8px 9px}
+    #stepaction{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+    #ui{gap:7px;padding:8px 9px}
+    #ui button,#ui select{padding:6px 9px}
+    #chapters{padding:7px 9px 10px}
+  }
+  @media (max-height:700px){
+    #hint{display:none}
+    #stepcard{top:7px;right:7px}
+    #chapters{padding-top:6px;padding-bottom:7px}
   }
 </style>
 </head>
@@ -77,19 +90,42 @@
     <canvas id="c"></canvas>
     <svg id="anno" xmlns="http://www.w3.org/2000/svg"></svg>
     <div id="hud"><div id="sub"></div></div>
-    <div id="hint">空格：播放/暂停　← →：快退/快进<br>自由视角：拖拽旋转 · 滚轮缩放 · WASD/QE 平移</div>
+    <div id="hint">空格 播放/暂停 &nbsp;·&nbsp; ←→ 快进退<br>自由视角：拖拽旋转 / 滚轮缩放 / WASD-QE 平移</div>
     <div id="stepcard">
-      <span id="stepnum">01</span><div id="stepcopy"><b id="steptitle">九层楼揭幕</b><span id="stepaction">木构逐层移开，显露彩绘大佛</span><i id="stepprogress"><u id="stepfill"></u></i></div>
+      <span id="stepnum">01</span>
+      <div id="stepcopy">
+        <b id="steptitle">九层楼揭幕</b>
+        <span id="stepaction">木构逐层移开，显露彩绘大佛</span>
+        <i id="stepprogress"><u id="stepfill"></u></i>
+      </div>
     </div>
-    <div id="ui">
-      <button id="play">⏸</button><div id="bar"><div id="barfill"></div></div><span id="time">0:00 / 1:56</span>
-      <select id="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select>
-      <button id="freebtn">自由视角</button><button id="hidebtn">纯净模式</button>
-    </div>
-    <div id="chapters"></div>
   </div>
+  <div id="ui">
+    <button id="play">⏸</button>
+    <div id="bar"><div id="barfill"></div></div>
+    <span id="time">0:00 / 1:56</span>
+    <select id="speed">
+      <option value="0.25">0.25×</option>
+      <option value="0.5">0.5×</option>
+      <option value="1" selected>1×</option>
+      <option value="1.5">1.5×</option>
+      <option value="2">2×</option>
+    </select>
+    <button id="freebtn">自由视角</button>
+    <button id="hidebtn">纯净模式</button>
+  </div>
+  <div id="chapters"></div>
 </div>
-<div id="loading"><div id="ltitle">敦煌莫高窟 · 第96窟</div><div id="lsub">洞窟开凿与大佛塑造 · 浏览器实时三维</div><div id="lwrap"><div id="lbar"></div></div><div id="ltxt">正在烘焙材质…</div></div>
-<script type="module">/*__BUNDLE__*/</script>
+
+<div id="loading">
+  <div id="ltitle">敦煌莫高窟 · 第96窟大佛</div>
+  <div id="lsub">开凿与塑造全过程 · 3D 实时复刻</div>
+  <div id="lwrap"><div id="lbar"></div></div>
+  <div id="ltxt">正在烘焙材质…</div>
+</div>
+
+<script type="module">
+/*__BUNDLE__*/
+</script>
 </body>
 </html>

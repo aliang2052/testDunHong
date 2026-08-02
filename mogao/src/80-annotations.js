@@ -137,47 +137,174 @@ function setMaterialLabel(text, x, y, size = 54) {
 function updateAnnotations(t, cam, w, h) {
   const E = ANNO.els;
   const P = (x, y, z) => project(x, y, z, cam, w, h);
-  for (const key of ['title','ruler','q','arrow','hi','outline','shitai','mtl','end']) if (E[key]) setOp(E[key], 0);
 
-  /* 只保留克制的尺度与结构提示；施工主体始终由3D几何表达。 */
-  if (t >= 5.8 && t < 9.6) {
-    const o = fadeWin(t, 5.8, 9.6, 0.35) * 0.78;
+  /* 标题 2.8–5.6 */
+  {
+    const o = fadeWin(t, 2.9, 5.5, 0.35);
+    setOp(E.title, o);
+    if (o > 0) {
+      const a = P(-9.5, 34.5, 3);
+      E.title.setAttribute('transform', `translate(${a.x},${a.y})`);
+    }
+  }
+
+  /* 35.5m 标尺 5.9–9.6 */
+  {
+    const o = fadeWin(t, 6.0, 9.5, 0.3);
     setOp(E.ruler, o);
-    const top = P(-7.2, 35.5, 4.2), bot = P(-7.2, 0.4, 4.2);
-    const arm = Math.max(18, w * 0.018);
-    E.rulerPath.setAttribute('d', `M ${top.x-arm} ${top.y} L ${top.x} ${top.y} L ${top.x} ${bot.y} M ${top.x-arm} ${bot.y} L ${top.x} ${bot.y}`);
-    E.rulerText.textContent = '35.5 m';
-    E.rulerText.setAttribute('font-size', Math.max(22, Math.min(36, w * 0.024)));
-    E.rulerText.setAttribute('x', top.x - arm - Math.max(46, w * 0.034));
-    E.rulerText.setAttribute('y', (top.y + bot.y) * 0.5);
+    if (o > 0) {
+      const top = P(-3.0, 35.5, 4.5), bot = P(-3.0, 0.2, 4.5);
+      const k = clamp((t - 6.0) / 1.1, 0, 1);
+      const yEnd = lerp(top.y, bot.y, easeOut(k));
+      const arm = 46;
+      E.rulerPath.setAttribute('d',
+        `M ${top.x - arm} ${top.y} L ${top.x} ${top.y} L ${top.x} ${yEnd} M ${top.x - arm} ${bot.y} L ${top.x} ${bot.y}`);
+      E.rulerText.textContent = t < 7.6 ? '35.5m' : '35.5m';
+      E.rulerText.setAttribute('x', top.x - 96);
+      E.rulerText.setAttribute('y', (top.y + bot.y) / 2);
+    }
   }
 
-  if (t >= 32.0 && t < 36.9) {
-    const o = fadeWin(t, 32.0, 36.9, 0.45) * 0.28;
+  /* 大问号 18.0–19.4 */
+  {
+    const o = fadeWin(t, 18.0, 19.4, 0.25);
+    setOp(E.q, o);
+    if (o > 0) {
+      const a = P(0, 30, 8);
+      E.q.setAttribute('x', a.x); E.q.setAttribute('y', a.y);
+    }
+  }
+
+  /* 红箭头 27.2–30.0：沿窟门水平向内 */
+  {
+    const o = fadeWin(t, 27.2, 30.0, 0.25);
+    setOp(E.arrow, o);
+    if (o > 0) {
+      const k = (t - 27.2) % 1.2 / 1.2;
+      const zTip = lerp(6, -6, k);
+      const a = P(0, 34.6, zTip), b = P(0, 34.6, zTip + 9);
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const L = Math.hypot(dx, dy) || 1;
+      const ux = dx / L, uy = dy / L;
+      const nx = -uy, ny = ux;
+      const hw = 24, hl = 40, sw = 11;
+      const d = `M ${a.x} ${a.y}
+                 L ${a.x + ux * hl + nx * hw} ${a.y + uy * hl + ny * hw}
+                 L ${a.x + ux * hl + nx * sw} ${a.y + uy * hl + ny * sw}
+                 L ${b.x + nx * sw} ${b.y + ny * sw}
+                 L ${b.x - nx * sw} ${b.y - ny * sw}
+                 L ${a.x + ux * hl - nx * sw} ${a.y + uy * hl - ny * sw}
+                 L ${a.x + ux * hl - nx * hw} ${a.y + uy * hl - ny * hw} Z`;
+      E.arrowPath.setAttribute('d', d);
+      setOp(E.arrow, o * (0.55 + 0.45 * Math.sin(t * 5) * 0.5 + 0.225));
+    }
+  }
+
+  /* 拱顶红色高亮 34.2–36.8 */
+  {
+    const o = fadeWin(t, 34.2, 36.8, 0.3);
     setOp(E.hi, o);
-    const pts = [], N = 26;
-    for (let i = 0; i <= N; i++) {
-      const a = Math.PI * (i / N);
-      pts.push(P(-Math.cos(a) * (CAVE.x1-CAVE.x0)/2, CAVE.yArch + Math.sin(a)*(CAVE.yTop-CAVE.yArch), CAVE.zBack + 1.0));
+    if (o > 0) {
+      const pts = [];
+      const N = 22;
+      for (let i = 0; i <= N; i++) {
+        const a = Math.PI * (i / N);
+        const x = -Math.cos(a) * (CAVE.x1 - CAVE.x0) / 2;
+        const y = CAVE.yArch + Math.sin(a) * (CAVE.yTop - CAVE.yArch);
+        pts.push(P(x, y, CAVE.zBack + 1.5));
+      }
+      for (let i = N; i >= 0; i--) {
+        const a = Math.PI * (i / N);
+        const x = -Math.cos(a) * (CAVE.x1 - CAVE.x0) / 2;
+        const y = CAVE.yArch + Math.sin(a) * (CAVE.yTop - CAVE.yArch);
+        pts.push(P(x, y, CAVE.zFront - 1.0));
+      }
+      E.hi.setAttribute('d', 'M ' + pts.map(p => `${p.x} ${p.y}`).join(' L ') + ' Z');
     }
-    for (let i = N; i >= 0; i--) {
-      const a = Math.PI * (i / N);
-      pts.push(P(-Math.cos(a) * (CAVE.x1-CAVE.x0)/2, CAVE.yArch + Math.sin(a)*(CAVE.yTop-CAVE.yArch), CAVE.zFront - 0.8));
-    }
-    E.hi.setAttribute('d', 'M ' + pts.map(p => `${p.x} ${p.y}`).join(' L ') + ' Z');
   }
 
-  if (t >= 39.4 && t < 43.4) {
-    const o = fadeWin(t, 39.4, 43.4, 0.4) * 0.40;
+  /* 石胎轮廓 + 文字 39.4–43.2 */
+  {
+    const o = fadeWin(t, 39.4, 43.2, 0.3);
     setOp(E.outline, o);
-    const pts = [];
-    for (let i = 0; i <= 32; i++) {
-      const y = lerp(17.8, 35.5, i/32); const q = P(ENV_RX(y)*0.63, y, ENV_RZ(y)*0.72); pts.push(`${q.x} ${q.y}`);
+    if (o > 0) {
+      const draw = clamp((t - 39.4) / 1.3, 0, 1);
+      const pts = [];
+      const yTopO = 35.6;
+      const yBotO = clamp((typeof CARVE !== 'undefined' ? CARVE.y : 19) - 0.8, 18.0, 31.5);
+      const N = 26;
+      // 右半（+X 侧）自下而上
+      for (let i = 0; i <= N; i++) {
+        const y = lerp(yBotO, yTopO, i / N);
+        pts.push([ENV_RX(y) * 0.62, y, ENV_RZ(y) * 0.72]);
+      }
+      // 顶部绕过
+      for (let i = 0; i <= 10; i++) {
+        const a = (i / 10) * Math.PI;
+        pts.push([Math.cos(a) * ENV_RX(35.2) * 0.62, 35.55 + Math.sin(a) * 0.9, ENV_RZ(35.2) * 0.5]);
+      }
+      // 左半自上而下
+      for (let i = N; i >= 0; i--) {
+        const y = lerp(yBotO, yTopO, i / N);
+        pts.push([-ENV_RX(y) * 0.62, y, ENV_RZ(y) * 0.72]);
+      }
+      const total = pts.length;
+      const cut = Math.max(2, Math.round(total * draw));
+      const sp = pts.slice(0, cut).map(([x, y, z]) => {
+        const p = P(x, y, z);
+        // 手绘抖动
+        const j = (hash3(Math.round(x * 10), Math.round(y * 10), 7) - 0.5) * 5;
+        return `${p.x + j} ${p.y + j}`;
+      });
+      E.outline.setAttribute('d', 'M ' + sp.join(' L '));
     }
-    for (let i = 32; i >= 0; i--) {
-      const y = lerp(17.8, 35.5, i/32); const q = P(-ENV_RX(y)*0.63, y, ENV_RZ(y)*0.72); pts.push(`${q.x} ${q.y}`);
+    const o2 = fadeWin(t, 41.3, 43.2, 0.28);
+    setOp(E.shitai, o2);
+    if (o2 > 0) {
+      const a = P(7.2, 31.6, 3.5);
+      E.shitai.setAttribute('transform', `translate(${a.x},${a.y})`);
     }
-    E.outline.setAttribute('d', 'M ' + pts.join(' L ') + ' Z');
+  }
+
+  /* 8.4m / 35.5m 佛窟尺度 51.4–56.0 */
+  if (t >= 51.2 && t < 56.1) {
+    const o = fadeWin(t, 51.4, 56.0, 0.3);
+    setOp(E.ruler, o);
+    if (o > 0) {
+      const isFirst = t < 53.4;
+      const yTopR = isFirst ? 8.4 : 35.5;
+      const top = P(-13.0, yTopR, 8.5), bot = P(-13.0, 0.1, 8.5);
+      const arm = 40;
+      E.rulerPath.setAttribute('d',
+        `M ${top.x - arm} ${top.y} L ${top.x} ${top.y} L ${top.x} ${bot.y} M ${top.x - arm} ${bot.y} L ${top.x} ${bot.y}`);
+      E.rulerText.textContent = isFirst ? '8.4m' : '35.5m';
+      E.rulerText.setAttribute('x', top.x - 92);
+      E.rulerText.setAttribute('y', (top.y + bot.y) / 2);
+    }
+  }
+
+  /* 材料名 */
+  {
+    let label = '', anchor = null, o = 0;
+    if (t >= 67.0 && t < 68.6) { label = '河流沉淀土'; o = fadeWin(t, 67.0, 68.6, 0.25); anchor = [-1.0, 27.4, 6]; }
+    else if (t >= 68.6 && t < 72.0) { label = '麦秆'; o = fadeWin(t, 68.7, 72.0, 0.25); anchor = [-1.2, 27.2, 6]; }
+    else if (t >= 78.4 && t < 80.4) { label = '棉花'; o = fadeWin(t, 78.5, 80.3, 0.25); anchor = [-1.0, 28.6, 6]; }
+    else if (t >= 83.4 && t < 85.4) { label = '蛋清 米汁'; o = fadeWin(t, 83.5, 85.3, 0.25); anchor = [-1.0, 29.6, 6]; }
+    setOp(E.mtl, o);
+    if (o > 0 && anchor) {
+      const a = P(anchor[0], anchor[1], anchor[2]);
+      setMaterialLabel(label, a.x, a.y, 54);
+    }
+  }
+
+  /* 片尾书法 111.6– */
+  {
+    const o = fadeWin(t, 111.6, DURATION, 0.5);
+    setOp(E.end, o);
+    if (o > 0) {
+      const a = P(-58, 52, 40);
+      E.end.setAttribute('transform', `translate(${a.x},${a.y})`);
+    }
   }
 }
 
@@ -323,8 +450,29 @@ function placeProp(obj, cam, right, up, dist, scale, spin = 0) {
 }
 
 function updateProps(t, cam) {
-  /* 取消漂浮在镜头前的巨型“讲解道具”。材料和工具统一在真实作业面中呈现。 */
-  for (const key of ['mud','wheat','cotton','egg','trowel','chisel']) {
-    if (PROPS[key]) PROPS[key].visible = false;
+  const show = (o, on) => { if (o) o.visible = on; };
+  show(PROPS.mud, false); show(PROPS.wheat, false); show(PROPS.cotton, false);
+  show(PROPS.egg, false); show(PROPS.trowel, false); show(PROPS.chisel, false);
+
+  if (t >= 66.9 && t < 68.7) {
+    show(PROPS.mud, true);
+    placeProp(PROPS.mud, cam, 0.115, -0.075, 6.5, 0.082, t * 0.5);
+  } else if (t >= 68.5 && t < 72.0) {
+    show(PROPS.mud, true);
+    placeProp(PROPS.mud, cam, 0.115, -0.075, 6.5, 0.082, t * 0.5);
+    show(PROPS.wheat, true);
+    placeProp(PROPS.wheat, cam, 0.075, 0.020, 6.2, 0.030, 0);
+  } else if (t >= 78.4 && t < 80.4) {
+    show(PROPS.cotton, true);
+    placeProp(PROPS.cotton, cam, 0.115, -0.055, 5.6, 0.095, t * 0.4);
+  } else if (t >= 83.4 && t < 85.4) {
+    show(PROPS.egg, true);
+    placeProp(PROPS.egg, cam, 0.125, -0.060, 6.0, 0.088, 0);
+  } else if (t >= 85.4 && t < 87.6) {
+    show(PROPS.trowel, true);
+    const sw = Math.sin(t * 2.6);
+    placeProp(PROPS.trowel, cam, 0.105 + sw * 0.060, -0.045 + Math.cos(t * 2.6) * 0.050, 8.2, 0.050, 0);
+    PROPS.trowel.rotateX(-1.16);          // 展示刀面而不是刀刃
+    PROPS.trowel.rotateY(-0.42 + sw * 0.22);
   }
 }

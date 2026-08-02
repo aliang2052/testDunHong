@@ -4,72 +4,28 @@
 
 /* 洞窟尺寸（米） */
 const CAVE = {
-  x0: -18.0, x1: 18.0,      // 左右壁
-  yTop: 43.5,               // 拱顶最高
-  yArch: 37.5,              // 起拱线
-  zBack: -18.5,             // 后壁
+  x0: -15.5, x1: 15.5,      // 左右壁
+  yTop: 41.5,               // 拱顶最高
+  yArch: 37.0,              // 起拱线
+  zBack: -11.5,             // 后壁
   zFront: 10.0,             // 洞口（= 崖壁面）
 };
 const CLIFF_Z = 10.0;
-const CLIFF_TOP = 52.0;
+const CLIFF_TOP = 46.0;
 
 const WORLD = { group: null };
 
-function buildArchTunnelGeometry(width = 8.8, wallHeight = 5.8, archHeight = 3.3, length = 20, segArch = 24, segDepth = 12) {
-  const half = width * 0.5;
-  const ring = [];
-  ring.push(new THREE.Vector2(-half, 0));
-  ring.push(new THREE.Vector2(-half, wallHeight));
-  for (let i = 0; i <= segArch; i++) {
-    const a = Math.PI - (i / segArch) * Math.PI;
-    ring.push(new THREE.Vector2(Math.cos(a) * half, wallHeight + Math.sin(a) * archHeight));
-  }
-  ring.push(new THREE.Vector2(half, 0));
-  const pos = [], uv = [], idx = [];
-  const nr = ring.length;
-  for (let j = 0; j <= segDepth; j++) {
-    const z = lerp(length * 0.5, -length * 0.5, j / segDepth);
-    for (let i = 0; i < nr; i++) {
-      const q = ring[i];
-      pos.push(q.x, q.y, z);
-      uv.push(i / Math.max(1, nr - 1) * 5.0, j / segDepth * length / 4.0);
-    }
-  }
-  for (let j = 0; j < segDepth; j++) for (let i = 0; i < nr - 1; i++) {
-    const a = j * nr + i, b = a + 1, c = a + nr + 1, d = a + nr;
-    idx.push(a, d, b, b, d, c);
-  }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  g.setIndex(idx); g.computeVertexNormals();
-  return g;
-}
-
-function buildArchBackGeometry(width = 8.8, wallHeight = 5.8, archHeight = 3.3, seg = 36) {
-  const shape = new THREE.Shape();
-  const half = width * 0.5;
-  shape.moveTo(-half, 0); shape.lineTo(-half, wallHeight);
-  for (let i = 0; i <= seg; i++) {
-    const a = Math.PI - (i / seg) * Math.PI;
-    shape.lineTo(Math.cos(a) * half, wallHeight + Math.sin(a) * archHeight);
-  }
-  shape.lineTo(half, 0); shape.closePath();
-  return new THREE.ShapeGeometry(shape, 24);
-}
-
 /* 崖壁面的起伏 */
 function cliffFaceZ(x, y) {
-  const macro=fbm2(x*.010+5,y*.012+2,5,3.1)-.5;
-  const blocks=fbm2(x*.031,y*.038,4,8.8)-.5;
-  const vertical=ridge2(x*.020+fbm2(x*.008,y*.025,3,41)*.8,y*.010,5,1.7);
-  const fracture=ridge2(x*.008+fbm2(x*.025,y*.010,3,19)*.6,y*.082,4,27);
-  const alcove=smoothstep(.60,.90,fbm2(x*.014+7,y*.029,4,5.1))*smoothstep(39,8,y)*smoothstep(155,18,Math.abs(x));
-  let z=CLIFF_Z+macro*8.6+blocks*3.4-vertical*4.2-fracture*2.1-alcove*2.8;
-  /* 仅在主窟门边缘局部收平，中央之外保持真实起伏。 */
-  const near=smoothstep(24,15.5,Math.abs(x))*smoothstep(50,39,y);
-  z=lerp(z,CLIFF_Z+blocks*.75-fracture*.55,near*.72);
-  z+=smoothstep(10,0,y)*2.2;
+  const n = fbm2(x * 0.011 + 5, y * 0.013 + 2, 5, 3.1) - 0.5;
+  const n2 = fbm2(x * 0.045, y * 0.05, 4, 8.8) - 0.5;
+  const erode = ridge2(x * 0.02, y * 0.055, 4, 1.7);
+  let z = CLIFF_Z + n * 6.6 + n2 * 2.2 - erode * 3.2;
+  // 靠近洞口区域压平，保证洞口是干净的立面
+  const near = smoothstep(30, 16, Math.abs(x)) * smoothstep(50, 42, y);
+  z = lerp(z, CLIFF_Z + n2 * 0.35, near * 0.96);
+  // 底部略外凸（坡积）
+  z += smoothstep(9, 0, y) * 1.6;
   return z;
 }
 
@@ -82,43 +38,10 @@ function duneY(x, z) {
   return CLIFF_TOP + rise + n * 9.0 + streak * 1.6;
 }
 
-function makeErodedRock(seed, sx, sy, sz) {
-  const g=new THREE.IcosahedronGeometry(1,3),pa=g.attributes.position;
-  for(let i=0;i<pa.count;i++){
-    let x=pa.getX(i),y=pa.getY(i),z=pa.getZ(i);
-    const n=fbm3(x*1.9+seed*.71,y*1.7+seed*1.17,z*1.8+seed*.43,4)-.5;
-    const cut=ridge2(x*2.7+seed,y*3.8,3,seed*3.1);
-    const r=1+n*.24-cut*.07;
-    x*=sx*r;y*=sy*(r+(y>0?.03:0));z*=sz*r;
-    pa.setXYZ(i,x,y,z);
-  }
-  pa.needsUpdate=true;g.computeVertexNormals();return g;
-}
-
 function buildWorld(scene) {
   const G = new THREE.Group();
   WORLD.group = G;
   scene.add(G);
-
-  /* ---------------- 砂岩崖体厚度：完整三维岩墙，正面细节由高密度立面叠加 ---------------- */
-  {
-    const W=340,Hh=CLIFF_TOP+14,D=38;
-    const g=new THREE.BoxGeometry(W,Hh,D,84,42,10);
-    const pa=g.attributes.position;
-    for(let i=0;i<pa.count;i++){
-      let x=pa.getX(i),y=pa.getY(i)+Hh*.5,z=pa.getZ(i)-9.0;
-      const side=Math.abs(x)/(W*.5);
-      const back=smoothstep(4,-28,z);
-      const rough=(fbm3(x*.018,y*.022,z*.025,4)-.5)*(1.3+back*1.8);
-      z+=rough;
-      x+=Math.sign(x||1)*smoothstep(.78,1.0,side)*rough*.35;
-      pa.setXYZ(i,x,y,z);
-    }
-    pa.needsUpdate=true;g.computeVertexNormals();
-    const mat=new THREE.MeshStandardMaterial({map:TEX.sandstone.map,normalMap:TEX.sandstone.normal,color:0xB78A5D,roughness:.99,metalness:0});
-    mat.normalScale.set(2.0,2.0);applyCarve(mat);
-    const m=new THREE.Mesh(g,mat);m.castShadow=m.receiveShadow=true;G.add(m);WORLD.cliffBody=m;
-  }
 
   /* ---------------- 崖壁立面 ---------------- */
   {
@@ -143,42 +66,13 @@ function buildWorld(scene) {
       map: TEX.sandstone.map, normalMap: TEX.sandstone.normal,
       roughness: 0.98, metalness: 0, side: THREE.DoubleSide,
     });
-    mat.normalScale.set(3.5, 3.5);
+    mat.normalScale.set(2.0, 2.0);
     applyCarve(mat);
     const m = new THREE.Mesh(g, mat);
     m.receiveShadow = true; m.castShadow = true;
     G.add(m);
     WORLD.cliffFace = m;
     WORLD.cliffMat = mat;
-  }
-
-  /* ---------------- 竖向断裂与崖脚碎石：只做地质尺度参照，不再堆叠球状巨石 ---------------- */
-  {
-    const fractureMat=new THREE.MeshStandardMaterial({color:0x4A3326,roughness:1,transparent:true,opacity:.58,depthWrite:false});
-    const fractures=new THREE.Group();
-    for(let j=0;j<18;j++){
-      const side=j%2?-1:1;
-      const baseX=side*(28+hash3(j,9,7)*132);
-      const pts=[];
-      for(let i=0;i<=22;i++){
-        const y=lerp(1.0,CLIFF_TOP+5,i/22);
-        const x=baseX+Math.sin(i*.58+j)*(.35+hash3(j,i,2)*1.15)+(fbm2(i*.12,j,2,17)-.5)*1.5;
-        pts.push(new THREE.Vector3(x,y,cliffFaceZ(x,y)+.18));
-      }
-      const tube=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),66,.018+hash3(j,3,5)*.032,5,false),fractureMat);
-      fractures.add(tube);
-    }
-    G.add(fractures);WORLD.fractures=fractures;
-
-    const rockGeo=new THREE.IcosahedronGeometry(1,1),rpa=rockGeo.attributes.position;
-    for(let i=0;i<rpa.count;i++){const q=.72+hash3(i,5,3)*.62;rpa.setXYZ(i,rpa.getX(i)*q,rpa.getY(i)*q*.72,rpa.getZ(i)*q);}rpa.needsUpdate=true;rockGeo.computeVertexNormals();
-    const screeMat=new THREE.MeshStandardMaterial({map:TEX.rockCore.map,normalMap:TEX.rockCore.normal,color:0x8B6849,roughness:.99});
-    const scree=new THREE.InstancedMesh(rockGeo,screeMat,132),M=new THREE.Matrix4(),Q=new THREE.Quaternion(),S=new THREE.Vector3();
-    for(let i=0;i<132;i++){
-      const x=(hash3(i,8,4)-.5)*290,z=CLIFF_Z+5+hash3(i,11,5)*30,y=.12+hash3(i,2,17)*.8,sc=.16+Math.pow(hash3(i,19,7),2.2)*1.25;
-      Q.setFromEuler(new THREE.Euler(hash3(i,3,13)*2,hash3(i,9,23)*TAU,hash3(i,17,29)*1.5));S.set(sc*(.8+hash3(i,31,2)*.8),sc*(.50+hash3(i,37,4)*.50),sc);M.compose(new THREE.Vector3(x,y,z),Q,S);scree.setMatrixAt(i,M);
-    }
-    scree.instanceMatrix.needsUpdate=true;scree.castShadow=scree.receiveShadow=true;G.add(scree);WORLD.scree=scree;
   }
 
   /* ---------------- 崖壁厚度：洞口周围的侧壁（让洞口有进深） ---------------- */
@@ -217,29 +111,21 @@ function buildWorld(scene) {
     WORLD.dune = m;
   }
 
-  /* ---------------- 窟门隧道：真实拱形内壁和暗后壁 ---------------- */
+  /* ---------------- 窟门隧道（门洞后的暗腔） ---------------- */
   {
-    const tg = buildArchTunnelGeometry(8.8, 5.8, 3.3, 20, 28, 16);
+    const tg = new THREE.BoxGeometry(8.6, 8.9, 20, 1, 1, 1);
+    const uvA = tg.attributes.uv;
+    for (let i = 0; i < uvA.count; i++) uvA.setXY(i, uvA.getX(i) * 8.6, uvA.getY(i) * 8.9);
     const tmat = new THREE.MeshStandardMaterial({
       map: TEX.caveWall.map, normalMap: TEX.caveWall.normal,
-      color: 0xB38A65, emissive: 0x3A2113, emissiveIntensity: 0.34,
-      roughness: 0.99, side: THREE.DoubleSide,
+      roughness: 0.98, side: THREE.BackSide,
     });
-    tmat.normalScale.set(1.4, 1.4);
+    tmat.map = TEX.caveWall.map;
     const tm = new THREE.Mesh(tg, tmat);
-    tm.position.set(0, 30.3, CLIFF_Z - 5.4);
-    tm.visible = false; tm.receiveShadow = true;
-    G.add(tm); WORLD.doorTunnel = tm;
-
-    const backMat = new THREE.MeshStandardMaterial({
-      map: TEX.rockCore.map, normalMap: TEX.rockCore.normal,
-      color: 0x745744, emissive: 0x28160D, emissiveIntensity: 0.34,
-      roughness: 1.0, side: THREE.DoubleSide,
-    });
-    const back = new THREE.Mesh(buildArchBackGeometry(8.8, 5.8, 3.3), backMat);
-    back.position.set(0, 30.3, CLIFF_Z - 15.25);
-    back.visible = false; back.receiveShadow = true;
-    G.add(back); WORLD.doorBack = back;
+    tm.position.set(0, 34.85, CLIFF_Z - 5.5);
+    tm.visible = false;
+    G.add(tm);
+    WORLD.doorTunnel = tm;
   }
 
   /* ---------------- 岩芯：尚未挖走的土石（顶面 = 当前开凿面） ---------------- */
@@ -251,7 +137,7 @@ function buildWorld(scene) {
     for (let i = 0; i < pa.count; i++) {
       if (pa.getY(i) > FH / 2 - 0.01) {
         const n = fbm2(pa.getX(i) * 0.20 + 3, pa.getZ(i) * 0.20, 3, 5);
-        pa.setY(i, FH / 2 + (n - 0.5) * 2.8);     // 凿击面的起伏（绝对米）
+        pa.setY(i, FH / 2 + (n - 0.5) * 1.5);     // 凿击面的起伏（绝对米）
       }
     }
     pa.needsUpdate = true; g.computeVertexNormals();
@@ -260,7 +146,7 @@ function buildWorld(scene) {
     const mat = new THREE.MeshStandardMaterial({
       map: TEX.sandstone.map, normalMap: TEX.sandstone.normal, roughness: 0.99,
     });
-    mat.normalScale.set(2.5, 2.5);
+    mat.normalScale.set(1.2, 1.2);
     applyCarve(mat);
     WORLD.rockFillH = FH;
     const m = new THREE.Mesh(g, mat);
@@ -273,41 +159,34 @@ function buildWorld(scene) {
   /* ---------------- 洞窟内壁 ---------------- */
   buildCaveInterior(G);
 
-  /* ---------------- 风蚀沙地与踩踏硬化区 ---------------- */
+  /* ---------------- 地面广场 ---------------- */
   {
-    const g = new THREE.PlaneGeometry(400, 300, 84, 60);
+    const g = new THREE.PlaneGeometry(400, 300, 1, 1);
     g.rotateX(-Math.PI / 2);
-    const pa = g.attributes.position;
-    for (let i = 0; i < pa.count; i++) {
-      const x = pa.getX(i), z = pa.getZ(i) + CLIFF_Z + 130;
-      const macro = fbm2(x * 0.008 + 3, z * 0.010 + 7, 4, 5.2) - 0.5;
-      const ripple = Math.sin(z * 0.075 + fbm2(x * 0.035, z * 0.018, 2, 4) * 3.0) * 0.12;
-      const apron = smoothstep(CLIFF_Z + 78, CLIFF_Z + 6, z);
-      const packed = smoothstep(55, 20, Math.abs(x)) * smoothstep(CLIFF_Z + 90, CLIFF_Z + 20, z);
-      pa.setXYZ(i, x, -0.16 + macro * 0.72 + ripple * (1 - packed * 0.75) + apron * 0.22, z);
-    }
-    pa.needsUpdate = true; g.computeVertexNormals();
+    g.translate(0, -0.05, CLIFF_Z + 130);
     const uvA = g.attributes.uv;
-    for (let i = 0; i < uvA.count; i++) uvA.setXY(i, uvA.getX(i) * 400 / 18, uvA.getY(i) * 300 / 18);
-    const mat = new THREE.MeshStandardMaterial({ map: TEX.ground.map, normalMap: TEX.ground.normal, roughness: 0.99 });
-    mat.normalScale.set(1.35, 1.35);
-    const m = new THREE.Mesh(g, mat); m.receiveShadow = true; G.add(m); WORLD.ground = m;
+    for (let i = 0; i < uvA.count; i++) uvA.setXY(i, uvA.getX(i) * 400 / 9, uvA.getY(i) * 300 / 9);
+    const mat = new THREE.MeshStandardMaterial({
+      map: TEX.ground.map, normalMap: TEX.ground.normal, roughness: 0.93,
+    });
+    const m = new THREE.Mesh(g, mat);
+    m.receiveShadow = true;
+    G.add(m);
+    WORLD.ground = m;
   }
 
-  /* 佛像基座：三层风化椭圆石台，避免现代矩形展台感。 */
+  /* 佛像基座台 */
   {
-    const mat = new THREE.MeshStandardMaterial({ map: TEX.ground.map, normalMap: TEX.ground.normal, color: 0x8E7358, roughness: 0.98 });
-    const grp = new THREE.Group();
-    const dims = [[17.8, 0.55, 11.8], [16.8, 0.42, 10.8], [15.8, 0.32, 9.8]];
-    let y = 0;
-    dims.forEach((d, i) => {
-      const g = new THREE.CylinderGeometry(1, 1.02, d[1], 64, 1);
-      const m = new THREE.Mesh(g, mat);
-      m.scale.set(d[0], 1, d[2]);
-      m.position.set(0, y + d[1] * 0.5, 0.35 - i * 0.12);
-      m.receiveShadow = true; m.castShadow = true; grp.add(m); y += d[1] - 0.06;
+    const g = new THREE.BoxGeometry(40, 1.2, 26);
+    const mat = new THREE.MeshStandardMaterial({
+      map: TEX.ground.map, normalMap: TEX.ground.normal, roughness: 0.92,
     });
-    G.add(grp); WORLD.plinth = grp; grp.visible = false;
+    const m = new THREE.Mesh(g, mat);
+    m.position.set(0, 0.6, 1.0);
+    m.receiveShadow = true;
+    G.add(m);
+    WORLD.plinth = m;
+    m.visible = false;
   }
 
   return G;
@@ -321,7 +200,6 @@ const WALL_MATS = [];
 function makeWallMaterial(uvScale = [4, 4]) {
   const mat = new THREE.MeshStandardMaterial({
     map: TEX.caveWall.map, normalMap: TEX.caveWall.normal,
-    color: 0xFFFFFF, emissive: 0x24160E, emissiveIntensity: 0.16,
     roughness: 0.97, metalness: 0, side: THREE.DoubleSide,
   });
   const U = {
@@ -340,7 +218,7 @@ function makeWallMaterial(uvScale = [4, 4]) {
     nFine: { value: TEX.mudFine.normal },
     uScale: { value: new THREE.Vector2(uvScale[0], uvScale[1]) },
     uWallSection: { value: 99999 },
-    uMuralScale: { value: new THREE.Vector2(1 / 36.0, 1 / 43.5) },
+    uMuralScale: { value: new THREE.Vector2(1 / 10.5, 1 / 10.5) },
   };
   mat.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, U);
@@ -357,12 +235,12 @@ function makeWallMaterial(uvScale = [4, 4]) {
       uniform float uWallSection;
       float wallPhaseLocal(){
         if (uWallProgress < 0.0) return uWallPhase;
-        float side = step(16.0, abs(vWP.x));
-        float uuBack = clamp((vWP.x + 18.0) / 36.0, 0.0, 1.0);
-        float uuSide = clamp((vWP.z + 18.5) / 28.5, 0.0, 1.0);
+        float side = step(13.8, abs(vWP.x));
+        float uuBack = clamp((vWP.x + 15.5) / 31.0, 0.0, 1.0);
+        float uuSide = clamp((vWP.z + 11.5) / 21.5, 0.0, 1.0);
         float uu = mix(uuBack, uuSide, side);
-        if (vWP.x > 16.0) uu = 1.0 - uu;
-        float vv = clamp(vWP.y / 43.5, 0.0, 1.0);
+        if (vWP.x > 13.8) uu = 1.0 - uu;
+        float vv = clamp(vWP.y / 41.5, 0.0, 1.0);
         float rag = sin(vWP.x * 0.83 + vWP.z * 0.47 + uWallTime * 0.55) * 0.020
                   + sin(vWP.y * 1.37 - vWP.z * 0.31) * 0.014;
         float coord = vv;
@@ -384,26 +262,10 @@ function makeWallMaterial(uvScale = [4, 4]) {
     sh.fragmentShader = sh.fragmentShader.replace('#include <map_fragment>',
       `
       vec2 uvA = vUvX * uScale;
-      vec4 rawCol = texture2D(tRaw, uvA);
-      vec4 fineCol = texture2D(tFine, uvA); fineCol.rgb *= vec3(0.76,0.69,0.60);
-      vec4 whiteCol = texture2D(tWhite, uvA); whiteCol.rgb *= vec3(1.035,1.025,0.99);
-      vec4 muralCol = texture2D(tMural, vUvX * uMuralScale); muralCol.rgb *= vec3(1.04,1.00,0.94);
-      vec4 col = rawCol;
-      col = mix(col, fineCol, pw(0.0));
-      col = mix(col, whiteCol, pw(1.0));
-      col = mix(col, muralCol, pw(2.0));
-      if (uWallProgress >= 0.0) {
-        float side = step(16.0, abs(vWP.x));
-        float uuBack = clamp((vWP.x + 18.0) / 36.0, 0.0, 1.0);
-        float uuSide = clamp((vWP.z + 18.5) / 28.5, 0.0, 1.0);
-        float uu = mix(uuBack, uuSide, side); if (vWP.x > 16.0) uu = 1.0 - uu;
-        float vv = clamp(vWP.y / 43.5, 0.0, 1.0);
-        float coord = vv;
-        if (uWallMode > 1.5 && uWallMode < 2.5) coord = 1.0 - vv;
-        if (uWallMode > 2.5) { float band=floor(vv*7.0); float snake=mod(band,2.0)<1.0?uu:1.0-uu; coord=(band+snake)/7.0; }
-        float frontEdge = 1.0 - smoothstep(0.018,0.082,abs(coord-uWallProgress));
-        col.rgb += frontEdge * vec3(0.18,0.095,0.040);
-      }
+      vec4 col = texture2D(tRaw, uvA);
+      col = mix(col, texture2D(tFine,  uvA), pw(0.0));
+      col = mix(col, texture2D(tWhite, uvA), pw(1.0));
+      col = mix(col, texture2D(tMural, vUvX * uMuralScale), pw(2.0));
       diffuseColor *= col;
       `);
     sh.fragmentShader = sh.fragmentShader.replace('#include <normal_fragment_maps>',

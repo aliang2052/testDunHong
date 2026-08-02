@@ -172,23 +172,6 @@ function makeStageMaterial(opts) {
         return uSpreadOn > 0.5 ? mix(uPhaseFrom, uPhaseTo, vStageCover) : uPhase;
       }
       float phW(float k){ return clamp(localPhase() - k, 0.0, 1.0); }
-      float stageHash(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123); }
-      float stageNoise(vec2 p){
-        vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);
-        return mix(mix(stageHash(i),stageHash(i+vec2(1.0,0.0)),f.x),mix(stageHash(i+vec2(0.0,1.0)),stageHash(i+vec2(1.0,1.0)),f.x),f.y);
-      }
-      float stageFbm(vec2 p){float v=0.0,a=0.5;for(int i=0;i<4;i++){v+=stageNoise(p)*a;p=p*2.03+17.7;a*=0.5;}return v;}
-      float pigmentAge(vec2 uv){
-        float macro=stageFbm(uv*1.8+vec2(4.1,1.7));
-        float flakes=stageFbm(uv*7.5+vec2(13.0,8.0));
-        return smoothstep(0.58,0.90,macro*0.62+flakes*0.38);
-      }
-      float pigmentCrack(vec2 uv){
-        float warp=stageFbm(uv*3.2)*1.7;
-        float a=abs(sin((uv.x*17.0+uv.y*4.0+warp)*3.14159));
-        float b=abs(sin((uv.y*23.0-uv.x*3.0-warp)*3.14159));
-        return smoothstep(0.965,0.995,max(a,b))*smoothstep(0.35,0.78,stageFbm(uv*5.0));
-      }
     ` + shader.fragmentShader;
 
     shader.fragmentShader = shader.fragmentShader.replace(
@@ -205,30 +188,16 @@ function makeStageMaterial(opts) {
       vec2 uvR = vUvX * uRockScale;
       vec2 uvM = vUvX * uMudScale;
       vec2 uvF = vUvX * uFinalScale;
-      vec4 rockCol = texture2D(tRock, uvR);
-      vec4 polishCol = texture2D(tPolish, uvM);
-      vec4 col = rockCol;
+      vec4 col = texture2D(tRock, uvR);
       col = mix(col, texture2D(tCrack,  uvM), phW(0.0));
       col = mix(col, texture2D(tCoarse, uvM), phW(1.0));
       col = mix(col, texture2D(tMid,    uvM), phW(2.0));
       col = mix(col, texture2D(tFine,   uvM), phW(3.0));
-      col = mix(col, polishCol, phW(4.0));
+      col = mix(col, texture2D(tPolish, uvM), phW(4.0));
       vec4 fin = texture2D(tFinal, uvF);
       fin.rgb *= uFinalTint;
-      /* 矿物颜料颗粒、粉化和剥落：最终彩绘不再是纯色硬片。 */
-      float grain = stageFbm(uvF*28.0 + vStageWP.xy*0.035);
-      float patina = pigmentAge(uvF*0.82 + vStageWP.xz*0.012);
-      float crack = pigmentCrack(uvF*0.92 + vStageWP.xy*0.008);
-      float peel = smoothstep(0.68,0.93,patina*0.76+stageFbm(uvF*13.0)*0.24);
-      float lum = dot(fin.rgb, vec3(0.299,0.587,0.114));
-      fin.rgb = mix(fin.rgb, vec3(lum), 0.13);
-      fin.rgb *= 0.88 + grain*0.20;
-      fin.rgb = mix(fin.rgb, fin.rgb*vec3(0.70,0.62,0.54), patina*0.26);
-      fin.rgb = mix(fin.rgb, polishCol.rgb*vec3(0.78,0.70,0.60), peel*0.68);
-      fin.rgb = mix(fin.rgb, vec3(0.20,0.13,0.09), crack*0.42);
-      float paintW = phW(5.0);
-      col = mix(col, fin, paintW);
-      col.rgb = mix(col.rgb, uFrontGlow, vFrontEdge * uWet * 0.14);
+      col = mix(col, fin, phW(5.0));
+      col.rgb = mix(col.rgb, uFrontGlow, vFrontEdge * uWet * 0.18);
       diffuseColor *= col;
       `
     );
@@ -268,10 +237,7 @@ function makeStageMaterial(opts) {
       rlo = mix(rlo, r4, step(3.5, rIdx));
       rlo = mix(rlo, r5, step(4.5, rIdx));
       rlo = mix(rlo, r6, step(5.5, rIdx));
-      float paintAge = pigmentAge(vUvX*uFinalScale*0.82 + vStageWP.xz*0.012);
-      float paintCrack = pigmentCrack(vUvX*uFinalScale*0.92 + vStageWP.xy*0.008);
-      float roughnessFactor = mix(rlo, 0.28, vFrontEdge * uWet);
-      roughnessFactor = clamp(roughnessFactor + phW(5.0)*(paintAge*0.18 + paintCrack*0.10), 0.28, 1.0);
+      float roughnessFactor = mix(rlo, 0.24, vFrontEdge * uWet);
       `
     );
   };

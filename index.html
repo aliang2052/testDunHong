@@ -4,70 +4,83 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="icon" href="data:,">
-<title>敦煌莫高窟第96窟 · 实时建造全过程</title>
+<title>敦煌莫高窟第96窟大佛 · 开凿与塑造全过程（3D 实时复刻）</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  :root{color-scheme:dark;--gold:#d7a257;--panel:rgba(12,14,17,.78);--line:rgba(255,255,255,.12)}
-  html,body{width:100%;height:100%;overflow:hidden;background:#050607;color:#eee7da;
+  html,body{height:100%;background:#0b0d10;color:#e8e4dc;
     font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
-    -webkit-font-smoothing:antialiased}
-  #app,#stage{position:fixed;inset:0}
-  #stage{display:flex;align-items:center;justify-content:center;overflow:hidden;
-    background:radial-gradient(ellipse at 52% 35%,#20201c 0%,#0c0d0e 48%,#040506 100%)}
+    overflow:hidden;-webkit-font-smoothing:antialiased}
+  #app{display:flex;flex-direction:column;height:100%}
+  #stage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;min-height:0;
+    background:radial-gradient(ellipse at 50% 35%,#161b20 0%,#08090b 75%)}
   #stage>*{position:absolute}
-  canvas#c{display:block;max-width:100%;max-height:100%;background:#08090a;
-    box-shadow:0 28px 90px rgba(0,0,0,.72)}
-  svg#anno{pointer-events:none;overflow:visible}
-  #hud{pointer-events:none;display:flex;align-items:flex-end;justify-content:center;padding:0 10% 86px}
-  #sub{max-width:72%;padding:7px 17px;border-radius:8px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.48),transparent);
-    color:#fff;font-size:clamp(17px,1.55vw,27px);font-weight:780;line-height:1.38;letter-spacing:.03em;text-align:center;
-    text-shadow:0 2px 5px #000,0 0 18px rgba(0,0,0,.8)}
-  #hint{left:18px;top:18px;padding:9px 12px;border:1px solid rgba(255,255,255,.09);border-radius:8px;
-    background:rgba(7,9,11,.56);backdrop-filter:blur(9px);font-size:11px;line-height:1.65;color:#a8adb2;pointer-events:none}
-  #stepcard{right:18px;top:18px;width:min(340px,38vw);padding:13px 15px;border:1px solid rgba(224,177,96,.28);border-radius:11px;
-    background:linear-gradient(145deg,rgba(15,17,19,.88),rgba(34,26,17,.68));backdrop-filter:blur(10px);
-    box-shadow:0 15px 42px rgba(0,0,0,.34);pointer-events:none}
-  #stepnum{float:left;margin-right:11px;color:#e7b66a;font-size:23px;font-weight:900;line-height:1}
-  #stepcopy{overflow:hidden}
-  #steptitle{display:block;color:#fff6e8;font-size:14px;font-weight:800;letter-spacing:.04em}
-  #stepaction{display:block;margin-top:4px;color:#b8bdc2;font-size:11px;line-height:1.45}
-  #stepprogress{display:block;height:3px;margin-top:9px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}
-  #stepfill{display:block;width:0;height:100%;background:linear-gradient(90deg,#a96628,#f0c16f);box-shadow:0 0 10px rgba(238,175,77,.7)}
-  #ui{left:50%;bottom:51px;transform:translateX(-50%);width:min(980px,calc(100% - 28px));height:46px;
-    display:flex;align-items:center;gap:10px;padding:7px 10px;border:1px solid rgba(255,255,255,.11);border-radius:12px;
-    background:var(--panel);backdrop-filter:blur(13px);box-shadow:0 15px 45px rgba(0,0,0,.45)}
-  #ui button,#ui select{height:31px;padding:0 11px;border:1px solid rgba(255,255,255,.13);border-radius:7px;
-    background:rgba(255,255,255,.055);color:#ddd7cd;font:12px inherit;cursor:pointer}
-  #ui button:hover,#ui select:hover,#ui button.on{background:rgba(212,151,70,.20);border-color:rgba(230,177,104,.45);color:#fff}
-  #play{width:39px;padding:0!important;font-size:15px!important}
-  #bar{position:relative;flex:1;height:8px;border-radius:7px;background:rgba(255,255,255,.12);cursor:pointer;overflow:hidden}
-  #barfill{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#a96a31,#e6b666)}
-  #time{min-width:88px;color:#aeb2b6;font-size:11px;font-variant-numeric:tabular-nums;text-align:right}
-  #chapters{left:50%;bottom:10px;transform:translateX(-50%);width:min(1180px,calc(100% - 26px));height:34px;
-    display:flex;align-items:center;gap:5px;padding:4px 7px;overflow-x:auto;scrollbar-width:none;border-radius:10px;
-    background:rgba(8,10,12,.65);backdrop-filter:blur(10px)}
-  #chapters::-webkit-scrollbar{display:none}
-  #chapters button{height:25px;flex:0 0 auto;padding:0 10px;border:1px solid rgba(255,255,255,.09);border-radius:13px;
-    background:rgba(255,255,255,.04);color:#9ca2a8;font:11px inherit;cursor:pointer;white-space:nowrap}
-  #chapters button:hover{color:#f1d2a2;border-color:rgba(224,174,95,.35)}
-  #chapters button.on{color:#fff;background:#8a5728;border-color:#d19a57}
-  #chapters button.done{color:#d0b482}
-  body.clean #ui,body.clean #chapters,body.clean #hint,body.clean #stepcard{display:none}
-  #loading{position:fixed;inset:0;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:17px;
-    background:radial-gradient(circle at 50% 40%,#241d15,#08090a 57%,#030404);transition:opacity .55s}
+  canvas#c{display:block;border-radius:6px;box-shadow:0 18px 60px rgba(0,0,0,.7)}
+  svg#anno{pointer-events:none}
+  #hud{pointer-events:none;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8.5%}
+  #sub{
+    font-size:clamp(15px,2.35vh,30px);font-weight:800;letter-spacing:.5px;
+    color:#fff;text-align:center;line-height:1.4;max-width:88%;
+    text-shadow:0 0 5px rgba(0,0,0,.95),0 2px 7px rgba(0,0,0,.9),0 0 22px rgba(0,0,0,.7);
+    padding:0 12px;
+  }
+  /* 控制条 */
+  #ui{display:flex;align-items:center;gap:12px;padding:11px 16px;background:#12151a;
+    border-top:1px solid #232830;flex-wrap:wrap}
+  #ui button,#ui select{
+    background:#1d222a;color:#d8d4cc;border:1px solid #2e3540;border-radius:7px;
+    padding:7px 13px;font-size:13px;cursor:pointer;font-family:inherit;transition:.15s}
+  #ui button:hover,#ui select:hover{background:#28303a;color:#fff}
+  #ui button.on{background:#8a5a2a;border-color:#b4763a;color:#fff}
+  #play{font-size:16px!important;min-width:44px}
+  #bar{flex:1;height:9px;background:#242a33;border-radius:5px;cursor:pointer;position:relative;min-width:140px}
+  #barfill{height:100%;background:linear-gradient(90deg,#c2853d,#e8b25e);border-radius:5px;width:0}
+  #time{font-size:12px;color:#8c94a0;font-variant-numeric:tabular-nums;min-width:82px;text-align:right}
+  #chapters{display:flex;gap:6px;padding:9px 16px 13px;background:#0e1114;overflow-x:auto;
+    border-top:1px solid #1b1f26;scrollbar-width:thin}
+  #chapters button{
+    background:#171c22;color:#9aa3af;border:1px solid #262c35;border-radius:14px;
+    padding:5px 13px;font-size:12px;white-space:nowrap;cursor:pointer;font-family:inherit;transition:.15s}
+  #chapters button:hover{background:#2a3340;color:#f0c78a;border-color:#4a5462}
+  /* 纯净模式 */
+  body.clean #ui,body.clean #chapters{display:none}
+  /* 加载 */
+  #loading{position:fixed;inset:0;background:#0b0d10;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:20px;z-index:99;transition:opacity .5s}
   #loading.gone{opacity:0;pointer-events:none}
-  #ltitle{font-size:22px;font-weight:850;letter-spacing:.18em;color:#e5bf7d}
-  #lsub{font-size:12px;color:#898c8e;letter-spacing:.08em}
-  #lwrap{width:min(380px,70vw);height:4px;border-radius:3px;background:#252728;overflow:hidden}
-  #lbar{height:100%;width:0;background:linear-gradient(90deg,#8f592b,#e4b66a);transition:width .16s}
-  #ltxt{font-size:11px;color:#777c80}
-  @media(max-width:760px){
-    #hint{display:none}#stepcard{right:9px;top:9px;width:min(300px,72vw);padding:9px 11px}
-    #stepnum{font-size:18px}#steptitle{font-size:12px}#stepaction{font-size:10px}
-    #hud{padding-bottom:91px}#sub{max-width:90%;font-size:14px;padding:5px 10px}
-    #ui{bottom:45px;height:40px;gap:6px;padding:5px 7px}#ui button,#ui select{height:28px;padding:0 7px;font-size:10px}
-    #time{min-width:72px;font-size:10px}#freebtn,#hidebtn{display:none}
-    #chapters{bottom:6px;height:33px}#chapters button{font-size:10px;padding:0 8px}
+  #ltitle{font-size:20px;font-weight:800;letter-spacing:3px;color:#e0c08a}
+  #lsub{font-size:12.5px;color:#6b7280;letter-spacing:1px}
+  #lwrap{width:min(340px,72vw);height:4px;background:#1e242c;border-radius:2px;overflow:hidden}
+  #lbar{height:100%;width:0;background:linear-gradient(90deg,#a9702f,#e8b25e);transition:width .2s}
+  #ltxt{font-size:11.5px;color:#586170;font-variant-numeric:tabular-nums}
+  #hint{position:absolute;left:14px;top:12px;font-size:11px;color:#79818e;line-height:1.7;
+    background:rgba(10,12,15,.55);padding:8px 11px;border-radius:7px;backdrop-filter:blur(6px);
+    pointer-events:none;opacity:.75}
+  #stepcard{right:14px;top:12px;width:min(270px,52%);display:flex;align-items:flex-start;gap:10px;
+    padding:10px 11px;border:1px solid rgba(231,184,104,.28);border-radius:9px;
+    background:linear-gradient(135deg,rgba(15,18,22,.86),rgba(28,22,16,.66));
+    box-shadow:0 8px 28px rgba(0,0,0,.28);backdrop-filter:blur(8px);pointer-events:none}
+  #stepnum{font-size:18px;font-weight:900;color:#e9b769;letter-spacing:.5px;line-height:1}
+  #stepcopy{min-width:0;flex:1}
+  #steptitle{display:block;font-size:12px;color:#fff;letter-spacing:.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #stepaction{display:block;margin-top:3px;font-size:10px;line-height:1.35;color:#aeb6c1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #stepprogress{display:block;height:2px;margin-top:7px;background:rgba(255,255,255,.12);overflow:hidden;border-radius:2px}
+  #stepfill{display:block;width:0;height:100%;background:linear-gradient(90deg,#d38a35,#f2c979);box-shadow:0 0 8px rgba(240,180,80,.7)}
+  #chapters button.on{background:#8a5a2a;border-color:#d69a50;color:#fff;box-shadow:0 0 0 1px rgba(232,178,94,.18) inset}
+  #chapters button.done{color:#d4b987;border-color:#3d4651}
+  body.clean #hint{display:none}
+  body.clean #stepcard{display:none}
+  @media (max-width:620px){
+    #hint{display:none}
+    #stepcard{right:8px;top:8px;width:calc(100% - 16px);max-width:300px;padding:8px 9px}
+    #stepaction{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+    #ui{gap:7px;padding:8px 9px}
+    #ui button,#ui select{padding:6px 9px}
+    #chapters{padding:7px 9px 10px}
+  }
+  @media (max-height:700px){
+    #hint{display:none}
+    #stepcard{top:7px;right:7px}
+    #chapters{padding-top:6px;padding-bottom:7px}
   }
 </style>
 </head>
@@ -77,20 +90,42 @@
     <canvas id="c"></canvas>
     <svg id="anno" xmlns="http://www.w3.org/2000/svg"></svg>
     <div id="hud"><div id="sub"></div></div>
-    <div id="hint">空格：播放/暂停　← →：快退/快进<br>自由视角：拖拽旋转 · 滚轮缩放 · WASD/QE 平移</div>
+    <div id="hint">空格 播放/暂停 &nbsp;·&nbsp; ←→ 快进退<br>自由视角：拖拽旋转 / 滚轮缩放 / WASD-QE 平移</div>
     <div id="stepcard">
-      <span id="stepnum">01</span><div id="stepcopy"><b id="steptitle">九层楼揭幕</b><span id="stepaction">木构逐层移开，显露彩绘大佛</span><i id="stepprogress"><u id="stepfill"></u></i></div>
+      <span id="stepnum">01</span>
+      <div id="stepcopy">
+        <b id="steptitle">九层楼揭幕</b>
+        <span id="stepaction">木构逐层移开，显露彩绘大佛</span>
+        <i id="stepprogress"><u id="stepfill"></u></i>
+      </div>
     </div>
-    <div id="ui">
-      <button id="play">⏸</button><div id="bar"><div id="barfill"></div></div><span id="time">0:00 / 1:56</span>
-      <select id="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select>
-      <button id="freebtn">自由视角</button><button id="hidebtn">纯净模式</button>
-    </div>
-    <div id="chapters"></div>
   </div>
+  <div id="ui">
+    <button id="play">⏸</button>
+    <div id="bar"><div id="barfill"></div></div>
+    <span id="time">0:00 / 1:56</span>
+    <select id="speed">
+      <option value="0.25">0.25×</option>
+      <option value="0.5">0.5×</option>
+      <option value="1" selected>1×</option>
+      <option value="1.5">1.5×</option>
+      <option value="2">2×</option>
+    </select>
+    <button id="freebtn">自由视角</button>
+    <button id="hidebtn">纯净模式</button>
+  </div>
+  <div id="chapters"></div>
 </div>
-<div id="loading"><div id="ltitle">敦煌莫高窟 · 第96窟</div><div id="lsub">洞窟开凿与大佛塑造 · 浏览器实时三维</div><div id="lwrap"><div id="lbar"></div></div><div id="ltxt">正在烘焙材质…</div></div>
-<script type="module">const THREE = (function(){
+
+<div id="loading">
+  <div id="ltitle">敦煌莫高窟 · 第96窟大佛</div>
+  <div id="lsub">开凿与塑造全过程 · 3D 实时复刻</div>
+  <div id="lwrap"><div id="lbar"></div></div>
+  <div id="ltxt">正在烘焙材质…</div>
+</div>
+
+<script type="module">
+const THREE = (function(){
 /**
  * @license
  * Copyright 2010-2023 Three.js Authors
@@ -53325,65 +53360,77 @@ function toDataTex(canvas, repeat = 1) {
    崖壁砂岩 —— 暖土黄 + 灰紫矿物斑 + 水平层理
    ------------------------------------------------------------ */
 function buildSandstone(size = 512) {
-  const dark=[0x6A,0x4B,0x35], mid=[0xA8,0x78,0x50], light=[0xD3,0xAD,0x7B], grey=[0x8B,0x7C,0x70];
-  const r=bake(size,(u,v)=>{
-    const warp=fbm2(u*2.1,v*2.7,5,17.2);
-    const macro=fbm2(u*3.0+warp*.42,v*3.4,5,3.7);
-    const vertical=ridge2(u*7.0+warp*1.35,v*1.35,5,7.3);
-    const pockets=fbm2(u*8.5+warp*.7,v*11.0,4,29.1);
-    const grain=fbm2(u*150,v*150,3,5.8);
-    const beds=fbm2(u*1.2+warp*.18,v*13.0,4,11.1);
-    const crackMask=smoothstep(.72,.91,fbm2(u*3.2,v*8.0,4,43.0));
-    const crackLine=smoothstep(.955,.995,Math.abs(Math.sin((u*5.2+warp*1.7+v*.18)*3.14159)))*crackMask;
-    let t=clamp(macro*.43+vertical*.25+pockets*.16+beds*.08+grain*.08,0,1);
-    let col=[lerp(mid[0],light[0],t),lerp(mid[1],light[1],t),lerp(mid[2],light[2],t)];
-    const mineral=smoothstep(.67,.90,fbm2(u*4.0,v*4.6,4,71))*0.24;
-    col=[lerp(col[0],grey[0],mineral),lerp(col[1],grey[1],mineral),lerp(col[2],grey[2],mineral)];
-    const shade=clamp((1.0-vertical)*.16+(1.0-pockets)*.12+crackLine*.48,0,.62);
-    col=[lerp(col[0],dark[0],shade),lerp(col[1],dark[1],shade),lerp(col[2],dark[2],shade)];
-    const h=clamp(.12+macro*.30+vertical*.33+pockets*.18+beds*.08+grain*.06-crackLine*.38,0,1);
-    return [col[0],col[1],col[2],h];
+  const baseA = [0xA2, 0x77, 0x48];   // 暗
+  const baseB = [0xEE, 0xCE, 0x9E];   // 亮
+  const mineral = [0x9A, 0x94, 0x9C]; // 灰紫矿物
+  const dark = [0x93, 0x70, 0x46];
+
+  const r = bake(size, (u, v) => {
+    // 层理（水平沉积带）
+    const bed = fbm2(u * 2.2, v * 17.0, 4, 3.1);
+    // 大块明暗
+    const macro = fbm2(u * 4.2, v * 3.8, 5, 11.7);
+    // 竖向风蚀条纹（崖壁的主要肌理）
+    const streak = ridge2(u * 34.0, v * 1.8, 4, 6.2);
+    // 细颗粒
+    const grain = fbm2(u * 120, v * 120, 3, 5.3);
+
+    let t = clamp(macro * 0.30 + bed * 0.24 + streak * 0.28 + grain * 0.18, 0, 1);
+    t = Math.pow(t, 0.94);
+    let col = [
+      lerp(baseA[0], baseB[0], t),
+      lerp(baseA[1], baseB[1], t),
+      lerp(baseA[2], baseB[2], t),
+    ];
+    // 灰紫矿物斑（柔和、低频、低对比）
+    const ms = smoothstep(0.58, 0.86, fbm2(u * 5.2, v * 4.8, 4, 41)) * 0.42;
+    col = [lerp(col[0], mineral[0], ms), lerp(col[1], mineral[1], ms), lerp(col[2], mineral[2], ms)];
+    // 稀疏的水平岩缝（只在少数层出现）
+    const seamBand = smoothstep(0.80, 0.94, fbm2(u * 1.6, v * 9.0, 3, 71));
+    const seam = seamBand * smoothstep(0.40, 0.82, fbm2(u * 9, v * 40, 3, 13)) * 0.52;
+    col = [lerp(col[0], dark[0], seam), lerp(col[1], dark[1], seam), lerp(col[2], dark[2], seam)];
+
+    const h = clamp(macro * 0.24 + bed * 0.18 + streak * 0.40 + grain * 0.18 - seam * 0.5, 0, 1);
+    return [col[0], col[1], col[2], h];
   });
-  return {map:toTex(r.canvas),normal:toDataTex(normalFromHeight(r.heights,size,3.6)),raw:r};
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 2.6)), raw: r };
 }
 
 /* ------------------------------------------------------------
    洞窟内壁 —— 开凿出的平滑土棕面
    ------------------------------------------------------------ */
 function buildCaveWall(size = 512) {
-  const a=[0x59,0x3E,0x2D],b=[0x9A,0x6E,0x4D],dust=[0xB4,0x8B,0x66];
-  const r=bake(size,(u,v)=>{
-    const macro=fbm2(u*4.5,v*4.0,5,7.7);
-    const chop=ridge2(u*10.5,v*34.0,4,2.2);
-    const soot=smoothstep(.62,.9,fbm2(u*3.2,v*3.6,4,63));
-    const grain=fbm2(u*130,v*130,3,9.1);
-    let t=clamp(macro*.55+grain*.18+chop*.27,0,1);
-    let col=[lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)];
-    col=[lerp(col[0],dust[0],grain*.12),lerp(col[1],dust[1],grain*.12),lerp(col[2],dust[2],grain*.12)];
-    col=col.map((c,i)=>lerp(c,[0x34,0x29,0x23][i],soot*.48));
-    return [col[0],col[1],col[2],clamp(macro*.26+chop*.52+grain*.18,0,1)];
+  const a = [0x8E, 0x68, 0x44], b = [0xB2, 0x8B, 0x60];
+  const r = bake(size, (u, v) => {
+    const macro = fbm2(u * 4.0, v * 4.0, 4, 7.7);
+    const chisel = ridge2(u * 13, v * 30, 3, 2.2);     // 凿痕
+    const grain = fbm2(u * 120, v * 120, 2, 9.1);
+    let t = clamp(macro * 0.7 + grain * 0.2 + chisel * 0.18, 0, 1);
+    const col = [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+    const h = clamp(macro * 0.35 + chisel * 0.45 + grain * 0.2, 0, 1);
+    return [col[0], col[1], col[2], h];
   });
-  return {map:toTex(r.canvas),normal:toDataTex(normalFromHeight(r.heights,size,2.0))};
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 1.5)) };
 }
 
 /* ------------------------------------------------------------
    石胎岩石 —— 黄褐砂岩 + 明显灰斑与凿面
    ------------------------------------------------------------ */
 function buildRockCore(size = 512) {
-  const a=[0x7E,0x5A,0x3A],b=[0xC3,0x96,0x62],grey=[0x70,0x69,0x60];
-  const r=bake(size,(u,v)=>{
-    const macro=fbm2(u*5.0,v*5.0,5,23.3);
-    const w=worley2(u*10.5,v*10.5,5);
-    const facet=smoothstep(.30,.025,w.f2-w.f1);
-    const grain=fbm2(u*140,v*140,3,3.3);
-    const chisel=ridge2(u*18,v*27,3,91);
-    let t=clamp(macro*.58+grain*.19+facet*.13+chisel*.10,0,1);
-    let col=[lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)];
-    const gm=smoothstep(.61,.86,fbm2(u*3.7,v*3.5,4,61))*.55;
-    col=[lerp(col[0],grey[0],gm),lerp(col[1],grey[1],gm),lerp(col[2],grey[2],gm)];
-    return [col[0],col[1],col[2],clamp(macro*.30+facet*.35+grain*.18+chisel*.23,0,1)];
+  const a = [0xA8, 0x84, 0x54], b = [0xDD, 0xC0, 0x8A], gy = [0x8C, 0x88, 0x8E];
+  const r = bake(size, (u, v) => {
+    const macro = fbm2(u * 5.0, v * 5.0, 5, 23.3);
+    const chunk = worley2(u * 9, v * 9, 5);
+    const facet = smoothstep(0.5, 0.02, chunk.f2 - chunk.f1);  // 凿击面
+    const grain = fbm2(u * 110, v * 110, 3, 3.3);
+    let t = clamp(macro * 0.68 + grain * 0.22 + facet * 0.1, 0, 1);
+    let col = [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+    const gm = smoothstep(0.62, 0.86, fbm2(u * 3.4, v * 3.4, 4, 61)) * 0.7;
+    col = [lerp(col[0], gy[0], gm), lerp(col[1], gy[1], gm), lerp(col[2], gy[2], gm)];
+    const h = clamp(macro * 0.45 + facet * 0.35 + grain * 0.3, 0, 1);
+    return [col[0], col[1], col[2], h];
   });
-  return {map:toTex(r.canvas),normal:toDataTex(normalFromHeight(r.heights,size,3.5))};
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 3.2)) };
 }
 
 /* ------------------------------------------------------------
@@ -53431,71 +53478,105 @@ function buildMud(size, tint, grainScale, roughAmp) {
    袈裟：赭红，带细小深褐斑点（视频里泥塑表面的杂质）
    ------------------------------------------------------------ */
 function buildRobeRed(size = 512) {
-  /* 褪色朱砂与土红，而不是饱和巧克力红。 */
-  const a=[0x66,0x37,0x2C],b=[0xAE,0x67,0x4E],ochre=[0xC0,0x87,0x59];
-  const r=bake(size,(u,v)=>{
-    const macro=fbm2(u*4,v*4,5,3.9),grain=fbm2(u*75,v*75,3,6.1);
-    const wear=smoothstep(.66,.91,fbm2(u*8,v*8,4,34));
-    const soot=smoothstep(.68,.92,fbm2(u*3.5,v*5,3,88));
-    let t=clamp(macro*.62+grain*.38,0,1);
-    let col=[lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)];
-    col=[lerp(col[0],ochre[0],wear*.25),lerp(col[1],ochre[1],wear*.25),lerp(col[2],ochre[2],wear*.25)];
-    col=col.map((c,i)=>lerp(c,[0x45,0x31,0x2A][i],soot*.22));
-    return [col[0],col[1],col[2],clamp(.45+(grain-.5)*.45+(wear-.5)*.12,0,1)];
+  const a = [0x96, 0x50, 0x3C], b = [0xB6, 0x6B, 0x50];
+  const r = bake(size, (u, v) => {
+    const macro = fbm2(u * 4, v * 4, 4, 3.9);
+    const grain = fbm2(u * 60, v * 60, 3, 6.1);
+    let t = clamp(macro * 0.55 + grain * 0.45, 0, 1);
+    let col = [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+    // 杂质斑点
+    const sp = worley2(u * 34, v * 34, 77);
+    const s = smoothstep(0.14, 0.0, sp.f1) * smoothstep(0.55, 0.95, fbm2(u * 20, v * 20, 2, 55));
+    col = [lerp(col[0], 0x4A, s), lerp(col[1], 0x2E, s), lerp(col[2], 0x1E, s)];
+    return [col[0], col[1], col[2], clamp(0.5 + (grain - 0.5) * 0.5, 0, 1)];
   });
-  return {map:toTex(r.canvas),normal:toDataTex(normalFromHeight(r.heights,size,1.35))};
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 1.2)) };
 }
 
 /* ------------------------------------------------------------
    内衣：孔雀蓝 + 深蓝团花圆点（参考 t96 左肩）
    ------------------------------------------------------------ */
 function buildInnerBlue(size = 512) {
-  const c=makeCanvas(size,size),g=c.getContext('2d');
-  const img=g.createImageData(size,size),d=img.data;
-  for(let y=0;y<size;y++)for(let x=0;x<size;x++){
-    const u=x/size,v=y/size,n=fbm2(u*44,v*44,3,2.1),m=fbm2(u*5,v*5,4,18);
-    const i=(y*size+x)*4;d[i]=45+(n-.5)*15;d[i+1]=82+(m-.5)*20;d[i+2]=88+(n-.5)*18;d[i+3]=255;
+  const c = makeCanvas(size, size);
+  const g = c.getContext('2d');
+  g.fillStyle = '#2E9DBE'; g.fillRect(0, 0, size, size);
+  // 底纹
+  const img = g.getImageData(0, 0, size, size); const d = img.data;
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    const n = fbm2(x / size * 40, y / size * 40, 3, 2.1);
+    const i = (y * size + x) * 4;
+    d[i] = clamp(d[i] + (n - 0.5) * 26, 0, 255);
+    d[i + 1] = clamp(d[i + 1] + (n - 0.5) * 26, 0, 255);
+    d[i + 2] = clamp(d[i + 2] + (n - 0.5) * 26, 0, 255);
   }
-  g.putImageData(img,0,0);
-  g.strokeStyle='rgba(171,145,99,.48)';g.fillStyle='rgba(31,58,61,.74)';g.lineWidth=size*.006;
-  const step=size/4;
-  for(let yy=-1;yy<5;yy++)for(let xx=-1;xx<5;xx++){
-    const cx=(xx+.5)*step+(yy%2)*step*.18,cy=(yy+.5)*step;
-    g.beginPath();g.arc(cx,cy,step*.105,0,TAU);g.fill();
-    for(let k=0;k<6;k++){const a=k/6*TAU;g.beginPath();g.ellipse(cx+Math.cos(a)*step*.17,cy+Math.sin(a)*step*.17,step*.07,step*.035,a,0,TAU);g.stroke();}
+  g.putImageData(img, 0, 0);
+  // 深蓝团花：中心圆 + 5 瓣
+  const rnd = mulberry32(7);
+  g.fillStyle = 'rgba(21,86,124,0.92)';
+  const step = size / 3;
+  for (let gy = 0; gy < 3; gy++) for (let gx = 0; gx < 3; gx++) {
+    const cx = gx * step + step * 0.5 + (rnd() - 0.5) * step * 0.18;
+    const cy = gy * step + step * 0.5 + (rnd() - 0.5) * step * 0.18;
+    const R = step * 0.115;
+    g.beginPath(); g.arc(cx, cy, R, 0, TAU); g.fill();
+    for (let k = 0; k < 5; k++) {
+      const an = (k / 5) * TAU + rnd() * 0.4;
+      g.beginPath();
+      g.arc(cx + Math.cos(an) * R * 2.05, cy + Math.sin(an) * R * 2.05, R * 0.82, 0, TAU);
+      g.fill();
+    }
   }
-  return {map:toTex(c)};
+  return { map: toTex(c) };
 }
 
 /* ------------------------------------------------------------
    斜披（僧祇支）：土黄底 + 绿松石菱形连环纹
    ------------------------------------------------------------ */
 function buildSash(size = 512) {
-  const c=makeCanvas(size,size),g=c.getContext('2d');g.fillStyle='#9A8144';g.fillRect(0,0,size,size);
-  const img=g.getImageData(0,0,size,size),d=img.data;
-  for(let y=0;y<size;y++)for(let x=0;x<size;x++){const n=fbm2(x/size*38,y/size*38,3,9.3),m=fbm2(x/size*5,y/size*5,4,27);const i=(y*size+x)*4;d[i]=clamp(d[i]+(n-.5)*28+(m-.5)*18,0,255);d[i+1]=clamp(d[i+1]+(n-.5)*25,0,255);d[i+2]=clamp(d[i+2]+(n-.5)*18,0,255);}g.putImageData(img,0,0);
-  g.strokeStyle='rgba(43,105,88,.82)';g.lineWidth=size*.010;const st=size/5;
-  for(let yy=-1;yy<6;yy++)for(let xx=-1;xx<6;xx++){const cx=(xx+.5)*st,cy=(yy+.5)*st;g.beginPath();g.moveTo(cx,cy-st*.38);g.lineTo(cx+st*.38,cy);g.lineTo(cx,cy+st*.38);g.lineTo(cx-st*.38,cy);g.closePath();g.stroke();}
-  g.globalAlpha=.18;g.fillStyle='#342820';const rnd=mulberry32(92);for(let i=0;i<170;i++){g.beginPath();g.arc(rnd()*size,rnd()*size,1+rnd()*8,0,TAU);g.fill();}g.globalAlpha=1;
-  return {map:toTex(c)};
+  const c = makeCanvas(size, size);
+  const g = c.getContext('2d');
+  g.fillStyle = '#CFBB6E'; g.fillRect(0, 0, size, size);
+  const img = g.getImageData(0, 0, size, size); const d = img.data;
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    const n = fbm2(x / size * 34, y / size * 34, 3, 9.3);
+    const i = (y * size + x) * 4;
+    d[i] = clamp(d[i] + (n - 0.5) * 30, 0, 255);
+    d[i + 1] = clamp(d[i + 1] + (n - 0.5) * 30, 0, 255);
+    d[i + 2] = clamp(d[i + 2] + (n - 0.5) * 24, 0, 255);
+  }
+  g.putImageData(img, 0, 0);
+  // 连环菱格
+  g.strokeStyle = '#3FBFA8'; g.lineWidth = size * 0.014; g.lineCap = 'round';
+  const N = 5, s = size / N;
+  for (let gy = -1; gy <= N; gy++) for (let gx = -1; gx <= N; gx++) {
+    const cx = gx * s + s * 0.5, cy = gy * s + s * 0.5;
+    // 菱形
+    g.beginPath();
+    g.moveTo(cx, cy - s * 0.42); g.lineTo(cx + s * 0.42, cy);
+    g.lineTo(cx, cy + s * 0.42); g.lineTo(cx - s * 0.42, cy);
+    g.closePath(); g.stroke();
+    // 内小菱
+    g.beginPath();
+    g.moveTo(cx, cy - s * 0.2); g.lineTo(cx + s * 0.2, cy);
+    g.lineTo(cx, cy + s * 0.2); g.lineTo(cx - s * 0.2, cy);
+    g.closePath(); g.stroke();
+    // 连接钩
+    g.beginPath(); g.arc(cx + s * 0.5, cy, s * 0.16, -0.9, 0.9); g.stroke();
+  }
+  return { map: toTex(c) };
 }
 
 /* ------------------------------------------------------------
    皮肤（肉色，细腻微颗粒）
    ------------------------------------------------------------ */
 function buildSkin(size = 256) {
-  const r=bake(size,(u,v)=>{
-    const micro=fbm2(u*90,v*90,3,12.2),m=fbm2(u*7,v*7,4,31.7);
-    const pore=worley2(u*42,v*46,67); const p=smoothstep(.16,.02,pore.f2-pore.f1);
-    const stain=smoothstep(.64,.90,fbm2(u*4,v*5,4,51));
-    const wear=smoothstep(.72,.94,fbm2(u*13,v*9,3,88));
-    const t=clamp(micro*.26+m*.62+p*.08,0,1);
-    let col=[lerp(0xC2,0xDF,t),lerp(0xA9,0xCC,t),lerp(0x88,0xB0,t)];
-    col=[lerp(col[0],0x8E,stain*.16),lerp(col[1],0x72,stain*.16),lerp(col[2],0x58,stain*.16)];
-    col=[lerp(col[0],0xD2,wear*.08),lerp(col[1],0xBD,wear*.08),lerp(col[2],0x99,wear*.08)];
-    return [col[0],col[1],col[2],clamp(.44+(micro-.5)*.22+p*.22+(wear-.5)*.07,0,1)];
+  const r = bake(size, (u, v) => {
+    const n = fbm2(u * 55, v * 55, 3, 12.2);
+    const m = fbm2(u * 6, v * 6, 3, 31.7);
+    const t = clamp(n * 0.4 + m * 0.6, 0, 1);
+    return [lerp(0xE8, 0xF6, t), lerp(0xCE, 0xE1, t), lerp(0xA9, 0xC0, t), clamp(0.5 + (n - 0.5) * 0.35, 0, 1)];
   });
-  return {map:toTex(r.canvas),normal:toDataTex(normalFromHeight(r.heights,size,.95))};
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 0.6)) };
 }
 
 /* ------------------------------------------------------------
@@ -53509,13 +53590,13 @@ function buildHalo(size = 1024) {
 
   // 环带定义： [r0, r1, 底色]
   const bands = [
-    [0.34, 0.50, '#8FA99C'],
-    [0.50, 0.53, '#3E6B61'],
-    [0.53, 0.71, '#B1B29B'],
-    [0.71, 0.74, '#466F64'],
-    [0.74, 0.905, '#88A79B'],
-    [0.905, 0.955, '#965044'],
-    [0.955, 1.00, '#76968C'],
+    [0.34, 0.50, '#8FD5C9'],
+    [0.50, 0.53, '#2E9B86'],
+    [0.53, 0.71, '#A8DED2'],
+    [0.71, 0.74, '#2E9B86'],
+    [0.74, 0.905, '#8FD5C9'],
+    [0.905, 0.955, '#C2553F'],
+    [0.955, 1.00, '#7FCBBD'],
   ];
   for (const [r0, r1, col] of bands) {
     g.beginPath();
@@ -53535,12 +53616,12 @@ function buildHalo(size = 1024) {
       g.fill();
     }
     g.beginPath(); g.arc(x, y, rad * 0.34, 0, TAU); g.fillStyle = coreCol; g.fill();
-    g.beginPath(); g.arc(x, y, rad * 0.15, 0, TAU); g.fillStyle = '#D9D0B8'; g.fill();
+    g.beginPath(); g.arc(x, y, rad * 0.15, 0, TAU); g.fillStyle = '#F2E6C8'; g.fill();
   }
   const rings = [
-    { r: 0.620, n: 22, rad: 0.070, p: '#4B756A', c: '#965044' },
-    { r: 0.825, n: 28, rad: 0.066, p: '#547F73', c: '#8E4A3F' },
-    { r: 0.435, n: 16, rad: 0.054, p: '#486E65', c: '#965044' },
+    { r: 0.620, n: 22, rad: 0.070, p: '#2E9B86', c: '#C2553F' },
+    { r: 0.825, n: 28, rad: 0.066, p: '#3AA890', c: '#B94E3A' },
+    { r: 0.435, n: 16, rad: 0.054, p: '#2E9B86', c: '#C2553F' },
   ];
   for (const ring of rings) {
     for (let i = 0; i < ring.n; i++) {
@@ -53573,9 +53654,9 @@ function buildHaloCrown(w = 640, h = 220) {
     g.closePath();
     g.fillStyle = col; g.fill();
   };
-  arc(w * 0.47, h * 0.86, '#934839');
-  arc(w * 0.40, h * 0.74, '#6D342B');
-  arc(w * 0.31, h * 0.60, '#A95B45');
+  arc(w * 0.47, h * 0.86, '#B84B33');
+  arc(w * 0.40, h * 0.74, '#8E3324');
+  arc(w * 0.31, h * 0.60, '#C6603F');
   /* 卷草纹 */
   g.strokeStyle = '#37302A'; g.lineWidth = h * 0.024; g.lineCap = 'round';
   for (let i = 0; i < 11; i++) {
@@ -53588,7 +53669,7 @@ function buildHaloCrown(w = 640, h = 220) {
     g.stroke();
   }
   /* 绿松石团点 */
-  g.fillStyle = '#5D8B7D';
+  g.fillStyle = '#43C0A8';
   for (let i = 0; i < 13; i++) {
     const t = i / 12;
     const x = cx + (t - 0.5) * w * 0.80;
@@ -53613,88 +53694,124 @@ function buildHaloCrown(w = 640, h = 220) {
    地面石板（参考 t17 广场）
    ------------------------------------------------------------ */
 function buildGroundStone(size = 512) {
-  const r=bake(size,(u,v)=>{
-    const macro=fbm2(u*4,v*4,5,17),grain=fbm2(u*110,v*110,3,22),ripple=ridge2(u*7,v*24,3,11);
-    const peb=worley2(u*34,v*34,31);const edge=smoothstep(.09,.0,peb.f1)*.28;
-    const t=clamp(macro*.48+grain*.28+ripple*.18+edge,0,1);
-    const a=[0x76,0x5A,0x3D],b=[0xBE,0x96,0x66];
-    return [lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t),clamp(macro*.35+grain*.2+ripple*.22+edge*.45,0,1)];
-  });
-  return {map:toTex(r.canvas,1),normal:toDataTex(normalFromHeight(r.heights,size,2.2))};
+  const c = makeCanvas(size, size);
+  const g = c.getContext('2d');
+  g.fillStyle = '#8C8F92'; g.fillRect(0, 0, size, size);
+  const rows = 16, cols = 4;
+  const rnd = mulberry32(11);
+  for (let r = 0; r < rows; r++) {
+    for (let cc = 0; cc < cols; cc++) {
+      const x = cc * (size / cols), y = r * (size / rows);
+      const v = 0.86 + rnd() * 0.26;
+      g.fillStyle = `rgb(${(0x92 * v) | 0},${(0x95 * v) | 0},${(0x99 * v) | 0})`;
+      g.fillRect(x + 1.5, y + 1.5, size / cols - 3, size / rows - 3);
+    }
+  }
+  // 颗粒
+  const img = g.getImageData(0, 0, size, size); const d = img.data;
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    const n = (fbm2(x / size * 80, y / size * 80, 3, 21) - 0.5) * 22;
+    const i = (y * size + x) * 4;
+    d[i] = clamp(d[i] + n, 0, 255); d[i + 1] = clamp(d[i + 1] + n, 0, 255); d[i + 2] = clamp(d[i + 2] + n, 0, 255);
+  }
+  g.putImageData(img, 0, 0);
+  const heights = new Float32Array(size * size);
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    const inX = (x % (size / cols)), inY = (y % (size / rows));
+    const edge = (inX < 2 || inX > size / cols - 3 || inY < 2 || inY > size / rows - 3) ? 0.2 : 0.8;
+    heights[y * size + x] = edge;
+  }
+  return { map: toTex(c, 1), normal: toDataTex(normalFromHeight(heights, size, 1.4)) };
 }
 
 /* ------------------------------------------------------------
    壁画（洞窟四壁，参考 t107）—— 千佛 + 飞天 + 卷草边饰
    ------------------------------------------------------------ */
 function buildMural(w = 1024, h = 1024) {
-  const c=makeCanvas(w,h),g=c.getContext('2d'),rnd=mulberry32(2307);
-  g.fillStyle='#766F58';g.fillRect(0,0,w,h);
-  /* 矿物底色先用多层半透明斑驳铺开，避免纯净平面。 */
-  for(let i=0;i<900;i++){
-    const x=rnd()*w,y=rnd()*h,rx=5+rnd()*54,ry=3+rnd()*34;
-    const cols=['rgba(111,118,91,.10)','rgba(129,80,55,.10)','rgba(56,73,69,.09)','rgba(199,164,104,.06)'];
-    g.fillStyle=cols[(rnd()*cols.length)|0];g.beginPath();g.ellipse(x,y,rx,ry,rnd()*TAU,0,TAU);g.fill();
+  const c = makeCanvas(w, h);
+  const g = c.getContext('2d');
+  g.fillStyle = '#7D8768'; g.fillRect(0, 0, w, h);
+  const img = g.getImageData(0, 0, w, h); const d = img.data;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const n = fbm2(x / w * 7, y / h * 7, 5, 3.3);
+    const n2 = fbm2(x / w * 48, y / h * 48, 3, 8.1);
+    const i = (y * w + x) * 4;
+    const k = (n - 0.5) * 46 + (n2 - 0.5) * 14;
+    d[i] = clamp(d[i] + k * 1.15, 0, 255);
+    d[i + 1] = clamp(d[i + 1] + k, 0, 255);
+    d[i + 2] = clamp(d[i + 2] + k * 0.75, 0, 255);
   }
-  /* 上下边饰：断续、错位、褪色。 */
-  const border=(y0,hh)=>{
-    g.globalAlpha=.68;g.fillStyle='#743F32';g.fillRect(0,y0,w,hh);
-    g.strokeStyle='rgba(205,177,112,.72)';g.lineWidth=hh*.07;
-    for(let i=0;i<34;i++){
-      if(rnd()<.12)continue;const x=i/34*w+(rnd()-.5)*9;
-      g.beginPath();g.moveTo(x,y0+hh*.78);g.bezierCurveTo(x+w/120,y0+hh*.12,x+w/80,y0+hh*.12,x+w/55,y0+hh*.78);g.stroke();
+  g.putImageData(img, 0, 0);
+
+  const rnd = mulberry32(23);
+  /* 上下卷草边饰 */
+  function border(y0, hh) {
+    g.fillStyle = '#8A3E2E'; g.fillRect(0, y0, w, hh);
+    g.strokeStyle = '#D6C489'; g.lineWidth = hh * 0.10;
+    for (let i = 0; i < 40; i++) {
+      const x = (i / 40) * w;
+      g.beginPath();
+      g.moveTo(x, y0 + hh * 0.82);
+      g.quadraticCurveTo(x + w / 80, y0 + hh * 0.12, x + w / 40, y0 + hh * 0.82);
+      g.stroke();
     }
-    g.globalAlpha=1;
-  };
-  border(0,h*.055);border(h*.945,h*.055);
+    g.fillStyle = '#3FA890';
+    for (let i = 0; i < 20; i++) {
+      g.beginPath(); g.arc((i + 0.5) / 20 * w, y0 + hh * 0.5, hh * 0.14, 0, TAU); g.fill();
+    }
+  }
+  border(0, h * 0.042);
+  border(h * 0.958, h * 0.042);
 
-  /* 叙事主带：不规则千佛与供养人，尺寸、姿态、缺损均不同。 */
-  const bodyCols=['#8F4E39','#70513F','#4E6667','#6D704E','#9B7641'];
-  const haloCols=['#566D61','#6D5848','#4C6870','#786346'];
-  const cols=8,rows=6,cw=w/cols,ch=h*.72/rows,y0=h*.16;
-  for(let r=0;r<rows;r++)for(let i=0;i<cols;i++){
-    if(rnd()<.10)continue;
-    const cx=(i+.5)*cw+(rnd()-.5)*cw*.22,cy=y0+(r+.5)*ch+(rnd()-.5)*ch*.18;
-    const sz=Math.min(cw,ch)*(.30+rnd()*.12),alpha=.48+rnd()*.30;
-    g.save();g.translate(cx,cy);g.rotate((rnd()-.5)*.12);g.globalAlpha=alpha;
-    g.fillStyle=haloCols[(r*2+i)%haloCols.length];g.beginPath();g.ellipse(0,-sz*.10,sz*.92,sz*1.02,0,0,TAU);g.fill();
-    g.strokeStyle='rgba(218,194,139,.48)';g.lineWidth=sz*.055;g.stroke();
-    g.fillStyle=bodyCols[(r+i*3)%bodyCols.length];g.beginPath();g.moveTo(-sz*.60,sz*.88);g.quadraticCurveTo(0,sz*.05,sz*.60,sz*.88);g.lineTo(sz*.45,sz*1.12);g.lineTo(-sz*.45,sz*1.12);g.closePath();g.fill();
-    g.fillStyle='#C8AD83';g.beginPath();g.ellipse(0,-sz*.22,sz*.24,sz*.30,0,0,TAU);g.fill();
-    g.strokeStyle='rgba(55,45,37,.65)';g.lineWidth=sz*.04;g.beginPath();g.moveTo(-sz*.12,-sz*.24);g.lineTo(sz*.12,-sz*.24);g.stroke();
+  /* 千佛：小而密（14 x 12） */
+  const cols = 14, rows = 12;
+  const cw = w / cols, ch = (h * 0.70) / rows, y0 = h * 0.245;
+  const bodyCols = ['#A85A3C', '#7B5340', '#4E6B7A', '#6E7A4E'];
+  const haloCols = ['#5C7F6C', '#7A5A48', '#4E6E80', '#8A6A46'];
+  for (let r = 0; r < rows; r++) {
+    for (let i = 0; i < cols; i++) {
+      const cx = i * cw + cw / 2, cy = y0 + r * ch + ch / 2;
+      const sz = Math.min(cw, ch) * 0.40;
+      g.beginPath(); g.arc(cx, cy - sz * 0.18, sz * 0.98, 0, TAU);
+      g.fillStyle = haloCols[(r * 3 + i) % 4]; g.fill();
+      g.beginPath(); g.arc(cx, cy - sz * 0.18, sz * 0.80, 0, TAU);
+      g.strokeStyle = 'rgba(230,210,160,0.55)'; g.lineWidth = sz * 0.07; g.stroke();
+      g.beginPath();
+      g.moveTo(cx - sz * 0.66, cy + sz * 0.88);
+      g.quadraticCurveTo(cx, cy + sz * 0.10, cx + sz * 0.66, cy + sz * 0.88);
+      g.closePath();
+      g.fillStyle = bodyCols[(r + i * 2) % 4]; g.fill();
+      g.beginPath(); g.arc(cx, cy - sz * 0.36, sz * 0.27, 0, TAU);
+      g.fillStyle = '#E7CCA5'; g.fill();
+      g.beginPath(); g.arc(cx, cy - sz * 0.45, sz * 0.24, Math.PI, TAU);
+      g.fillStyle = '#312F2B'; g.fill();
+    }
+  }
+
+  /* 上方飞天带 */
+  for (let i = 0; i < 8; i++) {
+    const cx = (i + 0.5) * (w / 8) + (rnd() - 0.5) * 30;
+    const cy = h * 0.135 + (rnd() - 0.5) * 26;
+    const sz = w * 0.030;
+    g.save(); g.translate(cx, cy); g.rotate((rnd() - 0.5) * 0.55);
+    g.fillStyle = '#CFA845';
+    g.beginPath(); g.ellipse(0, 0, sz * 1.1, sz * 0.40, 0, 0, TAU); g.fill();
+    g.beginPath(); g.arc(-sz * 0.88, -sz * 0.18, sz * 0.25, 0, TAU); g.fillStyle = '#E8D0A8'; g.fill();
+    g.strokeStyle = '#C0654A'; g.lineWidth = sz * 0.13;
+    g.beginPath(); g.moveTo(sz * 0.6, -sz * 0.1);
+    g.quadraticCurveTo(sz * 2.0, -sz * 1.1, sz * 3.4, -sz * 0.25); g.stroke();
     g.restore();
   }
 
-  /* 飞天与飘带以多次低透明笔触构成。 */
-  for(let i=0;i<7;i++){
-    const cx=(i+.55)/7*w+(rnd()-.5)*35,cy=h*(.105+rnd()*.055),sz=w*(.026+rnd()*.010);
-    g.save();g.translate(cx,cy);g.rotate((rnd()-.5)*.7);g.globalAlpha=.58+rnd()*.18;
-    g.fillStyle='#B9934E';g.beginPath();g.ellipse(0,0,sz*1.15,sz*.36,0,0,TAU);g.fill();
-    g.fillStyle='#C7AA83';g.beginPath();g.arc(-sz*.82,-sz*.14,sz*.23,0,TAU);g.fill();
-    g.strokeStyle='#9D5542';g.lineWidth=sz*.10;
-    for(let q=0;q<3;q++){g.beginPath();g.moveTo(sz*.55,(-.14+q*.14)*sz);g.bezierCurveTo(sz*1.5,-sz*(.7-q*.2),sz*2.4,sz*(.35+q*.15),sz*3.2,sz*(.05+q*.15));g.stroke();}
-    g.restore();
+  /* 做旧剥落 */
+  g.globalAlpha = 0.45;
+  for (let i = 0; i < 420; i++) {
+    const x = rnd() * w, y = rnd() * h, sz = rnd() * 18 + 3;
+    g.fillStyle = rnd() > 0.5 ? 'rgba(152,142,118,0.5)' : 'rgba(74,66,54,0.38)';
+    g.beginPath(); g.ellipse(x, y, sz, sz * (0.4 + rnd() * 0.8), rnd() * 3, 0, TAU); g.fill();
   }
-
-  /* 颜料脱落、粉化、裂纹和积尘。 */
-  g.globalCompositeOperation='source-over';
-  for(let i=0;i<620;i++){
-    const x=rnd()*w,y=rnd()*h,sz=2+rnd()*24;
-    g.fillStyle=rnd()>.47?'rgba(168,151,119,.34)':'rgba(56,49,41,.25)';
-    g.beginPath();g.ellipse(x,y,sz,sz*(.28+rnd()*.75),rnd()*TAU,0,TAU);g.fill();
-  }
-  g.strokeStyle='rgba(58,47,38,.34)';
-  for(let i=0;i<52;i++){
-    let x=rnd()*w,y=rnd()*h;g.lineWidth=.5+rnd()*1.3;g.beginPath();g.moveTo(x,y);
-    for(let k=0;k<5+rnd()*7;k++){x+=(rnd()-.5)*34;y+=8+rnd()*26;g.lineTo(x,y);}g.stroke();
-  }
-  /* 全局微粒和色偏，用图像数据把矢量边缘打散。 */
-  const img=g.getImageData(0,0,w,h),d=img.data;
-  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
-    const i=(y*w+x)*4,n=fbm2(x/w*80,y/h*80,3,8.1),m=fbm2(x/w*6,y/h*6,4,3.3);
-    const k=(n-.5)*15+(m-.5)*18;d[i]=clamp(d[i]+k*.92,0,255);d[i+1]=clamp(d[i+1]+k*.78,0,255);d[i+2]=clamp(d[i+2]+k*.58,0,255);
-  }
-  g.putImageData(img,0,0);
-  return {map:toTex(c)};
+  g.globalAlpha = 1;
+  return { map: toTex(c) };
 }
 
 /* 白粉底（上壁画之前的一层） */
@@ -53710,15 +53827,32 @@ function buildWhitewash(size = 256) {
 
 /* 天空：青绿渐变 + 卷云 */
 function buildSky(w = 1024, h = 512) {
-  const c=makeCanvas(w,h),g=c.getContext('2d');
-  const grad=g.createLinearGradient(0,0,0,h);grad.addColorStop(0,'#7B8589');grad.addColorStop(.34,'#9CA19D');grad.addColorStop(.68,'#BCAF9A');grad.addColorStop(1,'#D0BA91');g.fillStyle=grad;g.fillRect(0,0,w,h);
-  const img=g.getImageData(0,0,w,h),d=img.data;
-  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
-    const u=x/w,v=y/h;const cloud=smoothstep(.55,.84,fbm2(u*6,v*10,6,2.9))*smoothstep(.03,.42,v)*smoothstep(.97,.50,v);
-    const dust=smoothstep(.48,1,v)*(.20+.32*fbm2(u*4,v*5,4,61));const grain=(fbm2(u*110,v*110,2,17)-.5)*5;
-    const i=(y*w+x)*4;d[i]=clamp(lerp(d[i],229,cloud*.39+dust*.22)+grain,0,255);d[i+1]=clamp(lerp(d[i+1],220,cloud*.38+dust*.20)+grain*.8,0,255);d[i+2]=clamp(lerp(d[i+2],202,cloud*.35+dust*.17)+grain*.55,0,255);
-  }g.putImageData(img,0,0);
-  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.mapping=THREE.EquirectangularReflectionMapping;return {map:t};
+  const c = makeCanvas(w, h);
+  const g = c.getContext('2d');
+  const grad = g.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0.00, '#1E8FA6');
+  grad.addColorStop(0.35, '#37AFC0');
+  grad.addColorStop(0.62, '#63C8D0');
+  grad.addColorStop(0.82, '#9BDCDC');
+  grad.addColorStop(1.00, '#CFE7DF');
+  g.fillStyle = grad; g.fillRect(0, 0, w, h);
+  const img = g.getImageData(0, 0, w, h); const d = img.data;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const u = x / w, v = y / h;
+      let cl = fbm2(u * 7, v * 13, 6, 2.9);
+      cl = smoothstep(0.50, 0.86, cl) * smoothstep(0.02, 0.35, v) * smoothstep(0.95, 0.55, v);
+      const i = (y * w + x) * 4;
+      d[i] = lerp(d[i], 250, cl * 0.85);
+      d[i + 1] = lerp(d[i + 1], 252, cl * 0.85);
+      d[i + 2] = lerp(d[i + 2], 250, cl * 0.85);
+    }
+  }
+  g.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.mapping = THREE.EquirectangularReflectionMapping;
+  return { map: t };
 }
 
 /* 树叶（带 alpha 的簇叶片） */
@@ -53861,34 +53995,82 @@ function makeCurve1D(pts) {
    数值由 t8 逐行量宽 + t96 侧影换算而来
    ------------------------------------------------------------ */
 const PROF_RX = makeCurve1D([
-  /* 35.5m倚坐佛：宽阔下身、收腰、斜肩、窄颈与庄严头面。 */
-  [-1.00, 9.15], [0.00, 9.18], [2.00, 9.22], [5.00, 9.18],
-  [8.00, 9.05], [11.00, 8.82], [14.00, 8.45], [17.00, 7.72],
-  [19.00, 6.75], [20.50, 5.95], [22.00, 5.38], [23.50, 5.18],
-  [24.70, 5.32], [25.65, 5.68], [26.45, 6.10], [27.05, 6.25],
-  [27.55, 5.78], [28.05, 4.52], [28.48, 3.05], [28.84, 1.92],
-  [29.35, 1.74], [29.85, 1.92], [30.40, 2.14], [31.20, 2.28],
-  [32.10, 2.34], [33.00, 2.30], [33.80, 2.18], [34.45, 1.95],
-  [34.95, 1.58], [35.38, 0.90], [35.60, 0.18],
+  [-1.0, 11.30],
+  [0.00, 11.25],  // 裙摆落地
+  [1.60, 11.05],
+  [4.00, 10.60],
+  [7.00, 10.10],
+  [10.00, 9.60],
+  [13.00, 9.10],
+  [15.50, 8.65],  // 膝高
+  [17.50, 7.95],
+  [19.50, 7.28],
+  [21.50, 6.60],  // 腰
+  [23.50, 5.86],
+  [25.50, 5.30],
+  [27.20, 5.06],  // 胸
+  [28.30, 4.94],  // 肩
+  [28.72, 4.34],
+  [29.05, 2.72],
+  [29.40, 1.68],
+  [29.85, 1.42],  // 颈
+  [30.20, 1.58],
+  [30.75, 1.80],  // 下颌
+  [31.60, 1.92],
+  [32.40, 1.94],  // 脸中（颧）
+  [33.30, 1.86],  // 额
+  [34.10, 1.70],
+  [34.70, 1.44],  // 肉髻起
+  [35.10, 1.14],
+  [35.42, 0.70],
+  [35.60, 0.16],
 ]);
 
 const PROF_RZ = makeCurve1D([
-  [-1.00, 6.22], [0.00, 6.24], [2.00, 6.26], [5.00, 6.22],
-  [8.00, 6.08], [11.00, 5.86], [14.00, 5.55], [17.00, 5.15],
-  [19.00, 4.70], [20.50, 4.30], [22.00, 4.02], [23.50, 3.90],
-  [24.70, 3.96], [25.65, 4.10], [26.45, 4.22], [27.05, 4.26],
-  [27.55, 4.00], [28.05, 3.35], [28.48, 2.45], [28.84, 1.72],
-  [29.35, 1.62], [29.85, 1.82], [30.40, 2.14], [31.20, 2.35],
-  [32.10, 2.46], [33.00, 2.42], [33.80, 2.28], [34.45, 2.02],
-  [34.95, 1.64], [35.38, 0.94], [35.60, 0.18],
+  [-1.0, 7.30],
+  [0.00, 7.25],
+  [1.60, 7.10],
+  [4.00, 6.90],
+  [7.00, 6.70],
+  [10.00, 6.50],
+  [13.00, 6.30],
+  [15.50, 6.10],
+  [17.50, 5.75],
+  [19.50, 5.25],
+  [21.50, 4.80],
+  [23.50, 4.42],
+  [25.50, 4.36],
+  [27.20, 4.20],
+  [28.30, 4.12],
+  [28.72, 3.80],
+  [29.05, 2.62],
+  [29.40, 1.82],
+  [29.85, 1.56],
+  [30.20, 1.80],
+  [30.75, 2.06],
+  [31.60, 2.20],
+  [32.40, 2.24],
+  [33.30, 2.18],
+  [34.10, 1.98],
+  [34.70, 1.66],
+  [35.10, 1.30],
+  [35.42, 0.78],
+  [35.60, 0.18],
 ]);
 
 /* 截面中心的前后位移：坐姿下身前倾、头略后靠 */
 const PROF_CZ = makeCurve1D([
-  [0.00, 0.48], [6.00, 0.42], [12.00, 0.34], [18.00, 0.20],
-  [21.50, 0.06], [24.00, -0.02], [26.50, -0.08], [28.20, -0.14],
-  [29.00, -0.04], [30.20, 0.18], [31.80, 0.28], [33.20, 0.22],
-  [34.40, 0.05], [35.55, -0.16],
+  [0.00, 0.55],
+  [6.00, 0.45],
+  [13.00, 0.30],
+  [17.00, 0.05],
+  [21.00, -0.25],
+  [25.00, -0.40],
+  [28.30, -0.45],
+  [29.80, -0.55],
+  [31.50, -0.35],
+  [33.50, -0.30],
+  [35.55, -0.40],
 ]);
 
 /* ------------------------------------------------------------
@@ -53903,11 +54085,11 @@ function foldDisp(u, y) {
 
   if (y < 19.5) {
     /* 主褶：等高线 y = c - K·cos(a) → 正面中央最低，向两侧上翘（U 形垂褶） */
-    const K = 4.75 * smoothstep(19.5, 6.5, y) + 1.20;       // 越靠下 U 形越深
-    const lam = 2.28 + (19.5 - y) * 0.046;                  // 褶距自上而下加大
+    const K = 5.20 * smoothstep(19.5, 6.5, y) + 1.4;       // 越靠下 U 形越深
+    const lam = 2.05 + (19.5 - y) * 0.052;                  // 褶距自上而下加大
     const jig = (fbm2(y * 0.13, 3.7, 3, 21) - 0.5) * 0.42;
     const phase = (y + K * front + 0.42 * Math.sin(a * 2.0 + 0.7) + jig) / lam;
-    const amp = 0.0305 * smoothstep(19.5, 15.0, y) * smoothstep(0.0, 2.6, y)
+    const amp = 0.0262 * smoothstep(19.5, 15.0, y) * smoothstep(0.0, 2.6, y)
               * (0.80 + 0.34 * fbm2(y * 0.19, 1.3, 3, 7));
     // 尖底的褶形（|sin| 加权），比纯正弦更像布料堆叠
     const frontW = 0.30 + 0.70 * smoothstep(-0.35, 0.72, front);
@@ -53915,24 +54097,24 @@ function foldDisp(u, y) {
     d += (sv * 0.68 + Math.sign(sv) * Math.pow(Math.abs(sv), 2.2) * 0.32) * amp * frontW;
 
     /* 次级细褶：同样是水平走向 */
-    d += Math.sin(((y + K * 0.62 * front) / (lam * 0.46)) * TAU) * 0.0072
+    d += Math.sin(((y + K * 0.62 * front) / (lam * 0.42)) * TAU) * 0.0052
        * smoothstep(19.0, 14.0, y) * smoothstep(1.2, 4.5, y);
 
     /* 侧面的竖向瀑布褶（幅度小，只出现在正侧方） */
     const sideOnly = Math.pow(side, 2.2) * smoothstep(0.55, -0.2, front);
     d += Math.sin(a * 8.0 + y * 0.09 + fbm2(a * 1.1, y * 0.05, 2, 5) * 2.0) * 0.020 * sideOnly
        * smoothstep(0.8, 5.0, y) * smoothstep(19.5, 12.0, y);
-    d += Math.sin(a * 15.0 - y * 0.14) * 0.0088 * sideOnly * smoothstep(1.5, 6.0, y) * smoothstep(19.0, 11.0, y);
+    d += Math.sin(a * 15.0 - y * 0.14) * 0.009 * sideOnly * smoothstep(1.5, 6.0, y) * smoothstep(19.0, 11.0, y);
 
     /* 裙摆落地处外撇 */
-    d += smoothstep(3.4, 0.0, y) * 0.045;
+    d += smoothstep(3.4, 0.0, y) * 0.042;
   }
 
   if (y >= 17.0 && y < 29.6) {
     /* 上身袈裟褶：右肩(-X)垂下的大 U 褶 + 胸前斜披的层叠 */
     const t = smoothstep(17.0, 20.0, y) * smoothstep(29.6, 27.0, y);
-    d += Math.sin((y / 1.72 + front * 0.42) * TAU) * 0.0210 * t;
-    d += Math.sin(a * 5.0 + y * 0.32) * 0.0120 * t;
+    d += Math.sin((y / 1.55 + front * 0.5) * TAU) * 0.020 * t;
+    d += Math.sin(a * 7.0 + y * 0.4) * 0.012 * t;
   }
 
   /* 头颈区不加褶 */
@@ -53955,7 +54137,7 @@ function kneeBulge(u, y) {
   const px = dx * PROF_RX(y);
   const gL = Math.exp(-Math.pow((px + off) / 3.9, 2));
   const gR = Math.exp(-Math.pow((px - off) / 3.9, 2));
-  return (gL + gR) * gy * dz * 1.20;
+  return (gL + gR) * gy * dz * 1.55;
 }
 
 /* 腿部：膝下小腿向下延伸，裙面在正前方略前凸 */
@@ -53968,7 +54150,7 @@ function shinBulge(u, y) {
   const off = 4.2;
   const gL = Math.exp(-Math.pow((px + off) / 4.6, 2));
   const gR = Math.exp(-Math.pow((px - off) / 4.6, 2));
-  return (gL + gR) * gy * dz * 0.42;
+  return (gL + gR) * gy * dz * 0.55;
 }
 
 /* ------------------------------------------------------------
@@ -53992,50 +54174,25 @@ function faceRelief(u, y) {
     const gy = smoothstep(32.98, 32.50, y) * smoothstep(31.10, 31.40, y);
     const prof = smoothstep(32.90, 31.45, y);
     const w = lerp(0.19, 0.40, prof);
-    d += G(ax, 0, w) * gy * lerp(0.22, 0.68, prof);
-    d += G(ax, 0.39, 0.20) * G(y, 31.44, 0.22) * 0.29;   // 鼻翼
+    d += G(ax, 0, w) * gy * lerp(0.13, 0.40, prof);
+    d += G(ax, 0.37, 0.19) * G(y, 31.44, 0.21) * 0.17;   // 鼻翼
   }
   /* 眉弓 */
-  d += G(ax, 0.98, 0.70) * G(y, 32.62, 0.25) * 0.145;
+  d += G(ax, 0.98, 0.70) * G(y, 32.62, 0.25) * 0.095;
   /* 眼窝（凹）+ 眼睑（凸） */
-  d -= G(ax, 0.88, 0.56) * G(y, 32.52, 0.30) * 0.115;
-  d += G(ax, 0.82, 0.43) * G(y, 32.31, 0.160) * 0.245;
+  d -= G(ax, 0.88, 0.56) * G(y, 32.52, 0.30) * 0.080;
+  d += G(ax, 0.78, 0.40) * G(y, 32.30, 0.150) * 0.150;
   /* 唇 + 唇下沟 */
-  d += G(ax, 0, 0.48) * G(y, 30.84, 0.190) * 0.135;
-  d -= G(ax, 0, 0.45) * G(y, 30.50, 0.16) * 0.055;
+  d += G(ax, 0, 0.45) * G(y, 30.84, 0.195) * 0.105;
+  d -= G(ax, 0, 0.45) * G(y, 30.50, 0.16) * 0.038;
   /* 人中 */
-  d -= G(ax, 0, 0.105) * G(y, 31.10, 0.175) * 0.050;
+  d -= G(ax, 0, 0.105) * G(y, 31.10, 0.175) * 0.036;
   /* 下巴 */
-  d += G(ax, 0, 0.54) * G(y, 30.34, 0.28) * 0.105;
+  d += G(ax, 0, 0.54) * G(y, 30.34, 0.28) * 0.058;
   /* 颊 */
-  d += G(ax, 1.30, 0.64) * G(y, 31.76, 0.62) * 0.120;
+  d += G(ax, 1.24, 0.55) * G(y, 31.78, 0.55) * 0.050;
 
   return d * fw;
-}
-
-/* ------------------------------------------------------------
-   胸腹与肩颈体块：给旋转体加入正面解剖起伏，避免瓶形轮廓。
-   ------------------------------------------------------------ */
-function anatomyRelief(u, y) {
-  let du = u; while (du > 0.5) du -= 1; while (du < -0.5) du += 1;
-  const a = du * TAU;
-  const front = Math.max(0, Math.cos(a));
-  const side = Math.abs(Math.sin(a));
-  if (front <= 0.001) return 0;
-  const G = (x, c, w) => Math.exp(-Math.pow((x - c) / w, 2));
-  const px = Math.sin(a) * PROF_RX(y);
-  let d = 0;
-  /* 腹部不是直筒，脐上略前凸、腰际收束。 */
-  d += G(y, 21.7, 2.35) * Math.pow(front, 1.35) * 0.48;
-  d += G(y, 24.7, 2.15) * Math.pow(front, 1.45) * 0.34;
-  /* 双侧胸肌与中央胸骨沟。 */
-  const chestY = G(y, 26.15, 1.85);
-  d += (G(px, -2.35, 2.2) + G(px, 2.35, 2.2)) * chestY * Math.pow(front, 1.15) * 0.46;
-  d -= G(px, 0, 0.78) * chestY * Math.pow(front, 1.8) * 0.16;
-  /* 锁骨下阴影与肩头圆转。 */
-  d -= G(y, 28.02, 0.35) * G(px, 0, 3.8) * Math.pow(front, 1.5) * 0.10;
-  d += G(y, 27.35, 0.72) * Math.pow(side, 2.4) * front * 0.18;
-  return d;
 }
 
 /* ------------------------------------------------------------
@@ -54049,9 +54206,8 @@ function bodyPoint(u, v, out) {
   const f = 1 + foldDisp(u, y);
   const kb = kneeBulge(u, y) + shinBulge(u, y);
   const fr = faceRelief(u, y);
-  const ar = anatomyRelief(u, y);
   const p = out || new THREE.Vector3();
-  p.set(dx * (rx * f + fr), y, dz * (rz * f + fr) + cz + kb + ar);
+  p.set(dx * (rx * f + fr), y, dz * (rz * f + fr) + cz + kb);
   return p;
 }
 
@@ -54074,16 +54230,20 @@ function bodyNormal(u, v, out) {
    石胎包络：开凿留下的粗岩柱（t52 侧影）
    ------------------------------------------------------------ */
 const ENV_RX = makeCurve1D([
-  [0.0, 9.72], [5.0, 9.66], [10.0, 9.36], [15.0, 8.85], [19.0, 7.35],
-  [21.5, 6.30], [23.8, 5.86], [25.5, 6.20], [27.0, 6.78], [27.8, 5.82],
-  [28.5, 3.48], [29.0, 2.28], [29.6, 2.14], [30.4, 2.48], [31.5, 2.68],
-  [32.8, 2.72], [33.9, 2.52], [34.7, 2.12], [35.25, 1.42], [35.62, 0.56],
+  [0.0, 12.3], [4.0, 12.1], [9.0, 11.6], [13.0, 11.0], [16.2, 10.55],  // 膝
+  [18.4, 9.85], [20.2, 8.55], [22.2, 7.25], [24.2, 6.35], [26.0, 5.90],
+  [27.2, 6.05], [28.5, 5.80],                                          // 肩（略外扩）
+  [29.2, 4.30], [29.9, 2.95],  // 颈（明显收束）
+  [30.5, 2.70], [31.4, 2.72], [32.6, 2.70], [33.6, 2.60],             // 头
+  [34.6, 2.25], [35.2, 1.55], [35.62, 0.70],
 ]);
 const ENV_RZ = makeCurve1D([
-  [0.0, 6.62], [5.0, 6.56], [10.0, 6.30], [15.0, 5.94], [19.0, 5.18],
-  [21.5, 4.66], [23.8, 4.38], [25.5, 4.48], [27.0, 4.62], [27.8, 4.12],
-  [28.5, 2.74], [29.0, 2.06], [29.6, 2.08], [30.4, 2.44], [31.5, 2.68],
-  [32.8, 2.76], [33.9, 2.58], [34.7, 2.18], [35.25, 1.48], [35.62, 0.56],
+  [0.0, 8.3], [4.0, 8.2], [9.0, 7.9], [13.0, 7.6], [16.2, 7.40],
+  [18.4, 6.95], [20.2, 6.20], [22.2, 5.55], [24.2, 4.95], [26.0, 4.60],
+  [27.2, 4.72], [28.5, 4.45],
+  [29.2, 3.55], [29.9, 2.85],
+  [30.5, 2.70], [31.4, 2.80], [32.6, 2.80], [33.6, 2.68],
+  [34.6, 2.30], [35.2, 1.58], [35.62, 0.72],
 ]);
 
 /* 石胎位置：把任意佛像顶点投影到包络面并加岩石噪声 */
@@ -54102,12 +54262,11 @@ function rockPoint(p, out) {
   const n1 = fbm3(p.x * 0.16, y * 0.16, p.z * 0.16, 4) - 0.5;
   const n2 = fbm3(p.x * 0.55, y * 0.55, p.z * 0.55, 3) - 0.5;
   const n3 = fbm3(p.x * 1.6, y * 1.6, p.z * 1.6, 2) - 0.5;
-  /* 石胎保留凿痕，但不能把完整轮廓打散成一团噪声。 */
-  R *= 1 + n1 * 0.070 + n2 * 0.030 + n3 * 0.012;
+  R *= 1 + n1 * 0.235 + n2 * 0.105 + n3 * 0.055;
   // 背面并入崖体：向 -Z 拉平
   const back = smoothstep(-0.15, -0.75, dz);
   const o = out || new THREE.Vector3();
-  o.set(dx * R, y + (n2 * 0.28), dz * R + cz);
+  o.set(dx * R, y + (n2 * 0.9), dz * R + cz);
   if (back > 0) o.z = lerp(o.z, -11.2, back * 0.82);
   return o;
 }
@@ -54420,23 +54579,6 @@ function makeStageMaterial(opts) {
         return uSpreadOn > 0.5 ? mix(uPhaseFrom, uPhaseTo, vStageCover) : uPhase;
       }
       float phW(float k){ return clamp(localPhase() - k, 0.0, 1.0); }
-      float stageHash(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123); }
-      float stageNoise(vec2 p){
-        vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);
-        return mix(mix(stageHash(i),stageHash(i+vec2(1.0,0.0)),f.x),mix(stageHash(i+vec2(0.0,1.0)),stageHash(i+vec2(1.0,1.0)),f.x),f.y);
-      }
-      float stageFbm(vec2 p){float v=0.0,a=0.5;for(int i=0;i<4;i++){v+=stageNoise(p)*a;p=p*2.03+17.7;a*=0.5;}return v;}
-      float pigmentAge(vec2 uv){
-        float macro=stageFbm(uv*1.8+vec2(4.1,1.7));
-        float flakes=stageFbm(uv*7.5+vec2(13.0,8.0));
-        return smoothstep(0.58,0.90,macro*0.62+flakes*0.38);
-      }
-      float pigmentCrack(vec2 uv){
-        float warp=stageFbm(uv*3.2)*1.7;
-        float a=abs(sin((uv.x*17.0+uv.y*4.0+warp)*3.14159));
-        float b=abs(sin((uv.y*23.0-uv.x*3.0-warp)*3.14159));
-        return smoothstep(0.965,0.995,max(a,b))*smoothstep(0.35,0.78,stageFbm(uv*5.0));
-      }
     ` + shader.fragmentShader;
 
     shader.fragmentShader = shader.fragmentShader.replace(
@@ -54453,30 +54595,16 @@ function makeStageMaterial(opts) {
       vec2 uvR = vUvX * uRockScale;
       vec2 uvM = vUvX * uMudScale;
       vec2 uvF = vUvX * uFinalScale;
-      vec4 rockCol = texture2D(tRock, uvR);
-      vec4 polishCol = texture2D(tPolish, uvM);
-      vec4 col = rockCol;
+      vec4 col = texture2D(tRock, uvR);
       col = mix(col, texture2D(tCrack,  uvM), phW(0.0));
       col = mix(col, texture2D(tCoarse, uvM), phW(1.0));
       col = mix(col, texture2D(tMid,    uvM), phW(2.0));
       col = mix(col, texture2D(tFine,   uvM), phW(3.0));
-      col = mix(col, polishCol, phW(4.0));
+      col = mix(col, texture2D(tPolish, uvM), phW(4.0));
       vec4 fin = texture2D(tFinal, uvF);
       fin.rgb *= uFinalTint;
-      /* 矿物颜料颗粒、粉化和剥落：最终彩绘不再是纯色硬片。 */
-      float grain = stageFbm(uvF*28.0 + vStageWP.xy*0.035);
-      float patina = pigmentAge(uvF*0.82 + vStageWP.xz*0.012);
-      float crack = pigmentCrack(uvF*0.92 + vStageWP.xy*0.008);
-      float peel = smoothstep(0.68,0.93,patina*0.76+stageFbm(uvF*13.0)*0.24);
-      float lum = dot(fin.rgb, vec3(0.299,0.587,0.114));
-      fin.rgb = mix(fin.rgb, vec3(lum), 0.13);
-      fin.rgb *= 0.88 + grain*0.20;
-      fin.rgb = mix(fin.rgb, fin.rgb*vec3(0.70,0.62,0.54), patina*0.26);
-      fin.rgb = mix(fin.rgb, polishCol.rgb*vec3(0.78,0.70,0.60), peel*0.68);
-      fin.rgb = mix(fin.rgb, vec3(0.20,0.13,0.09), crack*0.42);
-      float paintW = phW(5.0);
-      col = mix(col, fin, paintW);
-      col.rgb = mix(col.rgb, uFrontGlow, vFrontEdge * uWet * 0.14);
+      col = mix(col, fin, phW(5.0));
+      col.rgb = mix(col.rgb, uFrontGlow, vFrontEdge * uWet * 0.18);
       diffuseColor *= col;
       `
     );
@@ -54516,10 +54644,7 @@ function makeStageMaterial(opts) {
       rlo = mix(rlo, r4, step(3.5, rIdx));
       rlo = mix(rlo, r5, step(4.5, rIdx));
       rlo = mix(rlo, r6, step(5.5, rIdx));
-      float paintAge = pigmentAge(vUvX*uFinalScale*0.82 + vStageWP.xz*0.012);
-      float paintCrack = pigmentCrack(vUvX*uFinalScale*0.92 + vStageWP.xy*0.008);
-      float roughnessFactor = mix(rlo, 0.28, vFrontEdge * uWet);
-      roughnessFactor = clamp(roughnessFactor + phW(5.0)*(paintAge*0.18 + paintCrack*0.10), 0.28, 1.0);
+      float roughnessFactor = mix(rlo, 0.24, vFrontEdge * uWet);
       `
     );
   };
@@ -54686,8 +54811,8 @@ function buildBuddha() {
 
   /* ---------------- 材质 ---------------- */
   const matSkin = makeStageMaterial({
-    finalMap: TEX.skin.map, finalTint: new THREE.Color(0.88, 0.79, 0.67), finalScale: [1/7, 1/7], mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
-    roughSet: [1.0, 0.97, 0.94, 0.88, 0.78, 0.66, 0.74], normalScale: 1.0,
+    finalMap: TEX.skin.map, finalTint: new THREE.Color(0.955, 0.855, 0.715), finalScale: [1/7, 1/7], mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
+    roughSet: [1.0, 0.97, 0.94, 0.86, 0.72, 0.52, 0.46], normalScale: 1.0,
   });
   const matRobe = makeStageMaterial({
     finalMap: TEX.robeRed.map, finalScale: [1/5, 1/5], mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
@@ -54712,7 +54837,7 @@ function buildBuddha() {
   });
   const matHair = makeStageMaterial({
     finalMap: TEX.skin.map, finalScale: [1/1.2, 1/1.2],
-    finalTint: new THREE.Color(0.16, 0.105, 0.060),
+    finalTint: new THREE.Color(0.052, 0.048, 0.052),
     mudScale: [1/1.4, 1/1.4], rockScale: [1/1.6, 1/1.6],
     roughSet: [1.0, 0.97, 0.94, 0.86, 0.72, 0.55, 0.78], normalScale: 0.4,
   });
@@ -54821,14 +54946,11 @@ function buildBuddha() {
   const mBelt = new THREE.Mesh(gBelt, matBelt);
   G.add(mBelt); BUDDHA.parts.belt = mBelt;
 
-  /* 真实凸起的衣褶、领口与袈裟边缘。 */
-  buildRobeRelief(G, matRobeLower, matRobe, matSash, matSkin);
-
   /* ---------------- 8. 螺发 ---------------- */
   buildHair(G, matHair);
 
   /* ---------------- 9. 五官 ---------------- */
-  buildFace(G, matSkin);
+  buildFace(G);
 
   /* ---------------- 10. 手臂与手 ---------------- */
   buildArms(G, matSkin, matInner, matRobe);
@@ -54847,151 +54969,64 @@ function buildBuddha() {
 }
 
 /* ------------------------------------------------------------
-   衣褶实体层：沿佛身曲面铺设低矮圆脊，解决仅靠纹理/法线的平面感。
-   ------------------------------------------------------------ */
-function buildRobeRelief(G, matLower, matRobe, matSash, matSkin) {
-  const group = new THREE.Group();
-  group.name = 'RobeRelief';
-  const addCurve = (samples, radius, mat, lift = 0.20, closed = false) => {
-    const pts = [];
-    for (const smp of samples) {
-      const u = (smp.u + 1) % 1;
-      const P = bodyPoint(u, yv(smp.y), new THREE.Vector3());
-      const N = bodyNormal(u, yv(smp.y), new THREE.Vector3()).normalize();
-      pts.push(P.addScaledVector(N, lift + (smp.lift || 0)));
-    }
-    if (pts.length < 3) return;
-    const geo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, closed, 'catmullrom', 0.34), Math.max(28, pts.length * 3), radius, 8, closed);
-    scaleUV(geo, 1.8); attachRockMorph(geo, 0.985);
-    const m = new THREE.Mesh(geo, mat); m.castShadow = true; m.receiveShadow = true; group.add(m);
-  };
-
-  /* 下裙十二道宽缓 U 形褶，边缘向两侧抬升。 */
-  for (let r = 0; r < 12; r++) {
-    const baseY = 2.2 + r * 1.38;
-    const samples = [];
-    for (let i = 0; i <= 26; i++) {
-      const q = i / 26, u = lerp(-0.205, 0.205, q);
-      const edge = Math.pow(Math.abs(q - 0.5) * 2, 1.55);
-      const y = baseY + edge * (1.35 + r * 0.035) + Math.sin(q * Math.PI * 2 + r * 0.52) * 0.055;
-      samples.push({ u, y });
-    }
-    addCurve(samples, 0.080 + r * 0.003, matLower, 0.24);
-  }
-
-  /* 胸腹袈裟层叠，向画面右肩汇聚。 */
-  for (let r = 0; r < 7; r++) {
-    const samples = [];
-    for (let i = 0; i <= 24; i++) {
-      const q = i / 24;
-      const u = lerp(-0.18, 0.17, q);
-      const y = 20.7 + r * 0.78 + q * (2.2 + r * 0.10) + Math.sin(q * Math.PI) * 0.34;
-      samples.push({ u, y });
-    }
-    addCurve(samples, 0.075, r < 3 ? matRobe : matSash, 0.28);
-  }
-
-  /* 领圈与颈部三道塑泥收口。 */
-  for (let r = 0; r < 3; r++) {
-    const samples = [];
-    for (let i = 0; i <= 28; i++) {
-      const q = i / 28, u = lerp(-0.18, 0.18, q);
-      const y = 29.15 + r * 0.20 + Math.pow(Math.abs(q - 0.5) * 2, 1.8) * 0.10;
-      samples.push({ u, y });
-    }
-    addCurve(samples, 0.052, matSkin, 0.13);
-  }
-
-  /* 袈裟竖边，从肩部自然落到腹前。 */
-  const edge = [];
-  for (let i = 0; i <= 30; i++) {
-    const q = i / 30;
-    edge.push({ u: lerp(-0.19, -0.11, q), y: lerp(28.55, 17.6, q) + Math.sin(q * Math.PI) * 0.28 });
-  }
-  addCurve(edge, 0.095, matRobe, 0.31);
-
-  G.add(group); BUDDHA.parts.robeRelief = group;
-}
-
-/* ------------------------------------------------------------
-   螺发：扁圆螺髻与同心环
+   螺发：沿头皮球面排布的小球（InstancedMesh）
    ------------------------------------------------------------ */
 function buildHair(G, mat) {
-  const group = new THREE.Group();
-  group.name = 'SculptedHair';
-  const elements = [];
-
-  /* 连续发帽只提供暗部，不承担可见纹样。 */
-  const capGeo = buildLayerGeometry({
-    uSeg: 112, vSeg: 64, v0: yv(30.20), v1: 1.0,
-    offset: 0.075, uvScale: [1.8, 1.8],
-    mask: (u, v) => {
-      const y = v * H;
-      const du = ucyc(u, 0.0);
-      const front = Math.cos(du * TAU) * 0.5 + 0.5;
-      const hairline = lerp(30.45, 33.62, Math.pow(front, 0.26));
-      return smoothstep(hairline - 0.16, hairline + 0.18, y);
-    },
-  });
-  const cap = new THREE.Mesh(capGeo, mat);
-  cap.castShadow = true;
-  cap.userData.revealY = 30.2;
-  cap.userData.finalScale = new THREE.Vector3(1, 1, 1);
-  group.add(cap); elements.push(cap);
-
-  /* 每一行把扁圆螺髻与同心环合并成一个 Mesh，既有雕塑感又控制 draw call。 */
-  const zAxis = new THREE.Vector3(0, 0, 1);
-  const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3();
-  const rows = 16;
+  const beads = [];
+  const P = new THREE.Vector3(), N = new THREE.Vector3();
+  /* 发际线（米）：正面 33.58、侧面 32.55、后脑 30.55 —— 依 t8 实测 */
+  const rows = 24;
   for (let r = 0; r < rows; r++) {
-    const tt = r / Math.max(1, rows - 1);
-    const y0 = lerp(30.55, 35.18, Math.pow(tt, 0.92));
-    const ringR = PROF_RX(y0);
-    const frontSpan = lerp(0.46, 0.30, tt);
-    const count = Math.max(7, Math.round(TAU * ringR * frontSpan * 1.65));
-    const parts = [];
-    for (let i = 0; i < count; i++) {
-      const u = -frontSpan + (frontSpan * 2) * ((i + (r % 2) * 0.5) / count);
+    const t = r / (rows - 1);
+    const y = lerp(30.45, 35.46, Math.pow(t, 0.94));
+    const v = yv(y);
+    const ringR = PROF_RX(y);
+    const cols = Math.max(6, Math.round(TAU * ringR / 0.36));
+    for (let c = 0; c < cols; c++) {
+      const u = (c + (r % 2) * 0.5) / cols;
       const du = ucyc(u, 0.0);
-      const frontness = Math.cos(du * TAU) * 0.5 + 0.5;
-      const hairline = lerp(30.45, 33.60, Math.pow(frontness, 0.28));
-      if (y0 < hairline) continue;
-      const P = bodyPoint((u + 1) % 1, yv(y0), new THREE.Vector3());
-      const N = bodyNormal((u + 1) % 1, yv(y0), new THREE.Vector3()).normalize();
-      const size = 0.145 + hash3(r, i, 91) * 0.028;
-      Q.setFromUnitVectors(zAxis, N);
-      M.compose(P.clone().addScaledVector(N, 0.105), Q, S.set(size * 1.15, size * 1.15, size * 0.52));
-      const dome = new THREE.SphereGeometry(1, 9, 7, 0, TAU, 0, Math.PI * 0.72);
-      dome.applyMatrix4(M); parts.push(dome);
-      M.compose(P.clone().addScaledVector(N, 0.165), Q, S.set(size, size, size));
-      const ring1 = new THREE.TorusGeometry(0.68, 0.115, 6, 14);
-      ring1.applyMatrix4(M); parts.push(ring1);
-      const ring2 = new THREE.TorusGeometry(0.36, 0.080, 5, 12);
-      ring2.applyMatrix4(M); parts.push(ring2);
+      const frontness = Math.cos(du * TAU) * 0.5 + 0.5;   // 1 = 正前
+      const hairline = lerp(30.60, 33.58, Math.pow(frontness, 0.25));
+      if (y < hairline) continue;
+      bodyPoint(u, v, P);
+      bodyNormal(u, v, N);
+      const jitter = (hash3(r * 13, c * 7, 3) - 0.5) * 0.04;
+      P.addScaledVector(N, 0.108 + jitter);
+      beads.push({ p: P.clone(), n: N.clone(), s: 0.163 + hash3(c, r, 9) * 0.034 });
     }
-    if (!parts.length) continue;
-    const geo = mergeGeometries(parts);
-    scaleUV(geo, 1.1); attachRockMorph(geo, 0.97);
-    const row = new THREE.Mesh(geo, mat);
-    row.castShadow = true;
-    row.userData.revealY = y0;
-    row.userData.finalScale = new THREE.Vector3(1, 1, 1);
-    group.add(row); elements.push(row);
   }
+  const bg = new THREE.SphereGeometry(1, 7, 6);
+  scaleUV(bg, 0.6);
+  const inst = new THREE.InstancedMesh(bg, mat, beads.length);
+  inst.castShadow = true;
+  const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3();
+  const up = new THREE.Vector3(0, 1, 0);
+  const baseMatrices = [];
+  const revealY = [];
+  beads.forEach((b, i) => {
+    Q.setFromUnitVectors(up, b.n);
+    S.set(b.s, b.s * 0.80, b.s);
+    M.compose(b.p, Q, S);
+    inst.setMatrixAt(i, M);
+    baseMatrices.push(M.clone());
+    revealY.push(b.p.y);
+  });
+  inst.userData.baseMatrices = baseMatrices;
+  inst.userData.revealY = revealY;
+  inst.instanceMatrix.needsUpdate = true;
+  attachRockMorph(bg, 1.0);
+  inst.userData.beads = beads;
+  G.add(inst);
+  BUDDHA.parts.hair = inst;
 
-  group.userData.elements = elements;
-  group.userData.revealMin = 30.2;
-  group.userData.revealMax = 35.6;
-  G.add(group);
-  BUDDHA.parts.hair = group;
-
-  const urnaGeo = new THREE.SphereGeometry(0.105, 18, 14);
-  const urnaMat = new THREE.MeshStandardMaterial({ color: 0x8B3027, roughness: 0.72, transparent: true, opacity: 0 });
+  /* 白毫（眉心红点） */
+  const urnaGeo = new THREE.SphereGeometry(0.17, 16, 12);
+  const urnaMat = new THREE.MeshStandardMaterial({ color: 0xC8302A, roughness: 0.45, transparent: true, opacity: 0 });
   const urna = new THREE.Mesh(urnaGeo, urnaMat);
   const UP = bodyPoint(0, yv(32.98), new THREE.Vector3());
   const UN = bodyNormal(0, yv(32.98), new THREE.Vector3());
-  urna.position.copy(UP).addScaledVector(UN, 0.13);
-  urna.scale.set(1, 1, 0.48);
+  urna.position.copy(UP).addScaledVector(UN, 0.10);
+  urna.scale.set(1, 1, 0.55);
   G.add(urna);
   BUDDHA.detailMats.push(urnaMat);
   BUDDHA.parts.urna = urna;
@@ -55000,97 +55035,79 @@ function buildHair(G, mat) {
 /* ------------------------------------------------------------
    五官：眉 / 眼 / 鼻 / 唇
    ------------------------------------------------------------ */
-function buildFace(G, matSkin) {
+function buildFace(G) {
+  /* 形体已由 faceRelief 做成浮雕，这里只放「上色阶段」才出现的彩色薄片 */
   const lineMat = new THREE.MeshStandardMaterial({
-    color: 0x3B2A20, roughness: 0.78, transparent: true, opacity: 0,
+    color: 0x2B2620, roughness: 0.52, transparent: true, opacity: 0,
     depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2,
   });
-  const lipMat = new THREE.MeshStandardMaterial({
-    color: 0x8F4C3B, roughness: 0.78, transparent: true, opacity: 0,
-    depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2,
-  });
-  const nostrilMat = new THREE.MeshStandardMaterial({
-    color: 0x302018, roughness: 0.90, transparent: true, opacity: 0,
-    depthWrite: false,
-  });
-  BUDDHA.detailMats.push(lineMat, lipMat, nostrilMat);
+  BUDDHA.detailMats.push(lineMat);
 
-  const surfacePoint = (u, y, lift = 0.04) => {
-    const P = bodyPoint((u + 1) % 1, yv(y), new THREE.Vector3());
-    const N = bodyNormal((u + 1) % 1, yv(y), new THREE.Vector3());
-    P.addScaledVector(N, lift);
-    return { P, N };
-  };
-  const addPrimitive = (geo, pos, scale, mat = matSkin, rot = null) => {
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.copy(pos);
-    mesh.scale.copy(scale);
-    if (rot) mesh.rotation.copy(rot);
-    mesh.castShadow = true;
-    attachRockMorphMesh(mesh);
-    G.add(mesh);
-    return mesh;
-  };
-
-  /* 真实几何眼睑：彩绘眼线只是最后一层。 */
+  /* 眼线：闭目下视的细长弧（y≈32.34，x 0.26→1.32） */
   for (const sx of [-1, 1]) {
-    const lidPts = [], linePts = [], browPts = [];
-    for (let i = 0; i <= 20; i++) {
-      const t = i / 20;
-      const u = sx * lerp(0.020, 0.134, t);
-      const yEye = 32.37 - Math.sin(t * Math.PI) * 0.095 + t * 0.018;
-      const a = surfacePoint(u, yEye, 0.145);
-      lidPts.push(a.P);
-      linePts.push(a.P.clone().addScaledVector(a.N, 0.035));
-      const yBrow = 32.73 + Math.sin(t * Math.PI) * 0.10 - t * 0.12;
-      const b = surfacePoint(sx * lerp(0.024, 0.154, t), yBrow, 0.06);
-      browPts.push(b.P.clone().addScaledVector(b.N, 0.035));
+    const pts = [];
+    for (let i = 0; i <= 14; i++) {
+      const t = i / 14;
+      const uu = sx * lerp(0.021, 0.113, t);
+      const yy = 32.36 - Math.sin(t * Math.PI) * 0.062 + t * 0.045;
+      const P = bodyPoint(uu, yv(yy), new THREE.Vector3());
+      const N = bodyNormal(uu, yv(yy), new THREE.Vector3());
+      P.addScaledVector(N, 0.030);
+      pts.push(P);
     }
-    const lidGeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(lidPts), 32, 0.060, 8, false);
-    scaleUV(lidGeo, 1.2); attachRockMorph(lidGeo, 0.98);
-    const lid = new THREE.Mesh(lidGeo, matSkin); lid.castShadow = true; G.add(lid);
-    const eyeGeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(linePts), 32, 0.022, 7, false);
-    const eye = new THREE.Mesh(eyeGeo, lineMat); G.add(eye);
-    const browGeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(browPts), 32, 0.043, 7, false);
-    const brow = new THREE.Mesh(browGeo, lineMat); G.add(brow);
+    const g = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 22, 0.048, 6, false);
+    G.add(new THREE.Mesh(g, lineMat));
   }
 
-  /* 鼻梁、鼻头和鼻翼，不再只靠纹理凸起。 */
+  /* 眉：细长弯弧（y≈32.63~32.78，x 0.30→1.78） */
+  for (const sx of [-1, 1]) {
+    const pts = [];
+    for (let i = 0; i <= 14; i++) {
+      const t = i / 14;
+      const uu = sx * lerp(0.0245, 0.152, t);
+      const yy = 32.60 + Math.sin(t * Math.PI) * 0.105 - t * 0.150;
+      const P = bodyPoint(uu, yv(yy), new THREE.Vector3());
+      const N = bodyNormal(uu, yv(yy), new THREE.Vector3());
+      P.addScaledVector(N, 0.030);
+      pts.push(P);
+    }
+    const g = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 22, 0.060, 6, false);
+    G.add(new THREE.Mesh(g, lineMat));
+  }
+
+  /* 唇色：贴着唇部浮雕的薄片 */
   {
-    const b = surfacePoint(0, 31.98, 0.34);
-    addPrimitive(new THREE.CapsuleGeometry(0.155, 0.70, 8, 16), b.P,
-      new THREE.Vector3(0.66, 1.0, 0.72), matSkin,
-      new THREE.Euler(0.07, 0, 0));
-    const tip = surfacePoint(0, 31.39, 0.31);
-    addPrimitive(new THREE.SphereGeometry(1, 20, 14), tip.P,
-      new THREE.Vector3(0.31, 0.21, 0.26), matSkin);
-    for (const sx of [-1, 1]) {
-      const wing = surfacePoint(sx * 0.032, 31.38, 0.30);
-      addPrimitive(new THREE.SphereGeometry(1, 16, 12), wing.P,
-        new THREE.Vector3(0.17, 0.10, 0.13), matSkin);
-      const nostril = surfacePoint(sx * 0.025, 31.31, 0.255);
-      const m = new THREE.Mesh(new THREE.SphereGeometry(0.038, 14, 10), nostrilMat);
-      m.position.copy(nostril.P); m.scale.set(1.0, 0.38, 0.30); G.add(m);
+    const lipMat = new THREE.MeshStandardMaterial({
+      color: 0xC24634, roughness: 0.40, transparent: true, opacity: 0,
+      depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, side: THREE.DoubleSide,
+    });
+    BUDDHA.detailMats.push(lipMat);
+    const uSeg = 26, vSeg = 10;
+    const pos = [], idx = [], uvs = [];
+    for (let j = 0; j <= vSeg; j++) {
+      const yy = lerp(30.66, 31.02, j / vSeg);
+      const halfU = 0.0385 * Math.sqrt(Math.max(0, 1 - Math.pow((j / vSeg - 0.5) * 2, 2)));
+      for (let i = 0; i <= uSeg; i++) {
+        const uu = lerp(-halfU, halfU, i / uSeg);
+        const P = bodyPoint(uu, yv(yy), new THREE.Vector3());
+        const N = bodyNormal(uu, yv(yy), new THREE.Vector3());
+        P.addScaledVector(N, 0.028);
+        pos.push(P.x, P.y, P.z);
+        uvs.push(i / uSeg, j / vSeg);
+      }
     }
-  }
-
-  /* 立体上下唇；颜色层在最后彩绘阶段才出现。 */
-  for (const [yy, bow, radius] of [[30.87, 0.070, 0.072], [30.73, -0.038, 0.080]]) {
-    const pts = [], colorPts = [];
-    for (let i = 0; i <= 26; i++) {
-      const t = i / 26;
-      const u = lerp(-0.047, 0.047, t);
-      const y = yy + Math.cos((t - 0.5) * Math.PI * 2) * bow;
-      const a = surfacePoint(u, y, 0.16);
-      pts.push(a.P); colorPts.push(a.P.clone().addScaledVector(a.N, 0.035));
+    const nu = uSeg + 1;
+    for (let j = 0; j < vSeg; j++) for (let i = 0; i < uSeg; i++) {
+      const a = j * nu + i, b = a + 1, c = a + nu + 1, d = a + nu;
+      idx.push(a, b, d, b, c, d);
     }
-    const geo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 32, radius, 8, false);
-    scaleUV(geo, 1); attachRockMorph(geo, 0.98);
-    const m = new THREE.Mesh(geo, matSkin); m.castShadow = true; G.add(m);
-    const cgeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(colorPts), 32, radius * 0.62, 7, false);
-    G.add(new THREE.Mesh(cgeo, lipMat));
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    G.add(new THREE.Mesh(g, lipMat));
   }
-  BUDDHA.parts.faceDetails = true;
 }
 
 /* 给已 position 好的 Mesh 附加石胎 morph（世界位置计算） */
@@ -55119,23 +55136,26 @@ function attachRockMorphMesh(mesh) {
    ------------------------------------------------------------ */
 function buildEars(G, mat) {
   for (const sx of [-1, 1]) {
-    const g = new THREE.SphereGeometry(1, 22, 18);
+    const g = new THREE.SphereGeometry(1, 18, 14);
     const pa = g.attributes.position;
     for (let i = 0; i < pa.count; i++) {
       const x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i);
-      const yy = y * 1.34 - 0.08;
-      const lobe = 0.36 + smoothstep(0.10, -1.0, yy) * 0.18;
-      pa.setXYZ(i, x * 0.25, yy, z * lobe);
+      // 拉成竖长的薄耳，下端加厚（耳垂）
+      const yy = y * 1.60 - 0.10;
+      const wid = 0.50 + smoothstep(0.3, -1.4, yy) * 0.16;
+      pa.setXYZ(i, x * 0.20, yy, z * wid);
     }
-    pa.needsUpdate = true; g.computeVertexNormals(); scaleUV(g, 3);
-    const uu = sx * 0.232;
-    const P = bodyPoint((uu + 1) % 1, yv(31.62), new THREE.Vector3());
-    const N = bodyNormal((uu + 1) % 1, yv(31.62), new THREE.Vector3());
-    P.addScaledVector(N, 0.04);
+    pa.needsUpdate = true; g.computeVertexNormals();
+    scaleUV(g, 3);
+    const uu = sx * 0.262;
+    const P = bodyPoint(uu, yv(31.70), new THREE.Vector3());
+    const N = bodyNormal(uu, yv(31.70), new THREE.Vector3());
+    P.addScaledVector(N, 0.02);
     const m = new THREE.Mesh(g, mat);
     m.position.copy(P);
-    m.rotation.y = sx * 0.13;
-    m.rotation.z = sx * 0.06;
+    m.scale.setScalar(1.0);
+    m.rotation.y = sx * 0.22;
+    m.rotation.z = sx * 0.07;
     m.castShadow = true;
     attachRockMorphMesh(m);
     G.add(m);
@@ -55170,34 +55190,35 @@ function tubeAlong(points, radiusFn, seg = 40, rseg = 12) {
 /* 手掌：掌 + 四指并拢 + 拇指 */
 function buildHandGeometry(scale) {
   const parts = [];
-  /* 掌根厚、指根收窄，正面略拱。 */
-  const palm = new THREE.SphereGeometry(1, 24, 18);
+  // 掌
+  const palm = new THREE.SphereGeometry(1, 20, 14);
   {
     const pa = palm.attributes.position;
     for (let i = 0; i < pa.count; i++) {
-      const x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i);
-      const taper = lerp(1.06, 0.82, smoothstep(-0.7, 0.95, y));
-      pa.setXYZ(i, x * 1.18 * taper, y * 1.48, z * (0.42 + (1 - y * y) * 0.08));
+      pa.setXYZ(i, pa.getX(i) * 1.34, pa.getY(i) * 1.42, pa.getZ(i) * 0.38);
     }
     pa.needsUpdate = true; palm.computeVertexNormals();
   }
   parts.push(palm);
-  const fingerLen = [1.54, 1.82, 1.92, 1.70];
-  const fingerX = [-0.76, -0.26, 0.26, 0.75];
-  const fingerR = [0.205, 0.225, 0.232, 0.210];
-  const fingerTilt = [-0.11, -0.035, 0.025, 0.10];
+  // 四指
+  const fingerLen = [1.72, 1.94, 1.82, 1.48];
+  const fingerX = [-0.86, -0.29, 0.29, 0.85];
+  const fingerR = [0.245, 0.262, 0.252, 0.222];
   for (let i = 0; i < 4; i++) {
-    const g = new THREE.CapsuleGeometry(fingerR[i], fingerLen[i], 5, 12);
-    g.rotateZ(fingerTilt[i]);
-    g.translate(fingerX[i], 1.20 + fingerLen[i] * 0.52, 0.015 + (i === 1 || i === 2 ? 0.035 : 0));
+    const g = new THREE.CapsuleGeometry(fingerR[i], fingerLen[i], 4, 10);
+    g.translate(fingerX[i] * 1.0, 1.30 + fingerLen[i] * 0.5, 0);
     const pa = g.attributes.position;
-    for (let k = 0; k < pa.count; k++) pa.setZ(k, pa.getZ(k) * 0.78);
+    for (let k = 0; k < pa.count; k++) pa.setZ(k, pa.getZ(k) * 0.82);
     pa.needsUpdate = true; g.computeVertexNormals();
     parts.push(g);
   }
-  const thumb = new THREE.CapsuleGeometry(0.245, 1.15, 5, 12);
-  thumb.rotateZ(0.94); thumb.rotateY(-0.16); thumb.translate(-1.25, 0.18, 0.12);
-  parts.push(thumb);
+  // 拇指
+  {
+    const g = new THREE.CapsuleGeometry(0.285, 1.28, 4, 10);
+    g.rotateZ(1.02);
+    g.translate(-1.48, 0.24, 0.14);
+    parts.push(g);
+  }
   const merged = mergeGeometries(parts);
   merged.scale(scale, scale, scale);
   return merged;
@@ -55238,57 +55259,79 @@ function mergeGeometries(list) {
 }
 
 function buildArms(G, matSkin, matInner, matRobe) {
-  /* 佛之右臂（画面左）：手掌举至肩前，比例压回真实雕塑尺度。 */
+  /* --- 佛之右臂（-X）：上举施无畏印 --- */
   {
     const pts = [
-      new THREE.Vector3(-5.55, 27.10, 0.05),
-      new THREE.Vector3(-6.15, 25.75, 1.10),
-      new THREE.Vector3(-6.35, 24.25, 2.45),
-      new THREE.Vector3(-6.05, 23.45, 3.62),
+      new THREE.Vector3(-3.9, 27.6, -0.2),
+      new THREE.Vector3(-5.0, 25.6, 1.2),
+      new THREE.Vector3(-5.6, 23.4, 2.9),
+      new THREE.Vector3(-5.85, 22.2, 4.3),
+      new THREE.Vector3(-5.95, 22.4, 4.9),
     ];
-    const g = tubeAlong(pts, (t) => lerp(1.05, 0.70, t), 34, 12);
-    scaleUV(g, 7); attachRockMorph(g);
-    const m = new THREE.Mesh(g, matSkin); m.castShadow = true; G.add(m); BUDDHA.parts.armR = m;
+    const g = tubeAlong(pts, (t) => lerp(1.85, 1.30, t), 36, 12);
+    scaleUV(g, 8); attachRockMorph(g);
+    const m = new THREE.Mesh(g, matSkin);
+    m.castShadow = true; G.add(m);
+    BUDDHA.parts.armR = m;
 
-    const hg = buildHandGeometry(0.68);
-    hg.rotateX(-0.10); hg.rotateY(0.05); hg.rotateZ(-0.03);
-    hg.translate(-6.02, 24.20, 4.02);
-    scaleUV(hg, 3); attachRockMorph(hg);
-    const hm = new THREE.Mesh(hg, matSkin); hm.castShadow = true; G.add(hm); BUDDHA.parts.handR = hm;
+    // 手掌：掌心朝 +Z，指尖朝上
+    const hg = buildHandGeometry(1.12);
+    hg.rotateX(-0.16);
+    hg.rotateY(0.10);
+    hg.translate(-5.99, 24.55, 4.95);
+    scaleUV(hg, 4); attachRockMorph(hg);
+    const hm = new THREE.Mesh(hg, matSkin);
+    hm.castShadow = true; G.add(hm);
+    BUDDHA.parts.handR = hm;
 
+    // 蓝色宽袖（垂下的袖筒）
     const sg = buildSleeveGeometry(
-      new THREE.Vector3(-5.70, 27.10, -0.20),
-      new THREE.Vector3(-6.08, 24.00, 2.20),
-      1.68, 1.08, 2.35);
+      new THREE.Vector3(-4.30, 27.6, -0.3),
+      new THREE.Vector3(-5.50, 22.6, 2.4),
+      2.95, 2.05, 4.6
+    );
     scaleUV(sg, 4); attachRockMorph(sg);
-    const sm = new THREE.Mesh(sg, matInner); sm.castShadow = true; G.add(sm); BUDDHA.parts.sleeveR = sm;
+    const sm = new THREE.Mesh(sg, matInner);
+    sm.castShadow = true; G.add(sm);
+    BUDDHA.parts.sleeveR = sm;
   }
 
-  /* 佛之左臂（画面右）：自然下垂并覆膝。 */
+  /* --- 佛之左臂（+X）：垂下抚膝 --- */
   {
     const pts = [
-      new THREE.Vector3(5.55, 27.05, -0.05),
-      new THREE.Vector3(6.18, 24.75, 0.85),
-      new THREE.Vector3(6.62, 22.15, 2.12),
-      new THREE.Vector3(6.90, 19.70, 3.42),
-      new THREE.Vector3(6.86, 18.55, 4.05),
+      new THREE.Vector3(4.0, 27.5, -0.3),
+      new THREE.Vector3(5.6, 24.6, 0.9),
+      new THREE.Vector3(6.7, 21.4, 2.6),
+      new THREE.Vector3(7.2, 18.9, 4.0),
+      new THREE.Vector3(7.35, 17.9, 4.7),
     ];
-    const g = tubeAlong(pts, (t) => lerp(1.08, 0.72, t), 36, 12);
-    scaleUV(g, 7); attachRockMorph(g);
-    const m = new THREE.Mesh(g, matSkin); m.castShadow = true; G.add(m); BUDDHA.parts.armL = m;
+    const g = tubeAlong(pts, (t) => lerp(1.95, 1.30, t), 36, 12);
+    scaleUV(g, 8); attachRockMorph(g);
+    const m = new THREE.Mesh(g, matSkin);
+    m.castShadow = true; G.add(m);
+    BUDDHA.parts.armL = m;
 
-    const hg = buildHandGeometry(0.72);
-    hg.rotateX(-1.45); hg.rotateY(-0.24); hg.rotateZ(0.12);
-    hg.translate(6.92, 18.12, 4.48);
-    scaleUV(hg, 3); attachRockMorph(hg);
-    const hm = new THREE.Mesh(hg, matSkin); hm.castShadow = true; G.add(hm); BUDDHA.parts.handL = hm;
+    // 手：掌心向下覆膝
+    const hg = buildHandGeometry(1.08);
+    hg.rotateX(-1.46);
+    hg.rotateZ(0.14);
+    hg.rotateY(-0.30);
+    hg.translate(7.42, 17.35, 5.35);
+    scaleUV(hg, 4); attachRockMorph(hg);
+    const hm = new THREE.Mesh(hg, matSkin);
+    hm.castShadow = true; G.add(hm);
+    BUDDHA.parts.handL = hm;
 
+    // 赭红袖（袈裟覆左臂）
     const sg = buildSleeveGeometry(
-      new THREE.Vector3(5.72, 27.06, -0.22),
-      new THREE.Vector3(6.65, 21.35, 1.95),
-      1.76, 1.12, 2.55);
+      new THREE.Vector3(4.45, 27.6, -0.4),
+      new THREE.Vector3(6.55, 20.8, 2.2),
+      3.05, 1.95, 4.2
+    );
     scaleUV(sg, 4); attachRockMorph(sg);
-    const sm = new THREE.Mesh(sg, matRobe); sm.castShadow = true; G.add(sm); BUDDHA.parts.sleeveL = sm;
+    const sm = new THREE.Mesh(sg, matRobe);
+    sm.castShadow = true; G.add(sm);
+    BUDDHA.parts.sleeveL = sm;
   }
 }
 
@@ -55340,28 +55383,36 @@ function buildSleeveGeometry(a, b, r0, r1, dropLen) {
 function buildFeet(G, mat) {
   for (const sx of [-1, 1]) {
     const parts = [];
-    const f = new THREE.SphereGeometry(1, 24, 18);
+    // 脚背
+    const f = new THREE.SphereGeometry(1, 22, 16);
     const pa = f.attributes.position;
     for (let i = 0; i < pa.count; i++) {
       let x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i);
-      y = Math.max(y, -0.26);
+      y = Math.max(y, -0.28);            // 削平脚底
+      // 前端（+z）变窄变薄
       const fz = (z + 1) * 0.5;
-      pa.setXYZ(i, x * 1.55 * lerp(1.0, 0.76, fz), y * 0.72, z * 2.02);
+      const narrow = lerp(1.0, 0.74, Math.pow(fz, 1.5));
+      pa.setXYZ(i, x * 1.82 * narrow, y * 0.86, z * 2.40);
     }
-    pa.needsUpdate = true; f.computeVertexNormals(); parts.push(f);
+    pa.needsUpdate = true; f.computeVertexNormals();
+    parts.push(f);
+    // 脚趾
     for (let i = 0; i < 5; i++) {
-      const t = i / 4, r = 0.31 - t * 0.075;
+      const t = i / 4;
+      const r = 0.40 - t * 0.11;
       const g = new THREE.SphereGeometry(r, 12, 10);
-      g.scale(1, 0.78, 1.24);
-      g.translate((-0.88 + t * 1.76) * sx, -0.17, 2.35 - Math.abs(t - 0.18) * 0.32);
+      g.scale(1, 0.86, 1.36);
+      g.translate((-1.05 + t * 2.1) * sx, -0.22 + (1 - Math.abs(t - 0.1)) * 0.12, 2.86 - Math.abs(t - 0.15) * 0.42);
       parts.push(g);
     }
     const merged = mergeGeometries(parts);
-    merged.scale(0.98, 0.98, 0.98);
-    merged.translate(sx * 8.10, 0.82, 6.05);
-    scaleUV(merged, 5); attachRockMorph(merged);
-    const m = new THREE.Mesh(merged, mat); m.castShadow = m.receiveShadow = true;
-    G.add(m); BUDDHA.parts['foot' + (sx > 0 ? 'L' : 'R')] = m;
+    merged.scale(1.05, 1.05, 1.05);
+    merged.translate(sx * 8.20, 0.98, 6.10);
+    scaleUV(merged, 6); attachRockMorph(merged);
+    const m = new THREE.Mesh(merged, mat);
+    m.castShadow = m.receiveShadow = true;
+    G.add(m);
+    BUDDHA.parts['foot' + (sx > 0 ? 'L' : 'R')] = m;
   }
 }
 
@@ -55371,37 +55422,29 @@ function buildFeet(G, mat) {
 function buildHalo3D(G) {
   const haloMat = new THREE.MeshStandardMaterial({
     map: TEX.halo.map, transparent: true, opacity: 0,
-    roughness: 0.82, metalness: 0.0, side: THREE.DoubleSide,
-    alphaTest: 0.015, depthWrite: false,
+    roughness: 0.72, metalness: 0.0, side: THREE.DoubleSide,
+    alphaTest: 0.02, depthWrite: false,
   });
   BUDDHA.haloMats.push(haloMat);
-  const g = new THREE.CircleGeometry(4.55, 80);
+  const R = 6.15;
+  const g = new THREE.PlaneGeometry(R * 2, R * 2, 1, 1);
   const m = new THREE.Mesh(g, haloMat);
-  m.position.set(0, 32.20, -5.05);
-  m.rotation.x = 0.015;
-  G.add(m); BUDDHA.parts.halo = m;
-
-  const ringMat = new THREE.MeshStandardMaterial({
-    color: 0xB68A43, emissive: 0x2C1907, emissiveIntensity: 0.12,
-    roughness: 0.62, transparent: true, opacity: 0,
-  });
-  BUDDHA.haloMats.push(ringMat);
-  const rings = new THREE.Group();
-  for (const r of [3.82, 4.24]) {
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.075, 8, 72), ringMat);
-    ring.position.set(0, 32.20, -4.94);
-    rings.add(ring);
-  }
-  G.add(rings); BUDDHA.parts.haloRings = rings;
+  m.position.set(0, 31.95, -3.55);
+  m.rotation.x = 0.05;
+  G.add(m);
+  BUDDHA.parts.halo = m;
 
   const crownMat = new THREE.MeshStandardMaterial({
     map: TEX.haloCrown.map, transparent: true, opacity: 0,
-    roughness: 0.78, side: THREE.DoubleSide, alphaTest: 0.035, depthWrite: false,
+    roughness: 0.7, side: THREE.DoubleSide, alphaTest: 0.02, depthWrite: false,
   });
   BUDDHA.haloMats.push(crownMat);
-  const cm = new THREE.Mesh(new THREE.PlaneGeometry(5.0, 1.18), crownMat);
-  cm.position.set(0, 36.42, -4.92);
-  G.add(cm); BUDDHA.parts.haloCrown = cm;
+  const cg = new THREE.PlaneGeometry(9.4, 3.10);
+  const cm = new THREE.Mesh(cg, crownMat);
+  cm.position.set(0, 36.55, -3.45);
+  cm.rotation.x = 0.05;
+  G.add(cm);
+  BUDDHA.parts.haloCrown = cm;
 }
 
 /* ------------------------------------------------------------
@@ -55409,29 +55452,28 @@ function buildHalo3D(G) {
    ------------------------------------------------------------ */
 function buildPegs(G) {
   const pegs = [];
+  const P = new THREE.Vector3(), N = new THREE.Vector3();
+  const rnd = mulberry32(41);
+  // 在举起的手掌/前臂区域插桩（视频里正是这里）
   const spots = [
-    [-0.18, 27.2], [0.18, 27.0], [-0.12, 24.9], [0.13, 24.4],
-    [-0.20, 21.9], [0.19, 21.3], [-0.13, 18.7], [0.14, 18.0],
-    [-0.17, 15.0], [0.17, 14.4], [-0.10, 11.3], [0.11, 10.7],
-    [-0.14, 7.5], [0.14, 7.0],
+    [-5.6, 26.6], [-5.2, 25.4], [-6.4, 26.0], [-4.9, 24.2], [-6.2, 24.6],
+    [-5.9, 27.6], [-4.4, 23.1],
   ];
-  const geo = new THREE.CylinderGeometry(0.10, 0.13, 1.85, 9);
-  const mat = new THREE.MeshStandardMaterial({ map: TEX.wood.map, color: 0x5B3A22, roughness: 0.92 });
+  const geo = new THREE.CylinderGeometry(0.20, 0.26, 3.4, 8);
+  const mat = new THREE.MeshStandardMaterial({ color: 0x2E241C, roughness: 0.92 });
   const grp = new THREE.Group();
-  for (let i = 0; i < spots.length; i++) {
-    const [u, y] = spots[i];
-    const uu = (u + 1) % 1;
-    const P = bodyPoint(uu, yv(y), new THREE.Vector3());
-    const N = bodyNormal(uu, yv(y), new THREE.Vector3()).normalize();
+  for (const [x, y] of spots) {
     const m = new THREE.Mesh(geo, mat);
-    m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), N);
-    m.position.copy(P).addScaledVector(N, 0.42);
+    m.position.set(x, y, 4.4 + rnd() * 0.6);
+    m.rotation.z = -0.5 + rnd() * 0.3;
+    m.rotation.x = 0.9 + rnd() * 0.35;
     m.castShadow = true;
-    m.userData.t = i / Math.max(1, spots.length - 1);
+    m.userData.t = rnd();
     m.userData.finalPosition = m.position.clone();
     m.userData.finalQuaternion = m.quaternion.clone();
-    m.userData.axis = N.clone();
-    grp.add(m); pegs.push(m);
+    m.userData.axis = new THREE.Vector3(0, 1, 0).applyQuaternion(m.quaternion).normalize();
+    grp.add(m);
+    pegs.push(m);
   }
   grp.visible = false;
   G.add(grp);
@@ -55447,72 +55489,28 @@ function buildPegs(G) {
 
 /* 洞窟尺寸（米） */
 const CAVE = {
-  x0: -18.0, x1: 18.0,      // 左右壁
-  yTop: 43.5,               // 拱顶最高
-  yArch: 37.5,              // 起拱线
-  zBack: -18.5,             // 后壁
+  x0: -15.5, x1: 15.5,      // 左右壁
+  yTop: 41.5,               // 拱顶最高
+  yArch: 37.0,              // 起拱线
+  zBack: -11.5,             // 后壁
   zFront: 10.0,             // 洞口（= 崖壁面）
 };
 const CLIFF_Z = 10.0;
-const CLIFF_TOP = 52.0;
+const CLIFF_TOP = 46.0;
 
 const WORLD = { group: null };
 
-function buildArchTunnelGeometry(width = 8.8, wallHeight = 5.8, archHeight = 3.3, length = 20, segArch = 24, segDepth = 12) {
-  const half = width * 0.5;
-  const ring = [];
-  ring.push(new THREE.Vector2(-half, 0));
-  ring.push(new THREE.Vector2(-half, wallHeight));
-  for (let i = 0; i <= segArch; i++) {
-    const a = Math.PI - (i / segArch) * Math.PI;
-    ring.push(new THREE.Vector2(Math.cos(a) * half, wallHeight + Math.sin(a) * archHeight));
-  }
-  ring.push(new THREE.Vector2(half, 0));
-  const pos = [], uv = [], idx = [];
-  const nr = ring.length;
-  for (let j = 0; j <= segDepth; j++) {
-    const z = lerp(length * 0.5, -length * 0.5, j / segDepth);
-    for (let i = 0; i < nr; i++) {
-      const q = ring[i];
-      pos.push(q.x, q.y, z);
-      uv.push(i / Math.max(1, nr - 1) * 5.0, j / segDepth * length / 4.0);
-    }
-  }
-  for (let j = 0; j < segDepth; j++) for (let i = 0; i < nr - 1; i++) {
-    const a = j * nr + i, b = a + 1, c = a + nr + 1, d = a + nr;
-    idx.push(a, d, b, b, d, c);
-  }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  g.setIndex(idx); g.computeVertexNormals();
-  return g;
-}
-
-function buildArchBackGeometry(width = 8.8, wallHeight = 5.8, archHeight = 3.3, seg = 36) {
-  const shape = new THREE.Shape();
-  const half = width * 0.5;
-  shape.moveTo(-half, 0); shape.lineTo(-half, wallHeight);
-  for (let i = 0; i <= seg; i++) {
-    const a = Math.PI - (i / seg) * Math.PI;
-    shape.lineTo(Math.cos(a) * half, wallHeight + Math.sin(a) * archHeight);
-  }
-  shape.lineTo(half, 0); shape.closePath();
-  return new THREE.ShapeGeometry(shape, 24);
-}
-
 /* 崖壁面的起伏 */
 function cliffFaceZ(x, y) {
-  const macro=fbm2(x*.010+5,y*.012+2,5,3.1)-.5;
-  const blocks=fbm2(x*.031,y*.038,4,8.8)-.5;
-  const vertical=ridge2(x*.020+fbm2(x*.008,y*.025,3,41)*.8,y*.010,5,1.7);
-  const fracture=ridge2(x*.008+fbm2(x*.025,y*.010,3,19)*.6,y*.082,4,27);
-  const alcove=smoothstep(.60,.90,fbm2(x*.014+7,y*.029,4,5.1))*smoothstep(39,8,y)*smoothstep(155,18,Math.abs(x));
-  let z=CLIFF_Z+macro*8.6+blocks*3.4-vertical*4.2-fracture*2.1-alcove*2.8;
-  /* 仅在主窟门边缘局部收平，中央之外保持真实起伏。 */
-  const near=smoothstep(24,15.5,Math.abs(x))*smoothstep(50,39,y);
-  z=lerp(z,CLIFF_Z+blocks*.75-fracture*.55,near*.72);
-  z+=smoothstep(10,0,y)*2.2;
+  const n = fbm2(x * 0.011 + 5, y * 0.013 + 2, 5, 3.1) - 0.5;
+  const n2 = fbm2(x * 0.045, y * 0.05, 4, 8.8) - 0.5;
+  const erode = ridge2(x * 0.02, y * 0.055, 4, 1.7);
+  let z = CLIFF_Z + n * 6.6 + n2 * 2.2 - erode * 3.2;
+  // 靠近洞口区域压平，保证洞口是干净的立面
+  const near = smoothstep(30, 16, Math.abs(x)) * smoothstep(50, 42, y);
+  z = lerp(z, CLIFF_Z + n2 * 0.35, near * 0.96);
+  // 底部略外凸（坡积）
+  z += smoothstep(9, 0, y) * 1.6;
   return z;
 }
 
@@ -55525,43 +55523,10 @@ function duneY(x, z) {
   return CLIFF_TOP + rise + n * 9.0 + streak * 1.6;
 }
 
-function makeErodedRock(seed, sx, sy, sz) {
-  const g=new THREE.IcosahedronGeometry(1,3),pa=g.attributes.position;
-  for(let i=0;i<pa.count;i++){
-    let x=pa.getX(i),y=pa.getY(i),z=pa.getZ(i);
-    const n=fbm3(x*1.9+seed*.71,y*1.7+seed*1.17,z*1.8+seed*.43,4)-.5;
-    const cut=ridge2(x*2.7+seed,y*3.8,3,seed*3.1);
-    const r=1+n*.24-cut*.07;
-    x*=sx*r;y*=sy*(r+(y>0?.03:0));z*=sz*r;
-    pa.setXYZ(i,x,y,z);
-  }
-  pa.needsUpdate=true;g.computeVertexNormals();return g;
-}
-
 function buildWorld(scene) {
   const G = new THREE.Group();
   WORLD.group = G;
   scene.add(G);
-
-  /* ---------------- 砂岩崖体厚度：完整三维岩墙，正面细节由高密度立面叠加 ---------------- */
-  {
-    const W=340,Hh=CLIFF_TOP+14,D=38;
-    const g=new THREE.BoxGeometry(W,Hh,D,84,42,10);
-    const pa=g.attributes.position;
-    for(let i=0;i<pa.count;i++){
-      let x=pa.getX(i),y=pa.getY(i)+Hh*.5,z=pa.getZ(i)-9.0;
-      const side=Math.abs(x)/(W*.5);
-      const back=smoothstep(4,-28,z);
-      const rough=(fbm3(x*.018,y*.022,z*.025,4)-.5)*(1.3+back*1.8);
-      z+=rough;
-      x+=Math.sign(x||1)*smoothstep(.78,1.0,side)*rough*.35;
-      pa.setXYZ(i,x,y,z);
-    }
-    pa.needsUpdate=true;g.computeVertexNormals();
-    const mat=new THREE.MeshStandardMaterial({map:TEX.sandstone.map,normalMap:TEX.sandstone.normal,color:0xB78A5D,roughness:.99,metalness:0});
-    mat.normalScale.set(2.0,2.0);applyCarve(mat);
-    const m=new THREE.Mesh(g,mat);m.castShadow=m.receiveShadow=true;G.add(m);WORLD.cliffBody=m;
-  }
 
   /* ---------------- 崖壁立面 ---------------- */
   {
@@ -55586,42 +55551,13 @@ function buildWorld(scene) {
       map: TEX.sandstone.map, normalMap: TEX.sandstone.normal,
       roughness: 0.98, metalness: 0, side: THREE.DoubleSide,
     });
-    mat.normalScale.set(3.5, 3.5);
+    mat.normalScale.set(2.0, 2.0);
     applyCarve(mat);
     const m = new THREE.Mesh(g, mat);
     m.receiveShadow = true; m.castShadow = true;
     G.add(m);
     WORLD.cliffFace = m;
     WORLD.cliffMat = mat;
-  }
-
-  /* ---------------- 竖向断裂与崖脚碎石：只做地质尺度参照，不再堆叠球状巨石 ---------------- */
-  {
-    const fractureMat=new THREE.MeshStandardMaterial({color:0x4A3326,roughness:1,transparent:true,opacity:.58,depthWrite:false});
-    const fractures=new THREE.Group();
-    for(let j=0;j<18;j++){
-      const side=j%2?-1:1;
-      const baseX=side*(28+hash3(j,9,7)*132);
-      const pts=[];
-      for(let i=0;i<=22;i++){
-        const y=lerp(1.0,CLIFF_TOP+5,i/22);
-        const x=baseX+Math.sin(i*.58+j)*(.35+hash3(j,i,2)*1.15)+(fbm2(i*.12,j,2,17)-.5)*1.5;
-        pts.push(new THREE.Vector3(x,y,cliffFaceZ(x,y)+.18));
-      }
-      const tube=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),66,.018+hash3(j,3,5)*.032,5,false),fractureMat);
-      fractures.add(tube);
-    }
-    G.add(fractures);WORLD.fractures=fractures;
-
-    const rockGeo=new THREE.IcosahedronGeometry(1,1),rpa=rockGeo.attributes.position;
-    for(let i=0;i<rpa.count;i++){const q=.72+hash3(i,5,3)*.62;rpa.setXYZ(i,rpa.getX(i)*q,rpa.getY(i)*q*.72,rpa.getZ(i)*q);}rpa.needsUpdate=true;rockGeo.computeVertexNormals();
-    const screeMat=new THREE.MeshStandardMaterial({map:TEX.rockCore.map,normalMap:TEX.rockCore.normal,color:0x8B6849,roughness:.99});
-    const scree=new THREE.InstancedMesh(rockGeo,screeMat,132),M=new THREE.Matrix4(),Q=new THREE.Quaternion(),S=new THREE.Vector3();
-    for(let i=0;i<132;i++){
-      const x=(hash3(i,8,4)-.5)*290,z=CLIFF_Z+5+hash3(i,11,5)*30,y=.12+hash3(i,2,17)*.8,sc=.16+Math.pow(hash3(i,19,7),2.2)*1.25;
-      Q.setFromEuler(new THREE.Euler(hash3(i,3,13)*2,hash3(i,9,23)*TAU,hash3(i,17,29)*1.5));S.set(sc*(.8+hash3(i,31,2)*.8),sc*(.50+hash3(i,37,4)*.50),sc);M.compose(new THREE.Vector3(x,y,z),Q,S);scree.setMatrixAt(i,M);
-    }
-    scree.instanceMatrix.needsUpdate=true;scree.castShadow=scree.receiveShadow=true;G.add(scree);WORLD.scree=scree;
   }
 
   /* ---------------- 崖壁厚度：洞口周围的侧壁（让洞口有进深） ---------------- */
@@ -55660,29 +55596,21 @@ function buildWorld(scene) {
     WORLD.dune = m;
   }
 
-  /* ---------------- 窟门隧道：真实拱形内壁和暗后壁 ---------------- */
+  /* ---------------- 窟门隧道（门洞后的暗腔） ---------------- */
   {
-    const tg = buildArchTunnelGeometry(8.8, 5.8, 3.3, 20, 28, 16);
+    const tg = new THREE.BoxGeometry(8.6, 8.9, 20, 1, 1, 1);
+    const uvA = tg.attributes.uv;
+    for (let i = 0; i < uvA.count; i++) uvA.setXY(i, uvA.getX(i) * 8.6, uvA.getY(i) * 8.9);
     const tmat = new THREE.MeshStandardMaterial({
       map: TEX.caveWall.map, normalMap: TEX.caveWall.normal,
-      color: 0xB38A65, emissive: 0x3A2113, emissiveIntensity: 0.34,
-      roughness: 0.99, side: THREE.DoubleSide,
+      roughness: 0.98, side: THREE.BackSide,
     });
-    tmat.normalScale.set(1.4, 1.4);
+    tmat.map = TEX.caveWall.map;
     const tm = new THREE.Mesh(tg, tmat);
-    tm.position.set(0, 30.3, CLIFF_Z - 5.4);
-    tm.visible = false; tm.receiveShadow = true;
-    G.add(tm); WORLD.doorTunnel = tm;
-
-    const backMat = new THREE.MeshStandardMaterial({
-      map: TEX.rockCore.map, normalMap: TEX.rockCore.normal,
-      color: 0x745744, emissive: 0x28160D, emissiveIntensity: 0.34,
-      roughness: 1.0, side: THREE.DoubleSide,
-    });
-    const back = new THREE.Mesh(buildArchBackGeometry(8.8, 5.8, 3.3), backMat);
-    back.position.set(0, 30.3, CLIFF_Z - 15.25);
-    back.visible = false; back.receiveShadow = true;
-    G.add(back); WORLD.doorBack = back;
+    tm.position.set(0, 34.85, CLIFF_Z - 5.5);
+    tm.visible = false;
+    G.add(tm);
+    WORLD.doorTunnel = tm;
   }
 
   /* ---------------- 岩芯：尚未挖走的土石（顶面 = 当前开凿面） ---------------- */
@@ -55694,7 +55622,7 @@ function buildWorld(scene) {
     for (let i = 0; i < pa.count; i++) {
       if (pa.getY(i) > FH / 2 - 0.01) {
         const n = fbm2(pa.getX(i) * 0.20 + 3, pa.getZ(i) * 0.20, 3, 5);
-        pa.setY(i, FH / 2 + (n - 0.5) * 2.8);     // 凿击面的起伏（绝对米）
+        pa.setY(i, FH / 2 + (n - 0.5) * 1.5);     // 凿击面的起伏（绝对米）
       }
     }
     pa.needsUpdate = true; g.computeVertexNormals();
@@ -55703,7 +55631,7 @@ function buildWorld(scene) {
     const mat = new THREE.MeshStandardMaterial({
       map: TEX.sandstone.map, normalMap: TEX.sandstone.normal, roughness: 0.99,
     });
-    mat.normalScale.set(2.5, 2.5);
+    mat.normalScale.set(1.2, 1.2);
     applyCarve(mat);
     WORLD.rockFillH = FH;
     const m = new THREE.Mesh(g, mat);
@@ -55716,41 +55644,34 @@ function buildWorld(scene) {
   /* ---------------- 洞窟内壁 ---------------- */
   buildCaveInterior(G);
 
-  /* ---------------- 风蚀沙地与踩踏硬化区 ---------------- */
+  /* ---------------- 地面广场 ---------------- */
   {
-    const g = new THREE.PlaneGeometry(400, 300, 84, 60);
+    const g = new THREE.PlaneGeometry(400, 300, 1, 1);
     g.rotateX(-Math.PI / 2);
-    const pa = g.attributes.position;
-    for (let i = 0; i < pa.count; i++) {
-      const x = pa.getX(i), z = pa.getZ(i) + CLIFF_Z + 130;
-      const macro = fbm2(x * 0.008 + 3, z * 0.010 + 7, 4, 5.2) - 0.5;
-      const ripple = Math.sin(z * 0.075 + fbm2(x * 0.035, z * 0.018, 2, 4) * 3.0) * 0.12;
-      const apron = smoothstep(CLIFF_Z + 78, CLIFF_Z + 6, z);
-      const packed = smoothstep(55, 20, Math.abs(x)) * smoothstep(CLIFF_Z + 90, CLIFF_Z + 20, z);
-      pa.setXYZ(i, x, -0.16 + macro * 0.72 + ripple * (1 - packed * 0.75) + apron * 0.22, z);
-    }
-    pa.needsUpdate = true; g.computeVertexNormals();
+    g.translate(0, -0.05, CLIFF_Z + 130);
     const uvA = g.attributes.uv;
-    for (let i = 0; i < uvA.count; i++) uvA.setXY(i, uvA.getX(i) * 400 / 18, uvA.getY(i) * 300 / 18);
-    const mat = new THREE.MeshStandardMaterial({ map: TEX.ground.map, normalMap: TEX.ground.normal, roughness: 0.99 });
-    mat.normalScale.set(1.35, 1.35);
-    const m = new THREE.Mesh(g, mat); m.receiveShadow = true; G.add(m); WORLD.ground = m;
+    for (let i = 0; i < uvA.count; i++) uvA.setXY(i, uvA.getX(i) * 400 / 9, uvA.getY(i) * 300 / 9);
+    const mat = new THREE.MeshStandardMaterial({
+      map: TEX.ground.map, normalMap: TEX.ground.normal, roughness: 0.93,
+    });
+    const m = new THREE.Mesh(g, mat);
+    m.receiveShadow = true;
+    G.add(m);
+    WORLD.ground = m;
   }
 
-  /* 佛像基座：三层风化椭圆石台，避免现代矩形展台感。 */
+  /* 佛像基座台 */
   {
-    const mat = new THREE.MeshStandardMaterial({ map: TEX.ground.map, normalMap: TEX.ground.normal, color: 0x8E7358, roughness: 0.98 });
-    const grp = new THREE.Group();
-    const dims = [[17.8, 0.55, 11.8], [16.8, 0.42, 10.8], [15.8, 0.32, 9.8]];
-    let y = 0;
-    dims.forEach((d, i) => {
-      const g = new THREE.CylinderGeometry(1, 1.02, d[1], 64, 1);
-      const m = new THREE.Mesh(g, mat);
-      m.scale.set(d[0], 1, d[2]);
-      m.position.set(0, y + d[1] * 0.5, 0.35 - i * 0.12);
-      m.receiveShadow = true; m.castShadow = true; grp.add(m); y += d[1] - 0.06;
+    const g = new THREE.BoxGeometry(40, 1.2, 26);
+    const mat = new THREE.MeshStandardMaterial({
+      map: TEX.ground.map, normalMap: TEX.ground.normal, roughness: 0.92,
     });
-    G.add(grp); WORLD.plinth = grp; grp.visible = false;
+    const m = new THREE.Mesh(g, mat);
+    m.position.set(0, 0.6, 1.0);
+    m.receiveShadow = true;
+    G.add(m);
+    WORLD.plinth = m;
+    m.visible = false;
   }
 
   return G;
@@ -55764,7 +55685,6 @@ const WALL_MATS = [];
 function makeWallMaterial(uvScale = [4, 4]) {
   const mat = new THREE.MeshStandardMaterial({
     map: TEX.caveWall.map, normalMap: TEX.caveWall.normal,
-    color: 0xFFFFFF, emissive: 0x24160E, emissiveIntensity: 0.16,
     roughness: 0.97, metalness: 0, side: THREE.DoubleSide,
   });
   const U = {
@@ -55783,7 +55703,7 @@ function makeWallMaterial(uvScale = [4, 4]) {
     nFine: { value: TEX.mudFine.normal },
     uScale: { value: new THREE.Vector2(uvScale[0], uvScale[1]) },
     uWallSection: { value: 99999 },
-    uMuralScale: { value: new THREE.Vector2(1 / 36.0, 1 / 43.5) },
+    uMuralScale: { value: new THREE.Vector2(1 / 10.5, 1 / 10.5) },
   };
   mat.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, U);
@@ -55800,12 +55720,12 @@ function makeWallMaterial(uvScale = [4, 4]) {
       uniform float uWallSection;
       float wallPhaseLocal(){
         if (uWallProgress < 0.0) return uWallPhase;
-        float side = step(16.0, abs(vWP.x));
-        float uuBack = clamp((vWP.x + 18.0) / 36.0, 0.0, 1.0);
-        float uuSide = clamp((vWP.z + 18.5) / 28.5, 0.0, 1.0);
+        float side = step(13.8, abs(vWP.x));
+        float uuBack = clamp((vWP.x + 15.5) / 31.0, 0.0, 1.0);
+        float uuSide = clamp((vWP.z + 11.5) / 21.5, 0.0, 1.0);
         float uu = mix(uuBack, uuSide, side);
-        if (vWP.x > 16.0) uu = 1.0 - uu;
-        float vv = clamp(vWP.y / 43.5, 0.0, 1.0);
+        if (vWP.x > 13.8) uu = 1.0 - uu;
+        float vv = clamp(vWP.y / 41.5, 0.0, 1.0);
         float rag = sin(vWP.x * 0.83 + vWP.z * 0.47 + uWallTime * 0.55) * 0.020
                   + sin(vWP.y * 1.37 - vWP.z * 0.31) * 0.014;
         float coord = vv;
@@ -55827,26 +55747,10 @@ function makeWallMaterial(uvScale = [4, 4]) {
     sh.fragmentShader = sh.fragmentShader.replace('#include <map_fragment>',
       `
       vec2 uvA = vUvX * uScale;
-      vec4 rawCol = texture2D(tRaw, uvA);
-      vec4 fineCol = texture2D(tFine, uvA); fineCol.rgb *= vec3(0.76,0.69,0.60);
-      vec4 whiteCol = texture2D(tWhite, uvA); whiteCol.rgb *= vec3(1.035,1.025,0.99);
-      vec4 muralCol = texture2D(tMural, vUvX * uMuralScale); muralCol.rgb *= vec3(1.04,1.00,0.94);
-      vec4 col = rawCol;
-      col = mix(col, fineCol, pw(0.0));
-      col = mix(col, whiteCol, pw(1.0));
-      col = mix(col, muralCol, pw(2.0));
-      if (uWallProgress >= 0.0) {
-        float side = step(16.0, abs(vWP.x));
-        float uuBack = clamp((vWP.x + 18.0) / 36.0, 0.0, 1.0);
-        float uuSide = clamp((vWP.z + 18.5) / 28.5, 0.0, 1.0);
-        float uu = mix(uuBack, uuSide, side); if (vWP.x > 16.0) uu = 1.0 - uu;
-        float vv = clamp(vWP.y / 43.5, 0.0, 1.0);
-        float coord = vv;
-        if (uWallMode > 1.5 && uWallMode < 2.5) coord = 1.0 - vv;
-        if (uWallMode > 2.5) { float band=floor(vv*7.0); float snake=mod(band,2.0)<1.0?uu:1.0-uu; coord=(band+snake)/7.0; }
-        float frontEdge = 1.0 - smoothstep(0.018,0.082,abs(coord-uWallProgress));
-        col.rgb += frontEdge * vec3(0.18,0.095,0.040);
-      }
+      vec4 col = texture2D(tRaw, uvA);
+      col = mix(col, texture2D(tFine,  uvA), pw(0.0));
+      col = mix(col, texture2D(tWhite, uvA), pw(1.0));
+      col = mix(col, texture2D(tMural, vUvX * uMuralScale), pw(2.0));
       diffuseColor *= col;
       `);
     sh.fragmentShader = sh.fragmentShader.replace('#include <normal_fragment_maps>',
@@ -56442,187 +56346,109 @@ function buildTree(h = 9, seed = 1) {
    ------------------------------------------------------------ */
 function buildWalkway() {
   const G = new THREE.Group();
-  G.name = 'HistoricCliffScaffold';
   const woodMat = new THREE.MeshStandardMaterial({
-    map: TEX.wood.map, normalMap: TEX.wood.normal, roughness: 0.91,
+    map: TEX.wood.map, normalMap: TEX.wood.normal, roughness: 0.9, side: THREE.DoubleSide,
   });
-  const darkWood = new THREE.MeshStandardMaterial({
-    map: TEX.wood.map, normalMap: TEX.wood.normal, color: 0x6B4024, roughness: 0.94,
-  });
-  const ropeMat = new THREE.MeshStandardMaterial({ color: 0x6D553A, roughness: 1.0 });
-  const ironMat = new THREE.MeshStandardMaterial({ color: 0x3E3A35, roughness: 0.65, metalness: 0.34 });
+  const railMat = new THREE.MeshStandardMaterial({ color: 0x8A3428, roughness: 0.85 });
+  const ironMat = new THREE.MeshStandardMaterial({ color: 0x51453A, roughness: 0.76, metalness: 0.12 });
   const rnd = mulberry32(2406);
-  const components = [];
   const segs = [];
-  const materialYard = new THREE.Vector3(-43, 0.55, CLIFF_Z + 34);
-  const hoistTop = new THREE.Vector3(-23.5, 41.0, CLIFF_Z + 16.5);
+  const components = [];
   let order = 0;
 
-  const register = (mesh, parent, type, stage = 0) => {
+  const register = (mesh, group, delayBias = 0) => {
     mesh.userData.finalPosition = mesh.position.clone();
     mesh.userData.finalQuaternion = mesh.quaternion.clone();
     mesh.userData.finalScale = mesh.scale.clone();
-    const fp = mesh.userData.finalPosition;
-    /*
-      构件从对应跨的正下方起吊，而不是所有木料从画面左侧横穿天空。
-      横屏中这样才能读成“逐跨搭设”，而不是黑色碎片飞行。
-    */
     mesh.userData.startPosition = new THREE.Vector3(
-      fp.x + (rnd() - 0.5) * 3.8,
-      0.18 + rnd() * 1.35,
-      materialYard.z + (rnd() - 0.5) * 4.8);
+      58 + (rnd() - 0.5) * 18,
+      0.45 + rnd() * 1.2,
+      CLIFF_Z + 28 + (rnd() - 0.5) * 12);
     mesh.userData.startQuaternion = new THREE.Quaternion().setFromEuler(
-      new THREE.Euler((rnd() - 0.5) * 0.9, (rnd() - 0.5) * 2.2, (rnd() - 0.5) * 0.8));
-    mesh.userData.hoistPosition = new THREE.Vector3(
-      fp.x + (rnd() - 0.5) * 0.85,
-      Math.max(fp.y + 5.0, 7.5 + stage * 1.4) + (rnd() - 0.5) * 0.8,
-      fp.z + 1.65 + (rnd() - 0.5) * 0.9);
-    mesh.userData.order = order++ + stage * 0.32;
-    mesh.userData.type = type;
-    mesh.userData.stage = stage;
+      new THREE.Euler((rnd() - 0.5) * 1.8, (rnd() - 0.5) * 2.8, (rnd() - 0.5) * 1.8));
+    mesh.userData.order = order++ + delayBias;
     mesh.position.copy(mesh.userData.startPosition);
     mesh.quaternion.copy(mesh.userData.startQuaternion);
-    mesh.scale.copy(mesh.userData.finalScale).multiplyScalar(0.035);
+    mesh.scale.setScalar(0.06);
     mesh.visible = false;
-    mesh.castShadow = true;
-    mesh.receiveShadow = type === 'plank' || type === 'platform';
-    parent.add(mesh);
+    group.add(mesh);
     components.push(mesh);
     return mesh;
   };
 
-  const beamBetween = (a, b, r, mat = woodMat, radial = 8) => {
+  const beamBetween = (a, b, r, mat) => {
     const d = new THREE.Vector3().subVectors(b, a);
-    const m = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.92, r, d.length(), radial), mat);
+    const len = d.length();
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 1.08, len, 7), mat);
     m.position.copy(a).add(b).multiplyScalar(0.5);
     m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize());
     return m;
   };
-  const boxBeam = (x, y, z, sx, sy, sz, mat = woodMat) => {
-    const m = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, sz), mat);
-    m.position.set(x, y, z);
-    return m;
-  };
 
-  /* 四层贴崖施工架：锚杆、挑梁、横梁、踏板、立柱、斜撑、栏杆按真实受力顺序安装。 */
-  const levels = [
-    { y: 5.2, x0: -28.5, x1: 28.5, z0: CLIFF_Z + 1.0, z1: CLIFF_Z + 7.4, nx: 12 },
-    { y: 13.8, x0: -26.0, x1: 26.0, z0: CLIFF_Z + 1.0, z1: CLIFF_Z + 7.0, nx: 11 },
-    { y: 22.4, x0: -23.0, x1: 23.0, z0: CLIFF_Z + 0.9, z1: CLIFF_Z + 6.6, nx: 10 },
-    { y: 30.8, x0: -19.5, x1: 19.5, z0: CLIFF_Z + 0.8, z1: CLIFF_Z + 6.3, nx: 9 },
+  /* 之字形：构件从广场材料堆逐根飞到崖壁，梁柱、踏板、斜撑顺序安装。 */
+  const runs = [
+    { x0: 68, x1: 40, y0: 1.0, y1: 12.0 },
+    { x0: 40, x1: 66, y0: 12.0, y1: 22.0 },
+    { x0: 66, x1: 38, y0: 22.0, y1: 31.5 },
+    { x0: 42, x1: 24, y0: 31.5, y1: 34.6 },
   ];
-
-  levels.forEach((L, li) => {
+  for (let ri = 0; ri < runs.length; ri++) {
+    const r = runs[ri];
     const grp = new THREE.Group();
-    grp.name = 'ScaffoldLevel' + li;
-    const dx = (L.x1 - L.x0) / (L.nx - 1);
-    const zFront = L.z1;
+    const n = 16;
+    for (let i = 0; i < n; i++) {
+      const t = i / (n - 1);
+      const x = lerp(r.x0, r.x1, t), y = lerp(r.y0, r.y1, t);
+      const z = cliffFaceZ(x, y) + 1.75;
+      const step = new THREE.Mesh(new THREE.BoxGeometry(Math.abs(r.x1 - r.x0) / n * 1.38, 0.34, 3.8), woodMat);
+      step.position.set(x, y, z);
+      step.rotation.z = Math.atan2(r.y1 - r.y0, r.x1 - r.x0);
+      step.castShadow = step.receiveShadow = true;
+      register(step, grp, ri * 0.2);
 
-    for (let i = 0; i < L.nx; i++) {
-      const x = L.x0 + i * dx;
-      const wallZ = cliffFaceZ(x, L.y) + 0.12;
-      const outerZ = zFront;
-      const anchor = beamBetween(new THREE.Vector3(x, L.y - 0.18, wallZ - 1.2),
-        new THREE.Vector3(x, L.y - 0.18, outerZ), 0.135, darkWood, 7);
-      register(anchor, grp, 'anchor', li);
-
-      const postBottom = li === 0 ? 0.35 : levels[li - 1].y + 0.18;
-      const post = beamBetween(new THREE.Vector3(x, postBottom, outerZ - 0.18),
-        new THREE.Vector3(x, L.y + 2.45, outerZ - 0.18), 0.17, woodMat, 8);
-      register(post, grp, 'post', li + 0.08);
-
-      if (i < L.nx - 1) {
-        const x2 = x + dx;
-        for (const z of [L.z0 + 0.25, zFront - 0.22]) {
-          const long = beamBetween(new THREE.Vector3(x, L.y - 0.10, z),
-            new THREE.Vector3(x2, L.y - 0.10, z), 0.16, woodMat, 8);
-          register(long, grp, 'long-beam', li + 0.13);
-        }
+      if (i % 3 === 0) {
+        const post = new THREE.Mesh(new THREE.BoxGeometry(0.26, 2.8, 0.26), railMat);
+        post.position.set(x, y + 1.35, z + 1.62);
+        post.castShadow = true;
+        register(post, grp, ri * 0.2 + 0.10);
       }
-
-      if (i < L.nx - 1 && i % 2 === 0) {
-        const x2 = x + dx;
-        const brace = beamBetween(new THREE.Vector3(x, Math.max(0.4, L.y - 7.2), zFront - 0.4),
-          new THREE.Vector3(x2, L.y - 0.22, zFront - 0.4), 0.11, darkWood, 7);
-        register(brace, grp, 'brace', li + 0.18);
+      if (i % 4 === 0) {
+        const wall = new THREE.Vector3(x, Math.max(0.3, y - 3.0), cliffFaceZ(x, y) - 0.2);
+        const deck = new THREE.Vector3(x, y - 0.08, z - 0.75);
+        const brace = beamBetween(wall, deck, 0.16, ironMat);
+        brace.castShadow = true;
+        register(brace, grp, ri * 0.2 + 0.16);
       }
     }
-
-    const plankCount = Math.max(18, Math.round((L.x1 - L.x0) / 2.2));
-    for (let i = 0; i < plankCount; i++) {
-      const x = lerp(L.x0, L.x1, (i + 0.5) / plankCount);
-      const w = (L.x1 - L.x0) / plankCount * 0.94;
-      for (let d = 0; d < 3; d++) {
-        const plank = boxBeam(x, L.y, lerp(L.z0 + 0.9, zFront - 0.9, d / 2), w, 0.20, 1.48, woodMat);
-        plank.rotation.z = (rnd() - 0.5) * 0.012;
-        register(plank, grp, 'plank', li + 0.23 + d * 0.014);
-      }
+    const len = Math.hypot(r.x1 - r.x0, r.y1 - r.y0);
+    for (const side of [-1, 1]) {
+      const rail = new THREE.Mesh(new THREE.BoxGeometry(len, 0.21, 0.21), railMat);
+      rail.position.set((r.x0 + r.x1) / 2, (r.y0 + r.y1) / 2 + 2.52,
+        cliffFaceZ((r.x0 + r.x1) / 2, (r.y0 + r.y1) / 2) + 2.85 + side * 1.42);
+      rail.rotation.z = Math.atan2(r.y1 - r.y0, r.x1 - r.x0);
+      rail.castShadow = true;
+      register(rail, grp, ri * 0.2 + 0.22);
     }
-
-    /* 外侧双道栏杆。 */
-    for (const h of [1.25, 2.20]) {
-      const rail = beamBetween(new THREE.Vector3(L.x0, L.y + h, zFront + 0.05),
-        new THREE.Vector3(L.x1, L.y + h, zFront + 0.05), 0.105, darkWood, 7);
-      register(rail, grp, 'rail', li + 0.29 + h * 0.01);
-    }
-
-    /* 麻绳绑扎节点，使连接不再像悬空积木。 */
-    for (let i = 0; i < L.nx; i += 2) {
-      const x = L.x0 + i * dx;
-      const knot = new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.045, 5, 14), ropeMat);
-      knot.position.set(x, L.y - 0.02, zFront - 0.18);
-      knot.rotation.x = Math.PI / 2;
-      register(knot, grp, 'knot', li + 0.35);
-    }
-    grp.userData.order = li;
-    segs.push(grp); G.add(grp);
-  });
-
-  /* 交替折返楼梯，连接四层施工平台。 */
-  for (let li = 0; li < levels.length - 1; li++) {
-    const a = levels[li], b = levels[li + 1];
-    const side = li % 2 === 0 ? 1 : -1;
-    const xBase = side > 0 ? a.x1 - 4.8 : a.x0 + 4.8;
-    const grp = new THREE.Group();
-    const steps = 11;
-    for (let i = 0; i < steps; i++) {
-      const k = i / (steps - 1);
-      const step = boxBeam(xBase - side * k * 7.4, lerp(a.y + 0.35, b.y - 0.35, k),
-        lerp(a.z1 - 0.8, b.z1 - 0.8, k), 2.15, 0.18, 1.00, woodMat);
-      register(step, grp, 'stair-step', li + 0.42 + k * 0.10);
-    }
-    const stringA = beamBetween(new THREE.Vector3(xBase, a.y + 0.05, a.z1 - 1.25),
-      new THREE.Vector3(xBase - side * 7.4, b.y - 0.55, b.z1 - 1.25), 0.12, darkWood, 7);
-    register(stringA, grp, 'stair-stringer', li + 0.40);
-    const stringB = stringA.clone(); stringB.position.z += 0.95;
-    register(stringB, grp, 'stair-stringer', li + 0.40);
-    segs.push(grp); G.add(grp);
+    grp.userData.order = ri;
+    segs.push(grp);
+    G.add(grp);
   }
-
-  /* 窟门正前方的高层作业台和小型吊架。 */
   {
     const grp = new THREE.Group();
-    for (let i = 0; i < 9; i++) {
-      const plank = boxBeam(lerp(-8.0, 8.0, i / 8), 35.0, CLIFF_Z + 6.0, 1.85, 0.20, 4.6, woodMat);
-      register(plank, grp, 'platform', 4.0 + i * 0.01);
+    const p = new THREE.Mesh(new THREE.BoxGeometry(22, 0.52, 4.6), woodMat);
+    p.position.set(29, 34.6, cliffFaceZ(29, 34.6) + 2.0);
+    p.castShadow = p.receiveShadow = true;
+    register(p, grp, 1.0);
+    for (let i = 0; i < 7; i++) {
+      const post = new THREE.Mesh(new THREE.BoxGeometry(0.30, 2.9, 0.30), railMat);
+      post.position.set(20 + i * 3.0, 36.0, cliffFaceZ(20 + i * 3.0, 34.6) + 3.5);
+      register(post, grp, 1.06);
     }
-    const mast = beamBetween(new THREE.Vector3(-10.5, 30.7, CLIFF_Z + 6.1),
-      new THREE.Vector3(-10.5, 41.0, CLIFF_Z + 6.1), 0.19, darkWood, 8);
-    register(mast, grp, 'hoist-mast', 4.05);
-    const jib = beamBetween(new THREE.Vector3(-10.5, 40.5, CLIFF_Z + 6.1),
-      new THREE.Vector3(-2.5, 40.5, CLIFF_Z + 6.1), 0.16, darkWood, 8);
-    register(jib, grp, 'hoist-jib', 4.10);
-    const pulley = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.10, 8, 20), ironMat);
-    pulley.position.set(-3.0, 40.1, CLIFF_Z + 6.1); pulley.rotation.y = Math.PI / 2;
-    register(pulley, grp, 'pulley', 4.14);
+    grp.userData.order = runs.length;
     segs.push(grp); G.add(grp);
   }
-
   G.userData.segs = segs;
   G.userData.components = components;
-  G.userData.materialYard = materialYard;
-  G.userData.hoistTop = hoistTop;
-  G.userData.levels = levels;
   return G;
 }
 
@@ -56714,11 +56540,6 @@ const CONSTRUCTION = {
   cutCircleGeo: null,
   cutArchGeo: null,
   sectionBackdrop: null,
-  workers: [],
-  workPlatform: null,
-  scaffoldWorkers: [],
-  activeWalkComponent: null,
-  wallBowls: null, wallStrokes: null, wallDrips: null, wallFront: null,
 };
 
 const _cgM = new THREE.Matrix4();
@@ -56822,7 +56643,7 @@ function makeHammerRig(scale = 1) {
 
 function makeTrowelRig(scale = 1, brush = false) {
   const root = new THREE.Group();
-  const metal = new THREE.MeshStandardMaterial({ color: 0x777C7E, roughness: 0.46, metalness: 0.66 });
+  const metal = new THREE.MeshStandardMaterial({ color: 0xC9CDD1, roughness: 0.2, metalness: 0.85 });
   const wood = new THREE.MeshStandardMaterial({ map: TEX.wood.map, normalMap: TEX.wood.normal, roughness: 0.82 });
   const bristle = new THREE.MeshStandardMaterial({ color: brush ? 0x8D4A2D : 0xBD8B58, roughness: 0.96 });
   if (brush) {
@@ -56848,78 +56669,6 @@ function makeTrowelRig(scale = 1, brush = false) {
   root.visible = false;
   root.traverse(o => { if (o.isMesh) o.castShadow = true; });
   return root;
-}
-
-
-function makeWorkerRig(seed = 1) {
-  const root = new THREE.Group();
-  const cloth = new THREE.MeshStandardMaterial({ color: seed % 3 === 0 ? 0x6D3E2B : (seed % 3 === 1 ? 0x8A5A36 : 0x5B4A34), roughness: 0.98 });
-  const skin = new THREE.MeshStandardMaterial({ color: 0xA66E49, roughness: 0.92 });
-  const dark = new THREE.MeshStandardMaterial({ color: 0x2F261F, roughness: 1.0 });
-  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 0.52, 4, 8), cloth);
-  torso.position.y = 1.03; torso.scale.set(0.92, 1, 0.62); root.add(torso);
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 9), skin);
-  head.position.y = 1.66; head.scale.set(0.92, 1.05, 0.90); root.add(head);
-  const cap = new THREE.Mesh(new THREE.SphereGeometry(0.185, 10, 6, 0, TAU, 0, Math.PI * 0.58), dark);
-  cap.position.y = 1.71; cap.rotation.x = -0.08; root.add(cap);
-  const limb = (r, len, mat) => {
-    const pivot = new THREE.Group();
-    const mesh = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.88, r, len, 7), mat);
-    mesh.position.y = -len * 0.5;
-    pivot.add(mesh); return pivot;
-  };
-  const armL = limb(0.075, 0.72, skin), armR = limb(0.075, 0.72, skin);
-  armL.position.set(-0.25, 1.35, 0); armR.position.set(0.25, 1.35, 0);
-  root.add(armL, armR);
-  const legL = limb(0.095, 0.84, cloth), legR = limb(0.095, 0.84, cloth);
-  legL.position.set(-0.12, 0.78, 0); legR.position.set(0.12, 0.78, 0);
-  root.add(legL, legR);
-  const tool = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.032, 0.95, 6), dark);
-  tool.rotation.z = Math.PI / 2; tool.position.set(0, -0.70, 0); armR.add(tool);
-  root.userData = { armL, armR, legL, legR, head, tool, seed };
-  root.visible = false;
-  root.traverse(o => { if (o.isMesh) o.castShadow = true; });
-  return root;
-}
-
-function poseWorker(worker, phase, mode = 'carry') {
-  const u = worker.userData;
-  const swing = Math.sin(phase * TAU);
-  if (mode === 'hammer') {
-    u.armR.rotation.z = -1.10 + Math.sin(phase * TAU) * 0.78;
-    u.armR.rotation.x = -0.35;
-    u.armL.rotation.z = 0.55 + Math.sin(phase * TAU + 0.7) * 0.24;
-    u.legL.rotation.x = 0.10; u.legR.rotation.x = -0.12;
-  } else if (mode === 'trowel') {
-    u.armR.rotation.z = -0.82 + swing * 0.28;
-    u.armR.rotation.x = -0.72;
-    u.armL.rotation.z = 0.28;
-    u.legL.rotation.x = -0.10; u.legR.rotation.x = 0.10;
-  } else if (mode === 'haul') {
-    u.armR.rotation.z = -0.60; u.armL.rotation.z = 0.60;
-    u.legL.rotation.x = swing * 0.46; u.legR.rotation.x = -swing * 0.46;
-  } else {
-    u.armR.rotation.z = -0.30 + swing * 0.35;
-    u.armL.rotation.z = 0.30 - swing * 0.35;
-    u.legL.rotation.x = swing * 0.42; u.legR.rotation.x = -swing * 0.42;
-  }
-  worker.rotation.z = Math.sin(phase * TAU * 0.5) * 0.025;
-}
-
-function makeSuspendedPlatform() {
-  const G = new THREE.Group();
-  const wood = new THREE.MeshStandardMaterial({ map: TEX.wood.map, normalMap: TEX.wood.normal, color: 0x7A4B2B, roughness: 0.94 });
-  const rope = new THREE.MeshStandardMaterial({ color: 0x5D4731, roughness: 1 });
-  for (let i = 0; i < 5; i++) {
-    const plank = new THREE.Mesh(new THREE.BoxGeometry(1.18, 0.12, 3.2), wood);
-    plank.position.x = (i - 2) * 1.08; plank.castShadow = plank.receiveShadow = true; G.add(plank);
-  }
-  for (const x of [-2.4, 2.4]) for (const z of [-1.35, 1.35]) {
-    const r = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.032, 8.2, 6), rope);
-    r.position.set(x, 4.0, z); G.add(r);
-  }
-  G.visible = false;
-  return G;
 }
 
 function pointOnFront(y, lateral = 0, outP = new THREE.Vector3(), outN = new THREE.Vector3()) {
@@ -56988,15 +56737,6 @@ function buildConstruction(scene, tower, walkway) {
     G.add(rig);
     CONSTRUCTION.tools.push(rig);
   }
-
-  /* 工人和吊篮提供真实尺度与因果动作。 */
-  for (let i = 0; i < 6; i++) {
-    const worker = makeWorkerRig(i + 1);
-    worker.scale.setScalar(1.0 + (i % 2) * 0.04);
-    G.add(worker); CONSTRUCTION.workers.push(worker);
-  }
-  const workPlatform = makeSuspendedPlatform();
-  G.add(workPlatform); CONSTRUCTION.workPlatform = workPlatform;
 
   /* 主剖切面：带洞腔开口的实体岩层截面，避免剖切后露出纯背景 */
   {
@@ -57068,8 +56808,7 @@ function buildConstruction(scene, tower, walkway) {
     const wood = new THREE.MeshStandardMaterial({ map: TEX.wood.map, normalMap: TEX.wood.normal, roughness: 0.9 });
     for (let i = 0; i < 14; i++) {
       const b = new THREE.Mesh(new THREE.BoxGeometry(8.5, 0.34, 0.42), wood);
-      const yard = walkway && walkway.userData.materialYard ? walkway.userData.materialYard : new THREE.Vector3(-43, 0.55, CLIFF_Z + 34);
-      b.position.set(yard.x + (i % 2) * 0.55, yard.y + Math.floor(i / 2) * 0.38, yard.z + (i % 3) * 0.62);
+      b.position.set(61 + (i % 2) * 0.5, 0.3 + Math.floor(i / 2) * 0.38, CLIFF_Z + 31 + (i % 3) * 0.55);
       b.rotation.y = (hash3(i, 2, 5) - 0.5) * 0.09;
       b.castShadow = true;
       grp.add(b);
@@ -57094,9 +56833,9 @@ function buildConstruction(scene, tower, walkway) {
     const mat = new THREE.MeshStandardMaterial({ color: 0x19130F, roughness: 1 });
     if (BUDDHA.parts.pegList) {
       for (const peg of BUDDHA.parts.pegList) {
-        const h = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.10, 16), mat);
+        const h = new THREE.Mesh(new THREE.CylinderGeometry(0.31, 0.31, 0.18, 16), mat);
         h.quaternion.copy(peg.userData.finalQuaternion);
-        h.position.copy(peg.userData.finalPosition).addScaledVector(peg.userData.axis, -0.86);
+        h.position.copy(peg.userData.finalPosition).addScaledVector(peg.userData.axis, -1.55);
         holes.add(h);
       }
     }
@@ -57109,7 +56848,7 @@ function buildConstruction(scene, tower, walkway) {
   {
     const geo = new THREE.SphereGeometry(1, 10, 7);
     const mat = new THREE.MeshStandardMaterial({ map: TEX.mudCoarse.map, normalMap: TEX.mudCoarse.normal, color: 0xA68C68, roughness: 0.9 });
-    const mesh = new THREE.InstancedMesh(geo, mat, 72);
+    const mesh = new THREE.InstancedMesh(geo, mat, 64);
     mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     mesh.castShadow = true;
     mesh.frustumCulled = false;
@@ -57120,7 +56859,7 @@ function buildConstruction(scene, tower, walkway) {
       const lat = (rnd() - 0.5) * 1.36;
       const p = new THREE.Vector3(), n = new THREE.Vector3();
       pointOnFront(y, lat, p, n);
-      data.push({ p: p.clone(), n: n.clone(), threshold: clamp(y / BUDDHA_H, 0, 1), s: 0.18 + rnd() * 0.34, phase: rnd(), lat });
+      data.push({ p: p.clone(), n: n.clone(), threshold: clamp(y / BUDDHA_H, 0, 1), s: 0.55 + rnd() * 0.78, phase: rnd(), lat });
     }
     mesh.userData.data = data;
     G.add(mesh);
@@ -57189,7 +56928,7 @@ function buildConstruction(scene, tower, walkway) {
       const lat = (rnd() - 0.5) * 1.2;
       const p = new THREE.Vector3(), n = new THREE.Vector3();
       pointOnFront(y, lat, p, n);
-      data.push({ p: p.clone(), n: n.clone(), s: 0.035 + rnd() * 0.070, order: rnd(), phase: rnd() });
+      data.push({ p: p.clone(), n: n.clone(), s: 0.15 + rnd() * 0.25, order: rnd(), phase: rnd() });
     }
     mesh.userData.data = data;
     G.add(mesh);
@@ -57226,27 +56965,6 @@ function buildConstruction(scene, tower, walkway) {
   CONSTRUCTION.wallBrushes = [makeTrowelRig(0.92, true), makeTrowelRig(0.82, true), makeTrowelRig(0.74, true)];
   for (const o of [...CONSTRUCTION.mudTrowels, CONSTRUCTION.polishTrowel, CONSTRUCTION.paintBrush, ...CONSTRUCTION.wallBrushes]) G.add(o);
 
-  /* 颜料碗、湿刷痕与滴落，让壁画阶段有持续施工信息。 */
-  {
-    const shelf=new THREE.Group();
-    const wood=new THREE.MeshStandardMaterial({map:TEX.wood.map,normalMap:TEX.wood.normal,color:0x6B452C,roughness:.94});
-    const bowlMat=new THREE.MeshStandardMaterial({color:0x4A3428,roughness:.92});
-    const colors=[0xB36B42,0x436B68,0xA98B4D,0xE3D8BC,0x6A4937];
-    const board=new THREE.Mesh(new THREE.BoxGeometry(7.8,.18,1.65),wood);board.position.y=.10;board.castShadow=board.receiveShadow=true;shelf.add(board);
-    colors.forEach((c,i)=>{
-      const bowl=new THREE.Mesh(new THREE.CylinderGeometry(.46,.36,.24,24,1,true),bowlMat);bowl.position.set((i-2)*1.35,.31,0);bowl.castShadow=true;shelf.add(bowl);
-      const pigment=new THREE.Mesh(new THREE.CylinderGeometry(.36,.36,.055,24),new THREE.MeshStandardMaterial({color:c,roughness:.78}));pigment.position.set((i-2)*1.35,.43,0);shelf.add(pigment);
-    });
-    shelf.visible=false;G.add(shelf);CONSTRUCTION.wallBowls=shelf;
-
-    const strokeMat=new THREE.MeshStandardMaterial({color:0xA98661,roughness:.88,transparent:true,opacity:.76,depthWrite:false});
-    const strokes=new THREE.InstancedMesh(new THREE.BoxGeometry(2.85,.34,.075),strokeMat,42);strokes.instanceMatrix.setUsage(THREE.DynamicDrawUsage);strokes.frustumCulled=false;G.add(strokes);CONSTRUCTION.wallStrokes=strokes;hideAllInstances(strokes);
-    const dripMat=new THREE.MeshStandardMaterial({color:0xA98661,roughness:.82,transparent:true,opacity:.70,depthWrite:false});
-    const drips=new THREE.InstancedMesh(new THREE.CylinderGeometry(.035,.055,1,7),dripMat,28);drips.instanceMatrix.setUsage(THREE.DynamicDrawUsage);drips.frustumCulled=false;G.add(drips);CONSTRUCTION.wallDrips=drips;hideAllInstances(drips);
-    const frontMat=new THREE.MeshStandardMaterial({color:0xF1DFC1,emissive:0x8A4A25,emissiveIntensity:.72,roughness:.76,transparent:true,opacity:.94,depthWrite:false});
-    const front=new THREE.Mesh(new THREE.BoxGeometry(33.5,.34,.12),frontMat);front.visible=false;front.frustumCulled=false;G.add(front);CONSTRUCTION.wallFront=front;
-  }
-
   /* 低开销冲击补光 */
   const flash = new THREE.PointLight(0xFFB45B, 0, 22, 2.1);
   scene.add(flash);
@@ -57258,7 +56976,7 @@ function buildConstruction(scene, tower, walkway) {
       floor.userData.finalPosition = new THREE.Vector3(0, floor.userData.baseY, 0);
       floor.userData.finalQuaternion = new THREE.Quaternion();
       const side = i % 2 === 0 ? -1 : 1;
-      floor.userData.stagingPosition = new THREE.Vector3(side * (14.0 + i * 1.15), floor.userData.baseY + 4.0 + i * 0.35, 22 + i * 0.75);
+      floor.userData.stagingPosition = new THREE.Vector3(side * (34 + i * 4.5), floor.userData.baseY + 8 + i * 1.1, 18 + i * 2.2);
       floor.userData.stagingQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler((i - 4) * 0.035, side * (0.36 + i * 0.028), side * 0.08));
       floor.userData.assemblyDelay = (8 - i) * 0.055; // 拆解时先揭顶，复原时由下往上锁定
     });
@@ -57270,16 +56988,12 @@ function buildConstruction(scene, tower, walkway) {
 
 function hideConstructionTransient() {
   for (const rig of CONSTRUCTION.tools) rig.visible = false;
-  for (const worker of CONSTRUCTION.workers) worker.visible = false;
-  if (CONSTRUCTION.workPlatform) CONSTRUCTION.workPlatform.visible = false;
-  CONSTRUCTION.activeWalkComponent = null;
   if (CONSTRUCTION.sectionPlane) {
     CONSTRUCTION.sectionPlane.material.opacity = 0;
     CONSTRUCTION.sectionPlane.visible = false;
     CONSTRUCTION.sectionEdge.material.opacity = 0;
     CONSTRUCTION.sectionEdge.visible = false;
   }
-  if (CONSTRUCTION.sectionBackdrop) { CONSTRUCTION.sectionBackdrop.visible = false; CONSTRUCTION.sectionBackdrop.material.opacity = 0; }
   if (CONSTRUCTION.cutFront) { CONSTRUCTION.cutFront.visible = false; CONSTRUCTION.cutFront.material.opacity = 0; }
   if (CONSTRUCTION.walkPile) CONSTRUCTION.walkPile.visible = false;
   if (CONSTRUCTION.pegHoles) CONSTRUCTION.pegHoles.visible = false;
@@ -57287,56 +57001,28 @@ function hideConstructionTransient() {
   if (CONSTRUCTION.dust) { CONSTRUCTION.dust.points.visible = false; CONSTRUCTION.dust.points.material.opacity = 0; }
   if (CONSTRUCTION.pigment) { CONSTRUCTION.pigment.points.visible = false; CONSTRUCTION.pigment.points.material.opacity = 0; }
   if (CONSTRUCTION.flash) CONSTRUCTION.flash.intensity = 0;
-  if (CONSTRUCTION.wallBowls) CONSTRUCTION.wallBowls.visible = false;
-  if (CONSTRUCTION.wallStrokes) hideAllInstances(CONSTRUCTION.wallStrokes);
-  if (CONSTRUCTION.wallDrips) hideAllInstances(CONSTRUCTION.wallDrips);
-  if (CONSTRUCTION.wallFront) CONSTRUCTION.wallFront.visible=false;
 }
 
 function updateTowerConstruction(t) {
   const tower = CONSTRUCTION.tower;
   if (!tower || !tower.userData.floors) return { k: 0, moving: 0 };
-  const floors = tower.userData.floors;
-  const n = floors.length;
-  const opening = t < 15.2;
-  const closing = t >= 110.6;
+  const k = CURVE_TOWER(t); // 0 完整，1 拆开
   let moving = 0;
-  tower.visible = opening || closing || t < 2.6 || t >= 113.2;
-
-  floors.forEach((floor, i) => {
+  tower.visible = true;
+  tower.userData.floors.forEach((floor) => {
+    const delay = floor.userData.assemblyDelay || 0;
+    const q = clamp((k - delay) / Math.max(0.001, 1 - delay), 0, 1);
+    const e = easeInOut(q);
     const fp = floor.userData.finalPosition;
     const sp = floor.userData.stagingPosition;
-    let q = 0;
-    if (opening) {
-      const p = clamp(t / 2.35, 0, 1);
-      const order = n - 1 - i; // 自上而下拆
-      q = clamp(p * (n + 0.65) - order, 0, 1);
-      floor.visible = q < 0.995;
-      const e = easeInOut(q);
-      floor.position.lerpVectors(fp, sp, e);
-      floor.position.y += Math.sin(e * Math.PI) * 3.6;
-      floor.quaternion.slerpQuaternions(floor.userData.finalQuaternion, floor.userData.stagingQuaternion, e);
-      floor.scale.setScalar(1 - Math.sin(e * Math.PI) * 0.025);
-    } else if (closing) {
-      const p = clamp((t - 110.6) / 2.95, 0, 1);
-      const order = i; // 自下而上装
-      q = clamp(p * (n + 0.70) - order, 0, 1);
-      floor.visible = q > 0.004;
-      const e = easeInOut(q);
-      floor.position.lerpVectors(sp, fp, e);
-      floor.position.y += Math.sin(e * Math.PI) * 3.3;
-      floor.quaternion.slerpQuaternions(floor.userData.stagingQuaternion, floor.userData.finalQuaternion, e);
-      floor.scale.setScalar(0.97 + 0.03 * easeOut(q));
-    } else {
-      floor.visible = false;
-      floor.position.copy(sp);
-      floor.quaternion.copy(floor.userData.stagingQuaternion);
-      floor.scale.setScalar(1);
-      q = 1;
-    }
+    floor.position.lerpVectors(fp, sp, e);
+    floor.position.y += Math.sin(e * Math.PI) * (5.5 + floor.userData.baseY * 0.04);
+    floor.quaternion.slerpQuaternions(floor.userData.finalQuaternion, floor.userData.stagingQuaternion, e);
+    floor.scale.setScalar(1 - Math.sin(e * Math.PI) * 0.035);
+    floor.visible = q < 0.986 || t < 2.55 || t > 110.7;
     if (q > 0.015 && q < 0.985) moving++;
   });
-  return { k: CURVE_TOWER(t), moving };
+  return { k, moving };
 }
 
 function updateWalkwayConstruction(t) {
@@ -57345,55 +57031,46 @@ function updateWalkwayConstruction(t) {
   const k = CURVE_WALK(t);
   const components = walkway.userData.components;
   const maxOrder = Math.max(1, ...components.map(c => c.userData.order || 0));
-  let active = null, moving = 0, built = 0;
+  let active = null;
+  let moving = 0;
+  let built = 0;
   for (const c of components) {
     const order = (c.userData.order || 0) / maxOrder;
-    // 同时飞行的构件过多会像黑色鸟群。缩窄单件安装窗口，让工序按批次读得清。
-    const q = clamp((k - order * 0.94) / 0.055, 0, 1);
+    const q = clamp((k - order * 0.86) / 0.14, 0, 1);
     c.visible = q > 0.001;
     if (q <= 0.001) {
       c.position.copy(c.userData.startPosition);
       c.quaternion.copy(c.userData.startQuaternion);
-      c.scale.copy(c.userData.finalScale).multiplyScalar(0.03);
+      c.scale.setScalar(0.03);
       continue;
     }
-    const e = easeInOut(q);
-    if (e < 0.52) {
-      const a = easeInOut(e / 0.52);
-      c.position.lerpVectors(c.userData.startPosition, c.userData.hoistPosition, a);
-      c.position.y += Math.sin(a * Math.PI) * 2.2;
-      c.quaternion.slerpQuaternions(c.userData.startQuaternion, c.userData.finalQuaternion, a * 0.35);
-    } else {
-      const b = easeInOut((e - 0.52) / 0.48);
-      c.position.lerpVectors(c.userData.hoistPosition, c.userData.finalPosition, b);
-      c.position.x += Math.sin(b * Math.PI) * Math.sin(t * 2.1 + order * 8) * 0.65;
-      c.quaternion.slerpQuaternions(c.userData.startQuaternion, c.userData.finalQuaternion, 0.35 + b * 0.65);
-    }
-    const ss = lerp(0.10, 1, easeOut(q));
+    const e = easeOut(q);
+    c.position.lerpVectors(c.userData.startPosition, c.userData.finalPosition, e);
+    c.position.y += Math.sin(e * Math.PI) * (6.5 + order * 4.5);
+    c.quaternion.slerpQuaternions(c.userData.startQuaternion, c.userData.finalQuaternion, easeInOut(q));
+    const ss = lerp(0.08, 1, easeOut(q));
     c.scale.copy(c.userData.finalScale).multiplyScalar(ss);
-    if (q > 0.04 && q < 0.97) { active = c; moving++; }
-    if (q >= 0.97) built++;
+    if (q > 0.05 && q < 0.94) { active = c; moving++; }
+    if (q >= 0.94) built++;
   }
-  CONSTRUCTION.activeWalkComponent = active;
 
   const pile = CONSTRUCTION.walkPile;
   if (pile) {
-    pile.visible = t >= 19.4 && t < 25.1;
-    const yard = walkway.userData.materialYard || _cgA.set(-43, 0.5, CLIFF_Z + 34);
+    pile.visible = t >= 19.6 && t < 25.0;
     pile.children.forEach((o, i) => {
       if (o === CONSTRUCTION.walkRope || o === CONSTRUCTION.walkHook) return;
-      o.visible = i / 14 > k * 0.82 - 0.10;
+      o.visible = i / 14 > k * 0.72 - 0.12;
     });
-    const top = walkway.userData.hoistTop || _cgA.set(-23.5, 41, CLIFF_Z + 16.5);
-    const target = active ? active.getWorldPosition(_cgB) : _cgB.copy(yard).add(_cgC.set(0, 1.2, 0));
+    const top = _cgA.set(58, 27, CLIFF_Z + 28);
+    const target = active ? active.getWorldPosition(_cgB) : _cgB.set(59, 1.2, CLIFF_Z + 31);
     const arr = CONSTRUCTION.walkRope.geometry.attributes.position.array;
     arr[0] = top.x; arr[1] = top.y; arr[2] = top.z;
     arr[3] = target.x; arr[4] = target.y; arr[5] = target.z;
     CONSTRUCTION.walkRope.geometry.attributes.position.needsUpdate = true;
     CONSTRUCTION.walkRope.visible = !!active;
     CONSTRUCTION.walkHook.visible = !!active;
-    CONSTRUCTION.walkHook.position.copy(target).add(_cgC.set(0, 0.38, 0));
-    CONSTRUCTION.walkHook.rotation.y = t * 1.6;
+    CONSTRUCTION.walkHook.position.copy(target).add(_cgC.set(0, 0.6, 0));
+    CONSTRUCTION.walkHook.rotation.y = t * 1.8;
   }
   return { k, moving, built };
 }
@@ -57455,8 +57132,8 @@ function updateExcavationBlocks(t, d) {
       if (y > archTop + 0.18) { show = false; }
       const order = (row / 11) * 0.64 + (Math.abs(col - 4.5) / 5) * 0.23 + seed * 0.05;
       const life = d.k - order;
-      show = show && life > 0 && life < 0.105 && seed > 0.13;
-      age = clamp(life / 0.105, 0, 1);
+      show = show && life > 0 && life < 0.145;
+      age = clamp(life / 0.145, 0, 1);
       p.set(x + sx * age * 3.0, y - age * age * 7.5, CLIFF_Z + 0.28 + age * (4.5 + seed * 4.5));
     } else if (d.stage === 'tunnel') {
       p.copy(d.center).add(_cgB.set(sx * 6.2, sy * 6.0, sz * 1.8));
@@ -57487,7 +57164,7 @@ function updateExcavationBlocks(t, d) {
     }
     if (!show) continue;
     q.setFromEuler(new THREE.Euler(age * (2 + seed * 4), age * (3 + sx * 5), age * (1 + sy * 4)));
-    const ss = (0.18 + seed * 0.38) * (1 - smoothstep(0.31, 0.47, age));
+    const ss = (0.34 + seed * 0.72) * (1 - smoothstep(0.34, 0.48, age));
     setInstance(mesh, i, p, q, _cgS.set(ss * (1 + Math.abs(sx)), ss * (0.7 + Math.abs(sy)), ss * (0.75 + Math.abs(sz))));
     visible++;
   }
@@ -57567,26 +57244,43 @@ function updateExcavationTools(t, d) {
 }
 
 function updateSectionAndFront(t, d) {
-  /*
-    横屏版本不再放置一整张剖切平面或发光圆盘。它们在正面镜头中会变成
-    巨大的黑色矩形/圆环。洞腔直接由真实崖体裁切、内壁和落石来说明。
-  */
-  if (CONSTRUCTION.sectionPlane) {
-    CONSTRUCTION.sectionPlane.visible = false;
-    CONSTRUCTION.sectionPlane.material.opacity = 0;
+  const sectionOn = t >= 26.7 && t < 51.6;
+  const plane = CONSTRUCTION.sectionPlane;
+  if (plane) {
+    const sx = CURVE_SECTION(t);
+    if (sx < 9000) {
+      plane.position.x = sx;
+      CONSTRUCTION.sectionEdge.position.x = sx;
+    }
+    plane.visible = sectionOn;
+    CONSTRUCTION.sectionEdge.visible = sectionOn;
+    const fade = sectionOn ? smoothstep(26.7, 27.4, t) * smoothstep(51.6, 50.8, t) : 0;
+    // 只保留极轻的切面提示；主体由后方岩层背景封闭，避免切面像一块挡板。
+    plane.material.opacity = 0.035 * fade;
+    plane.material.depthWrite = false;
+    CONSTRUCTION.sectionEdge.material.opacity = 0.24 * fade;
+    if (CONSTRUCTION.sectionBackdrop) {
+      CONSTRUCTION.sectionBackdrop.visible = sectionOn;
+      CONSTRUCTION.sectionBackdrop.material.opacity = 0.96 * fade;
+      CONSTRUCTION.sectionBackdrop.material.depthWrite = fade > 0.08;
+    }
   }
-  if (CONSTRUCTION.sectionEdge) {
-    CONSTRUCTION.sectionEdge.visible = false;
-    CONSTRUCTION.sectionEdge.material.opacity = 0;
+  const front = CONSTRUCTION.cutFront;
+  if (!front) return;
+  front.visible = !!d && (d.stage === 'main' || d.stage === 'arch');
+  if (!front.visible) { front.material.opacity = 0; return; }
+  if (d.stage === 'main') {
+    if (front.geometry !== CONSTRUCTION.cutCircleGeo) front.geometry = CONSTRUCTION.cutCircleGeo;
+    front.rotation.set(-Math.PI / 2, 0, 0);
+    front.position.set(0, d.cy + 0.18, -0.8);
+    front.scale.set(1, 0.70, 1);
+  } else {
+    if (front.geometry !== CONSTRUCTION.cutArchGeo) front.geometry = CONSTRUCTION.cutArchGeo;
+    front.rotation.set(0, 0, 0);
+    front.position.set(0, CAVE.yArch - 0.15, -1.8);
+    front.scale.set(1.45, 0.48, 1);
   }
-  if (CONSTRUCTION.sectionBackdrop) {
-    CONSTRUCTION.sectionBackdrop.visible = false;
-    CONSTRUCTION.sectionBackdrop.material.opacity = 0;
-  }
-  if (CONSTRUCTION.cutFront) {
-    CONSTRUCTION.cutFront.visible = false;
-    CONSTRUCTION.cutFront.material.opacity = 0;
-  }
+  front.material.opacity = 0.18 + Math.sin(t * 5) * 0.035;
 }
 
 function updatePegConstruction(t) {
@@ -57605,21 +57299,21 @@ function updatePegConstruction(t) {
     p.visible = k > 0.001;
     p.scale.setScalar(k > 0.001 ? 1 : 0.001);
     p.quaternion.copy(p.userData.finalQuaternion);
-    p.position.copy(p.userData.finalPosition).addScaledVector(p.userData.axis, (1 - easeOut(k)) * 1.55);
+    p.position.copy(p.userData.finalPosition).addScaledVector(p.userData.axis, (1 - easeOut(k)) * 3.2);
     if (k > 0 && k < 1) { active = i; activeK = k; }
   }
   if (active >= 0) {
     const tool = CONSTRUCTION.tools[0];
     const peg = pegs[active];
     tool.visible = true;
-    tool.position.copy(peg.position).addScaledVector(peg.userData.axis, 0.34);
+    tool.position.copy(peg.position).addScaledVector(peg.userData.axis, 1.6);
     orientZTo(tool.quaternion, peg.userData.axis);
-    tool.scale.setScalar(0.52);
+    tool.scale.setScalar(0.72);
     const ph = frac((t - (56.45 + active * 0.52)) / 0.31);
     tool.userData.hammerPivot.rotation.x = ph < 0.68 ? lerp(-0.9, 0.1, easeInOut(ph / 0.68)) : lerp(0.1, -0.55, (ph - 0.68) / 0.32);
     const impact = pulse01((t - (56.45 + active * 0.52)) / 0.31, 0.24);
     if (CONSTRUCTION.flash) {
-      CONSTRUCTION.flash.position.copy(peg.userData.finalPosition).addScaledVector(peg.userData.axis, 0.10);
+      CONSTRUCTION.flash.position.copy(peg.userData.finalPosition).addScaledVector(peg.userData.axis, -1.2);
       CONSTRUCTION.flash.intensity = impact * 170;
     }
     return { impact, active: active + activeK };
@@ -57628,12 +57322,12 @@ function updatePegConstruction(t) {
 }
 
 const MUD_WINDOWS = [
-  { a: 62.4, b: 66.0, fromP: PHASE.ROCK, toP: PHASE.CRACK, fromM: 0.48, toM: 0.26, color: 0xA18D70 },
-  { a: 67.0, b: 72.0, fromP: PHASE.CRACK, toP: PHASE.COARSE, fromM: 0.26, toM: 0.08, color: 0x9D8767 },
-  { a: 72.0, b: 77.2, fromP: PHASE.COARSE, toP: PHASE.MID, fromM: 0.08, toM: 0.03, color: 0xB09A7D },
-  { a: 77.0, b: 83.4, fromP: PHASE.MID, toP: PHASE.FINE, fromM: 0.03, toM: 0.00, color: 0xCBB79B },
-  { a: 83.4, b: 89.6, fromP: PHASE.FINE, toP: PHASE.POLISH, fromM: 0.00, toM: 0.00, color: 0xDECBAF },
-  { a: 90.2, b: 93.2, fromP: PHASE.POLISH, toP: PHASE.PAINT, fromM: 0.00, toM: 0.00, color: 0xD7B57B, dir: -1 },
+  { a: 62.4, b: 66.0, fromP: PHASE.ROCK, toP: PHASE.CRACK, fromM: 1.00, toM: 0.72, color: 0xA18D70 },
+  { a: 67.0, b: 72.0, fromP: PHASE.CRACK, toP: PHASE.COARSE, fromM: 0.72, toM: 0.44, color: 0x9D8767 },
+  { a: 72.0, b: 77.2, fromP: PHASE.COARSE, toP: PHASE.MID, fromM: 0.44, toM: 0.26, color: 0xB09A7D },
+  { a: 77.0, b: 83.4, fromP: PHASE.MID, toP: PHASE.FINE, fromM: 0.26, toM: 0.08, color: 0xCBB79B },
+  { a: 83.4, b: 89.6, fromP: PHASE.FINE, toP: PHASE.POLISH, fromM: 0.08, toM: 0.00, color: 0xDECBAF },
+  { a: 90.2, b: 93.5, fromP: PHASE.POLISH, toP: PHASE.PAINT, fromM: 0.00, toM: 0.00, color: 0xD7B57B, dir: -1 },
 ];
 
 function activeMudWindow(t) {
@@ -57653,8 +57347,8 @@ function updateMudPatches(t, w) {
     const rel = w.k - threshold;
     if (rel < -0.08 || rel > 0.18) continue;
     const age = clamp((rel + 0.08) / 0.26, 0, 1);
-    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(0.72 + d.phase * 0.34, 0.035, easeOut(age)));
-    p.x += Math.sin(age * Math.PI) * (d.phase - 0.5) * 0.55;
+    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(2.7 + d.phase * 1.6, 0.12, easeOut(age)));
+    p.x += Math.sin(age * Math.PI) * (d.phase - 0.5) * 1.4;
     const q = orientZTo(_cgQ, d.n);
     q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, d.phase * TAU)));
     const squash = lerp(0.5, 0.18, age);
@@ -57691,7 +57385,7 @@ function updateStraw(t) {
     const d = mesh.userData.data[i];
     const qv = clamp((k - d.order * 0.78) / 0.22, 0, 1);
     if (qv <= 0 || (qv >= 1 && t > 72.2)) continue;
-    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(1.15, 0.045, easeOut(qv)));
+    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(3.2, 0.18, easeOut(qv)));
     p.x += Math.sin(qv * Math.PI) * Math.cos(d.spin) * 1.3;
     const tangent = new THREE.Vector3(Math.cos(d.spin), Math.sin(d.spin) * 0.7, 0.3).normalize();
     tangent.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(_cgForward, d.n));
@@ -57710,7 +57404,7 @@ function updateCotton(t) {
     const d = mesh.userData.data[i];
     const qv = clamp((k - d.order * 0.72) / 0.28, 0, 1);
     if (qv <= 0) continue;
-    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(0.95, 0.040, easeOut(qv)));
+    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(2.8, 0.16, easeOut(qv)));
     p.y += Math.sin(qv * Math.PI) * (0.5 + d.phase);
     orientZTo(_cgQ, d.n);
     const ss = d.s * (1 - smoothstep(0.78, 1, qv) * 0.72);
@@ -57728,7 +57422,7 @@ function updateDroplets(t) {
     const d = mesh.userData.data[i];
     const age = frac(k * 2.0 + d.phase);
     if (age > 0.82) continue;
-    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(0.85, 0.035, easeInOut(age)));
+    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(2.5, 0.10, easeInOut(age)));
     p.y += (1 - age) * (0.6 + d.order) - age * age * 0.9;
     orientZTo(_cgQ, d.n);
     const ss = d.s * (1 - smoothstep(0.65, 0.85, age));
@@ -57757,8 +57451,8 @@ function updateSurfaceTools(t, w) {
       const local = frac((t - w.a) / 1.9 + i * 0.43);
       const y = lerp(3.2, 33.0, w.dir === -1 ? 1 - w.k : w.k) + Math.sin(local * TAU) * 1.4 + (i - 0.5) * 2.5;
       const lat = Math.sin(t * 1.55 + i * 2.3) * 0.54;
-      placeSurfaceTool(tool, clamp(y, 2.5, 33.4), lat, 0.12, -0.15 + Math.sin(t * 2.4 + i) * 0.34);
-      tool.scale.setScalar(i === 0 ? 0.30 : 0.26);
+      placeSurfaceTool(tool, clamp(y, 2.5, 33.4), lat, 0.65, -0.15 + Math.sin(t * 2.4 + i) * 0.34);
+      tool.scale.setScalar(i === 0 ? 0.66 : 0.52);
     });
   }
   if (t >= 85.0 && t < 90.0) {
@@ -57767,8 +57461,8 @@ function updateSurfaceTools(t, w) {
     const k = windowK(t, 85.0, 89.6);
     const y = lerp(19.5, 33.0, k) + Math.sin(t * 3.4) * 1.6;
     const lat = Math.sin(t * 2.1) * 0.46;
-    placeSurfaceTool(tool, y, lat, 0.08, Math.sin(t * 3.6) * 0.55);
-    tool.scale.setScalar(0.32);
+    placeSurfaceTool(tool, y, lat, 0.42, Math.sin(t * 3.6) * 0.55);
+    tool.scale.setScalar(0.78);
   }
   if (t >= 90.2 && t < 93.7) {
     const tool = CONSTRUCTION.paintBrush;
@@ -57776,8 +57470,8 @@ function updateSurfaceTools(t, w) {
     const k = windowK(t, 90.2, 93.5);
     const y = lerp(34.0, 5.5, k) + Math.sin(t * 4.0) * 0.8;
     const lat = Math.sin(t * 2.5) * 0.55;
-    placeSurfaceTool(tool, y, lat, 0.10, Math.sin(t * 5.1) * 0.26);
-    tool.scale.setScalar(0.30);
+    placeSurfaceTool(tool, y, lat, 0.55, Math.sin(t * 5.1) * 0.26);
+    tool.scale.setScalar(0.72);
     updatePigmentCloud(t, tool.position, 0xD6A13A, 0.72);
   }
 }
@@ -57800,9 +57494,9 @@ function updatePigmentCloud(t, center, color, opacity) {
 }
 
 function wallTransitionAt(t) {
-  if (t >= 95.4 && t < 99.35) return { from: 0, to: 1, k: windowK(t, 95.4, 99.35), mode: 1, label: 'wall-mud' };
-  if (t >= 99.35 && t < 103.45) return { from: 1, to: 2, k: windowK(t, 99.35, 103.45), mode: 2, label: 'whitewash' };
-  if (t >= 103.45 && t < 108.6) return { from: 2, to: 3, k: windowK(t, 103.45, 108.6), mode: 3, label: 'mural' };
+  if (t >= 95.4 && t < 100.0) return { from: 0, to: 1, k: windowK(t, 95.4, 100.0), mode: 1, label: 'wall-mud' };
+  if (t >= 100.0 && t < 103.6) return { from: 1, to: 2, k: windowK(t, 100.0, 103.6), mode: 2, label: 'whitewash' };
+  if (t >= 103.6 && t < 108.6) return { from: 2, to: 3, k: windowK(t, 103.6, 108.6), mode: 3, label: 'mural' };
   return null;
 }
 
@@ -57818,143 +57512,56 @@ function wallSnakePoint(k, lane, out) {
 }
 
 function updateWallConstruction(t) {
-  const w=wallTransitionAt(t);
-  for(const b of CONSTRUCTION.wallBrushes)b.visible=false;
-  if(!w){clearWallTransition();return null;}
-  setWallTransition(w.from,w.to,w.k,w.mode,t);
-  CONSTRUCTION.wallBrushes.forEach((brush,i)=>{
-    brush.visible=true;const kk=clamp(w.k+(i-1)*.025,0,1),p=wallSnakePoint(kk,i-1,_cgA);
-    brush.position.copy(p).add(new THREE.Vector3(0,0,.10));
-    brush.quaternion.setFromEuler(new THREE.Euler(Math.PI/2,0,(i-1)*.12+Math.sin(t*4+i)*.18));
-    brush.scale.setScalar(1.05+i*.10);
+  const w = wallTransitionAt(t);
+  for (const b of CONSTRUCTION.wallBrushes) b.visible = false;
+  if (!w) {
+    clearWallTransition();
+    return null;
+  }
+  setWallTransition(w.from, w.to, w.k, w.mode, t);
+  CONSTRUCTION.wallBrushes.forEach((brush, i) => {
+    brush.visible = true;
+    const kk = clamp(w.k + (i - 1) * 0.025, 0, 1);
+    const p = wallSnakePoint(kk, i - 1, _cgA);
+    brush.position.copy(p);
+    brush.quaternion.setFromEuler(new THREE.Euler(Math.PI / 2, 0, (i - 1) * 0.12 + Math.sin(t * 4 + i) * 0.18));
+    brush.scale.setScalar(0.78 + i * 0.08);
   });
-  const color=w.label==='mural'?0xA96845:(w.label==='whitewash'?0xF0E4CF:0x9A7455);
-  updatePigmentCloud(t,CONSTRUCTION.wallBrushes[1].position,color,.62);
-
-  if(CONSTRUCTION.wallBowls){
-    CONSTRUCTION.wallBowls.visible=true;
-    CONSTRUCTION.wallBowls.position.set(-7.0,3.10,CAVE.zBack+3.2);
-    CONSTRUCTION.wallBowls.rotation.y=.08;
-  }
-  if(CONSTRUCTION.wallStrokes){
-    const mesh=CONSTRUCTION.wallStrokes;mesh.material.color.setHex(color);mesh.material.opacity=w.label==='whitewash'?.62:.72;
-    for(let i=0;i<mesh.count;i++){
-      const kk=clamp(w.k-i*.0065,0,1),lane=(i%3)-1,p=wallSnakePoint(kk,lane*.32,_cgA);
-      p.z=CAVE.zBack+.095;
-      const band=Math.floor(clamp(kk,0,.999)*7),dir=band%2===0?1:-1;
-      _cgQ.setFromEuler(new THREE.Euler(0,0,dir*(.03+Math.sin(i*1.7)*.025)));
-      const fade=clamp(1-i/mesh.count,0,1),sx=1.05+1.15*fade;
-      setInstance(mesh,i,p,_cgQ,_cgS.set(sx,.90+fade*.72,1));
-    }
-    mesh.instanceMatrix.needsUpdate=true;
-  }
-  if(CONSTRUCTION.wallFront){
-    const front=CONSTRUCTION.wallFront;front.visible=true;front.material.color.setHex(color);
-    if(w.mode===1){front.position.set(0,lerp(1.5,39.5,w.k),CAVE.zBack+.16);front.scale.set(1,1,1);front.rotation.z=0;}
-    else if(w.mode===2){front.position.set(0,lerp(39.5,1.5,w.k),CAVE.zBack+.16);front.scale.set(1,1,1);front.rotation.z=0;}
-    else {const p=wallSnakePoint(w.k,0,_cgA);front.position.copy(p);front.position.z=CAVE.zBack+.16;front.scale.set(.18,1,1);front.rotation.z=(Math.floor(w.k*7)%2?-.035:.035);}
-    front.material.opacity=w.mode===3?.78:.96;
-  }
-  if(CONSTRUCTION.wallDrips){
-    const mesh=CONSTRUCTION.wallDrips;mesh.material.color.setHex(color);mesh.material.opacity=w.label==='whitewash'?.50:.62;
-    for(let i=0;i<mesh.count;i++){
-      const lag=(i/mesh.count)*.13,kk=clamp(w.k-lag,0,1),p=wallSnakePoint(kk,(i%4-1.5)*.22,_cgA);
-      const len=.18+hash3(i,47,3)*(.55+(w.label==='mural'?.35:.20));
-      p.y-=len*.5+.10;p.z=CAVE.zBack+.13;
-      setInstance(mesh,i,p,_cgQ.identity(),_cgS.set(1,len,1));
-    }
-    mesh.instanceMatrix.needsUpdate=true;
-  }
+  const color = w.label === 'mural' ? 0xBE5638 : (w.label === 'whitewash' ? 0xF1E8D2 : 0xA78C6E);
+  updatePigmentCloud(t, CONSTRUCTION.wallBrushes[1].position, color, 0.68);
   return w;
 }
 
 function updateHairConstruction(t) {
   const hair = BUDDHA.parts.hair;
-  if (!hair || !hair.userData.elements) return;
-  const elements = hair.userData.elements;
-  let mode = 'full', k = 1;
+  if (!hair || !hair.userData.baseMatrices) return;
+  const base = hair.userData.baseMatrices;
+  const ys = hair.userData.revealY;
+  let mode = 'full';
+  let k = 1;
   if (t >= 15.2 && t < 51.6) { mode = 'carve'; k = CURVE_CARVE(t); }
   else if (t >= 56.0 && t < 90.2) { mode = 'hidden'; }
   else if (t >= 90.2 && t < 93.6) { mode = 'paint'; k = windowK(t, 90.2, 93.6); }
+  for (let i = 0; i < hair.count; i++) {
+    if (mode === 'hidden') {
+      hideInstance(hair, i);
+      continue;
+    }
+    if (mode === 'carve' && ys[i] < k) { hideInstance(hair, i); continue; }
+    if (mode === 'paint') {
+      const threshold = 1 - clamp((ys[i] - 30.2) / 5.4, 0, 1);
+      const q = clamp((k - threshold * 0.72) / 0.28, 0, 1);
+      if (q <= 0) { hideInstance(hair, i); continue; }
+      base[i].decompose(_cgP, _cgQ, _cgS);
+      _cgP.add(_cgA.set(0, (1 - q) * 0.8, (1 - q) * 0.7));
+      _cgS.multiplyScalar(easeOut(q));
+      setInstance(hair, i, _cgP, _cgQ, _cgS);
+      continue;
+    }
+    hair.setMatrixAt(i, base[i]);
+  }
+  hair.instanceMatrix.needsUpdate = true;
   hair.visible = mode !== 'hidden';
-  for (const el of elements) {
-    const y = el.userData.revealY || 30.2;
-    const final = el.userData.finalScale || _cgS.set(1, 1, 1);
-    if (mode === 'hidden') { el.visible = false; continue; }
-    if (mode === 'carve') {
-      const reveal = clamp((1 - k) * 1.18 - (y - 30.2) / 5.5, 0, 1);
-      el.visible = reveal > 0.02;
-      el.scale.copy(final).multiplyScalar(Math.max(0.001, easeOut(reveal)));
-    } else if (mode === 'paint') {
-      const threshold = 1 - clamp((y - 30.2) / 5.4, 0, 1);
-      const q = clamp((k - threshold * 0.74) / 0.26, 0, 1);
-      el.visible = q > 0.01;
-      el.scale.copy(final).multiplyScalar(Math.max(0.001, easeOut(q)));
-    } else {
-      el.visible = true; el.scale.copy(final);
-    }
-  }
-}
-
-function updateConstructionCrew(t, d, w, wall) {
-  const workers = CONSTRUCTION.workers || [];
-  workers.forEach(o => { o.visible = false; });
-  const platform = CONSTRUCTION.workPlatform;
-  if (platform) platform.visible = false;
-
-  if (t >= 19.6 && t < 24.8) {
-    const k = CURVE_WALK(t);
-    const levels = CONSTRUCTION.walkway && CONSTRUCTION.walkway.userData.levels;
-    for (let i = 0; i < Math.min(3, workers.length); i++) {
-      const W = workers[i];
-      const L = levels ? levels[Math.min(levels.length - 1, Math.floor(k * levels.length + i * 0.3))] : null;
-      if (!L) continue;
-      W.visible = true;
-      W.position.set(lerp(L.x0 + 4, L.x1 - 4, (i + 1) / 4), L.y + 0.15, L.z1 - 0.8);
-      W.rotation.y = i % 2 ? -1.35 : 1.35;
-      poseWorker(W, t * 0.7 + i * 0.19, i === 0 ? 'haul' : 'carry');
-    }
-    return;
-  }
-
-  if (d) {
-    // 顶拱和主窟下降开凿改用侧边作业位，避免吊篮横在镜头与石胎之间。
-    const usePlatform = d.stage === 'door' || d.stage === 'tunnel' || d.stage === 'lower';
-    if (platform) {
-      platform.visible = usePlatform;
-      platform.position.set(d.center.x, d.center.y - 2.35, d.center.z + (d.normal.z > 0.5 ? 3.0 : 1.2));
-      platform.rotation.set(0, 0, d.normal.y > 0.5 ? 0.10 : 0);
-      platform.scale.setScalar(0.86);
-    }
-    for (let i = 0; i < Math.min(2, workers.length); i++) {
-      const W = workers[i]; W.visible = true;
-      if (usePlatform) {
-        W.position.set(d.center.x + (i - 0.5) * 1.75, d.center.y - 2.18, d.center.z + (d.normal.z > 0.5 ? 3.2 : 1.4));
-      } else {
-        const side = i === 0 ? -1 : 1;
-        W.position.set(d.center.x + side * (3.0 + Math.abs(d.center.x) * 0.10), d.center.y - 1.35, d.center.z + 1.0);
-      }
-      W.rotation.y = d.normal.z > 0.5 ? Math.PI : (i % 2 ? 1.1 : -1.1);
-      poseWorker(W, (t - d.start) * 1.25 + i * 0.27, 'hammer');
-    }
-    return;
-  }
-
-  const pegOn = t >= 56.2 && t < 64.8;
-  const surfaceOn = !!w || (t >= 83.3 && t < 93.7);
-  if (pegOn || surfaceOn) {
-    /* 佛身近景已有锤、桩、泥团、塑刀等因果动作；小人和吊篮会破坏尺度与轮廓。 */
-    return;
-  }
-
-  if (wall) {
-    for (let i = 0; i < 2; i++) {
-      const W = workers[i]; W.visible = true;
-      const p = wallSnakePoint(clamp(wall.k + (i - 0.5) * 0.04, 0, 1), i - 0.5, _cgA);
-      W.position.set(p.x + (i ? 1.0 : -1.0), Math.max(0.4, p.y - 1.35), p.z + 1.5);
-      W.rotation.y = Math.PI; poseWorker(W, t * 1.1 + i * 0.3, 'trowel');
-    }
-  }
 }
 
 function updateConstruction(t) {
@@ -57978,7 +57585,6 @@ function updateConstruction(t) {
   updateSurfaceTools(t, w);
   const wall = updateWallConstruction(t);
   updateHairConstruction(t);
-  updateConstructionCrew(t, d, w, wall);
 
   const impact = Math.max(impactExc, peg.impact);
   if (CONSTRUCTION.flash && CONSTRUCTION.flash.intensity < 1) CONSTRUCTION.flash.intensity = 0;
@@ -58099,45 +57705,68 @@ const DURATION = 116.373;
 /* ---------------- 镜头段 ---------------- */
 const V = (x, y, z) => ({ x, y, z });
 const SHOTS = [
-  // 横屏镜头以“全场施工可读”为第一目标，不再机械复制竖屏裁切。
-  { t0:0.0,t1:2.6,   p0:V(18,30,142),p1:V(4,28,112),   l0:V(0,25,12),l1:V(0,23,5),   f0:39,f1:36 },
-  { t0:2.6,t1:5.6,   p0:V(8,33,35),p1:V(3,32.7,27),  l0:V(0,32.2,0),l1:V(0,32.1,0),f0:32,f1:29,cut:true },
-  { t0:5.6,t1:9.6,   p0:V(10,24,55),p1:V(18,21,82),  l0:V(0,24,0),l1:V(0,18,0),   f0:34,f1:34 },
-  { t0:9.6,t1:15.2,  p0:V(-11,4.0,39),p1:V(11,3.4,29),l0:V(0,23,0),l1:V(0,20,0),   f0:45,f1:47,cut:true },
-  { t0:15.2,t1:18.4, p0:V(14,18,118),p1:V(0,19,178), l0:V(0,20,6),l1:V(0,19,8),   f0:39,f1:43,cut:true },
-  { t0:18.4,t1:20.0, p0:V(0,19,178),p1:V(-44,23,106),l0:V(0,19,8),l1:V(-5,18,10),f0:43,f1:40 },
-
-  // 整条栈道始终处于画面中央，料堆、吊绳、工人和已完成层同框。
-  { t0:20.0,t1:23.5, p0:V(-42,22,76),p1:V(38,25,78),l0:V(0,19,13),l1:V(0,23,13),f0:38,f1:37,cut:true },
-  { t0:23.5,t1:26.8, p0:V(22,35,58),p1:V(8,35,44),l0:V(0,34.5,10),l1:V(0,35,8),f0:36,f1:33 },
-
-  { t0:26.8,t1:30.2, p0:V(39,35,59),p1:V(29,35,48),l0:V(0,34.5,0),l1:V(0,34,-4),f0:38,f1:35,cut:true },
-  { t0:30.2,t1:34.0, p0:V(25,35,55),p1:V(-20,38,60),l0:V(0,36,-3),l1:V(0,40,-3),f0:37,f1:39 },
-  { t0:34.0,t1:37.0, p0:V(-25,36,66),p1:V(24,34,72),l0:V(0,39,-3),l1:V(0,38,-4),f0:39,f1:40 },
-  { t0:37.0,t1:43.4, p0:V(35,33,79),p1:V(-31,29,75),l0:V(0,31,-2),l1:V(0,25,-2),f0:41,f1:39,cut:true },
-  { t0:43.4,t1:46.2, p0:V(-31,28,78),p1:V(25,23,86),l0:V(0,22,-2),l1:V(0,17,-2),f0:39,f1:41 },
-  { t0:46.2,t1:51.0, p0:V(43,20,80),p1:V(-34,14,72),l0:V(-7,14,1),l1:V(-7,7,2),f0:43,f1:41,cut:true },
-  { t0:51.0,t1:56.2, p0:V(24,22,104),p1:V(-18,20,92),l0:V(0,20,-1),l1:V(0,19,-1),f0:40,f1:38,cut:true },
-
-  // 塑像阶段以三分之二侧前视为主，平台工人、工具和材料前沿都能看见。
-  { t0:56.2,t1:59.0, p0:V(-29,29,48),p1:V(-23,27,40),l0:V(-3,27,2),l1:V(-3,26,3),f0:36,f1:34,cut:true },
-  { t0:59.0,t1:62.4, p0:V(-16,27,29),p1:V(16,25,29),l0:V(-3,25,3),l1:V(3,23.5,3),f0:30,f1:30 },
-  { t0:62.4,t1:67.0, p0:V(17,25,32),p1:V(-17,24,31),l0:V(3,23,3),l1:V(-3,21.5,3),f0:31,f1:31,cut:true },
-  { t0:67.0,t1:72.0, p0:V(-18,24,32),p1:V(17,26,34),l0:V(-3,22,3),l1:V(3,25,3),f0:31,f1:32 },
-  { t0:72.0,t1:77.0, p0:V(28,28,67),p1:V(-25,26,61),l0:V(0,24,0),l1:V(0,23,0),f0:39,f1:38,cut:true },
-  { t0:77.0,t1:83.0, p0:V(-25,28,50),p1:V(25,27,47),l0:V(-2,25,2),l1:V(2,25,2),f0:36,f1:35 },
-  { t0:83.0,t1:87.2, p0:V(19,29,38),p1:V(-18,29,35),l0:V(0,27,3),l1:V(0,28,3),f0:34,f1:32 },
-  { t0:87.2,t1:90.2, p0:V(6,33,25),p1:V(-5,32.8,22),l0:V(0,32.1,1),l1:V(0,32,1),f0:30,f1:29,cut:true },
-  { t0:90.2,t1:93.0, p0:V(-5,32.8,22),p1:V(8,32.2,27),l0:V(0,32,1),l1:V(0,31.8,1),f0:29,f1:31 },
-  { t0:93.0,t1:95.4, p0:V(20,23,70),p1:V(-18,21,85),l0:V(0,21,0),l1:V(0,19,0),f0:38,f1:38,cut:true },
-
-  // 壁面镜头同时包含佛像与施工墙，避免空白墙占满画面。
-  { t0:95.4,t1:99.0, p0:V(18,22,24),p1:V(10,21,18),l0:V(0,20,-16),l1:V(0,20,-18),f0:47,f1:49,cut:true },
-  { t0:99.0,t1:103.6,p0:V(10,21,18),p1:V(-9,21,16),l0:V(0,20,-18),l1:V(0,19,-18),f0:49,f1:50 },
-  { t0:103.6,t1:108.6,p0:V(-9,21,16),p1:V(8,20,18),l0:V(0,19,-18),l1:V(0,20,-18),f0:50,f1:49,cut:true },
-  { t0:108.6,t1:111.4,p0:V(-24,20,76),p1:V(24,23,98),l0:V(0,20,0),l1:V(0,22,2),f0:39,f1:40,cut:true },
-  { t0:111.4,t1:114.0,p0:V(30,35,112),p1:V(-24,39,118),l0:V(0,25,12),l1:V(0,26,12),f0:36,f1:36 },
-  { t0:114.0,t1:DURATION,p0:V(-24,39,118),p1:V(18,42,126),l0:V(0,26,12),l1:V(0,24,10),f0:36,f1:37 },
+  // 开场：九层楼被"撕下来"
+  { t0: 0.0, t1: 2.6, p0: V(4, 31, 136), p1: V(0, 27, 104), l0: V(0, 25, 16), l1: V(0, 22, 6), f0: 37, f1: 35 },
+  // 佛面特写
+  { t0: 2.6, t1: 5.6, p0: V(0, 33.0, 34), p1: V(0, 32.6, 27), l0: V(0, 32.4, 0), l1: V(0, 32.2, 0), f0: 30, f1: 28, cut: true },
+  // 拉远至全身 + 标尺
+  { t0: 5.6, t1: 9.6, p0: V(0, 22, 52), p1: V(0, 19.5, 84), l0: V(0, 24, 0), l1: V(0, 17.5, 0), f0: 32, f1: 32 },
+  // 佛脚下仰视
+  { t0: 9.6, t1: 15.2, p0: V(0, 3.2, 34), p1: V(0, 2.4, 21), l0: V(0, 24, 0), l1: V(0, 19, 0), f0: 44, f1: 48, cut: true },
+  // 佛像淡出，拉远到广场
+  { t0: 15.2, t1: 18.4, p0: V(0, 11, 104), p1: V(0, 15, 186), l0: V(0, 15, 0), l1: V(0, 18, 0), f0: 38, f1: 43, cut: true },
+  // 广场全景（问号）
+  { t0: 18.4, t1: 20.0, p0: V(0, 15, 186), p1: V(91, 18, 106), l0: V(0, 18, 0), l1: V(48, 14, 11), f0: 43, f1: 39 },
+  // 栈道修建
+  { t0: 20.0, t1: 23.4, p0: V(91, 18, 106), p1: V(58, 31, 72), l0: V(48, 14, 11), l1: V(16, 31, 10), f0: 39, f1: 35 },
+  // 上到崖壁 → 窟门
+  { t0: 23.4, t1: 26.8, p0: V(24, 34, 68), p1: V(3, 36.2, 46), l0: V(0, 34, 10), l1: V(0, 35, 8), f0: 39, f1: 32 },
+  // 剖面：红箭头，笔直凿进
+  { t0: 26.8, t1: 30.2, p0: V(22, 35.6, 44), p1: V(13, 35.2, 38), l0: V(0, 34.6, 2), l1: V(0, 34.6, -3), f0: 32, f1: 31, cut: true },
+  // 进入窟门 → 一路往上 → 拱顶
+  { t0: 30.2, t1: 34.0, p0: V(6, 35.4, 40), p1: V(5, 37.5, 50), l0: V(0, 35, -3), l1: V(0, 39.2, -4), f0: 32, f1: 34 },
+  // 拱形结构高亮
+  { t0: 34.0, t1: 37.0, p0: V(8, 35, 56), p1: V(5, 33, 64), l0: V(0, 39.4, -4), l1: V(0, 38.6, -4), f0: 35, f1: 37 },
+  // 自上而下开凿 + 石胎
+  { t0: 37.0, t1: 43.4, p0: V(13, 32, 68), p1: V(9, 28, 62), l0: V(0, 32, -3), l1: V(-1.5, 27, -3), f0: 37, f1: 35 },
+  // 深挖 / 土石难运
+  { t0: 43.4, t1: 46.2, p0: V(8, 24, 72), p1: V(6, 21, 82), l0: V(0, 22, -3), l1: V(0, 18, -3), f0: 36, f1: 38 },
+  // 下方增加两个洞窟
+  { t0: 46.2, t1: 51.0, p0: V(26, 20, 74), p1: V(20, 14, 62), l0: V(-7, 15, 2), l1: V(-8, 8, 3), f0: 40, f1: 38 },
+  // 佛窟建成 + 尺度标注
+  { t0: 51.0, t1: 56.2, p0: V(6, 21, 96), p1: V(2, 19, 88), l0: V(0, 19, -2), l1: V(-1, 18, -2), f0: 37, f1: 36 },
+  // 石胎细节：上半身
+  { t0: 56.2, t1: 59.0, p0: V(-22, 29, 44), p1: V(-17, 27.5, 35), l0: V(-4, 27, 1), l1: V(-4, 26, 2), f0: 34, f1: 32, cut: true },
+  // 凿孔插桩（手部）
+  { t0: 59.0, t1: 62.4, p0: V(-24, 26.5, 28), p1: V(-20, 26, 24), l0: V(-6, 25.5, 4), l1: V(-5.6, 25.2, 4.4), f0: 30, f1: 29 },
+  // 敷粗泥 → 龟裂
+  { t0: 62.4, t1: 67.0, p0: V(-22, 25.5, 26), p1: V(-19, 25, 23), l0: V(-5.5, 25, 4), l1: V(-5.4, 24.6, 4.4), f0: 30, f1: 29 },
+  // 河流沉淀土 / 麦秆
+  { t0: 67.0, t1: 72.0, p0: V(-20, 25, 25), p1: V(-17, 24.4, 22), l0: V(-5.2, 24.4, 4.2), l1: V(-5.0, 24.0, 4.4), f0: 30, f1: 29 },
+  // 大致造型（中景）
+  { t0: 72.0, t1: 77.0, p0: V(-20, 27, 56), p1: V(-15, 25.5, 48), l0: V(-2, 25, 0), l1: V(-1, 24, 0), f0: 34, f1: 33, cut: true },
+  // 继续敷泥 / 棉花
+  { t0: 77.0, t1: 83.0, p0: V(-17, 27, 38), p1: V(-12, 26.5, 31), l0: V(-2, 26, 2), l1: V(-1, 26, 2.5), f0: 32, f1: 30 },
+  // 蛋清米汁 / 塑刀（胸部）
+  { t0: 83.0, t1: 87.2, p0: V(-9, 27.5, 27), p1: V(-5, 28.5, 23), l0: V(0, 26.5, 3), l1: V(0, 27.5, 3), f0: 30, f1: 28 },
+  // 素胎脸部
+  { t0: 87.2, t1: 90.2, p0: V(0.5, 32.8, 21), p1: V(0, 32.6, 18.5), l0: V(0, 32.3, 1), l1: V(0, 32.2, 1), f0: 28, f1: 27, cut: true },
+  // 上色
+  { t0: 90.2, t1: 93.0, p0: V(0, 32.6, 18.5), p1: V(-1, 32.4, 22), l0: V(0, 32.2, 1), l1: V(0, 32.0, 1), f0: 27, f1: 28 },
+  // 全彩全身
+  { t0: 93.0, t1: 95.4, p0: V(-4, 22, 62), p1: V(0, 20, 78), l0: V(0, 21, 0), l1: V(0, 19, 0), f0: 33, f1: 32, cut: true },
+  // 侧面 → 发现墙壁简陋
+  { t0: 95.4, t1: 99.0, p0: V(26, 14, 66), p1: V(20, 18, 56), l0: V(1, 17, 0), l1: V(-2, 19, -3), f0: 36, f1: 36, cut: true },
+  // 敷软土 → 白粉
+  { t0: 99.0, t1: 103.6, p0: V(-30, 21.5, 48), p1: V(-24, 23.5, 40), l0: V(-14, 22, -10), l1: V(-12, 24, -10), f0: 36, f1: 32, cut: true },
+  // 矿物颜料 → 壁画
+  { t0: 103.6, t1: 108.6, p0: V(-24, 23.5, 40), p1: V(-19, 21, 35), l0: V(-12, 24, -10), l1: V(-8, 19, -10), f0: 32, f1: 31 },
+  // 窟内全景（建成）
+  { t0: 108.6, t1: 111.4, p0: V(0, 17, 58), p1: V(0, 21, 88), l0: V(0, 20, 0), l1: V(0, 22, 2), f0: 36, f1: 35, cut: true },
+  // 九层楼重新拼装
+  { t0: 111.4, t1: 114.0, p0: V(14, 38, 132), p1: V(26, 46, 138), l0: V(0, 26, 12), l1: V(0, 27, 12), f0: 33, f1: 32 },
+  // 收尾
+  { t0: 114.0, t1: DURATION, p0: V(28, 47, 140), p1: V(38, 52, 158), l0: V(0, 26, 12), l1: V(-2, 24, 10), f0: 32, f1: 32 },
 ];
 
 /* ---------------- 字幕（逐字对齐原片） ---------------- */
@@ -58285,17 +57914,17 @@ const SCULPT_KEYS = [
   [0.0, PHASE.PAINT, 0.00],      // 开场：已建成的彩绘大佛
   [14.9, PHASE.PAINT, 0.00],
   [15.5, PHASE.ROCK, 1.00],      // 佛像淡出后切回石胎（不可见）
-  [56.0, PHASE.ROCK, 0.72],
-  [59.0, PHASE.ROCK, 0.60],
-  [62.4, PHASE.ROCK, 0.48],
-  [64.2, PHASE.CRACK, 0.34],     // 敷上普通粗泥 → 开裂
-  [66.8, PHASE.CRACK, 0.26],
-  [68.6, PHASE.COARSE, 0.16],    // 河泥 + 麦秆
-  [72.0, PHASE.COARSE, 0.08],
-  [74.6, PHASE.MID, 0.03],       // 大致完整造型
-  [77.6, PHASE.MID, 0.00],
-  [80.4, PHASE.FINE, 0.00],      // 细泥 + 棉花
-  [83.4, PHASE.FINE, 0.00],
+  [56.0, PHASE.ROCK, 1.00],
+  [59.0, PHASE.ROCK, 1.00],
+  [62.4, PHASE.ROCK, 1.00],
+  [64.2, PHASE.CRACK, 0.74],     // 敷上普通粗泥 → 开裂
+  [66.8, PHASE.CRACK, 0.72],
+  [68.6, PHASE.COARSE, 0.56],    // 河泥 + 麦秆
+  [72.0, PHASE.COARSE, 0.44],
+  [74.6, PHASE.MID, 0.30],       // 大致完整造型
+  [77.6, PHASE.MID, 0.26],
+  [80.4, PHASE.FINE, 0.13],      // 细泥 + 棉花
+  [83.4, PHASE.FINE, 0.08],
   [85.6, PHASE.POLISH, 0.02],    // 蛋清米汁 + 塑刀收光
   [89.4, PHASE.POLISH, 0.00],
   [90.6, PHASE.POLISH, 0.00],
@@ -58326,7 +57955,10 @@ const CURVE_CARVE = makeLinear1D(CARVE_KEYS);
 
 /* 剖切面（把崖壁前半切开做示意） */
 const SECTION_KEYS = [
-  [0.0, 99999], [DURATION, 99999],
+  [0.0, 99999], [26.55, 99999],
+  [27.35, 10.0], [29.10, 5.6],       // 仅切开右侧观察窗，保留岩芯与崖壁体量
+  [50.75, 5.6], [51.55, 99999],
+  [DURATION, 99999],
 ];
 const CURVE_SECTION = makeLinear1D(SECTION_KEYS);
 
@@ -58348,13 +57980,13 @@ const CURVE_WALL = makeLinear1D(WALL_KEYS);
 const TOWER_KEYS = [
   [0.0, 0.10], [0.6, 0.35], [2.2, 1.0], [2.6, 1.0],
   [15.0, 1.0], [15.3, 1.0],
-  [110.6, 1.0], [111.4, 0.82], [113.55, 0.0], [DURATION, 0.0],
+  [110.6, 1.0], [111.4, 0.86], [113.4, 0.0], [DURATION, 0.0],
 ];
 const CURVE_TOWER = makeLinear1D(TOWER_KEYS);
 
 /* 栈道显现 0..1 */
 const WALK_KEYS = [
-  [0.0, 0.0], [19.40, 0.0], [19.72, 0.12], [20.0, 0.34], [20.4, 0.48], [23.6, 1.0], [56.0, 1.0],
+  [0.0, 0.0], [19.40, 0.0], [19.75, 0.08], [20.0, 0.24], [20.4, 0.34], [23.6, 1.0], [56.0, 1.0],
   [56.6, 1.0], [95.0, 1.0], [DURATION, 1.0],
 ];
 const CURVE_WALK = makeLinear1D(WALK_KEYS);
@@ -58370,93 +58002,6 @@ const DETAIL_KEYS = [[0.0, 1.0], [14.8, 1.0], [15.4, 0.0], [90.4, 0.0], [92.4, 1
 const CURVE_DETAIL = makeLinear1D(DETAIL_KEYS);
 const HALO_KEYS = [[0.0, 1.0], [14.8, 1.0], [15.4, 0.0], [91.2, 0.0], [93.4, 1.0], [DURATION, 1.0]];
 const CURVE_HALO = makeLinear1D(HALO_KEYS);
-
-
-/* ===== 75-post.js ===== */
-/* ============================================================
-   75 - 轻量电影级后处理：景深、暖色调、暗角、细颗粒
-   不依赖外部库；失败时自动回退到 renderer.render。
-   ============================================================ */
-const POSTFX = { ready:false, target:null, scene:null, camera:null, quad:null, mat:null, w:1, h:1 };
-
-function initPostFX(renderer) {
-  try {
-    const depth = new THREE.DepthTexture(1, 1, THREE.UnsignedIntType);
-    depth.format = THREE.DepthFormat;
-    const target = new THREE.WebGLRenderTarget(1, 1, {
-      minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter,
-      format: THREE.RGBAFormat, type: THREE.UnsignedByteType,
-      depthBuffer: true, stencilBuffer: false,
-    });
-    target.depthTexture = depth;
-    const mat = new THREE.ShaderMaterial({
-      depthTest:false, depthWrite:false,
-      uniforms:{
-        tColor:{value:target.texture}, tDepth:{value:depth},
-        resolution:{value:new THREE.Vector2(1,1)},
-        cameraNear:{value:0.5}, cameraFar:{value:1400},
-        focusDistance:{value:70}, focusRange:{value:80},
-        grain:{value:0}, exposureLift:{value:1.045},
-      },
-      vertexShader:`varying vec2 vUv; void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}`,
-      fragmentShader:`
-        varying vec2 vUv;
-        uniform sampler2D tColor,tDepth;
-        uniform vec2 resolution;
-        uniform float cameraNear,cameraFar,focusDistance,focusRange,grain,exposureLift;
-        float linearDepth(float z){
-          float ndc=z*2.0-1.0;
-          return (2.0*cameraNear*cameraFar)/(cameraFar+cameraNear-ndc*(cameraFar-cameraNear));
-        }
-        float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-        void main(){
-          vec2 px=1.0/resolution;
-          float d=linearDepth(texture2D(tDepth,vUv).x);
-          float coc=clamp(abs(d-focusDistance)/max(1.0,focusRange),0.0,1.0);
-          vec2 off=px*(0.65+2.4*coc);
-          vec3 c=texture2D(tColor,vUv).rgb*0.54;
-          c+=texture2D(tColor,vUv+vec2(off.x,0.)).rgb*0.115;
-          c+=texture2D(tColor,vUv-vec2(off.x,0.)).rgb*0.115;
-          c+=texture2D(tColor,vUv+vec2(0.,off.y)).rgb*0.115;
-          c+=texture2D(tColor,vUv-vec2(0.,off.y)).rgb*0.115;
-          vec3 bloom=max(c-vec3(0.72),0.0);
-          c+=bloom*bloom*0.23;
-          // 胶片式暖高光 / 冷阴影，不改变文物主色。
-          float lum=dot(c,vec3(.2126,.7152,.0722));
-          c=mix(c*vec3(.985,1.00,1.015),c*vec3(1.015,1.005,.985),smoothstep(.23,.78,lum));
-          float shadowLift=1.0-smoothstep(.055,.42,lum);
-          c+=shadowLift*vec3(.045,.042,.038);
-          c=pow(max(c,vec3(0.0)),vec3(.94));
-          c=(c-0.5)*1.025+0.5;
-          c*=exposureLift;
-          float vig=1.0-smoothstep(.38,.90,distance(vUv,vec2(.5)));
-          c*=mix(.96,1.0,vig);
-          c+=(hash(gl_FragCoord.xy+grain)-.5)/255.0*1.9;
-          gl_FragColor=vec4(c,1.0);
-        }`,
-    });
-    const quad=new THREE.Mesh(new THREE.PlaneGeometry(2,2),mat);
-    const s=new THREE.Scene(); s.add(quad);
-    const cam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
-    POSTFX.target=target; POSTFX.scene=s; POSTFX.camera=cam; POSTFX.quad=quad; POSTFX.mat=mat; POSTFX.ready=true;
-  } catch(e) { console.warn('postFX fallback',e); POSTFX.ready=false; }
-}
-
-function resizePostFX(w,h,pixelRatio=1) {
-  if(!POSTFX.ready)return;
-  const rw=Math.max(1,Math.floor(w*pixelRatio)), rh=Math.max(1,Math.floor(h*pixelRatio));
-  if(rw===POSTFX.w&&rh===POSTFX.h)return;
-  POSTFX.w=rw;POSTFX.h=rh;POSTFX.target.setSize(rw,rh);POSTFX.mat.uniforms.resolution.value.set(rw,rh);
-}
-
-function renderPostFX(renderer, scene, camera, focusDistance=70, time=0) {
-  if(!POSTFX.ready){renderer.render(scene,camera);return;}
-  const U=POSTFX.mat.uniforms;
-  U.cameraNear.value=camera.near;U.cameraFar.value=camera.far;U.focusDistance.value=focusDistance;
-  U.focusRange.value=Math.max(18,focusDistance*.72);U.grain.value=time*47.0;
-  renderer.setRenderTarget(POSTFX.target);renderer.render(scene,camera);
-  renderer.setRenderTarget(null);renderer.render(POSTFX.scene,POSTFX.camera);
-}
 
 
 /* ===== 80-annotations.js ===== */
@@ -58599,47 +58144,174 @@ function setMaterialLabel(text, x, y, size = 54) {
 function updateAnnotations(t, cam, w, h) {
   const E = ANNO.els;
   const P = (x, y, z) => project(x, y, z, cam, w, h);
-  for (const key of ['title','ruler','q','arrow','hi','outline','shitai','mtl','end']) if (E[key]) setOp(E[key], 0);
 
-  /* 只保留克制的尺度与结构提示；施工主体始终由3D几何表达。 */
-  if (t >= 5.8 && t < 9.6) {
-    const o = fadeWin(t, 5.8, 9.6, 0.35) * 0.78;
+  /* 标题 2.8–5.6 */
+  {
+    const o = fadeWin(t, 2.9, 5.5, 0.35);
+    setOp(E.title, o);
+    if (o > 0) {
+      const a = P(-9.5, 34.5, 3);
+      E.title.setAttribute('transform', `translate(${a.x},${a.y})`);
+    }
+  }
+
+  /* 35.5m 标尺 5.9–9.6 */
+  {
+    const o = fadeWin(t, 6.0, 9.5, 0.3);
     setOp(E.ruler, o);
-    const top = P(-7.2, 35.5, 4.2), bot = P(-7.2, 0.4, 4.2);
-    const arm = Math.max(18, w * 0.018);
-    E.rulerPath.setAttribute('d', `M ${top.x-arm} ${top.y} L ${top.x} ${top.y} L ${top.x} ${bot.y} M ${top.x-arm} ${bot.y} L ${top.x} ${bot.y}`);
-    E.rulerText.textContent = '35.5 m';
-    E.rulerText.setAttribute('font-size', Math.max(22, Math.min(36, w * 0.024)));
-    E.rulerText.setAttribute('x', top.x - arm - Math.max(46, w * 0.034));
-    E.rulerText.setAttribute('y', (top.y + bot.y) * 0.5);
+    if (o > 0) {
+      const top = P(-3.0, 35.5, 4.5), bot = P(-3.0, 0.2, 4.5);
+      const k = clamp((t - 6.0) / 1.1, 0, 1);
+      const yEnd = lerp(top.y, bot.y, easeOut(k));
+      const arm = 46;
+      E.rulerPath.setAttribute('d',
+        `M ${top.x - arm} ${top.y} L ${top.x} ${top.y} L ${top.x} ${yEnd} M ${top.x - arm} ${bot.y} L ${top.x} ${bot.y}`);
+      E.rulerText.textContent = t < 7.6 ? '35.5m' : '35.5m';
+      E.rulerText.setAttribute('x', top.x - 96);
+      E.rulerText.setAttribute('y', (top.y + bot.y) / 2);
+    }
   }
 
-  if (t >= 32.0 && t < 36.9) {
-    const o = fadeWin(t, 32.0, 36.9, 0.45) * 0.28;
+  /* 大问号 18.0–19.4 */
+  {
+    const o = fadeWin(t, 18.0, 19.4, 0.25);
+    setOp(E.q, o);
+    if (o > 0) {
+      const a = P(0, 30, 8);
+      E.q.setAttribute('x', a.x); E.q.setAttribute('y', a.y);
+    }
+  }
+
+  /* 红箭头 27.2–30.0：沿窟门水平向内 */
+  {
+    const o = fadeWin(t, 27.2, 30.0, 0.25);
+    setOp(E.arrow, o);
+    if (o > 0) {
+      const k = (t - 27.2) % 1.2 / 1.2;
+      const zTip = lerp(6, -6, k);
+      const a = P(0, 34.6, zTip), b = P(0, 34.6, zTip + 9);
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const L = Math.hypot(dx, dy) || 1;
+      const ux = dx / L, uy = dy / L;
+      const nx = -uy, ny = ux;
+      const hw = 24, hl = 40, sw = 11;
+      const d = `M ${a.x} ${a.y}
+                 L ${a.x + ux * hl + nx * hw} ${a.y + uy * hl + ny * hw}
+                 L ${a.x + ux * hl + nx * sw} ${a.y + uy * hl + ny * sw}
+                 L ${b.x + nx * sw} ${b.y + ny * sw}
+                 L ${b.x - nx * sw} ${b.y - ny * sw}
+                 L ${a.x + ux * hl - nx * sw} ${a.y + uy * hl - ny * sw}
+                 L ${a.x + ux * hl - nx * hw} ${a.y + uy * hl - ny * hw} Z`;
+      E.arrowPath.setAttribute('d', d);
+      setOp(E.arrow, o * (0.55 + 0.45 * Math.sin(t * 5) * 0.5 + 0.225));
+    }
+  }
+
+  /* 拱顶红色高亮 34.2–36.8 */
+  {
+    const o = fadeWin(t, 34.2, 36.8, 0.3);
     setOp(E.hi, o);
-    const pts = [], N = 26;
-    for (let i = 0; i <= N; i++) {
-      const a = Math.PI * (i / N);
-      pts.push(P(-Math.cos(a) * (CAVE.x1-CAVE.x0)/2, CAVE.yArch + Math.sin(a)*(CAVE.yTop-CAVE.yArch), CAVE.zBack + 1.0));
+    if (o > 0) {
+      const pts = [];
+      const N = 22;
+      for (let i = 0; i <= N; i++) {
+        const a = Math.PI * (i / N);
+        const x = -Math.cos(a) * (CAVE.x1 - CAVE.x0) / 2;
+        const y = CAVE.yArch + Math.sin(a) * (CAVE.yTop - CAVE.yArch);
+        pts.push(P(x, y, CAVE.zBack + 1.5));
+      }
+      for (let i = N; i >= 0; i--) {
+        const a = Math.PI * (i / N);
+        const x = -Math.cos(a) * (CAVE.x1 - CAVE.x0) / 2;
+        const y = CAVE.yArch + Math.sin(a) * (CAVE.yTop - CAVE.yArch);
+        pts.push(P(x, y, CAVE.zFront - 1.0));
+      }
+      E.hi.setAttribute('d', 'M ' + pts.map(p => `${p.x} ${p.y}`).join(' L ') + ' Z');
     }
-    for (let i = N; i >= 0; i--) {
-      const a = Math.PI * (i / N);
-      pts.push(P(-Math.cos(a) * (CAVE.x1-CAVE.x0)/2, CAVE.yArch + Math.sin(a)*(CAVE.yTop-CAVE.yArch), CAVE.zFront - 0.8));
-    }
-    E.hi.setAttribute('d', 'M ' + pts.map(p => `${p.x} ${p.y}`).join(' L ') + ' Z');
   }
 
-  if (t >= 39.4 && t < 43.4) {
-    const o = fadeWin(t, 39.4, 43.4, 0.4) * 0.40;
+  /* 石胎轮廓 + 文字 39.4–43.2 */
+  {
+    const o = fadeWin(t, 39.4, 43.2, 0.3);
     setOp(E.outline, o);
-    const pts = [];
-    for (let i = 0; i <= 32; i++) {
-      const y = lerp(17.8, 35.5, i/32); const q = P(ENV_RX(y)*0.63, y, ENV_RZ(y)*0.72); pts.push(`${q.x} ${q.y}`);
+    if (o > 0) {
+      const draw = clamp((t - 39.4) / 1.3, 0, 1);
+      const pts = [];
+      const yTopO = 35.6;
+      const yBotO = clamp((typeof CARVE !== 'undefined' ? CARVE.y : 19) - 0.8, 18.0, 31.5);
+      const N = 26;
+      // 右半（+X 侧）自下而上
+      for (let i = 0; i <= N; i++) {
+        const y = lerp(yBotO, yTopO, i / N);
+        pts.push([ENV_RX(y) * 0.62, y, ENV_RZ(y) * 0.72]);
+      }
+      // 顶部绕过
+      for (let i = 0; i <= 10; i++) {
+        const a = (i / 10) * Math.PI;
+        pts.push([Math.cos(a) * ENV_RX(35.2) * 0.62, 35.55 + Math.sin(a) * 0.9, ENV_RZ(35.2) * 0.5]);
+      }
+      // 左半自上而下
+      for (let i = N; i >= 0; i--) {
+        const y = lerp(yBotO, yTopO, i / N);
+        pts.push([-ENV_RX(y) * 0.62, y, ENV_RZ(y) * 0.72]);
+      }
+      const total = pts.length;
+      const cut = Math.max(2, Math.round(total * draw));
+      const sp = pts.slice(0, cut).map(([x, y, z]) => {
+        const p = P(x, y, z);
+        // 手绘抖动
+        const j = (hash3(Math.round(x * 10), Math.round(y * 10), 7) - 0.5) * 5;
+        return `${p.x + j} ${p.y + j}`;
+      });
+      E.outline.setAttribute('d', 'M ' + sp.join(' L '));
     }
-    for (let i = 32; i >= 0; i--) {
-      const y = lerp(17.8, 35.5, i/32); const q = P(-ENV_RX(y)*0.63, y, ENV_RZ(y)*0.72); pts.push(`${q.x} ${q.y}`);
+    const o2 = fadeWin(t, 41.3, 43.2, 0.28);
+    setOp(E.shitai, o2);
+    if (o2 > 0) {
+      const a = P(7.2, 31.6, 3.5);
+      E.shitai.setAttribute('transform', `translate(${a.x},${a.y})`);
     }
-    E.outline.setAttribute('d', 'M ' + pts.join(' L ') + ' Z');
+  }
+
+  /* 8.4m / 35.5m 佛窟尺度 51.4–56.0 */
+  if (t >= 51.2 && t < 56.1) {
+    const o = fadeWin(t, 51.4, 56.0, 0.3);
+    setOp(E.ruler, o);
+    if (o > 0) {
+      const isFirst = t < 53.4;
+      const yTopR = isFirst ? 8.4 : 35.5;
+      const top = P(-13.0, yTopR, 8.5), bot = P(-13.0, 0.1, 8.5);
+      const arm = 40;
+      E.rulerPath.setAttribute('d',
+        `M ${top.x - arm} ${top.y} L ${top.x} ${top.y} L ${top.x} ${bot.y} M ${top.x - arm} ${bot.y} L ${top.x} ${bot.y}`);
+      E.rulerText.textContent = isFirst ? '8.4m' : '35.5m';
+      E.rulerText.setAttribute('x', top.x - 92);
+      E.rulerText.setAttribute('y', (top.y + bot.y) / 2);
+    }
+  }
+
+  /* 材料名 */
+  {
+    let label = '', anchor = null, o = 0;
+    if (t >= 67.0 && t < 68.6) { label = '河流沉淀土'; o = fadeWin(t, 67.0, 68.6, 0.25); anchor = [-1.0, 27.4, 6]; }
+    else if (t >= 68.6 && t < 72.0) { label = '麦秆'; o = fadeWin(t, 68.7, 72.0, 0.25); anchor = [-1.2, 27.2, 6]; }
+    else if (t >= 78.4 && t < 80.4) { label = '棉花'; o = fadeWin(t, 78.5, 80.3, 0.25); anchor = [-1.0, 28.6, 6]; }
+    else if (t >= 83.4 && t < 85.4) { label = '蛋清 米汁'; o = fadeWin(t, 83.5, 85.3, 0.25); anchor = [-1.0, 29.6, 6]; }
+    setOp(E.mtl, o);
+    if (o > 0 && anchor) {
+      const a = P(anchor[0], anchor[1], anchor[2]);
+      setMaterialLabel(label, a.x, a.y, 54);
+    }
+  }
+
+  /* 片尾书法 111.6– */
+  {
+    const o = fadeWin(t, 111.6, DURATION, 0.5);
+    setOp(E.end, o);
+    if (o > 0) {
+      const a = P(-58, 52, 40);
+      E.end.setAttribute('transform', `translate(${a.x},${a.y})`);
+    }
   }
 }
 
@@ -58785,9 +58457,30 @@ function placeProp(obj, cam, right, up, dist, scale, spin = 0) {
 }
 
 function updateProps(t, cam) {
-  /* 取消漂浮在镜头前的巨型“讲解道具”。材料和工具统一在真实作业面中呈现。 */
-  for (const key of ['mud','wheat','cotton','egg','trowel','chisel']) {
-    if (PROPS[key]) PROPS[key].visible = false;
+  const show = (o, on) => { if (o) o.visible = on; };
+  show(PROPS.mud, false); show(PROPS.wheat, false); show(PROPS.cotton, false);
+  show(PROPS.egg, false); show(PROPS.trowel, false); show(PROPS.chisel, false);
+
+  if (t >= 66.9 && t < 68.7) {
+    show(PROPS.mud, true);
+    placeProp(PROPS.mud, cam, 0.115, -0.075, 6.5, 0.082, t * 0.5);
+  } else if (t >= 68.5 && t < 72.0) {
+    show(PROPS.mud, true);
+    placeProp(PROPS.mud, cam, 0.115, -0.075, 6.5, 0.082, t * 0.5);
+    show(PROPS.wheat, true);
+    placeProp(PROPS.wheat, cam, 0.075, 0.020, 6.2, 0.030, 0);
+  } else if (t >= 78.4 && t < 80.4) {
+    show(PROPS.cotton, true);
+    placeProp(PROPS.cotton, cam, 0.115, -0.055, 5.6, 0.095, t * 0.4);
+  } else if (t >= 83.4 && t < 85.4) {
+    show(PROPS.egg, true);
+    placeProp(PROPS.egg, cam, 0.125, -0.060, 6.0, 0.088, 0);
+  } else if (t >= 85.4 && t < 87.6) {
+    show(PROPS.trowel, true);
+    const sw = Math.sin(t * 2.6);
+    placeProp(PROPS.trowel, cam, 0.105 + sw * 0.060, -0.045 + Math.cos(t * 2.6) * 0.050, 8.2, 0.050, 0);
+    PROPS.trowel.rotateX(-1.16);          // 展示刀面而不是刀刃
+    PROPS.trowel.rotateY(-0.42 + sw * 0.22);
   }
 }
 
@@ -58808,8 +58501,7 @@ const APP = {
   currentStep: -1,
   playUntil: null,
   playFromChapter: -1,
-  baseExposure: 1.18,
-  focusDistance: 70,
+  baseExposure: 1.02,
 };
 
 let renderer, scene, camera, freeCam, debris, tower, walkway, decorGroup, clock;
@@ -58831,55 +58523,53 @@ function init() {
   renderer.toneMappingExposure = APP.baseExposure;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  initPostFX(renderer);
 
   scene = new THREE.Scene();
   APP.skyBackground = TEX.sky.map;
-  APP.skyFogColor = new THREE.Color(0xB8B1A4);
-  APP.sectionBackground = new THREE.Color(0x574234);
-  APP.sectionFogColor = new THREE.Color(0x6A5140);
+  APP.skyFogColor = new THREE.Color(0xB9D6D2);
+  APP.sectionBackground = new THREE.Color(0x241B16);
+  APP.sectionFogColor = new THREE.Color(0x4A3324);
   scene.background = APP.skyBackground;
   scene.environment = null;
-  scene.fog = new THREE.Fog(APP.skyFogColor, 280, 940);
+  scene.fog = new THREE.Fog(APP.skyFogColor, 380, 1100);
 
-  camera = new THREE.PerspectiveCamera(35, 16 / 9, 0.42, 1400);
-  freeCam = new THREE.PerspectiveCamera(45, 16 / 9, 0.42, 1400);
+  camera = new THREE.PerspectiveCamera(35, 9 / 16, 0.5, 1400);
+  freeCam = new THREE.PerspectiveCamera(45, 9 / 16, 0.5, 1400);
 
-  /* ---------------- 电影化日照 + 洞窟反弹光 ---------------- */
-  scene.add(new THREE.AmbientLight(0xFFF4E8, 0.43));
-  scene.add(new THREE.HemisphereLight(0xD8E0E2, 0x8A684D, 0.84));
+  /* ---------------- 光照 ---------------- */
+  scene.add(new THREE.AmbientLight(0xFFF2E2, 0.30));
+  scene.add(new THREE.HemisphereLight(0xC6E6EC, 0xC09872, 0.64));
 
-  const sun = new THREE.DirectionalLight(0xFFF0D2, 2.42);
-  sun.position.set(92, 118, 106); sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
-  Object.assign(sun.shadow.camera,{left:-100,right:100,top:92,bottom:-55,near:18,far:410});
-  sun.shadow.bias=-0.0008; sun.shadow.normalBias=0.38;
-  sun.target.position.set(0,20,2); scene.add(sun,sun.target);
+  const sun = new THREE.DirectionalLight(0xFFF3E0, 2.15);
+  sun.position.set(76, 108, 128);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(1024, 1024);
+  const sc = sun.shadow.camera;
+  sc.left = -95; sc.right = 95; sc.top = 95; sc.bottom = -55;
+  sc.near = 20; sc.far = 380;
+  sun.shadow.bias = -0.0009;
+  sun.shadow.normalBias = 0.55;
+  sun.target.position.set(0, 18, 0);
+  scene.add(sun, sun.target);
 
-  const skyFill = new THREE.DirectionalLight(0xD6E0E4, 0.66);
-  skyFill.position.set(-78,54,128); skyFill.target.position.set(0,23,0); scene.add(skyFill,skyFill.target);
-  const sandBounce = new THREE.DirectionalLight(0xE0B080, 0.34);
-  sandBounce.position.set(0,-18,86); sandBounce.target.position.set(0,18,0); scene.add(sandBounce,sandBounce.target);
-  const rim = new THREE.DirectionalLight(0xE5CFAC, 0.58);
-  rim.position.set(-82,70,-56); rim.target.position.set(0,26,0); scene.add(rim,rim.target);
+  const fill = new THREE.DirectionalLight(0xDCE8EE, 0.40);
+  fill.position.set(-70, 40, 120);
+  scene.add(fill);
 
-  const inner = new THREE.PointLight(0xF4D3AA, 76, 125, 1.62);
-  inner.position.set(0,25,18); scene.add(inner); APP.innerLight=inner;
-  const faceKey = new THREE.SpotLight(0xFBEAD8, 116, 110, Math.PI/4.9,0.68,1.65);
-  faceKey.position.set(18,36,44); faceKey.target.position.set(0,29.6,-0.5); scene.add(faceKey,faceKey.target);
-  const caveRim = new THREE.SpotLight(0xC5D7DE, 84, 115, Math.PI/4.4,0.74,1.75);
-  caveRim.position.set(-28,32,-15); caveRim.target.position.set(0,23,2); scene.add(caveRim,caveRim.target);
-  const workFill = new THREE.PointLight(0xFFD8AE, 78, 104, 1.55);
-  workFill.position.set(-8, 27, 37); scene.add(workFill); APP.workFill = workFill;
-  const wallKey = new THREE.PointLight(0xFFE1BB, 0, 96, 1.28);
-  wallKey.position.set(0, 23, 12); scene.add(wallKey); APP.wallKey = wallKey;
-  const bodyFill = new THREE.SpotLight(0xF3D7B8, 0, 112, Math.PI/3.4, 0.78, 1.45);
-  bodyFill.position.set(-18, 25, 50); bodyFill.target.position.set(0, 22, 0); scene.add(bodyFill, bodyFill.target); APP.bodyFill = bodyFill;
-  const towerKey = new THREE.SpotLight(0xFFE1C2, 0, 260, Math.PI/4.0, 0.72, 1.35);
-  towerKey.position.set(22, 45, 148); towerKey.target.position.set(0, 24, CLIFF_Z + 10); scene.add(towerKey, towerKey.target); APP.towerKey = towerKey;
-  const cliffLift = new THREE.DirectionalLight(0xE8CDB0, 0.42);
-  cliffLift.position.set(-36, 48, 136); cliffLift.target.position.set(0, 24, CLIFF_Z); scene.add(cliffLift, cliffLift.target);
-  APP.faceKey = faceKey; APP.caveRim = caveRim;
+  const inner = new THREE.PointLight(0xFFE7C6, 60, 130, 1.6);
+  inner.position.set(0, 27, 22);
+  scene.add(inner);
+  APP.innerLight = inner;
+
+  const inner2 = new THREE.DirectionalLight(0xFFF0DC, 1.08);
+  inner2.position.set(4, 34, 90);
+  inner2.target.position.set(0, 20, -8);
+  scene.add(inner2, inner2.target);
+
+  const inner3 = new THREE.DirectionalLight(0xE8F0F4, 0.52);
+  inner3.position.set(-46, 22, 70);
+  inner3.target.position.set(0, 22, -6);
+  scene.add(inner3, inner3.target);
 
   /* ---------------- 场景 ---------------- */
   buildWorld(scene);
@@ -58891,7 +58581,6 @@ function init() {
 
   tower = buildNineStorey();
   tower.position.set(0, 0, CLIFF_Z + 5.2);
-  tower.scale.setScalar(1.10);
   scene.add(tower);
 
   walkway = buildWalkway();
@@ -58901,14 +58590,22 @@ function init() {
   decorGroup.name = 'ExteriorDecor';
   scene.add(decorGroup);
   {
-    // 只保留疏朗的白塔、枯树和风蚀石，去掉基线里现代园林式花坛与对称寺院。
-    const st = [
-      [-72,CLIFF_Z+96,1.20],[-43,CLIFF_Z+132,0.82],[70,CLIFF_Z+100,1.10],[46,CLIFF_Z+146,0.78],
-    ];
-    st.forEach(([x,z,k])=>{const o=buildStupa(k);o.position.set(x,0,z);decorGroup.add(o);});
-    for (const [x,z,h,seed] of [[-77,92,7.5,2],[-48,126,6.4,3],[74,95,7.0,4],[50,138,5.6,5],[-8,164,5.2,6]]) {
-      const tr=buildTree(h,seed);tr.position.set(x,0,CLIFF_Z+z);tr.scale.set(1,0.82,1);decorGroup.add(tr);
+    const s1 = buildStupa(3.4); s1.position.set(-36, 0, CLIFF_Z + 52); decorGroup.add(s1);
+    const s2 = buildStupa(2.2); s2.position.set(-24, 0, CLIFF_Z + 78); decorGroup.add(s2);
+    const s3 = buildStupa(3.2); s3.position.set(38, 0, CLIFF_Z + 54); decorGroup.add(s3);
+    const s4 = buildStupa(2.0); s4.position.set(26, 0, CLIFF_Z + 80); decorGroup.add(s4);
+    const tp = buildTemple(); tp.position.set(66, 0, CLIFF_Z + 24); decorGroup.add(tp);
+    const tp2 = buildTemple(); tp2.position.set(-66, 0, CLIFF_Z + 28); tp2.scale.setScalar(0.72); decorGroup.add(tp2);
+    for (const [x, z, h, seed] of [
+      [-38, 46, 15, 2], [-26, 74, 12, 3], [40, 48, 14, 4], [28, 78, 11, 5],
+      [-16, 108, 13, 6], [18, 112, 12, 7], [58, 68, 14, 8], [-58, 72, 13, 9],
+    ]) {
+      const tr = buildTree(h, seed); tr.position.set(x, 0, CLIFF_Z + z); decorGroup.add(tr);
     }
+    const pl1 = buildPlanter(26, 8); pl1.position.set(-25, 0, CLIFF_Z + 44); decorGroup.add(pl1);
+    const pl2 = buildPlanter(26, 8); pl2.position.set(25, 0, CLIFF_Z + 44); decorGroup.add(pl2);
+    const pl3 = buildPlanter(20, 7); pl3.position.set(-22, 0, CLIFF_Z + 96); decorGroup.add(pl3);
+    const pl4 = buildPlanter(20, 7); pl4.position.set(22, 0, CLIFF_Z + 96); decorGroup.add(pl4);
   }
 
   // 兼容旧对象，但不再用帧累积粒子；施工特效全部由绝对时间重建。
@@ -58951,19 +58648,24 @@ function init() {
 }
 
 /* ------------------------------------------------------------
-   画布尺寸：横屏 16:9，自适应浏览器可用区域
+   画布尺寸：竖屏 9:16 居中
    ------------------------------------------------------------ */
 function onResize() {
-  const wrap=document.getElementById('stage');
-  const aw=Math.max(1,wrap.clientWidth), ah=Math.max(1,wrap.clientHeight), aspect=16/9;
-  let w=aw,h=w/aspect;if(h>ah){h=ah;w=h*aspect;}
-  w=Math.max(1,Math.floor(w));h=Math.max(1,Math.floor(h));
-  const el=renderer.domElement;el.style.width=w+'px';el.style.height=h+'px';
-  elSvg.style.width=w+'px';elSvg.style.height=h+'px';elSvg.setAttribute('viewBox',`0 0 ${w} ${h}`);
-  elHud.style.width=w+'px';elHud.style.height=h+'px';
-  renderer.setSize(w,h,false);resizePostFX(w,h,renderer.getPixelRatio());
-  camera.aspect=w/h;camera.updateProjectionMatrix();freeCam.aspect=w/h;freeCam.updateProjectionMatrix();
-  APP.vw=w;APP.vh=h;APP.dirty=true;
+  const wrap = document.getElementById('stage');
+  const aw = Math.max(1, wrap.clientWidth), ah = Math.max(1, wrap.clientHeight);
+  let w = ah * 9 / 16, h = ah;
+  if (w > aw) { w = aw; h = aw * 16 / 9; }
+  w = Math.max(1, Math.floor(w));
+  h = Math.max(1, Math.floor(h));
+  const el = renderer.domElement;
+  el.style.width = w + 'px'; el.style.height = h + 'px';
+  elSvg.style.width = w + 'px'; elSvg.style.height = h + 'px';
+  elSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  elHud.style.width = w + 'px'; elHud.style.height = h + 'px';
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+  freeCam.aspect = w / h; freeCam.updateProjectionMatrix();
+  APP.vw = w; APP.vh = h; APP.dirty = true;
 }
 
 /* ============================================================
@@ -58990,7 +58692,7 @@ function applySculptState(t, carveY) {
     Object.assign(opts, {
       spread: true,
       spreadY: front,
-      spreadSoft: dir < 0 ? (w.a >= 90 ? 2.65 : 1.70) : 1.28,
+      spreadSoft: dir < 0 ? 1.45 : 1.08,
       spreadDir: dir,
       phaseFrom: w.fromP,
       phaseTo: w.toP,
@@ -59011,10 +58713,7 @@ function applyCarveState(t) {
   if (t < 15.2 || t >= 27.0) doorProgress = 1;
   else if (t >= 24.55) doorProgress = easeOut(windowK(t, 24.55, 27.0));
   setDoorProgress(doorProgress);
-  // 这两块只是窟门开凿时的局部施工壳体。洞窟完成后继续显示会在佛像背后形成黑色矩形。
-  const doorShellVisible = t >= 24.50 && t < 31.0 && doorProgress > 0.035;
-  if (WORLD.doorTunnel) WORLD.doorTunnel.visible = doorShellVisible;
-  if (WORLD.doorBack) WORLD.doorBack.visible = doorShellVisible;
+  if (WORLD.doorTunnel) WORLD.doorTunnel.visible = doorProgress > 0.035;
 
   const complete = t < 15.2 || t >= 51.6;
   let lower1 = complete ? 1 : 0;
@@ -59031,18 +58730,15 @@ function applyCarveState(t) {
 
 function applyState(t, dt) {
   const carve = applyCarveState(t);
-  const sectionOn = t >= 26.7 && t < 51.6;
-  if (WORLD.cliffBody) WORLD.cliffBody.visible = !sectionOn;
-  if (WORLD.dune) WORLD.dune.visible = !sectionOn;
+  const sectionOn = t >= 26.7 && t < 51.6 && CURVE_SECTION(t) < 9000;
   scene.background = sectionOn ? APP.sectionBackground : APP.skyBackground;
   scene.fog.color.copy(sectionOn ? APP.sectionFogColor : APP.skyFogColor);
   const sculpt = applySculptState(t, carve.carveY);
 
   /* 佛像在开凿阶段由高度阈值从石胎中显露，不做整尊跳变。 */
   const excavationReveal = t >= 31.0 && t < 51.9;
-  const wallFocus = (t >= 98.7 && t < 108.6) ? lerp(0.38, 0.20, smoothstep(99.0, 104.0, t)) : 1.0;
-  const bop = (excavationReveal ? 1 : CURVE_BOPA(t)) * wallFocus;
-  BUDDHA.group.visible = bop > 0.004 && !(t >= 98.7 && t < 108.6);
+  const bop = excavationReveal ? 1 : CURVE_BOPA(t);
+  BUDDHA.group.visible = bop > 0.004;
   for (const m of STAGE_MATS) {
     if (bop >= 0.999) {
       m.transparent = false; m.opacity = 1; m.depthWrite = true;
@@ -59050,9 +58746,9 @@ function applyState(t, dt) {
       m.transparent = true; m.opacity = bop; m.depthWrite = bop > 0.6;
     }
   }
-  const detailOpacity = CURVE_DETAIL(t) * bop * 0.76;
+  const detailOpacity = CURVE_DETAIL(t) * bop;
   for (const m of BUDDHA.detailMats) m.opacity = detailOpacity;
-  const haloOpacity = CURVE_HALO(t) * bop * 0.78;
+  const haloOpacity = CURVE_HALO(t) * bop * 0.98;
   for (const m of BUDDHA.haloMats) m.opacity = haloOpacity;
 
   // 螺发的逐颗显露/上色由施工系统接管，避免整组缩放。
@@ -59062,24 +58758,13 @@ function applyState(t, dt) {
   clearWallTransition();
 
   tower.visible = true;
-  walkway.visible = t >= 19.15 && t < 56.25;
+  walkway.visible = true;
   if (decorGroup) decorGroup.visible = t < 26.6 || t >= 108.4;
 
   const caveOpen = carve.complete
     ? 1
     : clamp((CAVE.yTop + 1 - carve.carveY) / (CAVE.yTop + 1), 0, 1);
-  APP.innerLight.intensity = lerp(84, 188, easeOut(caveOpen));
-  if (APP.workFill) APP.workFill.intensity = t >= 24.2 && t < 95.4 ? 96 : 50;
-  if (APP.faceKey) APP.faceKey.intensity = t >= 56.0 ? (t < 95.4 ? 136 : 108) : 76;
-  if (APP.bodyFill) APP.bodyFill.intensity = (t >= 56.0 && t < 95.4) ? 126 : ((t < 15.2 || t >= 108.6) ? 54 : 0);
-  if (APP.wallKey) APP.wallKey.intensity = (t >= 98.7 && t < 108.6) ? 112 : 0;
-  if (APP.towerKey) APP.towerKey.intensity = (t < 15.2 || t >= 110.6) ? 168 : 0;
-  const finalCliffLift = (t < 15.2 || t >= 110.6);
-  for (const cliffMat of [WORLD.cliffMat, WORLD.cliffBody && WORLD.cliffBody.material]) {
-    if (!cliffMat || !cliffMat.emissive) continue;
-    cliffMat.emissive.setHex(finalCliffLift ? 0x755B43 : 0x000000);
-    cliffMat.emissiveIntensity = finalCliffLift ? 0.52 : 0;
-  }
+  APP.innerLight.intensity = lerp(42, 185, easeOut(caveOpen));
   WORLD.plinth.visible = t < 15.2 || t >= 51.55;
 
   const construction = updateConstruction(t);
@@ -59090,15 +58775,6 @@ function applyState(t, dt) {
 /* ============================================================
    相机 / 单帧渲染
    ============================================================ */
-function exposureBoostAt(t) {
-  if (t >= 56.0 && t < 95.4) return 0.23;
-  if (t >= 110.6) return 0.20;
-  if (t < 15.2) return 0.17;
-  if (t >= 15.2 && t < 26.7) return 0.12;
-  if (t >= 26.7 && t < 51.6) return 0.10;
-  if (t >= 98.7 && t < 108.6) return -0.14;
-  return 0.08;
-}
 function setScriptedCamera(t) {
   const s = shotAt(t);
   const fb = constructionCameraFeedback();
@@ -59109,8 +58785,7 @@ function setScriptedCamera(t) {
     camera.fov = fov;
     camera.updateProjectionMatrix();
   }
-  renderer.toneMappingExposure = APP.baseExposure + exposureBoostAt(t) + fb.exposure;
-  APP.focusDistance = Math.max(4, camera.position.distanceTo(new THREE.Vector3(s.lx,s.ly,s.lz)));
+  renderer.toneMappingExposure = APP.baseExposure + fb.exposure;
 }
 
 function renderFrame(t, dt) {
@@ -59118,7 +58793,7 @@ function renderFrame(t, dt) {
   const cam = APP.free ? freeCam : camera;
   if (APP.free) {
     updateFreeCam(dt);
-    renderer.toneMappingExposure = APP.baseExposure + exposureBoostAt(t) + constructionCameraFeedback().exposure * 0.45;
+    renderer.toneMappingExposure = APP.baseExposure + constructionCameraFeedback().exposure * 0.45;
   } else {
     setScriptedCamera(t);
   }
@@ -59126,7 +58801,7 @@ function renderFrame(t, dt) {
   updateProps(t, cam);
   updateAnnotations(t, cam, APP.vw, APP.vh);
   updateTimelineUI(t);
-  renderPostFX(renderer, scene, cam, APP.free ? 72 : APP.focusDistance, t);
+  renderer.render(scene, cam);
   APP.dirty = false;
   return state;
 }
@@ -59467,6 +59142,7 @@ function installDebugAPI() {
     console.error(err);
   });
 })();
+
 
 </script>
 </body>

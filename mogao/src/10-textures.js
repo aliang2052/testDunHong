@@ -77,65 +77,77 @@ function toDataTex(canvas, repeat = 1) {
    崖壁砂岩 —— 暖土黄 + 灰紫矿物斑 + 水平层理
    ------------------------------------------------------------ */
 function buildSandstone(size = 512) {
-  const dark=[0x6A,0x4B,0x35], mid=[0xA8,0x78,0x50], light=[0xD3,0xAD,0x7B], grey=[0x8B,0x7C,0x70];
-  const r=bake(size,(u,v)=>{
-    const warp=fbm2(u*2.1,v*2.7,5,17.2);
-    const macro=fbm2(u*3.0+warp*.42,v*3.4,5,3.7);
-    const vertical=ridge2(u*7.0+warp*1.35,v*1.35,5,7.3);
-    const pockets=fbm2(u*8.5+warp*.7,v*11.0,4,29.1);
-    const grain=fbm2(u*150,v*150,3,5.8);
-    const beds=fbm2(u*1.2+warp*.18,v*13.0,4,11.1);
-    const crackMask=smoothstep(.72,.91,fbm2(u*3.2,v*8.0,4,43.0));
-    const crackLine=smoothstep(.955,.995,Math.abs(Math.sin((u*5.2+warp*1.7+v*.18)*3.14159)))*crackMask;
-    let t=clamp(macro*.43+vertical*.25+pockets*.16+beds*.08+grain*.08,0,1);
-    let col=[lerp(mid[0],light[0],t),lerp(mid[1],light[1],t),lerp(mid[2],light[2],t)];
-    const mineral=smoothstep(.67,.90,fbm2(u*4.0,v*4.6,4,71))*0.24;
-    col=[lerp(col[0],grey[0],mineral),lerp(col[1],grey[1],mineral),lerp(col[2],grey[2],mineral)];
-    const shade=clamp((1.0-vertical)*.16+(1.0-pockets)*.12+crackLine*.48,0,.62);
-    col=[lerp(col[0],dark[0],shade),lerp(col[1],dark[1],shade),lerp(col[2],dark[2],shade)];
-    const h=clamp(.12+macro*.30+vertical*.33+pockets*.18+beds*.08+grain*.06-crackLine*.38,0,1);
-    return [col[0],col[1],col[2],h];
+  const baseA = [0xA2, 0x77, 0x48];   // 暗
+  const baseB = [0xEE, 0xCE, 0x9E];   // 亮
+  const mineral = [0x9A, 0x94, 0x9C]; // 灰紫矿物
+  const dark = [0x93, 0x70, 0x46];
+
+  const r = bake(size, (u, v) => {
+    // 层理（水平沉积带）
+    const bed = fbm2(u * 2.2, v * 17.0, 4, 3.1);
+    // 大块明暗
+    const macro = fbm2(u * 4.2, v * 3.8, 5, 11.7);
+    // 竖向风蚀条纹（崖壁的主要肌理）
+    const streak = ridge2(u * 34.0, v * 1.8, 4, 6.2);
+    // 细颗粒
+    const grain = fbm2(u * 120, v * 120, 3, 5.3);
+
+    let t = clamp(macro * 0.30 + bed * 0.24 + streak * 0.28 + grain * 0.18, 0, 1);
+    t = Math.pow(t, 0.94);
+    let col = [
+      lerp(baseA[0], baseB[0], t),
+      lerp(baseA[1], baseB[1], t),
+      lerp(baseA[2], baseB[2], t),
+    ];
+    // 灰紫矿物斑（柔和、低频、低对比）
+    const ms = smoothstep(0.58, 0.86, fbm2(u * 5.2, v * 4.8, 4, 41)) * 0.42;
+    col = [lerp(col[0], mineral[0], ms), lerp(col[1], mineral[1], ms), lerp(col[2], mineral[2], ms)];
+    // 稀疏的水平岩缝（只在少数层出现）
+    const seamBand = smoothstep(0.80, 0.94, fbm2(u * 1.6, v * 9.0, 3, 71));
+    const seam = seamBand * smoothstep(0.40, 0.82, fbm2(u * 9, v * 40, 3, 13)) * 0.52;
+    col = [lerp(col[0], dark[0], seam), lerp(col[1], dark[1], seam), lerp(col[2], dark[2], seam)];
+
+    const h = clamp(macro * 0.24 + bed * 0.18 + streak * 0.40 + grain * 0.18 - seam * 0.5, 0, 1);
+    return [col[0], col[1], col[2], h];
   });
-  return {map:toTex(r.canvas),normal:toDataTex(normalFromHeight(r.heights,size,3.6)),raw:r};
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 2.6)), raw: r };
 }
 
 /* ------------------------------------------------------------
    洞窟内壁 —— 开凿出的平滑土棕面
    ------------------------------------------------------------ */
 function buildCaveWall(size = 512) {
-  const a=[0x59,0x3E,0x2D],b=[0x9A,0x6E,0x4D],dust=[0xB4,0x8B,0x66];
-  const r=bake(size,(u,v)=>{
-    const macro=fbm2(u*4.5,v*4.0,5,7.7);
-    const chop=ridge2(u*10.5,v*34.0,4,2.2);
-    const soot=smoothstep(.62,.9,fbm2(u*3.2,v*3.6,4,63));
-    const grain=fbm2(u*130,v*130,3,9.1);
-    let t=clamp(macro*.55+grain*.18+chop*.27,0,1);
-    let col=[lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)];
-    col=[lerp(col[0],dust[0],grain*.12),lerp(col[1],dust[1],grain*.12),lerp(col[2],dust[2],grain*.12)];
-    col=col.map((c,i)=>lerp(c,[0x34,0x29,0x23][i],soot*.48));
-    return [col[0],col[1],col[2],clamp(macro*.26+chop*.52+grain*.18,0,1)];
+  const a = [0x8E, 0x68, 0x44], b = [0xB2, 0x8B, 0x60];
+  const r = bake(size, (u, v) => {
+    const macro = fbm2(u * 4.0, v * 4.0, 4, 7.7);
+    const chisel = ridge2(u * 13, v * 30, 3, 2.2);     // 凿痕
+    const grain = fbm2(u * 120, v * 120, 2, 9.1);
+    let t = clamp(macro * 0.7 + grain * 0.2 + chisel * 0.18, 0, 1);
+    const col = [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+    const h = clamp(macro * 0.35 + chisel * 0.45 + grain * 0.2, 0, 1);
+    return [col[0], col[1], col[2], h];
   });
-  return {map:toTex(r.canvas),normal:toDataTex(normalFromHeight(r.heights,size,2.0))};
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 1.5)) };
 }
 
 /* ------------------------------------------------------------
    石胎岩石 —— 黄褐砂岩 + 明显灰斑与凿面
    ------------------------------------------------------------ */
 function buildRockCore(size = 512) {
-  const a=[0x7E,0x5A,0x3A],b=[0xC3,0x96,0x62],grey=[0x70,0x69,0x60];
-  const r=bake(size,(u,v)=>{
-    const macro=fbm2(u*5.0,v*5.0,5,23.3);
-    const w=worley2(u*10.5,v*10.5,5);
-    const facet=smoothstep(.30,.025,w.f2-w.f1);
-    const grain=fbm2(u*140,v*140,3,3.3);
-    const chisel=ridge2(u*18,v*27,3,91);
-    let t=clamp(macro*.58+grain*.19+facet*.13+chisel*.10,0,1);
-    let col=[lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)];
-    const gm=smoothstep(.61,.86,fbm2(u*3.7,v*3.5,4,61))*.55;
-    col=[lerp(col[0],grey[0],gm),lerp(col[1],grey[1],gm),lerp(col[2],grey[2],gm)];
-    return [col[0],col[1],col[2],clamp(macro*.30+facet*.35+grain*.18+chisel*.23,0,1)];
+  const a = [0xA8, 0x84, 0x54], b = [0xDD, 0xC0, 0x8A], gy = [0x8C, 0x88, 0x8E];
+  const r = bake(size, (u, v) => {
+    const macro = fbm2(u * 5.0, v * 5.0, 5, 23.3);
+    const chunk = worley2(u * 9, v * 9, 5);
+    const facet = smoothstep(0.5, 0.02, chunk.f2 - chunk.f1);  // 凿击面
+    const grain = fbm2(u * 110, v * 110, 3, 3.3);
+    let t = clamp(macro * 0.68 + grain * 0.22 + facet * 0.1, 0, 1);
+    let col = [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+    const gm = smoothstep(0.62, 0.86, fbm2(u * 3.4, v * 3.4, 4, 61)) * 0.7;
+    col = [lerp(col[0], gy[0], gm), lerp(col[1], gy[1], gm), lerp(col[2], gy[2], gm)];
+    const h = clamp(macro * 0.45 + facet * 0.35 + grain * 0.3, 0, 1);
+    return [col[0], col[1], col[2], h];
   });
-  return {map:toTex(r.canvas),normal:toDataTex(normalFromHeight(r.heights,size,3.5))};
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 3.2)) };
 }
 
 /* ------------------------------------------------------------
@@ -183,71 +195,105 @@ function buildMud(size, tint, grainScale, roughAmp) {
    袈裟：赭红，带细小深褐斑点（视频里泥塑表面的杂质）
    ------------------------------------------------------------ */
 function buildRobeRed(size = 512) {
-  /* 褪色朱砂与土红，而不是饱和巧克力红。 */
-  const a=[0x66,0x37,0x2C],b=[0xAE,0x67,0x4E],ochre=[0xC0,0x87,0x59];
-  const r=bake(size,(u,v)=>{
-    const macro=fbm2(u*4,v*4,5,3.9),grain=fbm2(u*75,v*75,3,6.1);
-    const wear=smoothstep(.66,.91,fbm2(u*8,v*8,4,34));
-    const soot=smoothstep(.68,.92,fbm2(u*3.5,v*5,3,88));
-    let t=clamp(macro*.62+grain*.38,0,1);
-    let col=[lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)];
-    col=[lerp(col[0],ochre[0],wear*.25),lerp(col[1],ochre[1],wear*.25),lerp(col[2],ochre[2],wear*.25)];
-    col=col.map((c,i)=>lerp(c,[0x45,0x31,0x2A][i],soot*.22));
-    return [col[0],col[1],col[2],clamp(.45+(grain-.5)*.45+(wear-.5)*.12,0,1)];
+  const a = [0x96, 0x50, 0x3C], b = [0xB6, 0x6B, 0x50];
+  const r = bake(size, (u, v) => {
+    const macro = fbm2(u * 4, v * 4, 4, 3.9);
+    const grain = fbm2(u * 60, v * 60, 3, 6.1);
+    let t = clamp(macro * 0.55 + grain * 0.45, 0, 1);
+    let col = [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+    // 杂质斑点
+    const sp = worley2(u * 34, v * 34, 77);
+    const s = smoothstep(0.14, 0.0, sp.f1) * smoothstep(0.55, 0.95, fbm2(u * 20, v * 20, 2, 55));
+    col = [lerp(col[0], 0x4A, s), lerp(col[1], 0x2E, s), lerp(col[2], 0x1E, s)];
+    return [col[0], col[1], col[2], clamp(0.5 + (grain - 0.5) * 0.5, 0, 1)];
   });
-  return {map:toTex(r.canvas),normal:toDataTex(normalFromHeight(r.heights,size,1.35))};
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 1.2)) };
 }
 
 /* ------------------------------------------------------------
    内衣：孔雀蓝 + 深蓝团花圆点（参考 t96 左肩）
    ------------------------------------------------------------ */
 function buildInnerBlue(size = 512) {
-  const c=makeCanvas(size,size),g=c.getContext('2d');
-  const img=g.createImageData(size,size),d=img.data;
-  for(let y=0;y<size;y++)for(let x=0;x<size;x++){
-    const u=x/size,v=y/size,n=fbm2(u*44,v*44,3,2.1),m=fbm2(u*5,v*5,4,18);
-    const i=(y*size+x)*4;d[i]=45+(n-.5)*15;d[i+1]=82+(m-.5)*20;d[i+2]=88+(n-.5)*18;d[i+3]=255;
+  const c = makeCanvas(size, size);
+  const g = c.getContext('2d');
+  g.fillStyle = '#2E9DBE'; g.fillRect(0, 0, size, size);
+  // 底纹
+  const img = g.getImageData(0, 0, size, size); const d = img.data;
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    const n = fbm2(x / size * 40, y / size * 40, 3, 2.1);
+    const i = (y * size + x) * 4;
+    d[i] = clamp(d[i] + (n - 0.5) * 26, 0, 255);
+    d[i + 1] = clamp(d[i + 1] + (n - 0.5) * 26, 0, 255);
+    d[i + 2] = clamp(d[i + 2] + (n - 0.5) * 26, 0, 255);
   }
-  g.putImageData(img,0,0);
-  g.strokeStyle='rgba(171,145,99,.48)';g.fillStyle='rgba(31,58,61,.74)';g.lineWidth=size*.006;
-  const step=size/4;
-  for(let yy=-1;yy<5;yy++)for(let xx=-1;xx<5;xx++){
-    const cx=(xx+.5)*step+(yy%2)*step*.18,cy=(yy+.5)*step;
-    g.beginPath();g.arc(cx,cy,step*.105,0,TAU);g.fill();
-    for(let k=0;k<6;k++){const a=k/6*TAU;g.beginPath();g.ellipse(cx+Math.cos(a)*step*.17,cy+Math.sin(a)*step*.17,step*.07,step*.035,a,0,TAU);g.stroke();}
+  g.putImageData(img, 0, 0);
+  // 深蓝团花：中心圆 + 5 瓣
+  const rnd = mulberry32(7);
+  g.fillStyle = 'rgba(21,86,124,0.92)';
+  const step = size / 3;
+  for (let gy = 0; gy < 3; gy++) for (let gx = 0; gx < 3; gx++) {
+    const cx = gx * step + step * 0.5 + (rnd() - 0.5) * step * 0.18;
+    const cy = gy * step + step * 0.5 + (rnd() - 0.5) * step * 0.18;
+    const R = step * 0.115;
+    g.beginPath(); g.arc(cx, cy, R, 0, TAU); g.fill();
+    for (let k = 0; k < 5; k++) {
+      const an = (k / 5) * TAU + rnd() * 0.4;
+      g.beginPath();
+      g.arc(cx + Math.cos(an) * R * 2.05, cy + Math.sin(an) * R * 2.05, R * 0.82, 0, TAU);
+      g.fill();
+    }
   }
-  return {map:toTex(c)};
+  return { map: toTex(c) };
 }
 
 /* ------------------------------------------------------------
    斜披（僧祇支）：土黄底 + 绿松石菱形连环纹
    ------------------------------------------------------------ */
 function buildSash(size = 512) {
-  const c=makeCanvas(size,size),g=c.getContext('2d');g.fillStyle='#9A8144';g.fillRect(0,0,size,size);
-  const img=g.getImageData(0,0,size,size),d=img.data;
-  for(let y=0;y<size;y++)for(let x=0;x<size;x++){const n=fbm2(x/size*38,y/size*38,3,9.3),m=fbm2(x/size*5,y/size*5,4,27);const i=(y*size+x)*4;d[i]=clamp(d[i]+(n-.5)*28+(m-.5)*18,0,255);d[i+1]=clamp(d[i+1]+(n-.5)*25,0,255);d[i+2]=clamp(d[i+2]+(n-.5)*18,0,255);}g.putImageData(img,0,0);
-  g.strokeStyle='rgba(43,105,88,.82)';g.lineWidth=size*.010;const st=size/5;
-  for(let yy=-1;yy<6;yy++)for(let xx=-1;xx<6;xx++){const cx=(xx+.5)*st,cy=(yy+.5)*st;g.beginPath();g.moveTo(cx,cy-st*.38);g.lineTo(cx+st*.38,cy);g.lineTo(cx,cy+st*.38);g.lineTo(cx-st*.38,cy);g.closePath();g.stroke();}
-  g.globalAlpha=.18;g.fillStyle='#342820';const rnd=mulberry32(92);for(let i=0;i<170;i++){g.beginPath();g.arc(rnd()*size,rnd()*size,1+rnd()*8,0,TAU);g.fill();}g.globalAlpha=1;
-  return {map:toTex(c)};
+  const c = makeCanvas(size, size);
+  const g = c.getContext('2d');
+  g.fillStyle = '#CFBB6E'; g.fillRect(0, 0, size, size);
+  const img = g.getImageData(0, 0, size, size); const d = img.data;
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    const n = fbm2(x / size * 34, y / size * 34, 3, 9.3);
+    const i = (y * size + x) * 4;
+    d[i] = clamp(d[i] + (n - 0.5) * 30, 0, 255);
+    d[i + 1] = clamp(d[i + 1] + (n - 0.5) * 30, 0, 255);
+    d[i + 2] = clamp(d[i + 2] + (n - 0.5) * 24, 0, 255);
+  }
+  g.putImageData(img, 0, 0);
+  // 连环菱格
+  g.strokeStyle = '#3FBFA8'; g.lineWidth = size * 0.014; g.lineCap = 'round';
+  const N = 5, s = size / N;
+  for (let gy = -1; gy <= N; gy++) for (let gx = -1; gx <= N; gx++) {
+    const cx = gx * s + s * 0.5, cy = gy * s + s * 0.5;
+    // 菱形
+    g.beginPath();
+    g.moveTo(cx, cy - s * 0.42); g.lineTo(cx + s * 0.42, cy);
+    g.lineTo(cx, cy + s * 0.42); g.lineTo(cx - s * 0.42, cy);
+    g.closePath(); g.stroke();
+    // 内小菱
+    g.beginPath();
+    g.moveTo(cx, cy - s * 0.2); g.lineTo(cx + s * 0.2, cy);
+    g.lineTo(cx, cy + s * 0.2); g.lineTo(cx - s * 0.2, cy);
+    g.closePath(); g.stroke();
+    // 连接钩
+    g.beginPath(); g.arc(cx + s * 0.5, cy, s * 0.16, -0.9, 0.9); g.stroke();
+  }
+  return { map: toTex(c) };
 }
 
 /* ------------------------------------------------------------
    皮肤（肉色，细腻微颗粒）
    ------------------------------------------------------------ */
 function buildSkin(size = 256) {
-  const r=bake(size,(u,v)=>{
-    const micro=fbm2(u*90,v*90,3,12.2),m=fbm2(u*7,v*7,4,31.7);
-    const pore=worley2(u*42,v*46,67); const p=smoothstep(.16,.02,pore.f2-pore.f1);
-    const stain=smoothstep(.64,.90,fbm2(u*4,v*5,4,51));
-    const wear=smoothstep(.72,.94,fbm2(u*13,v*9,3,88));
-    const t=clamp(micro*.26+m*.62+p*.08,0,1);
-    let col=[lerp(0xC2,0xDF,t),lerp(0xA9,0xCC,t),lerp(0x88,0xB0,t)];
-    col=[lerp(col[0],0x8E,stain*.16),lerp(col[1],0x72,stain*.16),lerp(col[2],0x58,stain*.16)];
-    col=[lerp(col[0],0xD2,wear*.08),lerp(col[1],0xBD,wear*.08),lerp(col[2],0x99,wear*.08)];
-    return [col[0],col[1],col[2],clamp(.44+(micro-.5)*.22+p*.22+(wear-.5)*.07,0,1)];
+  const r = bake(size, (u, v) => {
+    const n = fbm2(u * 55, v * 55, 3, 12.2);
+    const m = fbm2(u * 6, v * 6, 3, 31.7);
+    const t = clamp(n * 0.4 + m * 0.6, 0, 1);
+    return [lerp(0xE8, 0xF6, t), lerp(0xCE, 0xE1, t), lerp(0xA9, 0xC0, t), clamp(0.5 + (n - 0.5) * 0.35, 0, 1)];
   });
-  return {map:toTex(r.canvas),normal:toDataTex(normalFromHeight(r.heights,size,.95))};
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 0.6)) };
 }
 
 /* ------------------------------------------------------------
@@ -261,13 +307,13 @@ function buildHalo(size = 1024) {
 
   // 环带定义： [r0, r1, 底色]
   const bands = [
-    [0.34, 0.50, '#8FA99C'],
-    [0.50, 0.53, '#3E6B61'],
-    [0.53, 0.71, '#B1B29B'],
-    [0.71, 0.74, '#466F64'],
-    [0.74, 0.905, '#88A79B'],
-    [0.905, 0.955, '#965044'],
-    [0.955, 1.00, '#76968C'],
+    [0.34, 0.50, '#8FD5C9'],
+    [0.50, 0.53, '#2E9B86'],
+    [0.53, 0.71, '#A8DED2'],
+    [0.71, 0.74, '#2E9B86'],
+    [0.74, 0.905, '#8FD5C9'],
+    [0.905, 0.955, '#C2553F'],
+    [0.955, 1.00, '#7FCBBD'],
   ];
   for (const [r0, r1, col] of bands) {
     g.beginPath();
@@ -287,12 +333,12 @@ function buildHalo(size = 1024) {
       g.fill();
     }
     g.beginPath(); g.arc(x, y, rad * 0.34, 0, TAU); g.fillStyle = coreCol; g.fill();
-    g.beginPath(); g.arc(x, y, rad * 0.15, 0, TAU); g.fillStyle = '#D9D0B8'; g.fill();
+    g.beginPath(); g.arc(x, y, rad * 0.15, 0, TAU); g.fillStyle = '#F2E6C8'; g.fill();
   }
   const rings = [
-    { r: 0.620, n: 22, rad: 0.070, p: '#4B756A', c: '#965044' },
-    { r: 0.825, n: 28, rad: 0.066, p: '#547F73', c: '#8E4A3F' },
-    { r: 0.435, n: 16, rad: 0.054, p: '#486E65', c: '#965044' },
+    { r: 0.620, n: 22, rad: 0.070, p: '#2E9B86', c: '#C2553F' },
+    { r: 0.825, n: 28, rad: 0.066, p: '#3AA890', c: '#B94E3A' },
+    { r: 0.435, n: 16, rad: 0.054, p: '#2E9B86', c: '#C2553F' },
   ];
   for (const ring of rings) {
     for (let i = 0; i < ring.n; i++) {
@@ -325,9 +371,9 @@ function buildHaloCrown(w = 640, h = 220) {
     g.closePath();
     g.fillStyle = col; g.fill();
   };
-  arc(w * 0.47, h * 0.86, '#934839');
-  arc(w * 0.40, h * 0.74, '#6D342B');
-  arc(w * 0.31, h * 0.60, '#A95B45');
+  arc(w * 0.47, h * 0.86, '#B84B33');
+  arc(w * 0.40, h * 0.74, '#8E3324');
+  arc(w * 0.31, h * 0.60, '#C6603F');
   /* 卷草纹 */
   g.strokeStyle = '#37302A'; g.lineWidth = h * 0.024; g.lineCap = 'round';
   for (let i = 0; i < 11; i++) {
@@ -340,7 +386,7 @@ function buildHaloCrown(w = 640, h = 220) {
     g.stroke();
   }
   /* 绿松石团点 */
-  g.fillStyle = '#5D8B7D';
+  g.fillStyle = '#43C0A8';
   for (let i = 0; i < 13; i++) {
     const t = i / 12;
     const x = cx + (t - 0.5) * w * 0.80;
@@ -365,88 +411,124 @@ function buildHaloCrown(w = 640, h = 220) {
    地面石板（参考 t17 广场）
    ------------------------------------------------------------ */
 function buildGroundStone(size = 512) {
-  const r=bake(size,(u,v)=>{
-    const macro=fbm2(u*4,v*4,5,17),grain=fbm2(u*110,v*110,3,22),ripple=ridge2(u*7,v*24,3,11);
-    const peb=worley2(u*34,v*34,31);const edge=smoothstep(.09,.0,peb.f1)*.28;
-    const t=clamp(macro*.48+grain*.28+ripple*.18+edge,0,1);
-    const a=[0x76,0x5A,0x3D],b=[0xBE,0x96,0x66];
-    return [lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t),clamp(macro*.35+grain*.2+ripple*.22+edge*.45,0,1)];
-  });
-  return {map:toTex(r.canvas,1),normal:toDataTex(normalFromHeight(r.heights,size,2.2))};
+  const c = makeCanvas(size, size);
+  const g = c.getContext('2d');
+  g.fillStyle = '#8C8F92'; g.fillRect(0, 0, size, size);
+  const rows = 16, cols = 4;
+  const rnd = mulberry32(11);
+  for (let r = 0; r < rows; r++) {
+    for (let cc = 0; cc < cols; cc++) {
+      const x = cc * (size / cols), y = r * (size / rows);
+      const v = 0.86 + rnd() * 0.26;
+      g.fillStyle = `rgb(${(0x92 * v) | 0},${(0x95 * v) | 0},${(0x99 * v) | 0})`;
+      g.fillRect(x + 1.5, y + 1.5, size / cols - 3, size / rows - 3);
+    }
+  }
+  // 颗粒
+  const img = g.getImageData(0, 0, size, size); const d = img.data;
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    const n = (fbm2(x / size * 80, y / size * 80, 3, 21) - 0.5) * 22;
+    const i = (y * size + x) * 4;
+    d[i] = clamp(d[i] + n, 0, 255); d[i + 1] = clamp(d[i + 1] + n, 0, 255); d[i + 2] = clamp(d[i + 2] + n, 0, 255);
+  }
+  g.putImageData(img, 0, 0);
+  const heights = new Float32Array(size * size);
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    const inX = (x % (size / cols)), inY = (y % (size / rows));
+    const edge = (inX < 2 || inX > size / cols - 3 || inY < 2 || inY > size / rows - 3) ? 0.2 : 0.8;
+    heights[y * size + x] = edge;
+  }
+  return { map: toTex(c, 1), normal: toDataTex(normalFromHeight(heights, size, 1.4)) };
 }
 
 /* ------------------------------------------------------------
    壁画（洞窟四壁，参考 t107）—— 千佛 + 飞天 + 卷草边饰
    ------------------------------------------------------------ */
 function buildMural(w = 1024, h = 1024) {
-  const c=makeCanvas(w,h),g=c.getContext('2d'),rnd=mulberry32(2307);
-  g.fillStyle='#766F58';g.fillRect(0,0,w,h);
-  /* 矿物底色先用多层半透明斑驳铺开，避免纯净平面。 */
-  for(let i=0;i<900;i++){
-    const x=rnd()*w,y=rnd()*h,rx=5+rnd()*54,ry=3+rnd()*34;
-    const cols=['rgba(111,118,91,.10)','rgba(129,80,55,.10)','rgba(56,73,69,.09)','rgba(199,164,104,.06)'];
-    g.fillStyle=cols[(rnd()*cols.length)|0];g.beginPath();g.ellipse(x,y,rx,ry,rnd()*TAU,0,TAU);g.fill();
+  const c = makeCanvas(w, h);
+  const g = c.getContext('2d');
+  g.fillStyle = '#7D8768'; g.fillRect(0, 0, w, h);
+  const img = g.getImageData(0, 0, w, h); const d = img.data;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const n = fbm2(x / w * 7, y / h * 7, 5, 3.3);
+    const n2 = fbm2(x / w * 48, y / h * 48, 3, 8.1);
+    const i = (y * w + x) * 4;
+    const k = (n - 0.5) * 46 + (n2 - 0.5) * 14;
+    d[i] = clamp(d[i] + k * 1.15, 0, 255);
+    d[i + 1] = clamp(d[i + 1] + k, 0, 255);
+    d[i + 2] = clamp(d[i + 2] + k * 0.75, 0, 255);
   }
-  /* 上下边饰：断续、错位、褪色。 */
-  const border=(y0,hh)=>{
-    g.globalAlpha=.68;g.fillStyle='#743F32';g.fillRect(0,y0,w,hh);
-    g.strokeStyle='rgba(205,177,112,.72)';g.lineWidth=hh*.07;
-    for(let i=0;i<34;i++){
-      if(rnd()<.12)continue;const x=i/34*w+(rnd()-.5)*9;
-      g.beginPath();g.moveTo(x,y0+hh*.78);g.bezierCurveTo(x+w/120,y0+hh*.12,x+w/80,y0+hh*.12,x+w/55,y0+hh*.78);g.stroke();
+  g.putImageData(img, 0, 0);
+
+  const rnd = mulberry32(23);
+  /* 上下卷草边饰 */
+  function border(y0, hh) {
+    g.fillStyle = '#8A3E2E'; g.fillRect(0, y0, w, hh);
+    g.strokeStyle = '#D6C489'; g.lineWidth = hh * 0.10;
+    for (let i = 0; i < 40; i++) {
+      const x = (i / 40) * w;
+      g.beginPath();
+      g.moveTo(x, y0 + hh * 0.82);
+      g.quadraticCurveTo(x + w / 80, y0 + hh * 0.12, x + w / 40, y0 + hh * 0.82);
+      g.stroke();
     }
-    g.globalAlpha=1;
-  };
-  border(0,h*.055);border(h*.945,h*.055);
+    g.fillStyle = '#3FA890';
+    for (let i = 0; i < 20; i++) {
+      g.beginPath(); g.arc((i + 0.5) / 20 * w, y0 + hh * 0.5, hh * 0.14, 0, TAU); g.fill();
+    }
+  }
+  border(0, h * 0.042);
+  border(h * 0.958, h * 0.042);
 
-  /* 叙事主带：不规则千佛与供养人，尺寸、姿态、缺损均不同。 */
-  const bodyCols=['#8F4E39','#70513F','#4E6667','#6D704E','#9B7641'];
-  const haloCols=['#566D61','#6D5848','#4C6870','#786346'];
-  const cols=8,rows=6,cw=w/cols,ch=h*.72/rows,y0=h*.16;
-  for(let r=0;r<rows;r++)for(let i=0;i<cols;i++){
-    if(rnd()<.10)continue;
-    const cx=(i+.5)*cw+(rnd()-.5)*cw*.22,cy=y0+(r+.5)*ch+(rnd()-.5)*ch*.18;
-    const sz=Math.min(cw,ch)*(.30+rnd()*.12),alpha=.48+rnd()*.30;
-    g.save();g.translate(cx,cy);g.rotate((rnd()-.5)*.12);g.globalAlpha=alpha;
-    g.fillStyle=haloCols[(r*2+i)%haloCols.length];g.beginPath();g.ellipse(0,-sz*.10,sz*.92,sz*1.02,0,0,TAU);g.fill();
-    g.strokeStyle='rgba(218,194,139,.48)';g.lineWidth=sz*.055;g.stroke();
-    g.fillStyle=bodyCols[(r+i*3)%bodyCols.length];g.beginPath();g.moveTo(-sz*.60,sz*.88);g.quadraticCurveTo(0,sz*.05,sz*.60,sz*.88);g.lineTo(sz*.45,sz*1.12);g.lineTo(-sz*.45,sz*1.12);g.closePath();g.fill();
-    g.fillStyle='#C8AD83';g.beginPath();g.ellipse(0,-sz*.22,sz*.24,sz*.30,0,0,TAU);g.fill();
-    g.strokeStyle='rgba(55,45,37,.65)';g.lineWidth=sz*.04;g.beginPath();g.moveTo(-sz*.12,-sz*.24);g.lineTo(sz*.12,-sz*.24);g.stroke();
+  /* 千佛：小而密（14 x 12） */
+  const cols = 14, rows = 12;
+  const cw = w / cols, ch = (h * 0.70) / rows, y0 = h * 0.245;
+  const bodyCols = ['#A85A3C', '#7B5340', '#4E6B7A', '#6E7A4E'];
+  const haloCols = ['#5C7F6C', '#7A5A48', '#4E6E80', '#8A6A46'];
+  for (let r = 0; r < rows; r++) {
+    for (let i = 0; i < cols; i++) {
+      const cx = i * cw + cw / 2, cy = y0 + r * ch + ch / 2;
+      const sz = Math.min(cw, ch) * 0.40;
+      g.beginPath(); g.arc(cx, cy - sz * 0.18, sz * 0.98, 0, TAU);
+      g.fillStyle = haloCols[(r * 3 + i) % 4]; g.fill();
+      g.beginPath(); g.arc(cx, cy - sz * 0.18, sz * 0.80, 0, TAU);
+      g.strokeStyle = 'rgba(230,210,160,0.55)'; g.lineWidth = sz * 0.07; g.stroke();
+      g.beginPath();
+      g.moveTo(cx - sz * 0.66, cy + sz * 0.88);
+      g.quadraticCurveTo(cx, cy + sz * 0.10, cx + sz * 0.66, cy + sz * 0.88);
+      g.closePath();
+      g.fillStyle = bodyCols[(r + i * 2) % 4]; g.fill();
+      g.beginPath(); g.arc(cx, cy - sz * 0.36, sz * 0.27, 0, TAU);
+      g.fillStyle = '#E7CCA5'; g.fill();
+      g.beginPath(); g.arc(cx, cy - sz * 0.45, sz * 0.24, Math.PI, TAU);
+      g.fillStyle = '#312F2B'; g.fill();
+    }
+  }
+
+  /* 上方飞天带 */
+  for (let i = 0; i < 8; i++) {
+    const cx = (i + 0.5) * (w / 8) + (rnd() - 0.5) * 30;
+    const cy = h * 0.135 + (rnd() - 0.5) * 26;
+    const sz = w * 0.030;
+    g.save(); g.translate(cx, cy); g.rotate((rnd() - 0.5) * 0.55);
+    g.fillStyle = '#CFA845';
+    g.beginPath(); g.ellipse(0, 0, sz * 1.1, sz * 0.40, 0, 0, TAU); g.fill();
+    g.beginPath(); g.arc(-sz * 0.88, -sz * 0.18, sz * 0.25, 0, TAU); g.fillStyle = '#E8D0A8'; g.fill();
+    g.strokeStyle = '#C0654A'; g.lineWidth = sz * 0.13;
+    g.beginPath(); g.moveTo(sz * 0.6, -sz * 0.1);
+    g.quadraticCurveTo(sz * 2.0, -sz * 1.1, sz * 3.4, -sz * 0.25); g.stroke();
     g.restore();
   }
 
-  /* 飞天与飘带以多次低透明笔触构成。 */
-  for(let i=0;i<7;i++){
-    const cx=(i+.55)/7*w+(rnd()-.5)*35,cy=h*(.105+rnd()*.055),sz=w*(.026+rnd()*.010);
-    g.save();g.translate(cx,cy);g.rotate((rnd()-.5)*.7);g.globalAlpha=.58+rnd()*.18;
-    g.fillStyle='#B9934E';g.beginPath();g.ellipse(0,0,sz*1.15,sz*.36,0,0,TAU);g.fill();
-    g.fillStyle='#C7AA83';g.beginPath();g.arc(-sz*.82,-sz*.14,sz*.23,0,TAU);g.fill();
-    g.strokeStyle='#9D5542';g.lineWidth=sz*.10;
-    for(let q=0;q<3;q++){g.beginPath();g.moveTo(sz*.55,(-.14+q*.14)*sz);g.bezierCurveTo(sz*1.5,-sz*(.7-q*.2),sz*2.4,sz*(.35+q*.15),sz*3.2,sz*(.05+q*.15));g.stroke();}
-    g.restore();
+  /* 做旧剥落 */
+  g.globalAlpha = 0.45;
+  for (let i = 0; i < 420; i++) {
+    const x = rnd() * w, y = rnd() * h, sz = rnd() * 18 + 3;
+    g.fillStyle = rnd() > 0.5 ? 'rgba(152,142,118,0.5)' : 'rgba(74,66,54,0.38)';
+    g.beginPath(); g.ellipse(x, y, sz, sz * (0.4 + rnd() * 0.8), rnd() * 3, 0, TAU); g.fill();
   }
-
-  /* 颜料脱落、粉化、裂纹和积尘。 */
-  g.globalCompositeOperation='source-over';
-  for(let i=0;i<620;i++){
-    const x=rnd()*w,y=rnd()*h,sz=2+rnd()*24;
-    g.fillStyle=rnd()>.47?'rgba(168,151,119,.34)':'rgba(56,49,41,.25)';
-    g.beginPath();g.ellipse(x,y,sz,sz*(.28+rnd()*.75),rnd()*TAU,0,TAU);g.fill();
-  }
-  g.strokeStyle='rgba(58,47,38,.34)';
-  for(let i=0;i<52;i++){
-    let x=rnd()*w,y=rnd()*h;g.lineWidth=.5+rnd()*1.3;g.beginPath();g.moveTo(x,y);
-    for(let k=0;k<5+rnd()*7;k++){x+=(rnd()-.5)*34;y+=8+rnd()*26;g.lineTo(x,y);}g.stroke();
-  }
-  /* 全局微粒和色偏，用图像数据把矢量边缘打散。 */
-  const img=g.getImageData(0,0,w,h),d=img.data;
-  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
-    const i=(y*w+x)*4,n=fbm2(x/w*80,y/h*80,3,8.1),m=fbm2(x/w*6,y/h*6,4,3.3);
-    const k=(n-.5)*15+(m-.5)*18;d[i]=clamp(d[i]+k*.92,0,255);d[i+1]=clamp(d[i+1]+k*.78,0,255);d[i+2]=clamp(d[i+2]+k*.58,0,255);
-  }
-  g.putImageData(img,0,0);
-  return {map:toTex(c)};
+  g.globalAlpha = 1;
+  return { map: toTex(c) };
 }
 
 /* 白粉底（上壁画之前的一层） */
@@ -462,15 +544,32 @@ function buildWhitewash(size = 256) {
 
 /* 天空：青绿渐变 + 卷云 */
 function buildSky(w = 1024, h = 512) {
-  const c=makeCanvas(w,h),g=c.getContext('2d');
-  const grad=g.createLinearGradient(0,0,0,h);grad.addColorStop(0,'#7B8589');grad.addColorStop(.34,'#9CA19D');grad.addColorStop(.68,'#BCAF9A');grad.addColorStop(1,'#D0BA91');g.fillStyle=grad;g.fillRect(0,0,w,h);
-  const img=g.getImageData(0,0,w,h),d=img.data;
-  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
-    const u=x/w,v=y/h;const cloud=smoothstep(.55,.84,fbm2(u*6,v*10,6,2.9))*smoothstep(.03,.42,v)*smoothstep(.97,.50,v);
-    const dust=smoothstep(.48,1,v)*(.20+.32*fbm2(u*4,v*5,4,61));const grain=(fbm2(u*110,v*110,2,17)-.5)*5;
-    const i=(y*w+x)*4;d[i]=clamp(lerp(d[i],229,cloud*.39+dust*.22)+grain,0,255);d[i+1]=clamp(lerp(d[i+1],220,cloud*.38+dust*.20)+grain*.8,0,255);d[i+2]=clamp(lerp(d[i+2],202,cloud*.35+dust*.17)+grain*.55,0,255);
-  }g.putImageData(img,0,0);
-  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.mapping=THREE.EquirectangularReflectionMapping;return {map:t};
+  const c = makeCanvas(w, h);
+  const g = c.getContext('2d');
+  const grad = g.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0.00, '#1E8FA6');
+  grad.addColorStop(0.35, '#37AFC0');
+  grad.addColorStop(0.62, '#63C8D0');
+  grad.addColorStop(0.82, '#9BDCDC');
+  grad.addColorStop(1.00, '#CFE7DF');
+  g.fillStyle = grad; g.fillRect(0, 0, w, h);
+  const img = g.getImageData(0, 0, w, h); const d = img.data;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const u = x / w, v = y / h;
+      let cl = fbm2(u * 7, v * 13, 6, 2.9);
+      cl = smoothstep(0.50, 0.86, cl) * smoothstep(0.02, 0.35, v) * smoothstep(0.95, 0.55, v);
+      const i = (y * w + x) * 4;
+      d[i] = lerp(d[i], 250, cl * 0.85);
+      d[i + 1] = lerp(d[i + 1], 252, cl * 0.85);
+      d[i + 2] = lerp(d[i + 2], 250, cl * 0.85);
+    }
+  }
+  g.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.mapping = THREE.EquirectangularReflectionMapping;
+  return { map: t };
 }
 
 /* 树叶（带 alpha 的簇叶片） */

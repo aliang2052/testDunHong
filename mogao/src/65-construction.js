@@ -24,11 +24,6 @@ const CONSTRUCTION = {
   cutCircleGeo: null,
   cutArchGeo: null,
   sectionBackdrop: null,
-  workers: [],
-  workPlatform: null,
-  scaffoldWorkers: [],
-  activeWalkComponent: null,
-  wallBowls: null, wallStrokes: null, wallDrips: null, wallFront: null,
 };
 
 const _cgM = new THREE.Matrix4();
@@ -132,7 +127,7 @@ function makeHammerRig(scale = 1) {
 
 function makeTrowelRig(scale = 1, brush = false) {
   const root = new THREE.Group();
-  const metal = new THREE.MeshStandardMaterial({ color: 0x777C7E, roughness: 0.46, metalness: 0.66 });
+  const metal = new THREE.MeshStandardMaterial({ color: 0xC9CDD1, roughness: 0.2, metalness: 0.85 });
   const wood = new THREE.MeshStandardMaterial({ map: TEX.wood.map, normalMap: TEX.wood.normal, roughness: 0.82 });
   const bristle = new THREE.MeshStandardMaterial({ color: brush ? 0x8D4A2D : 0xBD8B58, roughness: 0.96 });
   if (brush) {
@@ -158,78 +153,6 @@ function makeTrowelRig(scale = 1, brush = false) {
   root.visible = false;
   root.traverse(o => { if (o.isMesh) o.castShadow = true; });
   return root;
-}
-
-
-function makeWorkerRig(seed = 1) {
-  const root = new THREE.Group();
-  const cloth = new THREE.MeshStandardMaterial({ color: seed % 3 === 0 ? 0x6D3E2B : (seed % 3 === 1 ? 0x8A5A36 : 0x5B4A34), roughness: 0.98 });
-  const skin = new THREE.MeshStandardMaterial({ color: 0xA66E49, roughness: 0.92 });
-  const dark = new THREE.MeshStandardMaterial({ color: 0x2F261F, roughness: 1.0 });
-  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 0.52, 4, 8), cloth);
-  torso.position.y = 1.03; torso.scale.set(0.92, 1, 0.62); root.add(torso);
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 9), skin);
-  head.position.y = 1.66; head.scale.set(0.92, 1.05, 0.90); root.add(head);
-  const cap = new THREE.Mesh(new THREE.SphereGeometry(0.185, 10, 6, 0, TAU, 0, Math.PI * 0.58), dark);
-  cap.position.y = 1.71; cap.rotation.x = -0.08; root.add(cap);
-  const limb = (r, len, mat) => {
-    const pivot = new THREE.Group();
-    const mesh = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.88, r, len, 7), mat);
-    mesh.position.y = -len * 0.5;
-    pivot.add(mesh); return pivot;
-  };
-  const armL = limb(0.075, 0.72, skin), armR = limb(0.075, 0.72, skin);
-  armL.position.set(-0.25, 1.35, 0); armR.position.set(0.25, 1.35, 0);
-  root.add(armL, armR);
-  const legL = limb(0.095, 0.84, cloth), legR = limb(0.095, 0.84, cloth);
-  legL.position.set(-0.12, 0.78, 0); legR.position.set(0.12, 0.78, 0);
-  root.add(legL, legR);
-  const tool = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.032, 0.95, 6), dark);
-  tool.rotation.z = Math.PI / 2; tool.position.set(0, -0.70, 0); armR.add(tool);
-  root.userData = { armL, armR, legL, legR, head, tool, seed };
-  root.visible = false;
-  root.traverse(o => { if (o.isMesh) o.castShadow = true; });
-  return root;
-}
-
-function poseWorker(worker, phase, mode = 'carry') {
-  const u = worker.userData;
-  const swing = Math.sin(phase * TAU);
-  if (mode === 'hammer') {
-    u.armR.rotation.z = -1.10 + Math.sin(phase * TAU) * 0.78;
-    u.armR.rotation.x = -0.35;
-    u.armL.rotation.z = 0.55 + Math.sin(phase * TAU + 0.7) * 0.24;
-    u.legL.rotation.x = 0.10; u.legR.rotation.x = -0.12;
-  } else if (mode === 'trowel') {
-    u.armR.rotation.z = -0.82 + swing * 0.28;
-    u.armR.rotation.x = -0.72;
-    u.armL.rotation.z = 0.28;
-    u.legL.rotation.x = -0.10; u.legR.rotation.x = 0.10;
-  } else if (mode === 'haul') {
-    u.armR.rotation.z = -0.60; u.armL.rotation.z = 0.60;
-    u.legL.rotation.x = swing * 0.46; u.legR.rotation.x = -swing * 0.46;
-  } else {
-    u.armR.rotation.z = -0.30 + swing * 0.35;
-    u.armL.rotation.z = 0.30 - swing * 0.35;
-    u.legL.rotation.x = swing * 0.42; u.legR.rotation.x = -swing * 0.42;
-  }
-  worker.rotation.z = Math.sin(phase * TAU * 0.5) * 0.025;
-}
-
-function makeSuspendedPlatform() {
-  const G = new THREE.Group();
-  const wood = new THREE.MeshStandardMaterial({ map: TEX.wood.map, normalMap: TEX.wood.normal, color: 0x7A4B2B, roughness: 0.94 });
-  const rope = new THREE.MeshStandardMaterial({ color: 0x5D4731, roughness: 1 });
-  for (let i = 0; i < 5; i++) {
-    const plank = new THREE.Mesh(new THREE.BoxGeometry(1.18, 0.12, 3.2), wood);
-    plank.position.x = (i - 2) * 1.08; plank.castShadow = plank.receiveShadow = true; G.add(plank);
-  }
-  for (const x of [-2.4, 2.4]) for (const z of [-1.35, 1.35]) {
-    const r = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.032, 8.2, 6), rope);
-    r.position.set(x, 4.0, z); G.add(r);
-  }
-  G.visible = false;
-  return G;
 }
 
 function pointOnFront(y, lateral = 0, outP = new THREE.Vector3(), outN = new THREE.Vector3()) {
@@ -298,15 +221,6 @@ function buildConstruction(scene, tower, walkway) {
     G.add(rig);
     CONSTRUCTION.tools.push(rig);
   }
-
-  /* 工人和吊篮提供真实尺度与因果动作。 */
-  for (let i = 0; i < 6; i++) {
-    const worker = makeWorkerRig(i + 1);
-    worker.scale.setScalar(1.0 + (i % 2) * 0.04);
-    G.add(worker); CONSTRUCTION.workers.push(worker);
-  }
-  const workPlatform = makeSuspendedPlatform();
-  G.add(workPlatform); CONSTRUCTION.workPlatform = workPlatform;
 
   /* 主剖切面：带洞腔开口的实体岩层截面，避免剖切后露出纯背景 */
   {
@@ -378,8 +292,7 @@ function buildConstruction(scene, tower, walkway) {
     const wood = new THREE.MeshStandardMaterial({ map: TEX.wood.map, normalMap: TEX.wood.normal, roughness: 0.9 });
     for (let i = 0; i < 14; i++) {
       const b = new THREE.Mesh(new THREE.BoxGeometry(8.5, 0.34, 0.42), wood);
-      const yard = walkway && walkway.userData.materialYard ? walkway.userData.materialYard : new THREE.Vector3(-43, 0.55, CLIFF_Z + 34);
-      b.position.set(yard.x + (i % 2) * 0.55, yard.y + Math.floor(i / 2) * 0.38, yard.z + (i % 3) * 0.62);
+      b.position.set(61 + (i % 2) * 0.5, 0.3 + Math.floor(i / 2) * 0.38, CLIFF_Z + 31 + (i % 3) * 0.55);
       b.rotation.y = (hash3(i, 2, 5) - 0.5) * 0.09;
       b.castShadow = true;
       grp.add(b);
@@ -404,9 +317,9 @@ function buildConstruction(scene, tower, walkway) {
     const mat = new THREE.MeshStandardMaterial({ color: 0x19130F, roughness: 1 });
     if (BUDDHA.parts.pegList) {
       for (const peg of BUDDHA.parts.pegList) {
-        const h = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.10, 16), mat);
+        const h = new THREE.Mesh(new THREE.CylinderGeometry(0.31, 0.31, 0.18, 16), mat);
         h.quaternion.copy(peg.userData.finalQuaternion);
-        h.position.copy(peg.userData.finalPosition).addScaledVector(peg.userData.axis, -0.86);
+        h.position.copy(peg.userData.finalPosition).addScaledVector(peg.userData.axis, -1.55);
         holes.add(h);
       }
     }
@@ -419,7 +332,7 @@ function buildConstruction(scene, tower, walkway) {
   {
     const geo = new THREE.SphereGeometry(1, 10, 7);
     const mat = new THREE.MeshStandardMaterial({ map: TEX.mudCoarse.map, normalMap: TEX.mudCoarse.normal, color: 0xA68C68, roughness: 0.9 });
-    const mesh = new THREE.InstancedMesh(geo, mat, 72);
+    const mesh = new THREE.InstancedMesh(geo, mat, 64);
     mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     mesh.castShadow = true;
     mesh.frustumCulled = false;
@@ -430,7 +343,7 @@ function buildConstruction(scene, tower, walkway) {
       const lat = (rnd() - 0.5) * 1.36;
       const p = new THREE.Vector3(), n = new THREE.Vector3();
       pointOnFront(y, lat, p, n);
-      data.push({ p: p.clone(), n: n.clone(), threshold: clamp(y / BUDDHA_H, 0, 1), s: 0.18 + rnd() * 0.34, phase: rnd(), lat });
+      data.push({ p: p.clone(), n: n.clone(), threshold: clamp(y / BUDDHA_H, 0, 1), s: 0.55 + rnd() * 0.78, phase: rnd(), lat });
     }
     mesh.userData.data = data;
     G.add(mesh);
@@ -499,7 +412,7 @@ function buildConstruction(scene, tower, walkway) {
       const lat = (rnd() - 0.5) * 1.2;
       const p = new THREE.Vector3(), n = new THREE.Vector3();
       pointOnFront(y, lat, p, n);
-      data.push({ p: p.clone(), n: n.clone(), s: 0.035 + rnd() * 0.070, order: rnd(), phase: rnd() });
+      data.push({ p: p.clone(), n: n.clone(), s: 0.15 + rnd() * 0.25, order: rnd(), phase: rnd() });
     }
     mesh.userData.data = data;
     G.add(mesh);
@@ -536,27 +449,6 @@ function buildConstruction(scene, tower, walkway) {
   CONSTRUCTION.wallBrushes = [makeTrowelRig(0.92, true), makeTrowelRig(0.82, true), makeTrowelRig(0.74, true)];
   for (const o of [...CONSTRUCTION.mudTrowels, CONSTRUCTION.polishTrowel, CONSTRUCTION.paintBrush, ...CONSTRUCTION.wallBrushes]) G.add(o);
 
-  /* 颜料碗、湿刷痕与滴落，让壁画阶段有持续施工信息。 */
-  {
-    const shelf=new THREE.Group();
-    const wood=new THREE.MeshStandardMaterial({map:TEX.wood.map,normalMap:TEX.wood.normal,color:0x6B452C,roughness:.94});
-    const bowlMat=new THREE.MeshStandardMaterial({color:0x4A3428,roughness:.92});
-    const colors=[0xB36B42,0x436B68,0xA98B4D,0xE3D8BC,0x6A4937];
-    const board=new THREE.Mesh(new THREE.BoxGeometry(7.8,.18,1.65),wood);board.position.y=.10;board.castShadow=board.receiveShadow=true;shelf.add(board);
-    colors.forEach((c,i)=>{
-      const bowl=new THREE.Mesh(new THREE.CylinderGeometry(.46,.36,.24,24,1,true),bowlMat);bowl.position.set((i-2)*1.35,.31,0);bowl.castShadow=true;shelf.add(bowl);
-      const pigment=new THREE.Mesh(new THREE.CylinderGeometry(.36,.36,.055,24),new THREE.MeshStandardMaterial({color:c,roughness:.78}));pigment.position.set((i-2)*1.35,.43,0);shelf.add(pigment);
-    });
-    shelf.visible=false;G.add(shelf);CONSTRUCTION.wallBowls=shelf;
-
-    const strokeMat=new THREE.MeshStandardMaterial({color:0xA98661,roughness:.88,transparent:true,opacity:.76,depthWrite:false});
-    const strokes=new THREE.InstancedMesh(new THREE.BoxGeometry(2.85,.34,.075),strokeMat,42);strokes.instanceMatrix.setUsage(THREE.DynamicDrawUsage);strokes.frustumCulled=false;G.add(strokes);CONSTRUCTION.wallStrokes=strokes;hideAllInstances(strokes);
-    const dripMat=new THREE.MeshStandardMaterial({color:0xA98661,roughness:.82,transparent:true,opacity:.70,depthWrite:false});
-    const drips=new THREE.InstancedMesh(new THREE.CylinderGeometry(.035,.055,1,7),dripMat,28);drips.instanceMatrix.setUsage(THREE.DynamicDrawUsage);drips.frustumCulled=false;G.add(drips);CONSTRUCTION.wallDrips=drips;hideAllInstances(drips);
-    const frontMat=new THREE.MeshStandardMaterial({color:0xF1DFC1,emissive:0x8A4A25,emissiveIntensity:.72,roughness:.76,transparent:true,opacity:.94,depthWrite:false});
-    const front=new THREE.Mesh(new THREE.BoxGeometry(33.5,.34,.12),frontMat);front.visible=false;front.frustumCulled=false;G.add(front);CONSTRUCTION.wallFront=front;
-  }
-
   /* 低开销冲击补光 */
   const flash = new THREE.PointLight(0xFFB45B, 0, 22, 2.1);
   scene.add(flash);
@@ -568,7 +460,7 @@ function buildConstruction(scene, tower, walkway) {
       floor.userData.finalPosition = new THREE.Vector3(0, floor.userData.baseY, 0);
       floor.userData.finalQuaternion = new THREE.Quaternion();
       const side = i % 2 === 0 ? -1 : 1;
-      floor.userData.stagingPosition = new THREE.Vector3(side * (14.0 + i * 1.15), floor.userData.baseY + 4.0 + i * 0.35, 22 + i * 0.75);
+      floor.userData.stagingPosition = new THREE.Vector3(side * (34 + i * 4.5), floor.userData.baseY + 8 + i * 1.1, 18 + i * 2.2);
       floor.userData.stagingQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler((i - 4) * 0.035, side * (0.36 + i * 0.028), side * 0.08));
       floor.userData.assemblyDelay = (8 - i) * 0.055; // 拆解时先揭顶，复原时由下往上锁定
     });
@@ -580,16 +472,12 @@ function buildConstruction(scene, tower, walkway) {
 
 function hideConstructionTransient() {
   for (const rig of CONSTRUCTION.tools) rig.visible = false;
-  for (const worker of CONSTRUCTION.workers) worker.visible = false;
-  if (CONSTRUCTION.workPlatform) CONSTRUCTION.workPlatform.visible = false;
-  CONSTRUCTION.activeWalkComponent = null;
   if (CONSTRUCTION.sectionPlane) {
     CONSTRUCTION.sectionPlane.material.opacity = 0;
     CONSTRUCTION.sectionPlane.visible = false;
     CONSTRUCTION.sectionEdge.material.opacity = 0;
     CONSTRUCTION.sectionEdge.visible = false;
   }
-  if (CONSTRUCTION.sectionBackdrop) { CONSTRUCTION.sectionBackdrop.visible = false; CONSTRUCTION.sectionBackdrop.material.opacity = 0; }
   if (CONSTRUCTION.cutFront) { CONSTRUCTION.cutFront.visible = false; CONSTRUCTION.cutFront.material.opacity = 0; }
   if (CONSTRUCTION.walkPile) CONSTRUCTION.walkPile.visible = false;
   if (CONSTRUCTION.pegHoles) CONSTRUCTION.pegHoles.visible = false;
@@ -597,56 +485,28 @@ function hideConstructionTransient() {
   if (CONSTRUCTION.dust) { CONSTRUCTION.dust.points.visible = false; CONSTRUCTION.dust.points.material.opacity = 0; }
   if (CONSTRUCTION.pigment) { CONSTRUCTION.pigment.points.visible = false; CONSTRUCTION.pigment.points.material.opacity = 0; }
   if (CONSTRUCTION.flash) CONSTRUCTION.flash.intensity = 0;
-  if (CONSTRUCTION.wallBowls) CONSTRUCTION.wallBowls.visible = false;
-  if (CONSTRUCTION.wallStrokes) hideAllInstances(CONSTRUCTION.wallStrokes);
-  if (CONSTRUCTION.wallDrips) hideAllInstances(CONSTRUCTION.wallDrips);
-  if (CONSTRUCTION.wallFront) CONSTRUCTION.wallFront.visible=false;
 }
 
 function updateTowerConstruction(t) {
   const tower = CONSTRUCTION.tower;
   if (!tower || !tower.userData.floors) return { k: 0, moving: 0 };
-  const floors = tower.userData.floors;
-  const n = floors.length;
-  const opening = t < 15.2;
-  const closing = t >= 110.6;
+  const k = CURVE_TOWER(t); // 0 完整，1 拆开
   let moving = 0;
-  tower.visible = opening || closing || t < 2.6 || t >= 113.2;
-
-  floors.forEach((floor, i) => {
+  tower.visible = true;
+  tower.userData.floors.forEach((floor) => {
+    const delay = floor.userData.assemblyDelay || 0;
+    const q = clamp((k - delay) / Math.max(0.001, 1 - delay), 0, 1);
+    const e = easeInOut(q);
     const fp = floor.userData.finalPosition;
     const sp = floor.userData.stagingPosition;
-    let q = 0;
-    if (opening) {
-      const p = clamp(t / 2.35, 0, 1);
-      const order = n - 1 - i; // 自上而下拆
-      q = clamp(p * (n + 0.65) - order, 0, 1);
-      floor.visible = q < 0.995;
-      const e = easeInOut(q);
-      floor.position.lerpVectors(fp, sp, e);
-      floor.position.y += Math.sin(e * Math.PI) * 3.6;
-      floor.quaternion.slerpQuaternions(floor.userData.finalQuaternion, floor.userData.stagingQuaternion, e);
-      floor.scale.setScalar(1 - Math.sin(e * Math.PI) * 0.025);
-    } else if (closing) {
-      const p = clamp((t - 110.6) / 2.95, 0, 1);
-      const order = i; // 自下而上装
-      q = clamp(p * (n + 0.70) - order, 0, 1);
-      floor.visible = q > 0.004;
-      const e = easeInOut(q);
-      floor.position.lerpVectors(sp, fp, e);
-      floor.position.y += Math.sin(e * Math.PI) * 3.3;
-      floor.quaternion.slerpQuaternions(floor.userData.stagingQuaternion, floor.userData.finalQuaternion, e);
-      floor.scale.setScalar(0.97 + 0.03 * easeOut(q));
-    } else {
-      floor.visible = false;
-      floor.position.copy(sp);
-      floor.quaternion.copy(floor.userData.stagingQuaternion);
-      floor.scale.setScalar(1);
-      q = 1;
-    }
+    floor.position.lerpVectors(fp, sp, e);
+    floor.position.y += Math.sin(e * Math.PI) * (5.5 + floor.userData.baseY * 0.04);
+    floor.quaternion.slerpQuaternions(floor.userData.finalQuaternion, floor.userData.stagingQuaternion, e);
+    floor.scale.setScalar(1 - Math.sin(e * Math.PI) * 0.035);
+    floor.visible = q < 0.986 || t < 2.55 || t > 110.7;
     if (q > 0.015 && q < 0.985) moving++;
   });
-  return { k: CURVE_TOWER(t), moving };
+  return { k, moving };
 }
 
 function updateWalkwayConstruction(t) {
@@ -655,55 +515,46 @@ function updateWalkwayConstruction(t) {
   const k = CURVE_WALK(t);
   const components = walkway.userData.components;
   const maxOrder = Math.max(1, ...components.map(c => c.userData.order || 0));
-  let active = null, moving = 0, built = 0;
+  let active = null;
+  let moving = 0;
+  let built = 0;
   for (const c of components) {
     const order = (c.userData.order || 0) / maxOrder;
-    // 同时飞行的构件过多会像黑色鸟群。缩窄单件安装窗口，让工序按批次读得清。
-    const q = clamp((k - order * 0.94) / 0.055, 0, 1);
+    const q = clamp((k - order * 0.86) / 0.14, 0, 1);
     c.visible = q > 0.001;
     if (q <= 0.001) {
       c.position.copy(c.userData.startPosition);
       c.quaternion.copy(c.userData.startQuaternion);
-      c.scale.copy(c.userData.finalScale).multiplyScalar(0.03);
+      c.scale.setScalar(0.03);
       continue;
     }
-    const e = easeInOut(q);
-    if (e < 0.52) {
-      const a = easeInOut(e / 0.52);
-      c.position.lerpVectors(c.userData.startPosition, c.userData.hoistPosition, a);
-      c.position.y += Math.sin(a * Math.PI) * 2.2;
-      c.quaternion.slerpQuaternions(c.userData.startQuaternion, c.userData.finalQuaternion, a * 0.35);
-    } else {
-      const b = easeInOut((e - 0.52) / 0.48);
-      c.position.lerpVectors(c.userData.hoistPosition, c.userData.finalPosition, b);
-      c.position.x += Math.sin(b * Math.PI) * Math.sin(t * 2.1 + order * 8) * 0.65;
-      c.quaternion.slerpQuaternions(c.userData.startQuaternion, c.userData.finalQuaternion, 0.35 + b * 0.65);
-    }
-    const ss = lerp(0.10, 1, easeOut(q));
+    const e = easeOut(q);
+    c.position.lerpVectors(c.userData.startPosition, c.userData.finalPosition, e);
+    c.position.y += Math.sin(e * Math.PI) * (6.5 + order * 4.5);
+    c.quaternion.slerpQuaternions(c.userData.startQuaternion, c.userData.finalQuaternion, easeInOut(q));
+    const ss = lerp(0.08, 1, easeOut(q));
     c.scale.copy(c.userData.finalScale).multiplyScalar(ss);
-    if (q > 0.04 && q < 0.97) { active = c; moving++; }
-    if (q >= 0.97) built++;
+    if (q > 0.05 && q < 0.94) { active = c; moving++; }
+    if (q >= 0.94) built++;
   }
-  CONSTRUCTION.activeWalkComponent = active;
 
   const pile = CONSTRUCTION.walkPile;
   if (pile) {
-    pile.visible = t >= 19.4 && t < 25.1;
-    const yard = walkway.userData.materialYard || _cgA.set(-43, 0.5, CLIFF_Z + 34);
+    pile.visible = t >= 19.6 && t < 25.0;
     pile.children.forEach((o, i) => {
       if (o === CONSTRUCTION.walkRope || o === CONSTRUCTION.walkHook) return;
-      o.visible = i / 14 > k * 0.82 - 0.10;
+      o.visible = i / 14 > k * 0.72 - 0.12;
     });
-    const top = walkway.userData.hoistTop || _cgA.set(-23.5, 41, CLIFF_Z + 16.5);
-    const target = active ? active.getWorldPosition(_cgB) : _cgB.copy(yard).add(_cgC.set(0, 1.2, 0));
+    const top = _cgA.set(58, 27, CLIFF_Z + 28);
+    const target = active ? active.getWorldPosition(_cgB) : _cgB.set(59, 1.2, CLIFF_Z + 31);
     const arr = CONSTRUCTION.walkRope.geometry.attributes.position.array;
     arr[0] = top.x; arr[1] = top.y; arr[2] = top.z;
     arr[3] = target.x; arr[4] = target.y; arr[5] = target.z;
     CONSTRUCTION.walkRope.geometry.attributes.position.needsUpdate = true;
     CONSTRUCTION.walkRope.visible = !!active;
     CONSTRUCTION.walkHook.visible = !!active;
-    CONSTRUCTION.walkHook.position.copy(target).add(_cgC.set(0, 0.38, 0));
-    CONSTRUCTION.walkHook.rotation.y = t * 1.6;
+    CONSTRUCTION.walkHook.position.copy(target).add(_cgC.set(0, 0.6, 0));
+    CONSTRUCTION.walkHook.rotation.y = t * 1.8;
   }
   return { k, moving, built };
 }
@@ -765,8 +616,8 @@ function updateExcavationBlocks(t, d) {
       if (y > archTop + 0.18) { show = false; }
       const order = (row / 11) * 0.64 + (Math.abs(col - 4.5) / 5) * 0.23 + seed * 0.05;
       const life = d.k - order;
-      show = show && life > 0 && life < 0.105 && seed > 0.13;
-      age = clamp(life / 0.105, 0, 1);
+      show = show && life > 0 && life < 0.145;
+      age = clamp(life / 0.145, 0, 1);
       p.set(x + sx * age * 3.0, y - age * age * 7.5, CLIFF_Z + 0.28 + age * (4.5 + seed * 4.5));
     } else if (d.stage === 'tunnel') {
       p.copy(d.center).add(_cgB.set(sx * 6.2, sy * 6.0, sz * 1.8));
@@ -797,7 +648,7 @@ function updateExcavationBlocks(t, d) {
     }
     if (!show) continue;
     q.setFromEuler(new THREE.Euler(age * (2 + seed * 4), age * (3 + sx * 5), age * (1 + sy * 4)));
-    const ss = (0.18 + seed * 0.38) * (1 - smoothstep(0.31, 0.47, age));
+    const ss = (0.34 + seed * 0.72) * (1 - smoothstep(0.34, 0.48, age));
     setInstance(mesh, i, p, q, _cgS.set(ss * (1 + Math.abs(sx)), ss * (0.7 + Math.abs(sy)), ss * (0.75 + Math.abs(sz))));
     visible++;
   }
@@ -877,26 +728,43 @@ function updateExcavationTools(t, d) {
 }
 
 function updateSectionAndFront(t, d) {
-  /*
-    横屏版本不再放置一整张剖切平面或发光圆盘。它们在正面镜头中会变成
-    巨大的黑色矩形/圆环。洞腔直接由真实崖体裁切、内壁和落石来说明。
-  */
-  if (CONSTRUCTION.sectionPlane) {
-    CONSTRUCTION.sectionPlane.visible = false;
-    CONSTRUCTION.sectionPlane.material.opacity = 0;
+  const sectionOn = t >= 26.7 && t < 51.6;
+  const plane = CONSTRUCTION.sectionPlane;
+  if (plane) {
+    const sx = CURVE_SECTION(t);
+    if (sx < 9000) {
+      plane.position.x = sx;
+      CONSTRUCTION.sectionEdge.position.x = sx;
+    }
+    plane.visible = sectionOn;
+    CONSTRUCTION.sectionEdge.visible = sectionOn;
+    const fade = sectionOn ? smoothstep(26.7, 27.4, t) * smoothstep(51.6, 50.8, t) : 0;
+    // 只保留极轻的切面提示；主体由后方岩层背景封闭，避免切面像一块挡板。
+    plane.material.opacity = 0.035 * fade;
+    plane.material.depthWrite = false;
+    CONSTRUCTION.sectionEdge.material.opacity = 0.24 * fade;
+    if (CONSTRUCTION.sectionBackdrop) {
+      CONSTRUCTION.sectionBackdrop.visible = sectionOn;
+      CONSTRUCTION.sectionBackdrop.material.opacity = 0.96 * fade;
+      CONSTRUCTION.sectionBackdrop.material.depthWrite = fade > 0.08;
+    }
   }
-  if (CONSTRUCTION.sectionEdge) {
-    CONSTRUCTION.sectionEdge.visible = false;
-    CONSTRUCTION.sectionEdge.material.opacity = 0;
+  const front = CONSTRUCTION.cutFront;
+  if (!front) return;
+  front.visible = !!d && (d.stage === 'main' || d.stage === 'arch');
+  if (!front.visible) { front.material.opacity = 0; return; }
+  if (d.stage === 'main') {
+    if (front.geometry !== CONSTRUCTION.cutCircleGeo) front.geometry = CONSTRUCTION.cutCircleGeo;
+    front.rotation.set(-Math.PI / 2, 0, 0);
+    front.position.set(0, d.cy + 0.18, -0.8);
+    front.scale.set(1, 0.70, 1);
+  } else {
+    if (front.geometry !== CONSTRUCTION.cutArchGeo) front.geometry = CONSTRUCTION.cutArchGeo;
+    front.rotation.set(0, 0, 0);
+    front.position.set(0, CAVE.yArch - 0.15, -1.8);
+    front.scale.set(1.45, 0.48, 1);
   }
-  if (CONSTRUCTION.sectionBackdrop) {
-    CONSTRUCTION.sectionBackdrop.visible = false;
-    CONSTRUCTION.sectionBackdrop.material.opacity = 0;
-  }
-  if (CONSTRUCTION.cutFront) {
-    CONSTRUCTION.cutFront.visible = false;
-    CONSTRUCTION.cutFront.material.opacity = 0;
-  }
+  front.material.opacity = 0.18 + Math.sin(t * 5) * 0.035;
 }
 
 function updatePegConstruction(t) {
@@ -915,21 +783,21 @@ function updatePegConstruction(t) {
     p.visible = k > 0.001;
     p.scale.setScalar(k > 0.001 ? 1 : 0.001);
     p.quaternion.copy(p.userData.finalQuaternion);
-    p.position.copy(p.userData.finalPosition).addScaledVector(p.userData.axis, (1 - easeOut(k)) * 1.55);
+    p.position.copy(p.userData.finalPosition).addScaledVector(p.userData.axis, (1 - easeOut(k)) * 3.2);
     if (k > 0 && k < 1) { active = i; activeK = k; }
   }
   if (active >= 0) {
     const tool = CONSTRUCTION.tools[0];
     const peg = pegs[active];
     tool.visible = true;
-    tool.position.copy(peg.position).addScaledVector(peg.userData.axis, 0.34);
+    tool.position.copy(peg.position).addScaledVector(peg.userData.axis, 1.6);
     orientZTo(tool.quaternion, peg.userData.axis);
-    tool.scale.setScalar(0.52);
+    tool.scale.setScalar(0.72);
     const ph = frac((t - (56.45 + active * 0.52)) / 0.31);
     tool.userData.hammerPivot.rotation.x = ph < 0.68 ? lerp(-0.9, 0.1, easeInOut(ph / 0.68)) : lerp(0.1, -0.55, (ph - 0.68) / 0.32);
     const impact = pulse01((t - (56.45 + active * 0.52)) / 0.31, 0.24);
     if (CONSTRUCTION.flash) {
-      CONSTRUCTION.flash.position.copy(peg.userData.finalPosition).addScaledVector(peg.userData.axis, 0.10);
+      CONSTRUCTION.flash.position.copy(peg.userData.finalPosition).addScaledVector(peg.userData.axis, -1.2);
       CONSTRUCTION.flash.intensity = impact * 170;
     }
     return { impact, active: active + activeK };
@@ -938,12 +806,12 @@ function updatePegConstruction(t) {
 }
 
 const MUD_WINDOWS = [
-  { a: 62.4, b: 66.0, fromP: PHASE.ROCK, toP: PHASE.CRACK, fromM: 0.48, toM: 0.26, color: 0xA18D70 },
-  { a: 67.0, b: 72.0, fromP: PHASE.CRACK, toP: PHASE.COARSE, fromM: 0.26, toM: 0.08, color: 0x9D8767 },
-  { a: 72.0, b: 77.2, fromP: PHASE.COARSE, toP: PHASE.MID, fromM: 0.08, toM: 0.03, color: 0xB09A7D },
-  { a: 77.0, b: 83.4, fromP: PHASE.MID, toP: PHASE.FINE, fromM: 0.03, toM: 0.00, color: 0xCBB79B },
-  { a: 83.4, b: 89.6, fromP: PHASE.FINE, toP: PHASE.POLISH, fromM: 0.00, toM: 0.00, color: 0xDECBAF },
-  { a: 90.2, b: 93.2, fromP: PHASE.POLISH, toP: PHASE.PAINT, fromM: 0.00, toM: 0.00, color: 0xD7B57B, dir: -1 },
+  { a: 62.4, b: 66.0, fromP: PHASE.ROCK, toP: PHASE.CRACK, fromM: 1.00, toM: 0.72, color: 0xA18D70 },
+  { a: 67.0, b: 72.0, fromP: PHASE.CRACK, toP: PHASE.COARSE, fromM: 0.72, toM: 0.44, color: 0x9D8767 },
+  { a: 72.0, b: 77.2, fromP: PHASE.COARSE, toP: PHASE.MID, fromM: 0.44, toM: 0.26, color: 0xB09A7D },
+  { a: 77.0, b: 83.4, fromP: PHASE.MID, toP: PHASE.FINE, fromM: 0.26, toM: 0.08, color: 0xCBB79B },
+  { a: 83.4, b: 89.6, fromP: PHASE.FINE, toP: PHASE.POLISH, fromM: 0.08, toM: 0.00, color: 0xDECBAF },
+  { a: 90.2, b: 93.5, fromP: PHASE.POLISH, toP: PHASE.PAINT, fromM: 0.00, toM: 0.00, color: 0xD7B57B, dir: -1 },
 ];
 
 function activeMudWindow(t) {
@@ -963,8 +831,8 @@ function updateMudPatches(t, w) {
     const rel = w.k - threshold;
     if (rel < -0.08 || rel > 0.18) continue;
     const age = clamp((rel + 0.08) / 0.26, 0, 1);
-    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(0.72 + d.phase * 0.34, 0.035, easeOut(age)));
-    p.x += Math.sin(age * Math.PI) * (d.phase - 0.5) * 0.55;
+    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(2.7 + d.phase * 1.6, 0.12, easeOut(age)));
+    p.x += Math.sin(age * Math.PI) * (d.phase - 0.5) * 1.4;
     const q = orientZTo(_cgQ, d.n);
     q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, d.phase * TAU)));
     const squash = lerp(0.5, 0.18, age);
@@ -1001,7 +869,7 @@ function updateStraw(t) {
     const d = mesh.userData.data[i];
     const qv = clamp((k - d.order * 0.78) / 0.22, 0, 1);
     if (qv <= 0 || (qv >= 1 && t > 72.2)) continue;
-    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(1.15, 0.045, easeOut(qv)));
+    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(3.2, 0.18, easeOut(qv)));
     p.x += Math.sin(qv * Math.PI) * Math.cos(d.spin) * 1.3;
     const tangent = new THREE.Vector3(Math.cos(d.spin), Math.sin(d.spin) * 0.7, 0.3).normalize();
     tangent.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(_cgForward, d.n));
@@ -1020,7 +888,7 @@ function updateCotton(t) {
     const d = mesh.userData.data[i];
     const qv = clamp((k - d.order * 0.72) / 0.28, 0, 1);
     if (qv <= 0) continue;
-    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(0.95, 0.040, easeOut(qv)));
+    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(2.8, 0.16, easeOut(qv)));
     p.y += Math.sin(qv * Math.PI) * (0.5 + d.phase);
     orientZTo(_cgQ, d.n);
     const ss = d.s * (1 - smoothstep(0.78, 1, qv) * 0.72);
@@ -1038,7 +906,7 @@ function updateDroplets(t) {
     const d = mesh.userData.data[i];
     const age = frac(k * 2.0 + d.phase);
     if (age > 0.82) continue;
-    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(0.85, 0.035, easeInOut(age)));
+    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(2.5, 0.10, easeInOut(age)));
     p.y += (1 - age) * (0.6 + d.order) - age * age * 0.9;
     orientZTo(_cgQ, d.n);
     const ss = d.s * (1 - smoothstep(0.65, 0.85, age));
@@ -1067,8 +935,8 @@ function updateSurfaceTools(t, w) {
       const local = frac((t - w.a) / 1.9 + i * 0.43);
       const y = lerp(3.2, 33.0, w.dir === -1 ? 1 - w.k : w.k) + Math.sin(local * TAU) * 1.4 + (i - 0.5) * 2.5;
       const lat = Math.sin(t * 1.55 + i * 2.3) * 0.54;
-      placeSurfaceTool(tool, clamp(y, 2.5, 33.4), lat, 0.12, -0.15 + Math.sin(t * 2.4 + i) * 0.34);
-      tool.scale.setScalar(i === 0 ? 0.30 : 0.26);
+      placeSurfaceTool(tool, clamp(y, 2.5, 33.4), lat, 0.65, -0.15 + Math.sin(t * 2.4 + i) * 0.34);
+      tool.scale.setScalar(i === 0 ? 0.66 : 0.52);
     });
   }
   if (t >= 85.0 && t < 90.0) {
@@ -1077,8 +945,8 @@ function updateSurfaceTools(t, w) {
     const k = windowK(t, 85.0, 89.6);
     const y = lerp(19.5, 33.0, k) + Math.sin(t * 3.4) * 1.6;
     const lat = Math.sin(t * 2.1) * 0.46;
-    placeSurfaceTool(tool, y, lat, 0.08, Math.sin(t * 3.6) * 0.55);
-    tool.scale.setScalar(0.32);
+    placeSurfaceTool(tool, y, lat, 0.42, Math.sin(t * 3.6) * 0.55);
+    tool.scale.setScalar(0.78);
   }
   if (t >= 90.2 && t < 93.7) {
     const tool = CONSTRUCTION.paintBrush;
@@ -1086,8 +954,8 @@ function updateSurfaceTools(t, w) {
     const k = windowK(t, 90.2, 93.5);
     const y = lerp(34.0, 5.5, k) + Math.sin(t * 4.0) * 0.8;
     const lat = Math.sin(t * 2.5) * 0.55;
-    placeSurfaceTool(tool, y, lat, 0.10, Math.sin(t * 5.1) * 0.26);
-    tool.scale.setScalar(0.30);
+    placeSurfaceTool(tool, y, lat, 0.55, Math.sin(t * 5.1) * 0.26);
+    tool.scale.setScalar(0.72);
     updatePigmentCloud(t, tool.position, 0xD6A13A, 0.72);
   }
 }
@@ -1110,9 +978,9 @@ function updatePigmentCloud(t, center, color, opacity) {
 }
 
 function wallTransitionAt(t) {
-  if (t >= 95.4 && t < 99.35) return { from: 0, to: 1, k: windowK(t, 95.4, 99.35), mode: 1, label: 'wall-mud' };
-  if (t >= 99.35 && t < 103.45) return { from: 1, to: 2, k: windowK(t, 99.35, 103.45), mode: 2, label: 'whitewash' };
-  if (t >= 103.45 && t < 108.6) return { from: 2, to: 3, k: windowK(t, 103.45, 108.6), mode: 3, label: 'mural' };
+  if (t >= 95.4 && t < 100.0) return { from: 0, to: 1, k: windowK(t, 95.4, 100.0), mode: 1, label: 'wall-mud' };
+  if (t >= 100.0 && t < 103.6) return { from: 1, to: 2, k: windowK(t, 100.0, 103.6), mode: 2, label: 'whitewash' };
+  if (t >= 103.6 && t < 108.6) return { from: 2, to: 3, k: windowK(t, 103.6, 108.6), mode: 3, label: 'mural' };
   return null;
 }
 
@@ -1128,143 +996,56 @@ function wallSnakePoint(k, lane, out) {
 }
 
 function updateWallConstruction(t) {
-  const w=wallTransitionAt(t);
-  for(const b of CONSTRUCTION.wallBrushes)b.visible=false;
-  if(!w){clearWallTransition();return null;}
-  setWallTransition(w.from,w.to,w.k,w.mode,t);
-  CONSTRUCTION.wallBrushes.forEach((brush,i)=>{
-    brush.visible=true;const kk=clamp(w.k+(i-1)*.025,0,1),p=wallSnakePoint(kk,i-1,_cgA);
-    brush.position.copy(p).add(new THREE.Vector3(0,0,.10));
-    brush.quaternion.setFromEuler(new THREE.Euler(Math.PI/2,0,(i-1)*.12+Math.sin(t*4+i)*.18));
-    brush.scale.setScalar(1.05+i*.10);
+  const w = wallTransitionAt(t);
+  for (const b of CONSTRUCTION.wallBrushes) b.visible = false;
+  if (!w) {
+    clearWallTransition();
+    return null;
+  }
+  setWallTransition(w.from, w.to, w.k, w.mode, t);
+  CONSTRUCTION.wallBrushes.forEach((brush, i) => {
+    brush.visible = true;
+    const kk = clamp(w.k + (i - 1) * 0.025, 0, 1);
+    const p = wallSnakePoint(kk, i - 1, _cgA);
+    brush.position.copy(p);
+    brush.quaternion.setFromEuler(new THREE.Euler(Math.PI / 2, 0, (i - 1) * 0.12 + Math.sin(t * 4 + i) * 0.18));
+    brush.scale.setScalar(0.78 + i * 0.08);
   });
-  const color=w.label==='mural'?0xA96845:(w.label==='whitewash'?0xF0E4CF:0x9A7455);
-  updatePigmentCloud(t,CONSTRUCTION.wallBrushes[1].position,color,.62);
-
-  if(CONSTRUCTION.wallBowls){
-    CONSTRUCTION.wallBowls.visible=true;
-    CONSTRUCTION.wallBowls.position.set(-7.0,3.10,CAVE.zBack+3.2);
-    CONSTRUCTION.wallBowls.rotation.y=.08;
-  }
-  if(CONSTRUCTION.wallStrokes){
-    const mesh=CONSTRUCTION.wallStrokes;mesh.material.color.setHex(color);mesh.material.opacity=w.label==='whitewash'?.62:.72;
-    for(let i=0;i<mesh.count;i++){
-      const kk=clamp(w.k-i*.0065,0,1),lane=(i%3)-1,p=wallSnakePoint(kk,lane*.32,_cgA);
-      p.z=CAVE.zBack+.095;
-      const band=Math.floor(clamp(kk,0,.999)*7),dir=band%2===0?1:-1;
-      _cgQ.setFromEuler(new THREE.Euler(0,0,dir*(.03+Math.sin(i*1.7)*.025)));
-      const fade=clamp(1-i/mesh.count,0,1),sx=1.05+1.15*fade;
-      setInstance(mesh,i,p,_cgQ,_cgS.set(sx,.90+fade*.72,1));
-    }
-    mesh.instanceMatrix.needsUpdate=true;
-  }
-  if(CONSTRUCTION.wallFront){
-    const front=CONSTRUCTION.wallFront;front.visible=true;front.material.color.setHex(color);
-    if(w.mode===1){front.position.set(0,lerp(1.5,39.5,w.k),CAVE.zBack+.16);front.scale.set(1,1,1);front.rotation.z=0;}
-    else if(w.mode===2){front.position.set(0,lerp(39.5,1.5,w.k),CAVE.zBack+.16);front.scale.set(1,1,1);front.rotation.z=0;}
-    else {const p=wallSnakePoint(w.k,0,_cgA);front.position.copy(p);front.position.z=CAVE.zBack+.16;front.scale.set(.18,1,1);front.rotation.z=(Math.floor(w.k*7)%2?-.035:.035);}
-    front.material.opacity=w.mode===3?.78:.96;
-  }
-  if(CONSTRUCTION.wallDrips){
-    const mesh=CONSTRUCTION.wallDrips;mesh.material.color.setHex(color);mesh.material.opacity=w.label==='whitewash'?.50:.62;
-    for(let i=0;i<mesh.count;i++){
-      const lag=(i/mesh.count)*.13,kk=clamp(w.k-lag,0,1),p=wallSnakePoint(kk,(i%4-1.5)*.22,_cgA);
-      const len=.18+hash3(i,47,3)*(.55+(w.label==='mural'?.35:.20));
-      p.y-=len*.5+.10;p.z=CAVE.zBack+.13;
-      setInstance(mesh,i,p,_cgQ.identity(),_cgS.set(1,len,1));
-    }
-    mesh.instanceMatrix.needsUpdate=true;
-  }
+  const color = w.label === 'mural' ? 0xBE5638 : (w.label === 'whitewash' ? 0xF1E8D2 : 0xA78C6E);
+  updatePigmentCloud(t, CONSTRUCTION.wallBrushes[1].position, color, 0.68);
   return w;
 }
 
 function updateHairConstruction(t) {
   const hair = BUDDHA.parts.hair;
-  if (!hair || !hair.userData.elements) return;
-  const elements = hair.userData.elements;
-  let mode = 'full', k = 1;
+  if (!hair || !hair.userData.baseMatrices) return;
+  const base = hair.userData.baseMatrices;
+  const ys = hair.userData.revealY;
+  let mode = 'full';
+  let k = 1;
   if (t >= 15.2 && t < 51.6) { mode = 'carve'; k = CURVE_CARVE(t); }
   else if (t >= 56.0 && t < 90.2) { mode = 'hidden'; }
   else if (t >= 90.2 && t < 93.6) { mode = 'paint'; k = windowK(t, 90.2, 93.6); }
+  for (let i = 0; i < hair.count; i++) {
+    if (mode === 'hidden') {
+      hideInstance(hair, i);
+      continue;
+    }
+    if (mode === 'carve' && ys[i] < k) { hideInstance(hair, i); continue; }
+    if (mode === 'paint') {
+      const threshold = 1 - clamp((ys[i] - 30.2) / 5.4, 0, 1);
+      const q = clamp((k - threshold * 0.72) / 0.28, 0, 1);
+      if (q <= 0) { hideInstance(hair, i); continue; }
+      base[i].decompose(_cgP, _cgQ, _cgS);
+      _cgP.add(_cgA.set(0, (1 - q) * 0.8, (1 - q) * 0.7));
+      _cgS.multiplyScalar(easeOut(q));
+      setInstance(hair, i, _cgP, _cgQ, _cgS);
+      continue;
+    }
+    hair.setMatrixAt(i, base[i]);
+  }
+  hair.instanceMatrix.needsUpdate = true;
   hair.visible = mode !== 'hidden';
-  for (const el of elements) {
-    const y = el.userData.revealY || 30.2;
-    const final = el.userData.finalScale || _cgS.set(1, 1, 1);
-    if (mode === 'hidden') { el.visible = false; continue; }
-    if (mode === 'carve') {
-      const reveal = clamp((1 - k) * 1.18 - (y - 30.2) / 5.5, 0, 1);
-      el.visible = reveal > 0.02;
-      el.scale.copy(final).multiplyScalar(Math.max(0.001, easeOut(reveal)));
-    } else if (mode === 'paint') {
-      const threshold = 1 - clamp((y - 30.2) / 5.4, 0, 1);
-      const q = clamp((k - threshold * 0.74) / 0.26, 0, 1);
-      el.visible = q > 0.01;
-      el.scale.copy(final).multiplyScalar(Math.max(0.001, easeOut(q)));
-    } else {
-      el.visible = true; el.scale.copy(final);
-    }
-  }
-}
-
-function updateConstructionCrew(t, d, w, wall) {
-  const workers = CONSTRUCTION.workers || [];
-  workers.forEach(o => { o.visible = false; });
-  const platform = CONSTRUCTION.workPlatform;
-  if (platform) platform.visible = false;
-
-  if (t >= 19.6 && t < 24.8) {
-    const k = CURVE_WALK(t);
-    const levels = CONSTRUCTION.walkway && CONSTRUCTION.walkway.userData.levels;
-    for (let i = 0; i < Math.min(3, workers.length); i++) {
-      const W = workers[i];
-      const L = levels ? levels[Math.min(levels.length - 1, Math.floor(k * levels.length + i * 0.3))] : null;
-      if (!L) continue;
-      W.visible = true;
-      W.position.set(lerp(L.x0 + 4, L.x1 - 4, (i + 1) / 4), L.y + 0.15, L.z1 - 0.8);
-      W.rotation.y = i % 2 ? -1.35 : 1.35;
-      poseWorker(W, t * 0.7 + i * 0.19, i === 0 ? 'haul' : 'carry');
-    }
-    return;
-  }
-
-  if (d) {
-    // 顶拱和主窟下降开凿改用侧边作业位，避免吊篮横在镜头与石胎之间。
-    const usePlatform = d.stage === 'door' || d.stage === 'tunnel' || d.stage === 'lower';
-    if (platform) {
-      platform.visible = usePlatform;
-      platform.position.set(d.center.x, d.center.y - 2.35, d.center.z + (d.normal.z > 0.5 ? 3.0 : 1.2));
-      platform.rotation.set(0, 0, d.normal.y > 0.5 ? 0.10 : 0);
-      platform.scale.setScalar(0.86);
-    }
-    for (let i = 0; i < Math.min(2, workers.length); i++) {
-      const W = workers[i]; W.visible = true;
-      if (usePlatform) {
-        W.position.set(d.center.x + (i - 0.5) * 1.75, d.center.y - 2.18, d.center.z + (d.normal.z > 0.5 ? 3.2 : 1.4));
-      } else {
-        const side = i === 0 ? -1 : 1;
-        W.position.set(d.center.x + side * (3.0 + Math.abs(d.center.x) * 0.10), d.center.y - 1.35, d.center.z + 1.0);
-      }
-      W.rotation.y = d.normal.z > 0.5 ? Math.PI : (i % 2 ? 1.1 : -1.1);
-      poseWorker(W, (t - d.start) * 1.25 + i * 0.27, 'hammer');
-    }
-    return;
-  }
-
-  const pegOn = t >= 56.2 && t < 64.8;
-  const surfaceOn = !!w || (t >= 83.3 && t < 93.7);
-  if (pegOn || surfaceOn) {
-    /* 佛身近景已有锤、桩、泥团、塑刀等因果动作；小人和吊篮会破坏尺度与轮廓。 */
-    return;
-  }
-
-  if (wall) {
-    for (let i = 0; i < 2; i++) {
-      const W = workers[i]; W.visible = true;
-      const p = wallSnakePoint(clamp(wall.k + (i - 0.5) * 0.04, 0, 1), i - 0.5, _cgA);
-      W.position.set(p.x + (i ? 1.0 : -1.0), Math.max(0.4, p.y - 1.35), p.z + 1.5);
-      W.rotation.y = Math.PI; poseWorker(W, t * 1.1 + i * 0.3, 'trowel');
-    }
-  }
 }
 
 function updateConstruction(t) {
@@ -1288,7 +1069,6 @@ function updateConstruction(t) {
   updateSurfaceTools(t, w);
   const wall = updateWallConstruction(t);
   updateHairConstruction(t);
-  updateConstructionCrew(t, d, w, wall);
 
   const impact = Math.max(impactExc, peg.impact);
   if (CONSTRUCTION.flash && CONSTRUCTION.flash.intensity < 1) CONSTRUCTION.flash.intensity = 0;

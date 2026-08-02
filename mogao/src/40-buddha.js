@@ -23,8 +23,8 @@ function buildBuddha() {
 
   /* ---------------- 材质 ---------------- */
   const matSkin = makeStageMaterial({
-    finalMap: TEX.skin.map, finalTint: new THREE.Color(0.88, 0.79, 0.67), finalScale: [1/7, 1/7], mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
-    roughSet: [1.0, 0.97, 0.94, 0.88, 0.78, 0.66, 0.74], normalScale: 1.0,
+    finalMap: TEX.skin.map, finalTint: new THREE.Color(0.955, 0.855, 0.715), finalScale: [1/7, 1/7], mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
+    roughSet: [1.0, 0.97, 0.94, 0.86, 0.72, 0.52, 0.46], normalScale: 1.0,
   });
   const matRobe = makeStageMaterial({
     finalMap: TEX.robeRed.map, finalScale: [1/5, 1/5], mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
@@ -49,7 +49,7 @@ function buildBuddha() {
   });
   const matHair = makeStageMaterial({
     finalMap: TEX.skin.map, finalScale: [1/1.2, 1/1.2],
-    finalTint: new THREE.Color(0.16, 0.105, 0.060),
+    finalTint: new THREE.Color(0.052, 0.048, 0.052),
     mudScale: [1/1.4, 1/1.4], rockScale: [1/1.6, 1/1.6],
     roughSet: [1.0, 0.97, 0.94, 0.86, 0.72, 0.55, 0.78], normalScale: 0.4,
   });
@@ -158,14 +158,11 @@ function buildBuddha() {
   const mBelt = new THREE.Mesh(gBelt, matBelt);
   G.add(mBelt); BUDDHA.parts.belt = mBelt;
 
-  /* 真实凸起的衣褶、领口与袈裟边缘。 */
-  buildRobeRelief(G, matRobeLower, matRobe, matSash, matSkin);
-
   /* ---------------- 8. 螺发 ---------------- */
   buildHair(G, matHair);
 
   /* ---------------- 9. 五官 ---------------- */
-  buildFace(G, matSkin);
+  buildFace(G);
 
   /* ---------------- 10. 手臂与手 ---------------- */
   buildArms(G, matSkin, matInner, matRobe);
@@ -184,151 +181,64 @@ function buildBuddha() {
 }
 
 /* ------------------------------------------------------------
-   衣褶实体层：沿佛身曲面铺设低矮圆脊，解决仅靠纹理/法线的平面感。
-   ------------------------------------------------------------ */
-function buildRobeRelief(G, matLower, matRobe, matSash, matSkin) {
-  const group = new THREE.Group();
-  group.name = 'RobeRelief';
-  const addCurve = (samples, radius, mat, lift = 0.20, closed = false) => {
-    const pts = [];
-    for (const smp of samples) {
-      const u = (smp.u + 1) % 1;
-      const P = bodyPoint(u, yv(smp.y), new THREE.Vector3());
-      const N = bodyNormal(u, yv(smp.y), new THREE.Vector3()).normalize();
-      pts.push(P.addScaledVector(N, lift + (smp.lift || 0)));
-    }
-    if (pts.length < 3) return;
-    const geo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, closed, 'catmullrom', 0.34), Math.max(28, pts.length * 3), radius, 8, closed);
-    scaleUV(geo, 1.8); attachRockMorph(geo, 0.985);
-    const m = new THREE.Mesh(geo, mat); m.castShadow = true; m.receiveShadow = true; group.add(m);
-  };
-
-  /* 下裙十二道宽缓 U 形褶，边缘向两侧抬升。 */
-  for (let r = 0; r < 12; r++) {
-    const baseY = 2.2 + r * 1.38;
-    const samples = [];
-    for (let i = 0; i <= 26; i++) {
-      const q = i / 26, u = lerp(-0.205, 0.205, q);
-      const edge = Math.pow(Math.abs(q - 0.5) * 2, 1.55);
-      const y = baseY + edge * (1.35 + r * 0.035) + Math.sin(q * Math.PI * 2 + r * 0.52) * 0.055;
-      samples.push({ u, y });
-    }
-    addCurve(samples, 0.080 + r * 0.003, matLower, 0.24);
-  }
-
-  /* 胸腹袈裟层叠，向画面右肩汇聚。 */
-  for (let r = 0; r < 7; r++) {
-    const samples = [];
-    for (let i = 0; i <= 24; i++) {
-      const q = i / 24;
-      const u = lerp(-0.18, 0.17, q);
-      const y = 20.7 + r * 0.78 + q * (2.2 + r * 0.10) + Math.sin(q * Math.PI) * 0.34;
-      samples.push({ u, y });
-    }
-    addCurve(samples, 0.075, r < 3 ? matRobe : matSash, 0.28);
-  }
-
-  /* 领圈与颈部三道塑泥收口。 */
-  for (let r = 0; r < 3; r++) {
-    const samples = [];
-    for (let i = 0; i <= 28; i++) {
-      const q = i / 28, u = lerp(-0.18, 0.18, q);
-      const y = 29.15 + r * 0.20 + Math.pow(Math.abs(q - 0.5) * 2, 1.8) * 0.10;
-      samples.push({ u, y });
-    }
-    addCurve(samples, 0.052, matSkin, 0.13);
-  }
-
-  /* 袈裟竖边，从肩部自然落到腹前。 */
-  const edge = [];
-  for (let i = 0; i <= 30; i++) {
-    const q = i / 30;
-    edge.push({ u: lerp(-0.19, -0.11, q), y: lerp(28.55, 17.6, q) + Math.sin(q * Math.PI) * 0.28 });
-  }
-  addCurve(edge, 0.095, matRobe, 0.31);
-
-  G.add(group); BUDDHA.parts.robeRelief = group;
-}
-
-/* ------------------------------------------------------------
-   螺发：扁圆螺髻与同心环
+   螺发：沿头皮球面排布的小球（InstancedMesh）
    ------------------------------------------------------------ */
 function buildHair(G, mat) {
-  const group = new THREE.Group();
-  group.name = 'SculptedHair';
-  const elements = [];
-
-  /* 连续发帽只提供暗部，不承担可见纹样。 */
-  const capGeo = buildLayerGeometry({
-    uSeg: 112, vSeg: 64, v0: yv(30.20), v1: 1.0,
-    offset: 0.075, uvScale: [1.8, 1.8],
-    mask: (u, v) => {
-      const y = v * H;
-      const du = ucyc(u, 0.0);
-      const front = Math.cos(du * TAU) * 0.5 + 0.5;
-      const hairline = lerp(30.45, 33.62, Math.pow(front, 0.26));
-      return smoothstep(hairline - 0.16, hairline + 0.18, y);
-    },
-  });
-  const cap = new THREE.Mesh(capGeo, mat);
-  cap.castShadow = true;
-  cap.userData.revealY = 30.2;
-  cap.userData.finalScale = new THREE.Vector3(1, 1, 1);
-  group.add(cap); elements.push(cap);
-
-  /* 每一行把扁圆螺髻与同心环合并成一个 Mesh，既有雕塑感又控制 draw call。 */
-  const zAxis = new THREE.Vector3(0, 0, 1);
-  const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3();
-  const rows = 16;
+  const beads = [];
+  const P = new THREE.Vector3(), N = new THREE.Vector3();
+  /* 发际线（米）：正面 33.58、侧面 32.55、后脑 30.55 —— 依 t8 实测 */
+  const rows = 24;
   for (let r = 0; r < rows; r++) {
-    const tt = r / Math.max(1, rows - 1);
-    const y0 = lerp(30.55, 35.18, Math.pow(tt, 0.92));
-    const ringR = PROF_RX(y0);
-    const frontSpan = lerp(0.46, 0.30, tt);
-    const count = Math.max(7, Math.round(TAU * ringR * frontSpan * 1.65));
-    const parts = [];
-    for (let i = 0; i < count; i++) {
-      const u = -frontSpan + (frontSpan * 2) * ((i + (r % 2) * 0.5) / count);
+    const t = r / (rows - 1);
+    const y = lerp(30.45, 35.46, Math.pow(t, 0.94));
+    const v = yv(y);
+    const ringR = PROF_RX(y);
+    const cols = Math.max(6, Math.round(TAU * ringR / 0.36));
+    for (let c = 0; c < cols; c++) {
+      const u = (c + (r % 2) * 0.5) / cols;
       const du = ucyc(u, 0.0);
-      const frontness = Math.cos(du * TAU) * 0.5 + 0.5;
-      const hairline = lerp(30.45, 33.60, Math.pow(frontness, 0.28));
-      if (y0 < hairline) continue;
-      const P = bodyPoint((u + 1) % 1, yv(y0), new THREE.Vector3());
-      const N = bodyNormal((u + 1) % 1, yv(y0), new THREE.Vector3()).normalize();
-      const size = 0.145 + hash3(r, i, 91) * 0.028;
-      Q.setFromUnitVectors(zAxis, N);
-      M.compose(P.clone().addScaledVector(N, 0.105), Q, S.set(size * 1.15, size * 1.15, size * 0.52));
-      const dome = new THREE.SphereGeometry(1, 9, 7, 0, TAU, 0, Math.PI * 0.72);
-      dome.applyMatrix4(M); parts.push(dome);
-      M.compose(P.clone().addScaledVector(N, 0.165), Q, S.set(size, size, size));
-      const ring1 = new THREE.TorusGeometry(0.68, 0.115, 6, 14);
-      ring1.applyMatrix4(M); parts.push(ring1);
-      const ring2 = new THREE.TorusGeometry(0.36, 0.080, 5, 12);
-      ring2.applyMatrix4(M); parts.push(ring2);
+      const frontness = Math.cos(du * TAU) * 0.5 + 0.5;   // 1 = 正前
+      const hairline = lerp(30.60, 33.58, Math.pow(frontness, 0.25));
+      if (y < hairline) continue;
+      bodyPoint(u, v, P);
+      bodyNormal(u, v, N);
+      const jitter = (hash3(r * 13, c * 7, 3) - 0.5) * 0.04;
+      P.addScaledVector(N, 0.108 + jitter);
+      beads.push({ p: P.clone(), n: N.clone(), s: 0.163 + hash3(c, r, 9) * 0.034 });
     }
-    if (!parts.length) continue;
-    const geo = mergeGeometries(parts);
-    scaleUV(geo, 1.1); attachRockMorph(geo, 0.97);
-    const row = new THREE.Mesh(geo, mat);
-    row.castShadow = true;
-    row.userData.revealY = y0;
-    row.userData.finalScale = new THREE.Vector3(1, 1, 1);
-    group.add(row); elements.push(row);
   }
+  const bg = new THREE.SphereGeometry(1, 7, 6);
+  scaleUV(bg, 0.6);
+  const inst = new THREE.InstancedMesh(bg, mat, beads.length);
+  inst.castShadow = true;
+  const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3();
+  const up = new THREE.Vector3(0, 1, 0);
+  const baseMatrices = [];
+  const revealY = [];
+  beads.forEach((b, i) => {
+    Q.setFromUnitVectors(up, b.n);
+    S.set(b.s, b.s * 0.80, b.s);
+    M.compose(b.p, Q, S);
+    inst.setMatrixAt(i, M);
+    baseMatrices.push(M.clone());
+    revealY.push(b.p.y);
+  });
+  inst.userData.baseMatrices = baseMatrices;
+  inst.userData.revealY = revealY;
+  inst.instanceMatrix.needsUpdate = true;
+  attachRockMorph(bg, 1.0);
+  inst.userData.beads = beads;
+  G.add(inst);
+  BUDDHA.parts.hair = inst;
 
-  group.userData.elements = elements;
-  group.userData.revealMin = 30.2;
-  group.userData.revealMax = 35.6;
-  G.add(group);
-  BUDDHA.parts.hair = group;
-
-  const urnaGeo = new THREE.SphereGeometry(0.105, 18, 14);
-  const urnaMat = new THREE.MeshStandardMaterial({ color: 0x8B3027, roughness: 0.72, transparent: true, opacity: 0 });
+  /* 白毫（眉心红点） */
+  const urnaGeo = new THREE.SphereGeometry(0.17, 16, 12);
+  const urnaMat = new THREE.MeshStandardMaterial({ color: 0xC8302A, roughness: 0.45, transparent: true, opacity: 0 });
   const urna = new THREE.Mesh(urnaGeo, urnaMat);
   const UP = bodyPoint(0, yv(32.98), new THREE.Vector3());
   const UN = bodyNormal(0, yv(32.98), new THREE.Vector3());
-  urna.position.copy(UP).addScaledVector(UN, 0.13);
-  urna.scale.set(1, 1, 0.48);
+  urna.position.copy(UP).addScaledVector(UN, 0.10);
+  urna.scale.set(1, 1, 0.55);
   G.add(urna);
   BUDDHA.detailMats.push(urnaMat);
   BUDDHA.parts.urna = urna;
@@ -337,97 +247,79 @@ function buildHair(G, mat) {
 /* ------------------------------------------------------------
    五官：眉 / 眼 / 鼻 / 唇
    ------------------------------------------------------------ */
-function buildFace(G, matSkin) {
+function buildFace(G) {
+  /* 形体已由 faceRelief 做成浮雕，这里只放「上色阶段」才出现的彩色薄片 */
   const lineMat = new THREE.MeshStandardMaterial({
-    color: 0x3B2A20, roughness: 0.78, transparent: true, opacity: 0,
+    color: 0x2B2620, roughness: 0.52, transparent: true, opacity: 0,
     depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2,
   });
-  const lipMat = new THREE.MeshStandardMaterial({
-    color: 0x8F4C3B, roughness: 0.78, transparent: true, opacity: 0,
-    depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2,
-  });
-  const nostrilMat = new THREE.MeshStandardMaterial({
-    color: 0x302018, roughness: 0.90, transparent: true, opacity: 0,
-    depthWrite: false,
-  });
-  BUDDHA.detailMats.push(lineMat, lipMat, nostrilMat);
+  BUDDHA.detailMats.push(lineMat);
 
-  const surfacePoint = (u, y, lift = 0.04) => {
-    const P = bodyPoint((u + 1) % 1, yv(y), new THREE.Vector3());
-    const N = bodyNormal((u + 1) % 1, yv(y), new THREE.Vector3());
-    P.addScaledVector(N, lift);
-    return { P, N };
-  };
-  const addPrimitive = (geo, pos, scale, mat = matSkin, rot = null) => {
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.copy(pos);
-    mesh.scale.copy(scale);
-    if (rot) mesh.rotation.copy(rot);
-    mesh.castShadow = true;
-    attachRockMorphMesh(mesh);
-    G.add(mesh);
-    return mesh;
-  };
-
-  /* 真实几何眼睑：彩绘眼线只是最后一层。 */
+  /* 眼线：闭目下视的细长弧（y≈32.34，x 0.26→1.32） */
   for (const sx of [-1, 1]) {
-    const lidPts = [], linePts = [], browPts = [];
-    for (let i = 0; i <= 20; i++) {
-      const t = i / 20;
-      const u = sx * lerp(0.020, 0.134, t);
-      const yEye = 32.37 - Math.sin(t * Math.PI) * 0.095 + t * 0.018;
-      const a = surfacePoint(u, yEye, 0.145);
-      lidPts.push(a.P);
-      linePts.push(a.P.clone().addScaledVector(a.N, 0.035));
-      const yBrow = 32.73 + Math.sin(t * Math.PI) * 0.10 - t * 0.12;
-      const b = surfacePoint(sx * lerp(0.024, 0.154, t), yBrow, 0.06);
-      browPts.push(b.P.clone().addScaledVector(b.N, 0.035));
+    const pts = [];
+    for (let i = 0; i <= 14; i++) {
+      const t = i / 14;
+      const uu = sx * lerp(0.021, 0.113, t);
+      const yy = 32.36 - Math.sin(t * Math.PI) * 0.062 + t * 0.045;
+      const P = bodyPoint(uu, yv(yy), new THREE.Vector3());
+      const N = bodyNormal(uu, yv(yy), new THREE.Vector3());
+      P.addScaledVector(N, 0.030);
+      pts.push(P);
     }
-    const lidGeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(lidPts), 32, 0.060, 8, false);
-    scaleUV(lidGeo, 1.2); attachRockMorph(lidGeo, 0.98);
-    const lid = new THREE.Mesh(lidGeo, matSkin); lid.castShadow = true; G.add(lid);
-    const eyeGeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(linePts), 32, 0.022, 7, false);
-    const eye = new THREE.Mesh(eyeGeo, lineMat); G.add(eye);
-    const browGeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(browPts), 32, 0.043, 7, false);
-    const brow = new THREE.Mesh(browGeo, lineMat); G.add(brow);
+    const g = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 22, 0.048, 6, false);
+    G.add(new THREE.Mesh(g, lineMat));
   }
 
-  /* 鼻梁、鼻头和鼻翼，不再只靠纹理凸起。 */
+  /* 眉：细长弯弧（y≈32.63~32.78，x 0.30→1.78） */
+  for (const sx of [-1, 1]) {
+    const pts = [];
+    for (let i = 0; i <= 14; i++) {
+      const t = i / 14;
+      const uu = sx * lerp(0.0245, 0.152, t);
+      const yy = 32.60 + Math.sin(t * Math.PI) * 0.105 - t * 0.150;
+      const P = bodyPoint(uu, yv(yy), new THREE.Vector3());
+      const N = bodyNormal(uu, yv(yy), new THREE.Vector3());
+      P.addScaledVector(N, 0.030);
+      pts.push(P);
+    }
+    const g = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 22, 0.060, 6, false);
+    G.add(new THREE.Mesh(g, lineMat));
+  }
+
+  /* 唇色：贴着唇部浮雕的薄片 */
   {
-    const b = surfacePoint(0, 31.98, 0.34);
-    addPrimitive(new THREE.CapsuleGeometry(0.155, 0.70, 8, 16), b.P,
-      new THREE.Vector3(0.66, 1.0, 0.72), matSkin,
-      new THREE.Euler(0.07, 0, 0));
-    const tip = surfacePoint(0, 31.39, 0.31);
-    addPrimitive(new THREE.SphereGeometry(1, 20, 14), tip.P,
-      new THREE.Vector3(0.31, 0.21, 0.26), matSkin);
-    for (const sx of [-1, 1]) {
-      const wing = surfacePoint(sx * 0.032, 31.38, 0.30);
-      addPrimitive(new THREE.SphereGeometry(1, 16, 12), wing.P,
-        new THREE.Vector3(0.17, 0.10, 0.13), matSkin);
-      const nostril = surfacePoint(sx * 0.025, 31.31, 0.255);
-      const m = new THREE.Mesh(new THREE.SphereGeometry(0.038, 14, 10), nostrilMat);
-      m.position.copy(nostril.P); m.scale.set(1.0, 0.38, 0.30); G.add(m);
+    const lipMat = new THREE.MeshStandardMaterial({
+      color: 0xC24634, roughness: 0.40, transparent: true, opacity: 0,
+      depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, side: THREE.DoubleSide,
+    });
+    BUDDHA.detailMats.push(lipMat);
+    const uSeg = 26, vSeg = 10;
+    const pos = [], idx = [], uvs = [];
+    for (let j = 0; j <= vSeg; j++) {
+      const yy = lerp(30.66, 31.02, j / vSeg);
+      const halfU = 0.0385 * Math.sqrt(Math.max(0, 1 - Math.pow((j / vSeg - 0.5) * 2, 2)));
+      for (let i = 0; i <= uSeg; i++) {
+        const uu = lerp(-halfU, halfU, i / uSeg);
+        const P = bodyPoint(uu, yv(yy), new THREE.Vector3());
+        const N = bodyNormal(uu, yv(yy), new THREE.Vector3());
+        P.addScaledVector(N, 0.028);
+        pos.push(P.x, P.y, P.z);
+        uvs.push(i / uSeg, j / vSeg);
+      }
     }
-  }
-
-  /* 立体上下唇；颜色层在最后彩绘阶段才出现。 */
-  for (const [yy, bow, radius] of [[30.87, 0.070, 0.072], [30.73, -0.038, 0.080]]) {
-    const pts = [], colorPts = [];
-    for (let i = 0; i <= 26; i++) {
-      const t = i / 26;
-      const u = lerp(-0.047, 0.047, t);
-      const y = yy + Math.cos((t - 0.5) * Math.PI * 2) * bow;
-      const a = surfacePoint(u, y, 0.16);
-      pts.push(a.P); colorPts.push(a.P.clone().addScaledVector(a.N, 0.035));
+    const nu = uSeg + 1;
+    for (let j = 0; j < vSeg; j++) for (let i = 0; i < uSeg; i++) {
+      const a = j * nu + i, b = a + 1, c = a + nu + 1, d = a + nu;
+      idx.push(a, b, d, b, c, d);
     }
-    const geo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 32, radius, 8, false);
-    scaleUV(geo, 1); attachRockMorph(geo, 0.98);
-    const m = new THREE.Mesh(geo, matSkin); m.castShadow = true; G.add(m);
-    const cgeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(colorPts), 32, radius * 0.62, 7, false);
-    G.add(new THREE.Mesh(cgeo, lipMat));
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    G.add(new THREE.Mesh(g, lipMat));
   }
-  BUDDHA.parts.faceDetails = true;
 }
 
 /* 给已 position 好的 Mesh 附加石胎 morph（世界位置计算） */
@@ -456,23 +348,26 @@ function attachRockMorphMesh(mesh) {
    ------------------------------------------------------------ */
 function buildEars(G, mat) {
   for (const sx of [-1, 1]) {
-    const g = new THREE.SphereGeometry(1, 22, 18);
+    const g = new THREE.SphereGeometry(1, 18, 14);
     const pa = g.attributes.position;
     for (let i = 0; i < pa.count; i++) {
       const x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i);
-      const yy = y * 1.34 - 0.08;
-      const lobe = 0.36 + smoothstep(0.10, -1.0, yy) * 0.18;
-      pa.setXYZ(i, x * 0.25, yy, z * lobe);
+      // 拉成竖长的薄耳，下端加厚（耳垂）
+      const yy = y * 1.60 - 0.10;
+      const wid = 0.50 + smoothstep(0.3, -1.4, yy) * 0.16;
+      pa.setXYZ(i, x * 0.20, yy, z * wid);
     }
-    pa.needsUpdate = true; g.computeVertexNormals(); scaleUV(g, 3);
-    const uu = sx * 0.232;
-    const P = bodyPoint((uu + 1) % 1, yv(31.62), new THREE.Vector3());
-    const N = bodyNormal((uu + 1) % 1, yv(31.62), new THREE.Vector3());
-    P.addScaledVector(N, 0.04);
+    pa.needsUpdate = true; g.computeVertexNormals();
+    scaleUV(g, 3);
+    const uu = sx * 0.262;
+    const P = bodyPoint(uu, yv(31.70), new THREE.Vector3());
+    const N = bodyNormal(uu, yv(31.70), new THREE.Vector3());
+    P.addScaledVector(N, 0.02);
     const m = new THREE.Mesh(g, mat);
     m.position.copy(P);
-    m.rotation.y = sx * 0.13;
-    m.rotation.z = sx * 0.06;
+    m.scale.setScalar(1.0);
+    m.rotation.y = sx * 0.22;
+    m.rotation.z = sx * 0.07;
     m.castShadow = true;
     attachRockMorphMesh(m);
     G.add(m);
@@ -507,34 +402,35 @@ function tubeAlong(points, radiusFn, seg = 40, rseg = 12) {
 /* 手掌：掌 + 四指并拢 + 拇指 */
 function buildHandGeometry(scale) {
   const parts = [];
-  /* 掌根厚、指根收窄，正面略拱。 */
-  const palm = new THREE.SphereGeometry(1, 24, 18);
+  // 掌
+  const palm = new THREE.SphereGeometry(1, 20, 14);
   {
     const pa = palm.attributes.position;
     for (let i = 0; i < pa.count; i++) {
-      const x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i);
-      const taper = lerp(1.06, 0.82, smoothstep(-0.7, 0.95, y));
-      pa.setXYZ(i, x * 1.18 * taper, y * 1.48, z * (0.42 + (1 - y * y) * 0.08));
+      pa.setXYZ(i, pa.getX(i) * 1.34, pa.getY(i) * 1.42, pa.getZ(i) * 0.38);
     }
     pa.needsUpdate = true; palm.computeVertexNormals();
   }
   parts.push(palm);
-  const fingerLen = [1.54, 1.82, 1.92, 1.70];
-  const fingerX = [-0.76, -0.26, 0.26, 0.75];
-  const fingerR = [0.205, 0.225, 0.232, 0.210];
-  const fingerTilt = [-0.11, -0.035, 0.025, 0.10];
+  // 四指
+  const fingerLen = [1.72, 1.94, 1.82, 1.48];
+  const fingerX = [-0.86, -0.29, 0.29, 0.85];
+  const fingerR = [0.245, 0.262, 0.252, 0.222];
   for (let i = 0; i < 4; i++) {
-    const g = new THREE.CapsuleGeometry(fingerR[i], fingerLen[i], 5, 12);
-    g.rotateZ(fingerTilt[i]);
-    g.translate(fingerX[i], 1.20 + fingerLen[i] * 0.52, 0.015 + (i === 1 || i === 2 ? 0.035 : 0));
+    const g = new THREE.CapsuleGeometry(fingerR[i], fingerLen[i], 4, 10);
+    g.translate(fingerX[i] * 1.0, 1.30 + fingerLen[i] * 0.5, 0);
     const pa = g.attributes.position;
-    for (let k = 0; k < pa.count; k++) pa.setZ(k, pa.getZ(k) * 0.78);
+    for (let k = 0; k < pa.count; k++) pa.setZ(k, pa.getZ(k) * 0.82);
     pa.needsUpdate = true; g.computeVertexNormals();
     parts.push(g);
   }
-  const thumb = new THREE.CapsuleGeometry(0.245, 1.15, 5, 12);
-  thumb.rotateZ(0.94); thumb.rotateY(-0.16); thumb.translate(-1.25, 0.18, 0.12);
-  parts.push(thumb);
+  // 拇指
+  {
+    const g = new THREE.CapsuleGeometry(0.285, 1.28, 4, 10);
+    g.rotateZ(1.02);
+    g.translate(-1.48, 0.24, 0.14);
+    parts.push(g);
+  }
   const merged = mergeGeometries(parts);
   merged.scale(scale, scale, scale);
   return merged;
@@ -575,57 +471,79 @@ function mergeGeometries(list) {
 }
 
 function buildArms(G, matSkin, matInner, matRobe) {
-  /* 佛之右臂（画面左）：手掌举至肩前，比例压回真实雕塑尺度。 */
+  /* --- 佛之右臂（-X）：上举施无畏印 --- */
   {
     const pts = [
-      new THREE.Vector3(-5.55, 27.10, 0.05),
-      new THREE.Vector3(-6.15, 25.75, 1.10),
-      new THREE.Vector3(-6.35, 24.25, 2.45),
-      new THREE.Vector3(-6.05, 23.45, 3.62),
+      new THREE.Vector3(-3.9, 27.6, -0.2),
+      new THREE.Vector3(-5.0, 25.6, 1.2),
+      new THREE.Vector3(-5.6, 23.4, 2.9),
+      new THREE.Vector3(-5.85, 22.2, 4.3),
+      new THREE.Vector3(-5.95, 22.4, 4.9),
     ];
-    const g = tubeAlong(pts, (t) => lerp(1.05, 0.70, t), 34, 12);
-    scaleUV(g, 7); attachRockMorph(g);
-    const m = new THREE.Mesh(g, matSkin); m.castShadow = true; G.add(m); BUDDHA.parts.armR = m;
+    const g = tubeAlong(pts, (t) => lerp(1.85, 1.30, t), 36, 12);
+    scaleUV(g, 8); attachRockMorph(g);
+    const m = new THREE.Mesh(g, matSkin);
+    m.castShadow = true; G.add(m);
+    BUDDHA.parts.armR = m;
 
-    const hg = buildHandGeometry(0.68);
-    hg.rotateX(-0.10); hg.rotateY(0.05); hg.rotateZ(-0.03);
-    hg.translate(-6.02, 24.20, 4.02);
-    scaleUV(hg, 3); attachRockMorph(hg);
-    const hm = new THREE.Mesh(hg, matSkin); hm.castShadow = true; G.add(hm); BUDDHA.parts.handR = hm;
+    // 手掌：掌心朝 +Z，指尖朝上
+    const hg = buildHandGeometry(1.12);
+    hg.rotateX(-0.16);
+    hg.rotateY(0.10);
+    hg.translate(-5.99, 24.55, 4.95);
+    scaleUV(hg, 4); attachRockMorph(hg);
+    const hm = new THREE.Mesh(hg, matSkin);
+    hm.castShadow = true; G.add(hm);
+    BUDDHA.parts.handR = hm;
 
+    // 蓝色宽袖（垂下的袖筒）
     const sg = buildSleeveGeometry(
-      new THREE.Vector3(-5.70, 27.10, -0.20),
-      new THREE.Vector3(-6.08, 24.00, 2.20),
-      1.68, 1.08, 2.35);
+      new THREE.Vector3(-4.30, 27.6, -0.3),
+      new THREE.Vector3(-5.50, 22.6, 2.4),
+      2.95, 2.05, 4.6
+    );
     scaleUV(sg, 4); attachRockMorph(sg);
-    const sm = new THREE.Mesh(sg, matInner); sm.castShadow = true; G.add(sm); BUDDHA.parts.sleeveR = sm;
+    const sm = new THREE.Mesh(sg, matInner);
+    sm.castShadow = true; G.add(sm);
+    BUDDHA.parts.sleeveR = sm;
   }
 
-  /* 佛之左臂（画面右）：自然下垂并覆膝。 */
+  /* --- 佛之左臂（+X）：垂下抚膝 --- */
   {
     const pts = [
-      new THREE.Vector3(5.55, 27.05, -0.05),
-      new THREE.Vector3(6.18, 24.75, 0.85),
-      new THREE.Vector3(6.62, 22.15, 2.12),
-      new THREE.Vector3(6.90, 19.70, 3.42),
-      new THREE.Vector3(6.86, 18.55, 4.05),
+      new THREE.Vector3(4.0, 27.5, -0.3),
+      new THREE.Vector3(5.6, 24.6, 0.9),
+      new THREE.Vector3(6.7, 21.4, 2.6),
+      new THREE.Vector3(7.2, 18.9, 4.0),
+      new THREE.Vector3(7.35, 17.9, 4.7),
     ];
-    const g = tubeAlong(pts, (t) => lerp(1.08, 0.72, t), 36, 12);
-    scaleUV(g, 7); attachRockMorph(g);
-    const m = new THREE.Mesh(g, matSkin); m.castShadow = true; G.add(m); BUDDHA.parts.armL = m;
+    const g = tubeAlong(pts, (t) => lerp(1.95, 1.30, t), 36, 12);
+    scaleUV(g, 8); attachRockMorph(g);
+    const m = new THREE.Mesh(g, matSkin);
+    m.castShadow = true; G.add(m);
+    BUDDHA.parts.armL = m;
 
-    const hg = buildHandGeometry(0.72);
-    hg.rotateX(-1.45); hg.rotateY(-0.24); hg.rotateZ(0.12);
-    hg.translate(6.92, 18.12, 4.48);
-    scaleUV(hg, 3); attachRockMorph(hg);
-    const hm = new THREE.Mesh(hg, matSkin); hm.castShadow = true; G.add(hm); BUDDHA.parts.handL = hm;
+    // 手：掌心向下覆膝
+    const hg = buildHandGeometry(1.08);
+    hg.rotateX(-1.46);
+    hg.rotateZ(0.14);
+    hg.rotateY(-0.30);
+    hg.translate(7.42, 17.35, 5.35);
+    scaleUV(hg, 4); attachRockMorph(hg);
+    const hm = new THREE.Mesh(hg, matSkin);
+    hm.castShadow = true; G.add(hm);
+    BUDDHA.parts.handL = hm;
 
+    // 赭红袖（袈裟覆左臂）
     const sg = buildSleeveGeometry(
-      new THREE.Vector3(5.72, 27.06, -0.22),
-      new THREE.Vector3(6.65, 21.35, 1.95),
-      1.76, 1.12, 2.55);
+      new THREE.Vector3(4.45, 27.6, -0.4),
+      new THREE.Vector3(6.55, 20.8, 2.2),
+      3.05, 1.95, 4.2
+    );
     scaleUV(sg, 4); attachRockMorph(sg);
-    const sm = new THREE.Mesh(sg, matRobe); sm.castShadow = true; G.add(sm); BUDDHA.parts.sleeveL = sm;
+    const sm = new THREE.Mesh(sg, matRobe);
+    sm.castShadow = true; G.add(sm);
+    BUDDHA.parts.sleeveL = sm;
   }
 }
 
@@ -677,28 +595,36 @@ function buildSleeveGeometry(a, b, r0, r1, dropLen) {
 function buildFeet(G, mat) {
   for (const sx of [-1, 1]) {
     const parts = [];
-    const f = new THREE.SphereGeometry(1, 24, 18);
+    // 脚背
+    const f = new THREE.SphereGeometry(1, 22, 16);
     const pa = f.attributes.position;
     for (let i = 0; i < pa.count; i++) {
       let x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i);
-      y = Math.max(y, -0.26);
+      y = Math.max(y, -0.28);            // 削平脚底
+      // 前端（+z）变窄变薄
       const fz = (z + 1) * 0.5;
-      pa.setXYZ(i, x * 1.55 * lerp(1.0, 0.76, fz), y * 0.72, z * 2.02);
+      const narrow = lerp(1.0, 0.74, Math.pow(fz, 1.5));
+      pa.setXYZ(i, x * 1.82 * narrow, y * 0.86, z * 2.40);
     }
-    pa.needsUpdate = true; f.computeVertexNormals(); parts.push(f);
+    pa.needsUpdate = true; f.computeVertexNormals();
+    parts.push(f);
+    // 脚趾
     for (let i = 0; i < 5; i++) {
-      const t = i / 4, r = 0.31 - t * 0.075;
+      const t = i / 4;
+      const r = 0.40 - t * 0.11;
       const g = new THREE.SphereGeometry(r, 12, 10);
-      g.scale(1, 0.78, 1.24);
-      g.translate((-0.88 + t * 1.76) * sx, -0.17, 2.35 - Math.abs(t - 0.18) * 0.32);
+      g.scale(1, 0.86, 1.36);
+      g.translate((-1.05 + t * 2.1) * sx, -0.22 + (1 - Math.abs(t - 0.1)) * 0.12, 2.86 - Math.abs(t - 0.15) * 0.42);
       parts.push(g);
     }
     const merged = mergeGeometries(parts);
-    merged.scale(0.98, 0.98, 0.98);
-    merged.translate(sx * 8.10, 0.82, 6.05);
-    scaleUV(merged, 5); attachRockMorph(merged);
-    const m = new THREE.Mesh(merged, mat); m.castShadow = m.receiveShadow = true;
-    G.add(m); BUDDHA.parts['foot' + (sx > 0 ? 'L' : 'R')] = m;
+    merged.scale(1.05, 1.05, 1.05);
+    merged.translate(sx * 8.20, 0.98, 6.10);
+    scaleUV(merged, 6); attachRockMorph(merged);
+    const m = new THREE.Mesh(merged, mat);
+    m.castShadow = m.receiveShadow = true;
+    G.add(m);
+    BUDDHA.parts['foot' + (sx > 0 ? 'L' : 'R')] = m;
   }
 }
 
@@ -708,37 +634,29 @@ function buildFeet(G, mat) {
 function buildHalo3D(G) {
   const haloMat = new THREE.MeshStandardMaterial({
     map: TEX.halo.map, transparent: true, opacity: 0,
-    roughness: 0.82, metalness: 0.0, side: THREE.DoubleSide,
-    alphaTest: 0.015, depthWrite: false,
+    roughness: 0.72, metalness: 0.0, side: THREE.DoubleSide,
+    alphaTest: 0.02, depthWrite: false,
   });
   BUDDHA.haloMats.push(haloMat);
-  const g = new THREE.CircleGeometry(4.55, 80);
+  const R = 6.15;
+  const g = new THREE.PlaneGeometry(R * 2, R * 2, 1, 1);
   const m = new THREE.Mesh(g, haloMat);
-  m.position.set(0, 32.20, -5.05);
-  m.rotation.x = 0.015;
-  G.add(m); BUDDHA.parts.halo = m;
-
-  const ringMat = new THREE.MeshStandardMaterial({
-    color: 0xB68A43, emissive: 0x2C1907, emissiveIntensity: 0.12,
-    roughness: 0.62, transparent: true, opacity: 0,
-  });
-  BUDDHA.haloMats.push(ringMat);
-  const rings = new THREE.Group();
-  for (const r of [3.82, 4.24]) {
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.075, 8, 72), ringMat);
-    ring.position.set(0, 32.20, -4.94);
-    rings.add(ring);
-  }
-  G.add(rings); BUDDHA.parts.haloRings = rings;
+  m.position.set(0, 31.95, -3.55);
+  m.rotation.x = 0.05;
+  G.add(m);
+  BUDDHA.parts.halo = m;
 
   const crownMat = new THREE.MeshStandardMaterial({
     map: TEX.haloCrown.map, transparent: true, opacity: 0,
-    roughness: 0.78, side: THREE.DoubleSide, alphaTest: 0.035, depthWrite: false,
+    roughness: 0.7, side: THREE.DoubleSide, alphaTest: 0.02, depthWrite: false,
   });
   BUDDHA.haloMats.push(crownMat);
-  const cm = new THREE.Mesh(new THREE.PlaneGeometry(5.0, 1.18), crownMat);
-  cm.position.set(0, 36.42, -4.92);
-  G.add(cm); BUDDHA.parts.haloCrown = cm;
+  const cg = new THREE.PlaneGeometry(9.4, 3.10);
+  const cm = new THREE.Mesh(cg, crownMat);
+  cm.position.set(0, 36.55, -3.45);
+  cm.rotation.x = 0.05;
+  G.add(cm);
+  BUDDHA.parts.haloCrown = cm;
 }
 
 /* ------------------------------------------------------------
@@ -746,29 +664,28 @@ function buildHalo3D(G) {
    ------------------------------------------------------------ */
 function buildPegs(G) {
   const pegs = [];
+  const P = new THREE.Vector3(), N = new THREE.Vector3();
+  const rnd = mulberry32(41);
+  // 在举起的手掌/前臂区域插桩（视频里正是这里）
   const spots = [
-    [-0.18, 27.2], [0.18, 27.0], [-0.12, 24.9], [0.13, 24.4],
-    [-0.20, 21.9], [0.19, 21.3], [-0.13, 18.7], [0.14, 18.0],
-    [-0.17, 15.0], [0.17, 14.4], [-0.10, 11.3], [0.11, 10.7],
-    [-0.14, 7.5], [0.14, 7.0],
+    [-5.6, 26.6], [-5.2, 25.4], [-6.4, 26.0], [-4.9, 24.2], [-6.2, 24.6],
+    [-5.9, 27.6], [-4.4, 23.1],
   ];
-  const geo = new THREE.CylinderGeometry(0.10, 0.13, 1.85, 9);
-  const mat = new THREE.MeshStandardMaterial({ map: TEX.wood.map, color: 0x5B3A22, roughness: 0.92 });
+  const geo = new THREE.CylinderGeometry(0.20, 0.26, 3.4, 8);
+  const mat = new THREE.MeshStandardMaterial({ color: 0x2E241C, roughness: 0.92 });
   const grp = new THREE.Group();
-  for (let i = 0; i < spots.length; i++) {
-    const [u, y] = spots[i];
-    const uu = (u + 1) % 1;
-    const P = bodyPoint(uu, yv(y), new THREE.Vector3());
-    const N = bodyNormal(uu, yv(y), new THREE.Vector3()).normalize();
+  for (const [x, y] of spots) {
     const m = new THREE.Mesh(geo, mat);
-    m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), N);
-    m.position.copy(P).addScaledVector(N, 0.42);
+    m.position.set(x, y, 4.4 + rnd() * 0.6);
+    m.rotation.z = -0.5 + rnd() * 0.3;
+    m.rotation.x = 0.9 + rnd() * 0.35;
     m.castShadow = true;
-    m.userData.t = i / Math.max(1, spots.length - 1);
+    m.userData.t = rnd();
     m.userData.finalPosition = m.position.clone();
     m.userData.finalQuaternion = m.quaternion.clone();
-    m.userData.axis = N.clone();
-    grp.add(m); pegs.push(m);
+    m.userData.axis = new THREE.Vector3(0, 1, 0).applyQuaternion(m.quaternion).normalize();
+    grp.add(m);
+    pegs.push(m);
   }
   grp.visible = false;
   G.add(grp);

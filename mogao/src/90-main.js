@@ -13,8 +13,7 @@ const APP = {
   currentStep: -1,
   playUntil: null,
   playFromChapter: -1,
-  baseExposure: 1.18,
-  focusDistance: 70,
+  baseExposure: 1.02,
 };
 
 let renderer, scene, camera, freeCam, debris, tower, walkway, decorGroup, clock;
@@ -36,55 +35,53 @@ function init() {
   renderer.toneMappingExposure = APP.baseExposure;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  initPostFX(renderer);
 
   scene = new THREE.Scene();
   APP.skyBackground = TEX.sky.map;
-  APP.skyFogColor = new THREE.Color(0xB8B1A4);
-  APP.sectionBackground = new THREE.Color(0x574234);
-  APP.sectionFogColor = new THREE.Color(0x6A5140);
+  APP.skyFogColor = new THREE.Color(0xB9D6D2);
+  APP.sectionBackground = new THREE.Color(0x241B16);
+  APP.sectionFogColor = new THREE.Color(0x4A3324);
   scene.background = APP.skyBackground;
   scene.environment = null;
-  scene.fog = new THREE.Fog(APP.skyFogColor, 280, 940);
+  scene.fog = new THREE.Fog(APP.skyFogColor, 380, 1100);
 
-  camera = new THREE.PerspectiveCamera(35, 16 / 9, 0.42, 1400);
-  freeCam = new THREE.PerspectiveCamera(45, 16 / 9, 0.42, 1400);
+  camera = new THREE.PerspectiveCamera(35, 9 / 16, 0.5, 1400);
+  freeCam = new THREE.PerspectiveCamera(45, 9 / 16, 0.5, 1400);
 
-  /* ---------------- 电影化日照 + 洞窟反弹光 ---------------- */
-  scene.add(new THREE.AmbientLight(0xFFF4E8, 0.43));
-  scene.add(new THREE.HemisphereLight(0xD8E0E2, 0x8A684D, 0.84));
+  /* ---------------- 光照 ---------------- */
+  scene.add(new THREE.AmbientLight(0xFFF2E2, 0.30));
+  scene.add(new THREE.HemisphereLight(0xC6E6EC, 0xC09872, 0.64));
 
-  const sun = new THREE.DirectionalLight(0xFFF0D2, 2.42);
-  sun.position.set(92, 118, 106); sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
-  Object.assign(sun.shadow.camera,{left:-100,right:100,top:92,bottom:-55,near:18,far:410});
-  sun.shadow.bias=-0.0008; sun.shadow.normalBias=0.38;
-  sun.target.position.set(0,20,2); scene.add(sun,sun.target);
+  const sun = new THREE.DirectionalLight(0xFFF3E0, 2.15);
+  sun.position.set(76, 108, 128);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(1024, 1024);
+  const sc = sun.shadow.camera;
+  sc.left = -95; sc.right = 95; sc.top = 95; sc.bottom = -55;
+  sc.near = 20; sc.far = 380;
+  sun.shadow.bias = -0.0009;
+  sun.shadow.normalBias = 0.55;
+  sun.target.position.set(0, 18, 0);
+  scene.add(sun, sun.target);
 
-  const skyFill = new THREE.DirectionalLight(0xD6E0E4, 0.66);
-  skyFill.position.set(-78,54,128); skyFill.target.position.set(0,23,0); scene.add(skyFill,skyFill.target);
-  const sandBounce = new THREE.DirectionalLight(0xE0B080, 0.34);
-  sandBounce.position.set(0,-18,86); sandBounce.target.position.set(0,18,0); scene.add(sandBounce,sandBounce.target);
-  const rim = new THREE.DirectionalLight(0xE5CFAC, 0.58);
-  rim.position.set(-82,70,-56); rim.target.position.set(0,26,0); scene.add(rim,rim.target);
+  const fill = new THREE.DirectionalLight(0xDCE8EE, 0.40);
+  fill.position.set(-70, 40, 120);
+  scene.add(fill);
 
-  const inner = new THREE.PointLight(0xF4D3AA, 76, 125, 1.62);
-  inner.position.set(0,25,18); scene.add(inner); APP.innerLight=inner;
-  const faceKey = new THREE.SpotLight(0xFBEAD8, 116, 110, Math.PI/4.9,0.68,1.65);
-  faceKey.position.set(18,36,44); faceKey.target.position.set(0,29.6,-0.5); scene.add(faceKey,faceKey.target);
-  const caveRim = new THREE.SpotLight(0xC5D7DE, 84, 115, Math.PI/4.4,0.74,1.75);
-  caveRim.position.set(-28,32,-15); caveRim.target.position.set(0,23,2); scene.add(caveRim,caveRim.target);
-  const workFill = new THREE.PointLight(0xFFD8AE, 78, 104, 1.55);
-  workFill.position.set(-8, 27, 37); scene.add(workFill); APP.workFill = workFill;
-  const wallKey = new THREE.PointLight(0xFFE1BB, 0, 96, 1.28);
-  wallKey.position.set(0, 23, 12); scene.add(wallKey); APP.wallKey = wallKey;
-  const bodyFill = new THREE.SpotLight(0xF3D7B8, 0, 112, Math.PI/3.4, 0.78, 1.45);
-  bodyFill.position.set(-18, 25, 50); bodyFill.target.position.set(0, 22, 0); scene.add(bodyFill, bodyFill.target); APP.bodyFill = bodyFill;
-  const towerKey = new THREE.SpotLight(0xFFE1C2, 0, 260, Math.PI/4.0, 0.72, 1.35);
-  towerKey.position.set(22, 45, 148); towerKey.target.position.set(0, 24, CLIFF_Z + 10); scene.add(towerKey, towerKey.target); APP.towerKey = towerKey;
-  const cliffLift = new THREE.DirectionalLight(0xE8CDB0, 0.42);
-  cliffLift.position.set(-36, 48, 136); cliffLift.target.position.set(0, 24, CLIFF_Z); scene.add(cliffLift, cliffLift.target);
-  APP.faceKey = faceKey; APP.caveRim = caveRim;
+  const inner = new THREE.PointLight(0xFFE7C6, 60, 130, 1.6);
+  inner.position.set(0, 27, 22);
+  scene.add(inner);
+  APP.innerLight = inner;
+
+  const inner2 = new THREE.DirectionalLight(0xFFF0DC, 1.08);
+  inner2.position.set(4, 34, 90);
+  inner2.target.position.set(0, 20, -8);
+  scene.add(inner2, inner2.target);
+
+  const inner3 = new THREE.DirectionalLight(0xE8F0F4, 0.52);
+  inner3.position.set(-46, 22, 70);
+  inner3.target.position.set(0, 22, -6);
+  scene.add(inner3, inner3.target);
 
   /* ---------------- 场景 ---------------- */
   buildWorld(scene);
@@ -96,7 +93,6 @@ function init() {
 
   tower = buildNineStorey();
   tower.position.set(0, 0, CLIFF_Z + 5.2);
-  tower.scale.setScalar(1.10);
   scene.add(tower);
 
   walkway = buildWalkway();
@@ -106,14 +102,22 @@ function init() {
   decorGroup.name = 'ExteriorDecor';
   scene.add(decorGroup);
   {
-    // 只保留疏朗的白塔、枯树和风蚀石，去掉基线里现代园林式花坛与对称寺院。
-    const st = [
-      [-72,CLIFF_Z+96,1.20],[-43,CLIFF_Z+132,0.82],[70,CLIFF_Z+100,1.10],[46,CLIFF_Z+146,0.78],
-    ];
-    st.forEach(([x,z,k])=>{const o=buildStupa(k);o.position.set(x,0,z);decorGroup.add(o);});
-    for (const [x,z,h,seed] of [[-77,92,7.5,2],[-48,126,6.4,3],[74,95,7.0,4],[50,138,5.6,5],[-8,164,5.2,6]]) {
-      const tr=buildTree(h,seed);tr.position.set(x,0,CLIFF_Z+z);tr.scale.set(1,0.82,1);decorGroup.add(tr);
+    const s1 = buildStupa(3.4); s1.position.set(-36, 0, CLIFF_Z + 52); decorGroup.add(s1);
+    const s2 = buildStupa(2.2); s2.position.set(-24, 0, CLIFF_Z + 78); decorGroup.add(s2);
+    const s3 = buildStupa(3.2); s3.position.set(38, 0, CLIFF_Z + 54); decorGroup.add(s3);
+    const s4 = buildStupa(2.0); s4.position.set(26, 0, CLIFF_Z + 80); decorGroup.add(s4);
+    const tp = buildTemple(); tp.position.set(66, 0, CLIFF_Z + 24); decorGroup.add(tp);
+    const tp2 = buildTemple(); tp2.position.set(-66, 0, CLIFF_Z + 28); tp2.scale.setScalar(0.72); decorGroup.add(tp2);
+    for (const [x, z, h, seed] of [
+      [-38, 46, 15, 2], [-26, 74, 12, 3], [40, 48, 14, 4], [28, 78, 11, 5],
+      [-16, 108, 13, 6], [18, 112, 12, 7], [58, 68, 14, 8], [-58, 72, 13, 9],
+    ]) {
+      const tr = buildTree(h, seed); tr.position.set(x, 0, CLIFF_Z + z); decorGroup.add(tr);
     }
+    const pl1 = buildPlanter(26, 8); pl1.position.set(-25, 0, CLIFF_Z + 44); decorGroup.add(pl1);
+    const pl2 = buildPlanter(26, 8); pl2.position.set(25, 0, CLIFF_Z + 44); decorGroup.add(pl2);
+    const pl3 = buildPlanter(20, 7); pl3.position.set(-22, 0, CLIFF_Z + 96); decorGroup.add(pl3);
+    const pl4 = buildPlanter(20, 7); pl4.position.set(22, 0, CLIFF_Z + 96); decorGroup.add(pl4);
   }
 
   // 兼容旧对象，但不再用帧累积粒子；施工特效全部由绝对时间重建。
@@ -156,19 +160,24 @@ function init() {
 }
 
 /* ------------------------------------------------------------
-   画布尺寸：横屏 16:9，自适应浏览器可用区域
+   画布尺寸：竖屏 9:16 居中
    ------------------------------------------------------------ */
 function onResize() {
-  const wrap=document.getElementById('stage');
-  const aw=Math.max(1,wrap.clientWidth), ah=Math.max(1,wrap.clientHeight), aspect=16/9;
-  let w=aw,h=w/aspect;if(h>ah){h=ah;w=h*aspect;}
-  w=Math.max(1,Math.floor(w));h=Math.max(1,Math.floor(h));
-  const el=renderer.domElement;el.style.width=w+'px';el.style.height=h+'px';
-  elSvg.style.width=w+'px';elSvg.style.height=h+'px';elSvg.setAttribute('viewBox',`0 0 ${w} ${h}`);
-  elHud.style.width=w+'px';elHud.style.height=h+'px';
-  renderer.setSize(w,h,false);resizePostFX(w,h,renderer.getPixelRatio());
-  camera.aspect=w/h;camera.updateProjectionMatrix();freeCam.aspect=w/h;freeCam.updateProjectionMatrix();
-  APP.vw=w;APP.vh=h;APP.dirty=true;
+  const wrap = document.getElementById('stage');
+  const aw = Math.max(1, wrap.clientWidth), ah = Math.max(1, wrap.clientHeight);
+  let w = ah * 9 / 16, h = ah;
+  if (w > aw) { w = aw; h = aw * 16 / 9; }
+  w = Math.max(1, Math.floor(w));
+  h = Math.max(1, Math.floor(h));
+  const el = renderer.domElement;
+  el.style.width = w + 'px'; el.style.height = h + 'px';
+  elSvg.style.width = w + 'px'; elSvg.style.height = h + 'px';
+  elSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  elHud.style.width = w + 'px'; elHud.style.height = h + 'px';
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+  freeCam.aspect = w / h; freeCam.updateProjectionMatrix();
+  APP.vw = w; APP.vh = h; APP.dirty = true;
 }
 
 /* ============================================================
@@ -195,7 +204,7 @@ function applySculptState(t, carveY) {
     Object.assign(opts, {
       spread: true,
       spreadY: front,
-      spreadSoft: dir < 0 ? (w.a >= 90 ? 2.65 : 1.70) : 1.28,
+      spreadSoft: dir < 0 ? 1.45 : 1.08,
       spreadDir: dir,
       phaseFrom: w.fromP,
       phaseTo: w.toP,
@@ -216,10 +225,7 @@ function applyCarveState(t) {
   if (t < 15.2 || t >= 27.0) doorProgress = 1;
   else if (t >= 24.55) doorProgress = easeOut(windowK(t, 24.55, 27.0));
   setDoorProgress(doorProgress);
-  // 这两块只是窟门开凿时的局部施工壳体。洞窟完成后继续显示会在佛像背后形成黑色矩形。
-  const doorShellVisible = t >= 24.50 && t < 31.0 && doorProgress > 0.035;
-  if (WORLD.doorTunnel) WORLD.doorTunnel.visible = doorShellVisible;
-  if (WORLD.doorBack) WORLD.doorBack.visible = doorShellVisible;
+  if (WORLD.doorTunnel) WORLD.doorTunnel.visible = doorProgress > 0.035;
 
   const complete = t < 15.2 || t >= 51.6;
   let lower1 = complete ? 1 : 0;
@@ -236,18 +242,15 @@ function applyCarveState(t) {
 
 function applyState(t, dt) {
   const carve = applyCarveState(t);
-  const sectionOn = t >= 26.7 && t < 51.6;
-  if (WORLD.cliffBody) WORLD.cliffBody.visible = !sectionOn;
-  if (WORLD.dune) WORLD.dune.visible = !sectionOn;
+  const sectionOn = t >= 26.7 && t < 51.6 && CURVE_SECTION(t) < 9000;
   scene.background = sectionOn ? APP.sectionBackground : APP.skyBackground;
   scene.fog.color.copy(sectionOn ? APP.sectionFogColor : APP.skyFogColor);
   const sculpt = applySculptState(t, carve.carveY);
 
   /* 佛像在开凿阶段由高度阈值从石胎中显露，不做整尊跳变。 */
   const excavationReveal = t >= 31.0 && t < 51.9;
-  const wallFocus = (t >= 98.7 && t < 108.6) ? lerp(0.38, 0.20, smoothstep(99.0, 104.0, t)) : 1.0;
-  const bop = (excavationReveal ? 1 : CURVE_BOPA(t)) * wallFocus;
-  BUDDHA.group.visible = bop > 0.004 && !(t >= 98.7 && t < 108.6);
+  const bop = excavationReveal ? 1 : CURVE_BOPA(t);
+  BUDDHA.group.visible = bop > 0.004;
   for (const m of STAGE_MATS) {
     if (bop >= 0.999) {
       m.transparent = false; m.opacity = 1; m.depthWrite = true;
@@ -255,9 +258,9 @@ function applyState(t, dt) {
       m.transparent = true; m.opacity = bop; m.depthWrite = bop > 0.6;
     }
   }
-  const detailOpacity = CURVE_DETAIL(t) * bop * 0.76;
+  const detailOpacity = CURVE_DETAIL(t) * bop;
   for (const m of BUDDHA.detailMats) m.opacity = detailOpacity;
-  const haloOpacity = CURVE_HALO(t) * bop * 0.78;
+  const haloOpacity = CURVE_HALO(t) * bop * 0.98;
   for (const m of BUDDHA.haloMats) m.opacity = haloOpacity;
 
   // 螺发的逐颗显露/上色由施工系统接管，避免整组缩放。
@@ -267,24 +270,13 @@ function applyState(t, dt) {
   clearWallTransition();
 
   tower.visible = true;
-  walkway.visible = t >= 19.15 && t < 56.25;
+  walkway.visible = true;
   if (decorGroup) decorGroup.visible = t < 26.6 || t >= 108.4;
 
   const caveOpen = carve.complete
     ? 1
     : clamp((CAVE.yTop + 1 - carve.carveY) / (CAVE.yTop + 1), 0, 1);
-  APP.innerLight.intensity = lerp(84, 188, easeOut(caveOpen));
-  if (APP.workFill) APP.workFill.intensity = t >= 24.2 && t < 95.4 ? 96 : 50;
-  if (APP.faceKey) APP.faceKey.intensity = t >= 56.0 ? (t < 95.4 ? 136 : 108) : 76;
-  if (APP.bodyFill) APP.bodyFill.intensity = (t >= 56.0 && t < 95.4) ? 126 : ((t < 15.2 || t >= 108.6) ? 54 : 0);
-  if (APP.wallKey) APP.wallKey.intensity = (t >= 98.7 && t < 108.6) ? 112 : 0;
-  if (APP.towerKey) APP.towerKey.intensity = (t < 15.2 || t >= 110.6) ? 168 : 0;
-  const finalCliffLift = (t < 15.2 || t >= 110.6);
-  for (const cliffMat of [WORLD.cliffMat, WORLD.cliffBody && WORLD.cliffBody.material]) {
-    if (!cliffMat || !cliffMat.emissive) continue;
-    cliffMat.emissive.setHex(finalCliffLift ? 0x755B43 : 0x000000);
-    cliffMat.emissiveIntensity = finalCliffLift ? 0.52 : 0;
-  }
+  APP.innerLight.intensity = lerp(42, 185, easeOut(caveOpen));
   WORLD.plinth.visible = t < 15.2 || t >= 51.55;
 
   const construction = updateConstruction(t);
@@ -295,15 +287,6 @@ function applyState(t, dt) {
 /* ============================================================
    相机 / 单帧渲染
    ============================================================ */
-function exposureBoostAt(t) {
-  if (t >= 56.0 && t < 95.4) return 0.23;
-  if (t >= 110.6) return 0.20;
-  if (t < 15.2) return 0.17;
-  if (t >= 15.2 && t < 26.7) return 0.12;
-  if (t >= 26.7 && t < 51.6) return 0.10;
-  if (t >= 98.7 && t < 108.6) return -0.14;
-  return 0.08;
-}
 function setScriptedCamera(t) {
   const s = shotAt(t);
   const fb = constructionCameraFeedback();
@@ -314,8 +297,7 @@ function setScriptedCamera(t) {
     camera.fov = fov;
     camera.updateProjectionMatrix();
   }
-  renderer.toneMappingExposure = APP.baseExposure + exposureBoostAt(t) + fb.exposure;
-  APP.focusDistance = Math.max(4, camera.position.distanceTo(new THREE.Vector3(s.lx,s.ly,s.lz)));
+  renderer.toneMappingExposure = APP.baseExposure + fb.exposure;
 }
 
 function renderFrame(t, dt) {
@@ -323,7 +305,7 @@ function renderFrame(t, dt) {
   const cam = APP.free ? freeCam : camera;
   if (APP.free) {
     updateFreeCam(dt);
-    renderer.toneMappingExposure = APP.baseExposure + exposureBoostAt(t) + constructionCameraFeedback().exposure * 0.45;
+    renderer.toneMappingExposure = APP.baseExposure + constructionCameraFeedback().exposure * 0.45;
   } else {
     setScriptedCamera(t);
   }
@@ -331,7 +313,7 @@ function renderFrame(t, dt) {
   updateProps(t, cam);
   updateAnnotations(t, cam, APP.vw, APP.vh);
   updateTimelineUI(t);
-  renderPostFX(renderer, scene, cam, APP.free ? 72 : APP.focusDistance, t);
+  renderer.render(scene, cam);
   APP.dirty = false;
   return state;
 }
