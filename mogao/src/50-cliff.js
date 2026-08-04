@@ -15,6 +15,107 @@ const CLIFF_TOP = 46.0;
 
 const WORLD = { group: null };
 
+function buildIrregularRockSlab(width, height, depth, seed) {
+  const rnd = mulberry32(seed);
+  const shape = new THREE.Shape();
+  const pts = [
+    [-0.36, -0.48], [0.42 + rnd() * 0.08, -0.50],
+    [0.50, -0.18 + rnd() * 0.10], [0.43 + rnd() * 0.07, 0.18],
+    [0.36 + rnd() * 0.10, 0.50], [-0.42, 0.47 + rnd() * 0.05],
+    [-0.46, 0.12], [-0.31, -0.18],
+  ];
+  shape.moveTo(pts[0][0] * width, pts[0][1] * height);
+  for (let i = 1; i < pts.length; i++) shape.lineTo(pts[i][0] * width, pts[i][1] * height);
+  shape.closePath();
+  const g = new THREE.ExtrudeGeometry(shape, {
+    depth,
+    steps: 1,
+    bevelEnabled: true,
+    bevelThickness: 0.16,
+    bevelSize: 0.18,
+    bevelSegments: 2,
+    curveSegments: 1,
+  });
+  g.translate(0, 0, -depth * 0.5);
+  const pa = g.attributes.position;
+  for (let i = 0; i < pa.count; i++) {
+    const x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i);
+    const rough = (fbm2(x * 0.28 + seed, y * 0.24 + z * 0.18, 3, seed + 13) - 0.5) * 0.16;
+    pa.setXYZ(i, x + rough * 0.22, y + rough * 0.34, z + rough);
+  }
+  pa.needsUpdate = true;
+  g.computeVertexNormals();
+  scaleUV(g, 0.55);
+  return g;
+}
+
+/* 完成镜头左侧是上宽下窄的天然岩楔，不是一根等宽立柱。 */
+function buildRevealLeftJamb(width, height, depth, seed) {
+  const shape = new THREE.Shape();
+  const pts = [
+    [-0.50, -0.50], [-0.42, -0.50], [-0.30, -0.24], [-0.16, 0.02],
+    [0.08, 0.22], [0.34, 0.40], [0.48, 0.50], [-0.43, 0.49],
+  ];
+  shape.moveTo(pts[0][0] * width, pts[0][1] * height);
+  for (let i = 1; i < pts.length; i++) shape.lineTo(pts[i][0] * width, pts[i][1] * height);
+  shape.closePath();
+  const g = new THREE.ExtrudeGeometry(shape, {
+    depth, steps: 1, bevelEnabled: true,
+    bevelThickness: 0.18, bevelSize: 0.20, bevelSegments: 3, curveSegments: 1,
+  });
+  g.translate(0, 0, -depth * 0.5);
+  const pa = g.attributes.position;
+  for (let i = 0; i < pa.count; i++) {
+    const x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i);
+    const rough = (fbm2(x * 0.21 + seed, y * 0.18 + z * 0.15, 4, seed + 31) - 0.5) * 0.62;
+    pa.setXYZ(i, x + rough * 0.22, y + rough * 0.34, z + rough * 0.44);
+  }
+  pa.needsUpdate = true;
+  g.computeVertexNormals();
+  scaleUV(g, 0.55);
+  return g;
+}
+
+function buildSculptureRevealFrame(parent) {
+  const group = new THREE.Group();
+  group.name = 'ThreeDimensionalSculptureRevealFrame';
+  const mat = new THREE.MeshStandardMaterial({
+    map: TEX.rockCore.map,
+    normalMap: TEX.rockCore.normal,
+    color: 0xC39B76,
+    roughness: 0.98,
+    metalness: 0,
+    envMapIntensity: 0.04,
+  });
+  mat.normalScale.set(0.34, 0.34);
+
+  const left = new THREE.Group();
+  left.name = 'LeftRockJamb';
+  const lm = new THREE.Mesh(buildRevealLeftJamb(7.0, 44.5, 2.6, 951), mat);
+  /* 岩楔退到造像之后，只形成洞口轮廓，不再像木柱一样穿过佛手与脸。 */
+  lm.position.set(-9.55, 22.2, 1.0);
+  lm.rotation.set(0.015, -0.28, -0.012);
+  lm.castShadow = lm.receiveShadow = true;
+  left.add(lm);
+  group.add(left);
+
+  const right = new THREE.Group();
+  right.name = 'RightRockJamb';
+  const rm = new THREE.Mesh(buildIrregularRockSlab(5.8, 44.5, 1.8, 987), mat);
+  rm.position.set(9.55, 22.2, 7.15);
+  /* 终景从左下仰视，岩壁正面也朝向该机位，避免挤出侧面读成黑木柱。 */
+  rm.rotation.set(-0.008, -0.42, 0.010);
+  rm.castShadow = rm.receiveShadow = true;
+  right.add(rm);
+  group.add(right);
+  group.visible = false;
+  parent.add(group);
+  WORLD.sculptureFrame = group;
+  WORLD.sculptureFrameLeft = left;
+  WORLD.sculptureFrameRight = right;
+  return group;
+}
+
 /* 崖壁面的起伏 */
 function cliffFaceZ(x, y) {
   const n = fbm2(x * 0.011 + 5, y * 0.013 + 2, 5, 3.1) - 0.5;
@@ -158,6 +259,7 @@ function buildWorld(scene) {
 
   /* ---------------- 洞窟内壁 ---------------- */
   buildCaveInterior(G);
+  buildSculptureRevealFrame(G);
 
   /* ---------------- 地面广场 ---------------- */
   {

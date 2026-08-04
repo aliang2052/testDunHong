@@ -63,6 +63,12 @@ function assert(name, condition, detail) {
     await page.goto(`file://${input}`, { waitUntil: 'load', timeout: 120000 });
     await page.waitForFunction('window.__READY__ === true', { timeout: 180000 });
     assert('ready-hook', await page.evaluate(() => window.__READY__ === true), 'window.__READY__ 必须为 true');
+    const initialState = await page.evaluate(() => ({
+      time: window.MOGAO.APP.time,
+      playing: window.MOGAO.APP.playing,
+      playIcon: document.querySelector('#play')?.textContent,
+    }));
+    assert('initial-frame-paused-at-zero', initialState.time === 0 && initialState.playing === false && initialState.playIcon === '▶', initialState);
     assert('no-video-element', await page.evaluate(() => document.querySelectorAll('video').length === 0), '不得嵌入 video');
     assert('no-remote-requests', report.remoteRequests.length === 0, report.remoteRequests);
 
@@ -91,6 +97,24 @@ function assert(name, condition, detail) {
     }
     assert('keyframe-count', report.keyframes.length === keyTimes.length, report.keyframes.length);
 
+    const boundaryState = await page.evaluate(() => {
+      const chapter = window.MOGAO.playChapter(2);
+      window.MOGAO.tick(chapter.until - chapter.from + 1);
+      return {
+        time: window.MOGAO.APP.time,
+        playing: window.MOGAO.APP.playing,
+        playUntil: window.MOGAO.APP.playUntil,
+        expectedStop: chapter.until - 1 / 60,
+      };
+    });
+    assert(
+      'chapter-stops-at-next-boundary',
+      boundaryState.playing === false
+        && boundaryState.playUntil == null
+        && Math.abs(boundaryState.time - boundaryState.expectedStop) < 0.002,
+      boundaryState
+    );
+
     await page.evaluate(() => {
       window.MOGAO.APP.playing = false;
       window.MOGAO.APP.time = 0;
@@ -118,12 +142,49 @@ function assert(name, condition, detail) {
     assert('free-camera-toggle', await page.evaluate(() => window.MOGAO.APP.free === true), '自由视角应开启');
 
     await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 1 });
-    await new Promise((r) => setTimeout(r, 150));
+    await page.evaluate(() => dispatchEvent(new Event('resize')));
+    await page.waitForFunction(() => {
+      const c = document.querySelector('#c').getBoundingClientRect();
+      return c.width <= innerWidth + 0.1 && c.height <= innerHeight + 0.1 && c.width > 200;
+    }, { timeout: 5000 });
     const mobile = await page.evaluate(() => {
       const c = document.querySelector('#c').getBoundingClientRect();
       return { width: c.width, height: c.height, viewport: [innerWidth, innerHeight] };
     });
     assert('mobile-fit', mobile.width <= 390.1 && mobile.height <= 844.1 && mobile.width > 200, mobile);
+
+    await page.setViewport({ width: 604, height: 816, deviceScaleFactor: 2 });
+    await page.evaluate(() => dispatchEvent(new Event('resize')));
+    await page.waitForFunction(() => {
+      const c = document.querySelector('#c').getBoundingClientRect();
+      const canvas = document.querySelector('#c');
+      return c.width <= innerWidth + 0.1
+        && c.height <= innerHeight + 0.1
+        && c.width > 300
+        && canvas.width > c.width
+        && canvas.height > c.height;
+    }, { timeout: 5000 });
+    const narrowDpr2 = await page.evaluate(() => {
+      const c = document.querySelector('#c').getBoundingClientRect();
+      return {
+        cssWidth: c.width,
+        cssHeight: c.height,
+        backingWidth: document.querySelector('#c').width,
+        backingHeight: document.querySelector('#c').height,
+        viewport: [innerWidth, innerHeight],
+        dpr: devicePixelRatio,
+      };
+    });
+    assert(
+      'narrow-dpr2-fit',
+      narrowDpr2.cssWidth <= 604.1
+        && narrowDpr2.cssHeight <= 816.1
+        && narrowDpr2.cssWidth > 300
+        && narrowDpr2.backingWidth > narrowDpr2.cssWidth
+        && narrowDpr2.backingHeight > narrowDpr2.cssHeight,
+      narrowDpr2
+    );
+    await page.screenshot({ path: path.join(outDir, 'narrow-604x816-dpr2.png') });
 
     assert('no-page-errors', report.pageErrors.length === 0, report.pageErrors);
     report.finishedAt = new Date().toISOString();

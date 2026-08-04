@@ -1,5 +1,7 @@
 # 最终独立验收记录
 
+> 历史说明：本文记录的是此前 Round 5.1 横屏交付，已不是当前工作树的最终状态。当前版本已回到 Round 2 的 9:16 时间轴并加入真实三维佛像升级；请以 [`REAL_3D_BUDDHA_VALIDATION.md`](REAL_3D_BUDDHA_VALIDATION.md) 及其中的最终哈希为准。
+
 ChatGPT Pro 协作对话：<https://chatgpt.com/c/6a6c63d1-c7d4-83e8-8e4b-e457d34db5cb>
 
 ## 结论

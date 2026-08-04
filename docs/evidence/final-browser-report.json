@@ -1,12 +1,20 @@
 {
   "input": "/Users/sniper/Desktop/temp/testDunHong/index.html",
-  "inputBytes": 1544201,
-  "inputSha256": "bc0725eed10538d81365a6be2c35ad358400f2227618ce19e66a8e05c445a9af",
-  "startedAt": "2026-07-31T23:50:27.814Z",
+  "inputBytes": 1584543,
+  "inputSha256": "3b94ed50e201bb092c9a175571176121afcf161286f23a37896d1b988365e219",
+  "startedAt": "2026-08-04T19:40:55.921Z",
   "checks": {
     "ready-hook": {
       "pass": true,
       "detail": "window.__READY__ 必须为 true"
+    },
+    "initial-frame-paused-at-zero": {
+      "pass": true,
+      "detail": {
+        "time": 0,
+        "playing": false,
+        "playIcon": "▶"
+      }
     },
     "no-video-element": {
       "pass": true,
@@ -24,10 +32,19 @@
       "pass": true,
       "detail": 16
     },
+    "chapter-stops-at-next-boundary": {
+      "pass": true,
+      "detail": {
+        "time": 24.183333333333334,
+        "playing": false,
+        "playUntil": null,
+        "expectedStop": 24.183333333333334
+      }
+    },
     "chapter-seek-and-play": {
       "pass": true,
       "detail": {
-        "time": 20.763400000095363,
+        "time": 20.502599999904636,
         "playing": true
       }
     },
@@ -50,11 +67,25 @@
       "pass": true,
       "detail": {
         "width": 390,
-        "height": 506,
+        "height": 693,
         "viewport": [
           390,
           844
         ]
+      }
+    },
+    "narrow-dpr2-fit": {
+      "pass": true,
+      "detail": {
+        "cssWidth": 403,
+        "cssHeight": 717,
+        "backingWidth": 604,
+        "backingHeight": 1075,
+        "viewport": [
+          604,
+          816
+        ],
+        "dpr": 2
       }
     },
     "no-page-errors": {
@@ -68,23 +99,23 @@
       "actualTime": 0,
       "subtitle": "如果你把敦煌莫高窟撕下来",
       "stats": {
-        "drawCalls": 1,
-        "triangles": 2,
+        "drawCalls": 424,
+        "triangles": 1137100,
         "lines": 0,
         "points": 0,
-        "geometries": 218,
-        "textures": 36,
+        "geometries": 294,
+        "textures": 40,
         "pixelRatio": 1,
         "canvas": {
-          "width": 760,
-          "height": 427
+          "width": 692,
+          "height": 1231
         },
         "construction": {
           "stage": "tower-reveal",
           "progress": 0.1,
           "impact": 0,
           "activeGeometry": 0,
-          "movingPieces": 0,
+          "movingPieces": 2,
           "towerProgress": 0.1,
           "walkwayProgress": 0,
           "walkwayBuilt": 0,
@@ -92,85 +123,85 @@
         }
       },
       "file": "t000.png",
-      "sha256": "d2eab52e66a301060ef6d3a45cc14d0c2d73cf0fdf5db93ef7002d1b8eb93bc5"
+      "sha256": "63a5358471343cbc69f06bf209b16d638fd3b436986601c1d8616bbc9b1c30be"
     },
     {
       "requestedTime": 20,
       "actualTime": 20,
       "subtitle": "聪明的你",
       "stats": {
-        "drawCalls": 1,
-        "triangles": 2,
-        "lines": 0,
+        "drawCalls": 67,
+        "triangles": 106226,
+        "lines": 1,
         "points": 0,
-        "geometries": 451,
-        "textures": 38,
+        "geometries": 344,
+        "textures": 41,
         "pixelRatio": 1,
         "canvas": {
-          "width": 760,
-          "height": 427
+          "width": 692,
+          "height": 1231
         },
         "construction": {
           "stage": "bare-cliff",
           "progress": 0.9600000000000002,
           "impact": 0,
           "activeGeometry": 0,
-          "movingPieces": 29,
+          "movingPieces": 17,
           "towerProgress": 1,
-          "walkwayProgress": 0.34,
-          "walkwayBuilt": 161,
+          "walkwayProgress": 0.24,
+          "walkwayBuilt": 16,
           "dustCount": 0
         }
       },
       "file": "t020.png",
-      "sha256": "54da761ad63ca29b8100cd3f6c7f940e9781b481605e9a1711823cb7d93be392"
+      "sha256": "62004682ca17c8bcf964679732458d0953f778b29754ce13efcac10e658faa47"
     },
     {
       "requestedTime": 25,
       "actualTime": 25,
       "subtitle": "并在合适的位置凿出一道窟门",
       "stats": {
-        "drawCalls": 1,
-        "triangles": 2,
+        "drawCalls": 22,
+        "triangles": 107106,
         "lines": 0,
-        "points": 0,
-        "geometries": 801,
-        "textures": 39,
+        "points": 180,
+        "geometries": 428,
+        "textures": 42,
         "pixelRatio": 1,
         "canvas": {
-          "width": 760,
-          "height": 427
+          "width": 692,
+          "height": 1231
         },
         "construction": {
           "stage": "excavate-door",
           "progress": 0.4560089758518979,
           "impact": 0,
-          "activeGeometry": 8,
+          "activeGeometry": 14,
           "movingPieces": 0,
           "towerProgress": 1,
           "walkwayProgress": 1,
-          "walkwayBuilt": 528,
+          "walkwayBuilt": 120,
           "dustCount": 180
         }
       },
       "file": "t025.png",
-      "sha256": "62b818a4d48b55be24e861f8384f7cb7d15f6c98955faa413930265ca042863c"
+      "sha256": "135201da292a3c06b9d5d7a591e0c1a5c513bebcf83ee2a7ae273841cbc2d989"
     },
     {
       "requestedTime": 33,
       "actualTime": 33,
       "subtitle": "先凿出拱形的天花板",
       "stats": {
-        "drawCalls": 1,
-        "triangles": 2,
-        "lines": 0,
-        "points": 0,
-        "geometries": 806,
-        "textures": 39,
+        "drawCalls": 92,
+        "triangles": 1118504,
+        "lines": 8,
+        "points": 180,
+        "geometries": 437,
+        "textures": 42,
         "pixelRatio": 1,
         "canvas": {
-          "width": 760,
-          "height": 427
+          "width": 692,
+          "height": 1231
         },
         "construction": {
           "stage": "excavate-arch",
@@ -180,28 +211,28 @@
           "movingPieces": 0,
           "towerProgress": 1,
           "walkwayProgress": 1,
-          "walkwayBuilt": 528,
+          "walkwayBuilt": 120,
           "dustCount": 180
         }
       },
       "file": "t033.png",
-      "sha256": "c3237e42b466fb7b5591dd5ad8e210d4ca589b2dcd6a2dfa6509b30f2472f328"
+      "sha256": "901c28e2dd9c4ca80715fe29d4da455ecf501af1a9522371aa2419da51c5318a"
     },
     {
       "requestedTime": 40,
       "actualTime": 40,
       "subtitle": "同时还预留出大佛的岩石雏形",
       "stats": {
-        "drawCalls": 1,
-        "triangles": 2,
-        "lines": 0,
-        "points": 0,
-        "geometries": 806,
-        "textures": 39,
+        "drawCalls": 100,
+        "triangles": 1128784,
+        "lines": 8,
+        "points": 180,
+        "geometries": 438,
+        "textures": 42,
         "pixelRatio": 1,
         "canvas": {
-          "width": 760,
-          "height": 427
+          "width": 692,
+          "height": 1231
         },
         "construction": {
           "stage": "excavate-main",
@@ -211,28 +242,28 @@
           "movingPieces": 0,
           "towerProgress": 1,
           "walkwayProgress": 1,
-          "walkwayBuilt": 528,
+          "walkwayBuilt": 120,
           "dustCount": 180
         }
       },
       "file": "t040.png",
-      "sha256": "17f930f23f47670a9e8571a0cc6f7d1ea47f946e107301b214607df0882de2f9"
+      "sha256": "b574c60aeb46cce107c563a0a4b5facc2eb1c6fd53db737637dc8d7cb6025e2a"
     },
     {
       "requestedTime": 49,
       "actualTime": 49,
       "subtitle": "在下方增加两个洞窟",
       "stats": {
-        "drawCalls": 1,
-        "triangles": 2,
-        "lines": 0,
-        "points": 0,
-        "geometries": 806,
-        "textures": 39,
+        "drawCalls": 89,
+        "triangles": 1125964,
+        "lines": 8,
+        "points": 180,
+        "geometries": 438,
+        "textures": 42,
         "pixelRatio": 1,
         "canvas": {
-          "width": 760,
-          "height": 427
+          "width": 692,
+          "height": 1231
         },
         "construction": {
           "stage": "excavate-lower",
@@ -242,307 +273,307 @@
           "movingPieces": 0,
           "towerProgress": 1,
           "walkwayProgress": 1,
-          "walkwayBuilt": 528,
+          "walkwayBuilt": 120,
           "dustCount": 180
         }
       },
       "file": "t049.png",
-      "sha256": "74ef37faca0362dd2e77c3f677716a7c4a302fbb4dde16b3c4e70e8234600503"
+      "sha256": "1cd402fcb152d1841d0504d706632ac30c25ae1f59eb4dd36b5d08a3313e9923"
     },
     {
       "requestedTime": 60,
       "actualTime": 60,
       "subtitle": "因此你在岩石上凿孔插桩",
       "stats": {
-        "drawCalls": 1,
-        "triangles": 2,
+        "drawCalls": 91,
+        "triangles": 565218,
         "lines": 0,
         "points": 0,
-        "geometries": 815,
-        "textures": 39,
+        "geometries": 446,
+        "textures": 42,
         "pixelRatio": 1,
         "canvas": {
-          "width": 760,
-          "height": 427
+          "width": 692,
+          "height": 1231
         },
         "construction": {
           "stage": "peg-insertion",
-          "progress": 0.4815270935960591,
+          "progress": 0.9630541871921182,
           "impact": 0,
           "activeGeometry": 0,
           "movingPieces": 0,
           "towerProgress": 1,
           "walkwayProgress": 1,
-          "walkwayBuilt": 528,
+          "walkwayBuilt": 120,
           "dustCount": 0
         }
       },
       "file": "t060.png",
-      "sha256": "66e42a5ecdc3539f56dbcb46de34efef9c5eb69c52c89131041822cd66e6d25d"
+      "sha256": "58a7ceae0fff2a48d3716074912a1524574a1775cc8a8bf1c56630b34e2395e8"
     },
     {
       "requestedTime": 65,
       "actualTime": 65,
       "subtitle": "由于普通的泥土会开裂",
       "stats": {
-        "drawCalls": 1,
-        "triangles": 2,
+        "drawCalls": 69,
+        "triangles": 558334,
         "lines": 0,
         "points": 0,
-        "geometries": 821,
-        "textures": 39,
+        "geometries": 452,
+        "textures": 42,
         "pixelRatio": 1,
         "canvas": {
-          "width": 760,
-          "height": 427
+          "width": 692,
+          "height": 1231
         },
         "construction": {
           "stage": "mud-layer",
           "progress": 0.7222222222222223,
           "impact": 0,
-          "activeGeometry": 20,
+          "activeGeometry": 18,
           "movingPieces": 0,
           "towerProgress": 1,
           "walkwayProgress": 1,
-          "walkwayBuilt": 528,
+          "walkwayBuilt": 120,
           "dustCount": 96
         }
       },
       "file": "t065.png",
-      "sha256": "646ea4082ba08801c2e239fa0c811018c65174bd22ec9e0fe9fcddd66ab245ef"
+      "sha256": "28efd3d39aab94fc5ec16f0f0b1a61fb74214bc21f08831dd1635dc83fbc01dd"
     },
     {
       "requestedTime": 70,
       "actualTime": 70,
       "subtitle": "土中加入麦秆",
       "stats": {
-        "drawCalls": 1,
-        "triangles": 2,
+        "drawCalls": 63,
+        "triangles": 1101728,
         "lines": 0,
         "points": 0,
-        "geometries": 821,
-        "textures": 39,
+        "geometries": 452,
+        "textures": 42,
         "pixelRatio": 1,
         "canvas": {
-          "width": 760,
-          "height": 427
+          "width": 692,
+          "height": 1231
         },
         "construction": {
           "stage": "mud-layer",
           "progress": 0.6,
           "impact": 0,
-          "activeGeometry": 21,
+          "activeGeometry": 20,
           "movingPieces": 0,
           "towerProgress": 1,
           "walkwayProgress": 1,
-          "walkwayBuilt": 528,
+          "walkwayBuilt": 120,
           "dustCount": 96
         }
       },
       "file": "t070.png",
-      "sha256": "4030ce69a1d33da3199b2543ad260e31a6a9b0ed7aef5e2e842267d0c9dfc8a8"
+      "sha256": "d4ef0b8ea4babd77c23517ff416f2d05f4f3b8d00443ac06eb3c33311390745f"
     },
     {
       "requestedTime": 79,
       "actualTime": 79,
       "subtitle": "并随之加入棉花等植物",
       "stats": {
-        "drawCalls": 1,
-        "triangles": 2,
+        "drawCalls": 60,
+        "triangles": 1106340,
         "lines": 0,
         "points": 0,
-        "geometries": 821,
-        "textures": 39,
+        "geometries": 453,
+        "textures": 42,
         "pixelRatio": 1,
         "canvas": {
-          "width": 760,
-          "height": 427
+          "width": 692,
+          "height": 1231
         },
         "construction": {
           "stage": "mud-layer",
           "progress": 0.3124999999999997,
           "impact": 0,
-          "activeGeometry": 21,
+          "activeGeometry": 0,
           "movingPieces": 0,
           "towerProgress": 1,
           "walkwayProgress": 1,
-          "walkwayBuilt": 528,
+          "walkwayBuilt": 120,
           "dustCount": 96
         }
       },
       "file": "t079.png",
-      "sha256": "c010d964de396322a365d64a89dd72e9ff760c632a3f37b6659d1e8a54519170"
+      "sha256": "d0e3b15500f28309a79a1d35ee931b7c64ed51366b4a0147206599ac38665b22"
     },
     {
       "requestedTime": 86,
       "actualTime": 86,
       "subtitle": "阴干时还不停地用塑刀按压收紧",
       "stats": {
-        "drawCalls": 1,
-        "triangles": 2,
+        "drawCalls": 65,
+        "triangles": 1111400,
         "lines": 0,
         "points": 0,
-        "geometries": 824,
-        "textures": 39,
+        "geometries": 456,
+        "textures": 42,
         "pixelRatio": 1,
         "canvas": {
-          "width": 760,
-          "height": 427
+          "width": 692,
+          "height": 1231
         },
         "construction": {
           "stage": "surface-polish",
           "progress": 0.41935483870967727,
           "impact": 0,
-          "activeGeometry": 20,
+          "activeGeometry": 0,
           "movingPieces": 0,
           "towerProgress": 1,
           "walkwayProgress": 1,
-          "walkwayBuilt": 528,
+          "walkwayBuilt": 120,
           "dustCount": 96
         }
       },
       "file": "t086.png",
-      "sha256": "b5fe36628e3c03b390810fbb738d8612b053b1c9caf3f0a8677c529af654dcbb"
+      "sha256": "b2b004b3de3ab5a78126eb4f5257fbe70bc9a3df452ab3efc238ba2da2beb393"
     },
     {
       "requestedTime": 92,
       "actualTime": 92,
       "subtitle": "一身庄严肃穆的超级大佛",
       "stats": {
-        "drawCalls": 1,
-        "triangles": 2,
+        "drawCalls": 75,
+        "triangles": 1101228,
         "lines": 0,
-        "points": 0,
-        "geometries": 828,
-        "textures": 40,
+        "points": 96,
+        "geometries": 460,
+        "textures": 43,
         "pixelRatio": 1,
         "canvas": {
-          "width": 760,
-          "height": 427
+          "width": 692,
+          "height": 1231
         },
         "construction": {
           "stage": "paint-buddha",
-          "progress": 0.5999999999999991,
+          "progress": 0.3125000000000011,
           "impact": 0,
           "activeGeometry": 0,
           "movingPieces": 0,
           "towerProgress": 1,
           "walkwayProgress": 1,
-          "walkwayBuilt": 528,
+          "walkwayBuilt": 120,
           "dustCount": 96
         }
       },
       "file": "t092.png",
-      "sha256": "94e4317f241a6d7230e81e3a0d7bd4d4285c7dce96c2b05ad325a6ea218044ae"
+      "sha256": "fcb3887d4a964ef14c4d5cc0db2dca576f09fc1e309c41305edeebae3420d00d"
     },
     {
       "requestedTime": 101,
       "actualTime": 101,
       "subtitle": "一层比一层细腻的软土",
       "stats": {
-        "drawCalls": 1,
-        "triangles": 2,
+        "drawCalls": 42,
+        "triangles": 258770,
         "lines": 0,
-        "points": 0,
-        "geometries": 844,
-        "textures": 40,
+        "points": 96,
+        "geometries": 469,
+        "textures": 43,
         "pixelRatio": 1,
         "canvas": {
-          "width": 760,
-          "height": 427
+          "width": 692,
+          "height": 1231
         },
         "construction": {
           "stage": "whitewash",
-          "progress": 0.4024390243902444,
+          "progress": 0.27777777777777823,
           "impact": 0,
           "activeGeometry": 0,
           "movingPieces": 0,
           "towerProgress": 1,
           "walkwayProgress": 1,
-          "walkwayBuilt": 528,
+          "walkwayBuilt": 120,
           "dustCount": 96
         }
       },
       "file": "t101.png",
-      "sha256": "493b8dce669162f4b9fb7f1a72d32763cff4200b1404118768ac3b138ef143df"
+      "sha256": "418aced6715439ef546c9b4b2961c8cb3b2e5fd3716a2444d628f178e66261ba"
     },
     {
       "requestedTime": 106,
       "actualTime": 106,
       "subtitle": "绘制出一张张栩栩如生的壁画",
       "stats": {
-        "drawCalls": 1,
-        "triangles": 2,
+        "drawCalls": 40,
+        "triangles": 262838,
         "lines": 0,
-        "points": 0,
-        "geometries": 844,
-        "textures": 40,
+        "points": 96,
+        "geometries": 469,
+        "textures": 43,
         "pixelRatio": 1,
         "canvas": {
-          "width": 760,
-          "height": 427
+          "width": 692,
+          "height": 1231
         },
         "construction": {
           "stage": "mural",
-          "progress": 0.49514563106796144,
+          "progress": 0.48000000000000115,
           "impact": 0,
           "activeGeometry": 0,
           "movingPieces": 0,
           "towerProgress": 1,
           "walkwayProgress": 1,
-          "walkwayBuilt": 528,
+          "walkwayBuilt": 120,
           "dustCount": 96
         }
       },
       "file": "t106.png",
-      "sha256": "78c483705201f7efae959c106a2ea2c8f55dadaea513d8e5deb400cdbbb4031b"
+      "sha256": "a865366cf5916356b0073b9610503f993a8ce7e777d2f1983759a30adc27c9b7"
     },
     {
       "requestedTime": 112,
       "actualTime": 112,
       "subtitle": "关注扇子有画",
       "stats": {
-        "drawCalls": 1,
-        "triangles": 2,
+        "drawCalls": 215,
+        "triangles": 1132112,
         "lines": 0,
         "points": 0,
-        "geometries": 844,
-        "textures": 40,
+        "geometries": 470,
+        "textures": 43,
         "pixelRatio": 1,
         "canvas": {
-          "width": 760,
-          "height": 427
+          "width": 692,
+          "height": 1231
         },
         "construction": {
           "stage": "tower-reassembly",
-          "progress": 0.40883720930232437,
+          "progress": 0.3979999999999976,
           "impact": 0,
           "activeGeometry": 0,
-          "movingPieces": 1,
-          "towerProgress": 0.5911627906976756,
+          "movingPieces": 9,
+          "towerProgress": 0.6020000000000024,
           "walkwayProgress": 1,
-          "walkwayBuilt": 528,
+          "walkwayBuilt": 120,
           "dustCount": 0
         }
       },
       "file": "t112.png",
-      "sha256": "584c5b64936ea628052b639f13a1962a39983518fad05f1d88aca1e063181633"
+      "sha256": "076c00fe4e7d572ce7518efa305d6df90f2b2638ce1e3c1ee6141be16694f26c"
     },
     {
       "requestedTime": 116,
       "actualTime": 116,
       "subtitle": "用3D解锁更多华夏瑰宝",
       "stats": {
-        "drawCalls": 1,
-        "triangles": 2,
+        "drawCalls": 438,
+        "triangles": 1137168,
         "lines": 0,
         "points": 0,
-        "geometries": 844,
-        "textures": 40,
+        "geometries": 477,
+        "textures": 43,
         "pixelRatio": 1,
         "canvas": {
-          "width": 760,
-          "height": 427
+          "width": 692,
+          "height": 1231
         },
         "construction": {
           "stage": "tower-reassembly",
@@ -552,34 +583,34 @@
           "movingPieces": 0,
           "towerProgress": 0,
           "walkwayProgress": 1,
-          "walkwayBuilt": 528,
+          "walkwayBuilt": 120,
           "dustCount": 0
         }
       },
       "file": "t116.png",
-      "sha256": "331fa6c0dd899896e0f751b90bb28608c90679d7dc3c99b0296f52503929ab2a"
+      "sha256": "9940fa7a501122e61f43827e0079027c05ffad9209264125d1f27ff276688dfa"
     }
   ],
   "console": [
     {
       "type": "warn",
-      "text": "[.WebGL-0x10c001afe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x124001b2e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x10c001afe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x124001b2e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x10c001afe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x124001b2e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x10c001afe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+      "text": "[.WebGL-0x124001b2e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
     }
   ],
   "pageErrors": [],
   "remoteRequests": [],
-  "finishedAt": "2026-07-31T23:52:24.443Z",
+  "finishedAt": "2026-08-04T19:43:07.376Z",
   "pass": true
 }

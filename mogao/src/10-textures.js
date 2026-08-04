@@ -134,20 +134,28 @@ function buildCaveWall(size = 512) {
    石胎岩石 —— 黄褐砂岩 + 明显灰斑与凿面
    ------------------------------------------------------------ */
 function buildRockCore(size = 512) {
-  const a = [0xA8, 0x84, 0x54], b = [0xDD, 0xC0, 0x8A], gy = [0x8C, 0x88, 0x8E];
+  const a = [0x98, 0x79, 0x55], b = [0xD5, 0xB8, 0x89];
+  const gy = [0x82, 0x81, 0x7E], ochre = [0xA3, 0x73, 0x45];
   const r = bake(size, (u, v) => {
     const macro = fbm2(u * 5.0, v * 5.0, 5, 23.3);
+    const bed = fbm2(u * 2.3, v * 17.0, 4, 46.1);
     const chunk = worley2(u * 9, v * 9, 5);
     const facet = smoothstep(0.5, 0.02, chunk.f2 - chunk.f1);  // 凿击面
-    const grain = fbm2(u * 110, v * 110, 3, 3.3);
-    let t = clamp(macro * 0.68 + grain * 0.22 + facet * 0.1, 0, 1);
+    const grain = fbm2(u * 118, v * 118, 3, 3.3);
+    const pores = worley2(u * 43, v * 43, 91);
+    const pit = smoothstep(0.085, 0.018, pores.f1)
+      * smoothstep(0.60, 0.92, fbm2(u * 23, v * 23, 2, 18.2));
+    let t = clamp(macro * 0.54 + bed * 0.18 + grain * 0.21 + facet * 0.07, 0, 1);
     let col = [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
-    const gm = smoothstep(0.62, 0.86, fbm2(u * 3.4, v * 3.4, 4, 61)) * 0.7;
+    const gm = smoothstep(0.58, 0.86, fbm2(u * 3.4, v * 3.4, 4, 61)) * 0.56;
     col = [lerp(col[0], gy[0], gm), lerp(col[1], gy[1], gm), lerp(col[2], gy[2], gm)];
-    const h = clamp(macro * 0.45 + facet * 0.35 + grain * 0.3, 0, 1);
+    const om = smoothstep(0.67, 0.90, fbm2(u * 8.0, v * 7.0, 3, 74.4)) * 0.24;
+    col = [lerp(col[0], ochre[0], om), lerp(col[1], ochre[1], om), lerp(col[2], ochre[2], om)];
+    col = [lerp(col[0], 0x63, pit * 0.44), lerp(col[1], 0x59, pit * 0.44), lerp(col[2], 0x48, pit * 0.44)];
+    const h = clamp(macro * 0.32 + bed * 0.17 + facet * 0.25 + grain * 0.24 + 0.08 - pit * 0.34, 0, 1);
     return [col[0], col[1], col[2], h];
   });
-  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 3.2)) };
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 2.65)) };
 }
 
 /* ------------------------------------------------------------
@@ -181,33 +189,47 @@ function buildMud(size, tint, grainScale, roughAmp) {
   const r = bake(size, (u, v) => {
     const macro = fbm2(u * 5, v * 5, 4, 17.7);
     const grain = fbm2(u * grainScale, v * grainScale, 3, 8.8);
+    const sweep = ridge2(u * 3.0 + fbm2(u * 2, v * 2, 2, 39.2) * 0.28, v * 22.0, 3, 26.4);
     const flake = worley2(u * grainScale * 0.35, v * grainScale * 0.35, 12);
     const fl = smoothstep(0.35, 0.0, flake.f1) * 0.25;
-    let t = clamp(macro * 0.45 + grain * 0.45 + fl * 0.4, 0, 1);
-    const col = [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
-    const h = clamp(0.5 + (grain - 0.5) * roughAmp + (macro - 0.5) * 0.35, 0, 1);
+    const pores = worley2(u * grainScale * 0.62, v * grainScale * 0.62, 113);
+    const pore = smoothstep(0.10, 0.015, pores.f1) * (0.20 + roughAmp * 0.18);
+    let t = clamp(macro * 0.43 + grain * 0.40 + sweep * 0.10 + fl * 0.32, 0, 1);
+    let col = [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+    const cool = (fbm2(u * 9.0, v * 8.0, 3, 64.8) - 0.5) * (2.5 + roughAmp * 3.5);
+    col = [col[0] + cool * 0.45, col[1] + cool * 0.62, col[2] + cool];
+    const h = clamp(0.5 + (grain - 0.5) * roughAmp * 0.72
+      + (macro - 0.5) * 0.28 + (sweep - 0.5) * 0.10 - pore, 0, 1);
     return [col[0], col[1], col[2], h];
   });
-  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 2.0)) };
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 1.55 + roughAmp * 0.72)) };
 }
 
 /* ------------------------------------------------------------
    袈裟：赭红，带细小深褐斑点（视频里泥塑表面的杂质）
    ------------------------------------------------------------ */
 function buildRobeRed(size = 512) {
-  const a = [0x96, 0x50, 0x3C], b = [0xB6, 0x6B, 0x50];
+  const a = [0x8B, 0x54, 0x49], b = [0xB6, 0x7B, 0x67], dust = [0xB8, 0x94, 0x79];
   const r = bake(size, (u, v) => {
     const macro = fbm2(u * 4, v * 4, 4, 3.9);
-    const grain = fbm2(u * 60, v * 60, 3, 6.1);
-    let t = clamp(macro * 0.55 + grain * 0.45, 0, 1);
+    const grain = fbm2(u * 66, v * 66, 3, 6.1);
+    const warp = Math.sin((u * 118.0 + fbm2(u * 9, v * 9, 2, 48.2) * 0.65) * TAU);
+    const weft = Math.sin((v * 92.0 + fbm2(u * 8, v * 8, 2, 12.6) * 0.58) * TAU);
+    const weave = warp * 0.54 + weft * 0.46;
+    let t = clamp(macro * 0.58 + grain * 0.30 + weave * 0.035 + 0.06, 0, 1);
     let col = [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
-    // 杂质斑点
+    // 矿物颜料的褪色与泥尘，不用高对比黑点破坏布面连续性。
+    const wear = smoothstep(0.58, 0.86, fbm2(u * 7.0, v * 6.0, 4, 81.4)) * 0.34;
+    col = [lerp(col[0], dust[0], wear), lerp(col[1], dust[1], wear), lerp(col[2], dust[2], wear)];
     const sp = worley2(u * 34, v * 34, 77);
-    const s = smoothstep(0.14, 0.0, sp.f1) * smoothstep(0.55, 0.95, fbm2(u * 20, v * 20, 2, 55));
-    col = [lerp(col[0], 0x4A, s), lerp(col[1], 0x2E, s), lerp(col[2], 0x1E, s)];
-    return [col[0], col[1], col[2], clamp(0.5 + (grain - 0.5) * 0.5, 0, 1)];
+    const s = smoothstep(0.105, 0.018, sp.f1)
+      * smoothstep(0.62, 0.92, fbm2(u * 20, v * 20, 2, 55)) * 0.46;
+    col = [lerp(col[0], 0x61, s), lerp(col[1], 0x40, s), lerp(col[2], 0x34, s)];
+    const h = clamp(0.5 + (grain - 0.5) * 0.19 + weave * 0.055
+      + (macro - 0.5) * 0.07 - s * 0.11, 0, 1);
+    return [col[0], col[1], col[2], h];
   });
-  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 1.2)) };
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 1.75)) };
 }
 
 /* ------------------------------------------------------------
@@ -216,20 +238,28 @@ function buildRobeRed(size = 512) {
 function buildInnerBlue(size = 512) {
   const c = makeCanvas(size, size);
   const g = c.getContext('2d');
-  g.fillStyle = '#2E9DBE'; g.fillRect(0, 0, size, size);
+  g.fillStyle = '#5D8996'; g.fillRect(0, 0, size, size);
   // 底纹
   const img = g.getImageData(0, 0, size, size); const d = img.data;
+  const heights = new Float32Array(size * size);
   for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
-    const n = fbm2(x / size * 40, y / size * 40, 3, 2.1);
+    const u = x / size, v = y / size;
+    const n = fbm2(u * 42, v * 42, 3, 2.1);
+    const m = fbm2(u * 5.2, v * 4.6, 4, 33.7);
+    const wear = smoothstep(0.62, 0.88, fbm2(u * 10, v * 9, 3, 71.2));
+    const warp = Math.sin((x / 3.7 + fbm2(u * 8, v * 8, 2, 14.3) * 0.55) * TAU);
+    const weft = Math.sin((y / 4.2 + fbm2(u * 7, v * 7, 2, 25.9) * 0.48) * TAU);
     const i = (y * size + x) * 4;
-    d[i] = clamp(d[i] + (n - 0.5) * 26, 0, 255);
-    d[i + 1] = clamp(d[i + 1] + (n - 0.5) * 26, 0, 255);
-    d[i + 2] = clamp(d[i + 2] + (n - 0.5) * 26, 0, 255);
+    d[i] = clamp(d[i] + (n - 0.5) * 17 + (m - 0.5) * 12 + wear * 12, 0, 255);
+    d[i + 1] = clamp(d[i + 1] + (n - 0.5) * 20 + (m - 0.5) * 10 + wear * 8, 0, 255);
+    d[i + 2] = clamp(d[i + 2] + (n - 0.5) * 22 + (m - 0.5) * 7 - wear * 2, 0, 255);
+    heights[y * size + x] = clamp(0.5 + (n - 0.5) * 0.11
+      + (m - 0.5) * 0.045 + warp * 0.026 + weft * 0.023, 0, 1);
   }
   g.putImageData(img, 0, 0);
   // 深蓝团花：中心圆 + 5 瓣
   const rnd = mulberry32(7);
-  g.fillStyle = 'rgba(21,86,124,0.92)';
+  g.fillStyle = 'rgba(39,72,88,0.58)';
   const step = size / 3;
   for (let gy = 0; gy < 3; gy++) for (let gx = 0; gx < 3; gx++) {
     const cx = gx * step + step * 0.5 + (rnd() - 0.5) * step * 0.18;
@@ -243,7 +273,14 @@ function buildInnerBlue(size = 512) {
       g.fill();
     }
   }
-  return { map: toTex(c) };
+  // 低透明尘斑压过纹样，表现彩绘磨蚀而非新印花。
+  g.fillStyle = 'rgba(164,151,126,0.11)';
+  for (let i = 0; i < 72; i++) {
+    const x = rnd() * size, y = rnd() * size;
+    const rx = size * (0.005 + rnd() * 0.023);
+    g.beginPath(); g.ellipse(x, y, rx, rx * (0.25 + rnd() * 0.65), rnd() * TAU, 0, TAU); g.fill();
+  }
+  return { map: toTex(c), normal: toDataTex(normalFromHeight(heights, size, 1.55)) };
 }
 
 /* ------------------------------------------------------------
@@ -252,18 +289,26 @@ function buildInnerBlue(size = 512) {
 function buildSash(size = 512) {
   const c = makeCanvas(size, size);
   const g = c.getContext('2d');
-  g.fillStyle = '#CFBB6E'; g.fillRect(0, 0, size, size);
+  g.fillStyle = '#B69A6C'; g.fillRect(0, 0, size, size);
   const img = g.getImageData(0, 0, size, size); const d = img.data;
+  const heights = new Float32Array(size * size);
   for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
-    const n = fbm2(x / size * 34, y / size * 34, 3, 9.3);
+    const u = x / size, v = y / size;
+    const n = fbm2(u * 36, v * 36, 3, 9.3);
+    const m = fbm2(u * 5.4, v * 4.8, 4, 57.8);
+    const wear = smoothstep(0.60, 0.87, fbm2(u * 11, v * 8, 3, 21.4));
+    const warp = Math.sin((x / 3.5 + fbm2(u * 7, v * 7, 2, 36.8) * 0.50) * TAU);
+    const weft = Math.sin((y / 4.0 + fbm2(u * 8, v * 8, 2, 44.1) * 0.45) * TAU);
     const i = (y * size + x) * 4;
-    d[i] = clamp(d[i] + (n - 0.5) * 30, 0, 255);
-    d[i + 1] = clamp(d[i + 1] + (n - 0.5) * 30, 0, 255);
-    d[i + 2] = clamp(d[i + 2] + (n - 0.5) * 24, 0, 255);
+    d[i] = clamp(d[i] + (n - 0.5) * 20 + (m - 0.5) * 15 + wear * 8, 0, 255);
+    d[i + 1] = clamp(d[i + 1] + (n - 0.5) * 18 + (m - 0.5) * 10 + wear * 5, 0, 255);
+    d[i + 2] = clamp(d[i + 2] + (n - 0.5) * 13 + (m - 0.5) * 6 - wear * 2, 0, 255);
+    heights[y * size + x] = clamp(0.5 + (n - 0.5) * 0.10
+      + (m - 0.5) * 0.045 + warp * 0.027 + weft * 0.024, 0, 1);
   }
   g.putImageData(img, 0, 0);
   // 连环菱格
-  g.strokeStyle = '#3FBFA8'; g.lineWidth = size * 0.014; g.lineCap = 'round';
+  g.strokeStyle = 'rgba(63,126,117,0.78)'; g.lineWidth = size * 0.0062; g.lineCap = 'round';
   const N = 5, s = size / N;
   for (let gy = -1; gy <= N; gy++) for (let gx = -1; gx <= N; gx++) {
     const cx = gx * s + s * 0.5, cy = gy * s + s * 0.5;
@@ -280,7 +325,14 @@ function buildSash(size = 512) {
     // 连接钩
     g.beginPath(); g.arc(cx + s * 0.5, cy, s * 0.16, -0.9, 0.9); g.stroke();
   }
-  return { map: toTex(c) };
+  const rnd = mulberry32(29);
+  g.fillStyle = 'rgba(181,157,113,0.20)';
+  for (let i = 0; i < 96; i++) {
+    const x = rnd() * size, y = rnd() * size;
+    const rx = size * (0.004 + rnd() * 0.018);
+    g.beginPath(); g.ellipse(x, y, rx, rx * (0.24 + rnd() * 0.72), rnd() * TAU, 0, TAU); g.fill();
+  }
+  return { map: toTex(c), normal: toDataTex(normalFromHeight(heights, size, 1.58)) };
 }
 
 /* ------------------------------------------------------------
@@ -288,12 +340,21 @@ function buildSash(size = 512) {
    ------------------------------------------------------------ */
 function buildSkin(size = 256) {
   const r = bake(size, (u, v) => {
-    const n = fbm2(u * 55, v * 55, 3, 12.2);
-    const m = fbm2(u * 6, v * 6, 3, 31.7);
-    const t = clamp(n * 0.4 + m * 0.6, 0, 1);
-    return [lerp(0xE8, 0xF6, t), lerp(0xCE, 0xE1, t), lerp(0xA9, 0xC0, t), clamp(0.5 + (n - 0.5) * 0.35, 0, 1)];
+    const n = fbm2(u * 62, v * 62, 3, 12.2);
+    const m = fbm2(u * 6, v * 6, 4, 31.7);
+    const bloom = fbm2(u * 13, v * 11, 3, 74.1);
+    const poreCell = worley2(u * 74, v * 74, 129);
+    const pore = smoothstep(0.055, 0.012, poreCell.f1)
+      * smoothstep(0.70, 0.94, fbm2(u * 31, v * 31, 2, 52.6));
+    const t = clamp(n * 0.25 + m * 0.66 + bloom * 0.09, 0, 1);
+    let col = [lerp(0xCE, 0xE9, t), lerp(0xAE, 0xD0, t), lerp(0x91, 0xAF, t)];
+    const rosy = smoothstep(0.64, 0.88, bloom) * 0.12;
+    col = [lerp(col[0], 0xD8, rosy), lerp(col[1], 0xA0, rosy), lerp(col[2], 0x8D, rosy)];
+    col = [lerp(col[0], 0x9C, pore * 0.30), lerp(col[1], 0x83, pore * 0.30), lerp(col[2], 0x70, pore * 0.30)];
+    const h = clamp(0.5 + (n - 0.5) * 0.20 + (m - 0.5) * 0.055 - pore * 0.13, 0, 1);
+    return [col[0], col[1], col[2], h];
   });
-  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 0.6)) };
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 0.92)) };
 }
 
 /* ------------------------------------------------------------
@@ -647,8 +708,8 @@ function buildAllTextures(onProgress) {
     ['rockCore', () => buildRockCore(384)],
     ['crackedMud', () => buildCrackedMud(384)],
     ['mudCoarse', () => buildMud(256, { a: [0x93, 0x81, 0x66], b: [0xBC, 0xA8, 0x86] }, 46, 1.0)],
-    ['mudMid', () => buildMud(256, { a: [0xA8, 0x94, 0x78], b: [0xCB, 0xB8, 0x9A] }, 80, 0.68)],
-    ['mudFine', () => buildMud(256, { a: [0xC3, 0xAE, 0x92], b: [0xE0, 0xCE, 0xB4] }, 150, 0.38)],
+    ['mudMid', () => buildMud(256, { a: [0x92, 0x72, 0x55], b: [0xB8, 0x96, 0x70] }, 80, 0.74)],
+    ['mudFine', () => buildMud(256, { a: [0xA5, 0x83, 0x64], b: [0xC3, 0xA2, 0x7C] }, 150, 0.46)],
     ['mudPolish', () => buildMud(256, { a: [0xD6, 0xC2, 0xA6], b: [0xEE, 0xDF, 0xC6] }, 260, 0.16)],
     ['skin', () => buildSkin(256)],
     ['robeRed', () => buildRobeRed(384)],

@@ -4,7 +4,7 @@
 
 const APP = {
   time: 0,
-  playing: true,
+  playing: false,
   speed: 1,
   free: false,
   renderSuspended: false,
@@ -42,15 +42,40 @@ function init() {
   APP.sectionBackground = new THREE.Color(0x241B16);
   APP.sectionFogColor = new THREE.Color(0x4A3324);
   scene.background = APP.skyBackground;
-  scene.environment = null;
+  /* 中性暖色程序化光场只参与 PBR 反射，不承载任何佛像图像或轮廓。 */
+  {
+    const envCanvas = makeCanvas(512, 256);
+    const eg = envCanvas.getContext('2d');
+    const base = eg.createLinearGradient(0, 0, 0, 256);
+    base.addColorStop(0.00, '#F4E7D8');
+    base.addColorStop(0.42, '#B9A995');
+    base.addColorStop(1.00, '#42382F');
+    eg.fillStyle = base;
+    eg.fillRect(0, 0, 512, 256);
+    const softbox = eg.createRadialGradient(122, 76, 3, 122, 76, 112);
+    softbox.addColorStop(0.00, 'rgba(255,248,238,0.95)');
+    softbox.addColorStop(0.35, 'rgba(255,232,209,0.48)');
+    softbox.addColorStop(1.00, 'rgba(255,224,198,0)');
+    eg.fillStyle = softbox;
+    eg.fillRect(0, 0, 512, 256);
+    const envTex = new THREE.CanvasTexture(envCanvas);
+    envTex.colorSpace = THREE.SRGBColorSpace;
+    envTex.mapping = THREE.EquirectangularReflectionMapping;
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    pmrem.compileEquirectangularShader();
+    APP.environmentTarget = pmrem.fromEquirectangular(envTex);
+    scene.environment = APP.environmentTarget.texture;
+    envTex.dispose();
+    pmrem.dispose();
+  }
   scene.fog = new THREE.Fog(APP.skyFogColor, 380, 1100);
 
   camera = new THREE.PerspectiveCamera(35, 9 / 16, 0.5, 1400);
   freeCam = new THREE.PerspectiveCamera(45, 9 / 16, 0.5, 1400);
 
   /* ---------------- 光照 ---------------- */
-  scene.add(new THREE.AmbientLight(0xFFF2E2, 0.30));
-  scene.add(new THREE.HemisphereLight(0xC6E6EC, 0xC09872, 0.64));
+  scene.add(new THREE.AmbientLight(0xFFF2E2, 0.07));
+  scene.add(new THREE.HemisphereLight(0xC6E6EC, 0x8B684C, 0.17));
 
   const sun = new THREE.DirectionalLight(0xFFF3E0, 2.15);
   sun.position.set(76, 108, 128);
@@ -63,25 +88,49 @@ function init() {
   sun.shadow.normalBias = 0.55;
   sun.target.position.set(0, 18, 0);
   scene.add(sun, sun.target);
+  APP.sun = sun;
 
-  const fill = new THREE.DirectionalLight(0xDCE8EE, 0.40);
+  const fill = new THREE.DirectionalLight(0xDCE8EE, 0.13);
   fill.position.set(-70, 40, 120);
   scene.add(fill);
 
-  const inner = new THREE.PointLight(0xFFE7C6, 60, 130, 1.6);
+  const inner = new THREE.PointLight(0xFFE7C6, 12, 130, 1.6);
   inner.position.set(0, 27, 22);
   scene.add(inner);
   APP.innerLight = inner;
 
-  const inner2 = new THREE.DirectionalLight(0xFFF0DC, 1.08);
+  const inner2 = new THREE.DirectionalLight(0xFFF0DC, 0.16);
   inner2.position.set(4, 34, 90);
   inner2.target.position.set(0, 20, -8);
   scene.add(inner2, inner2.target);
 
-  const inner3 = new THREE.DirectionalLight(0xE8F0F4, 0.52);
+  const inner3 = new THREE.DirectionalLight(0xE8F0F4, 0.16);
   inner3.position.set(-46, 22, 70);
   inner3.target.position.set(0, 22, -6);
   scene.add(inner3, inner3.target);
+
+  /* 造像局部塑形光：让眼睑、鼻翼、唇峰、指缝和螺发产生可读的实体阴影。 */
+  const sculptKey = new THREE.DirectionalLight(0xFFF0E4, 2.18);
+  sculptKey.position.set(-42, 54, 24);
+  sculptKey.target.position.set(0, 26, 0);
+  sculptKey.castShadow = true;
+  sculptKey.shadow.mapSize.set(2048, 2048);
+  sculptKey.shadow.camera.left = -18;
+  sculptKey.shadow.camera.right = 18;
+  sculptKey.shadow.camera.top = 22;
+  sculptKey.shadow.camera.bottom = -18;
+  sculptKey.shadow.camera.near = 18;
+  sculptKey.shadow.camera.far = 105;
+  sculptKey.shadow.bias = -0.00020;
+  sculptKey.shadow.normalBias = 0.035;
+  scene.add(sculptKey, sculptKey.target);
+  APP.sculptKey = sculptKey;
+
+  const sculptFill = new THREE.DirectionalLight(0xFFF7F0, 0);
+  sculptFill.position.set(34, 38, 58);
+  sculptFill.target.position.set(0, 27.5, 1.5);
+  scene.add(sculptFill, sculptFill.target);
+  APP.sculptFill = sculptFill;
 
   /* ---------------- 场景 ---------------- */
   buildWorld(scene);
@@ -174,6 +223,13 @@ function onResize() {
   elSvg.style.width = w + 'px'; elSvg.style.height = h + 'px';
   elSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
   elHud.style.width = w + 'px'; elHud.style.height = h + 'px';
+  // 浏览器窗口在不同 DPR 的屏幕间移动，或测试/系统动态切换缩放时，
+  // resize 不会重新创建 renderer。同步像素比后再 setSize，避免高分屏
+  // 仍沿用初始化时的 1x backing buffer 而出现明显模糊。
+  const pixelRatio = Math.min(devicePixelRatio || 1, 1.5);
+  if (Math.abs(renderer.getPixelRatio() - pixelRatio) > 0.001) {
+    renderer.setPixelRatio(pixelRatio);
+  }
   renderer.setSize(w, h, false);
   camera.aspect = w / h; camera.updateProjectionMatrix();
   freeCam.aspect = w / h; freeCam.updateProjectionMatrix();
@@ -225,7 +281,13 @@ function applyCarveState(t) {
   if (t < 15.2 || t >= 27.0) doorProgress = 1;
   else if (t >= 24.55) doorProgress = easeOut(windowK(t, 24.55, 27.0));
   setDoorProgress(doorProgress);
-  if (WORLD.doorTunnel) WORLD.doorTunnel.visible = doorProgress > 0.035;
+  /*
+    门洞盒体只用于外部凿门镜头。旧逻辑让它在佛像施工期仍常驻，近景相机
+    实际钻进盒体后，前壁会像一块巨型横板截掉佛脸与胸口。
+  */
+  if (WORLD.doorTunnel) {
+    WORLD.doorTunnel.visible = doorProgress > 0.035 && (t < 30.4 || t >= 111.4);
+  }
 
   const complete = t < 15.2 || t >= 51.6;
   let lower1 = complete ? 1 : 0;
@@ -247,6 +309,14 @@ function applyState(t, dt) {
   scene.fog.color.copy(sectionOn ? APP.sectionFogColor : APP.skyFogColor);
   const sculpt = applySculptState(t, carve.carveY);
 
+  if (APP.sculptKey) {
+    const focus = (t < 15.2 || (t >= 51.0 && t < 99.0) || t >= 108.6) ? 1 : 0;
+    const paintedLift = smoothstep(90.2, 92.6, t);
+    APP.sculptKey.intensity = lerp(0.14, lerp(3.60, 5.80, paintedLift), focus);
+  }
+  if (APP.sculptFill) APP.sculptFill.intensity = (t >= 56.0 && t < 99.0) ? 0.06 : 0;
+  if (APP.sun) APP.sun.intensity = (t >= 56.0 && t < 99.0) ? 0.32 : 2.15;
+
   /* 佛像在开凿阶段由高度阈值从石胎中显露，不做整尊跳变。 */
   const excavationReveal = t >= 31.0 && t < 51.9;
   const bop = excavationReveal ? 1 : CURVE_BOPA(t);
@@ -260,8 +330,23 @@ function applyState(t, dt) {
   }
   const detailOpacity = CURVE_DETAIL(t) * bop;
   for (const m of BUDDHA.detailMats) m.opacity = detailOpacity;
+  /* 雕刻凹槽在素胎阶段已经存在；彩绘只改变其综合色，而不是凭空出现。 */
+  const cavityOpacity = (t < 72 ? 0 : smoothstep(72, 78, t)) * bop;
+  for (const m of BUDDHA.cavityMats) m.opacity = cavityOpacity;
+  if (BUDDHA.parts.eyeSurfaceMats) {
+    const eyePaint = smoothstep(90.2, 92.6, t);
+    for (const m of BUDDHA.parts.eyeSurfaceMats) {
+      m.color.copy(m.userData.clayColor).lerp(m.userData.paintColor, eyePaint);
+    }
+  }
   const haloOpacity = CURVE_HALO(t) * bop * 0.98;
   for (const m of BUDDHA.haloMats) m.opacity = haloOpacity;
+
+  /* 原片 87.2–94.1 s 是正面脸胸特写，举手位于镜头外；95 s 低机位再完整入画。 */
+  const faceCloseWithoutHand = t >= 87.2 && t < 94.1;
+  for (const part of [BUDDHA.parts.handR, BUDDHA.parts.cuffR, BUDDHA.parts.raisedSleeve]) {
+    if (part) part.visible = !faceCloseWithoutHand;
+  }
 
   // 螺发的逐颗显露/上色由施工系统接管，避免整组缩放。
   if (BUDDHA.parts.hair) BUDDHA.parts.hair.scale.setScalar(1);
@@ -272,11 +357,31 @@ function applyState(t, dt) {
   tower.visible = true;
   walkway.visible = true;
   if (decorGroup) decorGroup.visible = t < 26.6 || t >= 108.4;
+  if (WORLD.sculptureFrame) {
+    const materialClose = t >= 71.6 && t < 83.4;
+    const completedReveal = t >= 94.1 && t < 95.4;
+    WORLD.sculptureFrame.visible = materialClose || completedReveal;
+    WORLD.sculptureFrameLeft.visible = materialClose || completedReveal;
+    WORLD.sculptureFrameRight.visible = completedReveal;
+    if (materialClose) {
+      WORLD.sculptureFrameLeft.position.x = -7.0;
+      WORLD.sculptureFrameLeft.scale.x = 0.30;
+    } else {
+      /* 完成镜头的岩壁只在左右构成天然画框，不能移到佛身中央。 */
+      WORLD.sculptureFrameLeft.position.x = 4.0;
+      WORLD.sculptureFrameLeft.scale.x = 0.75;
+    }
+    WORLD.sculptureFrameRight.position.x = -3.5;
+    WORLD.sculptureFrameRight.scale.x = 1.12;
+  }
 
   const caveOpen = carve.complete
     ? 1
     : clamp((CAVE.yTop + 1 - carve.carveY) / (CAVE.yTop + 1), 0, 1);
-  APP.innerLight.intensity = lerp(42, 185, easeOut(caveOpen));
+  /* 正面点光在近景会把鼻翼、眼窝和唇峰全部洗平；造像段改由侧上方塑形光主导。 */
+  APP.innerLight.intensity = (t >= 56.0 && t < 99.0)
+    ? lerp(1.10, 0.55, smoothstep(90.2, 92.6, t))
+    : lerp(9, 28, easeOut(caveOpen));
   WORLD.plinth.visible = t < 15.2 || t >= 51.55;
 
   const construction = updateConstruction(t);
@@ -297,7 +402,10 @@ function setScriptedCamera(t) {
     camera.fov = fov;
     camera.updateProjectionMatrix();
   }
-  renderer.toneMappingExposure = APP.baseExposure + fb.exposure;
+  const sculptExposure = t >= 56.0 && t < 95.4
+    ? lerp(0.48, 0.88, smoothstep(90.2, 92.6, t))
+    : 0;
+  renderer.toneMappingExposure = APP.baseExposure + fb.exposure + sculptExposure;
 }
 
 function renderFrame(t, dt) {

@@ -1,0 +1,692 @@
+{
+  "input": "/Users/sniper/Desktop/temp/testDunHong/index.html",
+  "inputBytes": 1584543,
+  "inputSha256": "3b94ed50e201bb092c9a175571176121afcf161286f23a37896d1b988365e219",
+  "startedAt": "2026-08-04T19:39:14.779Z",
+  "checks": {
+    "realism-group-present": {
+      "pass": true,
+      "detail": {
+        "name": "RealThreeDimensionalBuddhaUpgrade",
+        "usesImageImpostor": false,
+        "geometryContract": "volumetric-surfaces-with-normals-no-impostors",
+        "referencePose": "abhaya-right-hand-resting-left-hand"
+      }
+    },
+    "realism-contract": {
+      "pass": true,
+      "detail": {
+        "name": "RealThreeDimensionalBuddhaUpgrade",
+        "usesImageImpostor": false,
+        "geometryContract": "volumetric-surfaces-with-normals-no-impostors",
+        "referencePose": "abhaya-right-hand-resting-left-hand"
+      }
+    },
+    "realism-no-sprites": {
+      "pass": true,
+      "detail": []
+    },
+    "realism-no-planes": {
+      "pass": true,
+      "detail": []
+    },
+    "realism-all-meshes-have-position": {
+      "pass": true,
+      "detail": []
+    },
+    "realism-all-meshes-have-normals": {
+      "pass": true,
+      "detail": []
+    },
+    "realism-mesh-density": {
+      "pass": true,
+      "detail": {
+        "type": "Group",
+        "name": "RealThreeDimensionalBuddhaUpgrade",
+        "isMesh": false,
+        "isInstancedMesh": false,
+        "meshCount": 65,
+        "instancedMeshCount": 1,
+        "instanceCount": 301,
+        "geometryTriangles": 353778,
+        "renderedTriangles": 903978,
+        "missingPosition": [],
+        "missingNormals": [],
+        "planeGeometries": [],
+        "sprites": [],
+        "dimensions": {
+          "x": 18.8980136680603,
+          "y": 34.901387214660645,
+          "z": 12.061169851422312
+        },
+        "names": [
+          "SculptedNeck",
+          "AnatomicalHead",
+          "UpperEyelid",
+          "LowerEyelid",
+          "BrowRidge",
+          "UpperEyelid",
+          "LowerEyelid",
+          "BrowRidge",
+          "UpperLip",
+          "LowerLip",
+          "RecessedEyeSlit",
+          "RecessedEyePupil",
+          "NostrilRecess",
+          "RecessedEyeSlit",
+          "RecessedEyePupil",
+          "NostrilRecess",
+          "MouthRecess",
+          "UpperLipPigment",
+          "LowerLipPigment",
+          "UrnaBase",
+          "UrnaPigment",
+          "EarShell",
+          "EarInnerRidge",
+          "EarShell",
+          "EarInnerRidge",
+          "SculptedHairCap",
+          "ThreeDimensionalSpiralCurls",
+          "VolumetricRaisedSleeve",
+          "BlueSleeveCuff",
+          "VolumetricRestingSleeve",
+          "RestingSleeveCuff",
+          "AbhayaHand",
+          "RobedRestingHand",
+          "CoherentBlueShoulderDrape",
+          "CoherentDiagonalSashCloth",
+          "LowerUShapeFoldRidge",
+          "LowerUShapeFoldRidge",
+          "LowerUShapeFoldRidge",
+          "LowerUShapeFoldRidge",
+          "LowerUShapeFoldRidge",
+          "TailoredSashLowerEdge",
+          "TailoredSashUpperEdge",
+          "CylinderGeometry",
+          "TorusGeometry",
+          "TorusGeometry",
+          "TorusGeometry",
+          "TorusGeometry",
+          "SphereGeometry",
+          "SphereGeometry",
+          "SphereGeometry",
+          "SphereGeometry",
+          "SphereGeometry",
+          "SphereGeometry",
+          "SphereGeometry",
+          "SphereGeometry",
+          "SphereGeometry",
+          "SphereGeometry",
+          "SphereGeometry",
+          "SphereGeometry",
+          "SphereGeometry",
+          "SphereGeometry",
+          "SphereGeometry",
+          "SphereGeometry",
+          "SphereGeometry",
+          "SphereGeometry"
+        ]
+      }
+    },
+    "realism-three-axis-volume": {
+      "pass": true,
+      "detail": {
+        "x": 18.8980136680603,
+        "y": 34.901387214660645,
+        "z": 12.061169851422312
+      }
+    },
+    "head-is-volumetric-mesh": {
+      "pass": true,
+      "detail": {
+        "type": "Mesh",
+        "name": "AnatomicalHead",
+        "isMesh": true,
+        "isInstancedMesh": false,
+        "meshCount": 1,
+        "instancedMeshCount": 0,
+        "instanceCount": 0,
+        "geometryTriangles": 221184,
+        "renderedTriangles": 221184,
+        "missingPosition": [],
+        "missingNormals": [],
+        "planeGeometries": [],
+        "sprites": [],
+        "dimensions": {
+          "x": 5.732484703063965,
+          "y": 7.808498859405518,
+          "z": 5.433751440048219
+        },
+        "names": [
+          "AnatomicalHead"
+        ]
+      }
+    },
+    "face-is-volumetric-mesh-assembly": {
+      "pass": true,
+      "detail": {
+        "type": "Group",
+        "name": "SculptedFace",
+        "isMesh": false,
+        "isInstancedMesh": false,
+        "meshCount": 19,
+        "instancedMeshCount": 0,
+        "instanceCount": 0,
+        "geometryTriangles": 31592,
+        "renderedTriangles": 31592,
+        "missingPosition": [],
+        "missingNormals": [],
+        "planeGeometries": [],
+        "sprites": [],
+        "dimensions": {
+          "x": 4.330817599296569,
+          "y": 3.636333656311038,
+          "z": 1.2027455091476442
+        },
+        "names": [
+          "UpperEyelid",
+          "LowerEyelid",
+          "BrowRidge",
+          "UpperEyelid",
+          "LowerEyelid",
+          "BrowRidge",
+          "UpperLip",
+          "LowerLip",
+          "RecessedEyeSlit",
+          "RecessedEyePupil",
+          "NostrilRecess",
+          "RecessedEyeSlit",
+          "RecessedEyePupil",
+          "NostrilRecess",
+          "MouthRecess",
+          "UpperLipPigment",
+          "LowerLipPigment",
+          "UrnaBase",
+          "UrnaPigment"
+        ]
+      }
+    },
+    "raised-hand-is-volumetric-mesh": {
+      "pass": true,
+      "detail": {
+        "type": "Mesh",
+        "name": "AbhayaHand",
+        "isMesh": true,
+        "isInstancedMesh": false,
+        "meshCount": 1,
+        "instancedMeshCount": 0,
+        "instanceCount": 0,
+        "geometryTriangles": 11292,
+        "renderedTriangles": 11292,
+        "missingPosition": [],
+        "missingNormals": [],
+        "planeGeometries": [],
+        "sprites": [],
+        "dimensions": {
+          "x": 3.281432867050171,
+          "y": 4.913270950317383,
+          "z": 1.2746806144714355
+        },
+        "names": [
+          "AbhayaHand"
+        ]
+      }
+    },
+    "resting-hand-is-volumetric-mesh": {
+      "pass": true,
+      "detail": {
+        "type": "Mesh",
+        "name": "RobedRestingHand",
+        "isMesh": true,
+        "isInstancedMesh": false,
+        "meshCount": 1,
+        "instancedMeshCount": 0,
+        "instanceCount": 0,
+        "geometryTriangles": 4752,
+        "renderedTriangles": 4752,
+        "missingPosition": [],
+        "missingNormals": [],
+        "planeGeometries": [],
+        "sprites": [],
+        "dimensions": {
+          "x": 2.2799997329711914,
+          "y": 2.0400009155273438,
+          "z": 1.4812331199645996
+        },
+        "names": [
+          "RobedRestingHand"
+        ]
+      }
+    },
+    "hair-is-instanced-spiral-mesh": {
+      "pass": true,
+      "detail": {
+        "hair": {
+          "type": "Mesh",
+          "name": "ThreeDimensionalSpiralCurls",
+          "isMesh": true,
+          "isInstancedMesh": true,
+          "meshCount": 1,
+          "instancedMeshCount": 1,
+          "instanceCount": 301,
+          "geometryTriangles": 1834,
+          "renderedTriangles": 552034,
+          "missingPosition": [],
+          "missingNormals": [],
+          "planeGeometries": [],
+          "sprites": [],
+          "dimensions": {
+            "x": 6.314989518236551,
+            "y": 5.716027618049473,
+            "z": 5.444482414006946
+          },
+          "names": [
+            "ThreeDimensionalSpiralCurls"
+          ]
+        },
+        "hairCurlCount": 301
+      }
+    },
+    "hair-three-axis-volume": {
+      "pass": true,
+      "detail": {
+        "x": 6.314989518236551,
+        "y": 5.716027618049473,
+        "z": 5.444482414006946
+      }
+    },
+    "parallax-front-vs-left25": {
+      "pass": true,
+      "detail": {
+        "sameSize": true,
+        "width": 540,
+        "height": 960,
+        "meanAbsoluteDifference": 0.06493830942870976,
+        "changedPixelRatio": 0.3316184413580247,
+        "comparedPixelRatio": 1
+      }
+    },
+    "parallax-front-vs-right25": {
+      "pass": true,
+      "detail": {
+        "sameSize": true,
+        "width": 540,
+        "height": 960,
+        "meanAbsoluteDifference": 0.07475550209795853,
+        "changedPixelRatio": 0.3513715277777778,
+        "comparedPixelRatio": 1
+      }
+    },
+    "parallax-left25-vs-right25": {
+      "pass": true,
+      "detail": {
+        "sameSize": true,
+        "width": 540,
+        "height": 960,
+        "meanAbsoluteDifference": 0.11339904331073994,
+        "changedPixelRatio": 0.4441358024691358,
+        "comparedPixelRatio": 1
+      }
+    },
+    "three-distinct-view-images": {
+      "pass": true,
+      "detail": [
+        "8531daf046a5f1b8a62f70dc1c8d69ec9b57c1ebde2df5c3d08c7133a3f35e12",
+        "53dbce6a3bc00b5881d2635fce0472a479cfd9d267c1c5f223d151e2607a34d6",
+        "2ba38d2580f83d72a365cfe8c80130b59706603b1a6a9941b914b4604644cc1d"
+      ]
+    },
+    "no-page-errors": {
+      "pass": true,
+      "detail": []
+    },
+    "no-console-errors": {
+      "pass": true,
+      "detail": []
+    }
+  },
+  "geometry": {
+    "contract": {
+      "name": "RealThreeDimensionalBuddhaUpgrade",
+      "usesImageImpostor": false,
+      "geometryContract": "volumetric-surfaces-with-normals-no-impostors",
+      "referencePose": "abhaya-right-hand-resting-left-hand"
+    },
+    "realism": {
+      "type": "Group",
+      "name": "RealThreeDimensionalBuddhaUpgrade",
+      "isMesh": false,
+      "isInstancedMesh": false,
+      "meshCount": 65,
+      "instancedMeshCount": 1,
+      "instanceCount": 301,
+      "geometryTriangles": 353778,
+      "renderedTriangles": 903978,
+      "missingPosition": [],
+      "missingNormals": [],
+      "planeGeometries": [],
+      "sprites": [],
+      "dimensions": {
+        "x": 18.8980136680603,
+        "y": 34.901387214660645,
+        "z": 12.061169851422312
+      },
+      "names": [
+        "SculptedNeck",
+        "AnatomicalHead",
+        "UpperEyelid",
+        "LowerEyelid",
+        "BrowRidge",
+        "UpperEyelid",
+        "LowerEyelid",
+        "BrowRidge",
+        "UpperLip",
+        "LowerLip",
+        "RecessedEyeSlit",
+        "RecessedEyePupil",
+        "NostrilRecess",
+        "RecessedEyeSlit",
+        "RecessedEyePupil",
+        "NostrilRecess",
+        "MouthRecess",
+        "UpperLipPigment",
+        "LowerLipPigment",
+        "UrnaBase",
+        "UrnaPigment",
+        "EarShell",
+        "EarInnerRidge",
+        "EarShell",
+        "EarInnerRidge",
+        "SculptedHairCap",
+        "ThreeDimensionalSpiralCurls",
+        "VolumetricRaisedSleeve",
+        "BlueSleeveCuff",
+        "VolumetricRestingSleeve",
+        "RestingSleeveCuff",
+        "AbhayaHand",
+        "RobedRestingHand",
+        "CoherentBlueShoulderDrape",
+        "CoherentDiagonalSashCloth",
+        "LowerUShapeFoldRidge",
+        "LowerUShapeFoldRidge",
+        "LowerUShapeFoldRidge",
+        "LowerUShapeFoldRidge",
+        "LowerUShapeFoldRidge",
+        "TailoredSashLowerEdge",
+        "TailoredSashUpperEdge",
+        "CylinderGeometry",
+        "TorusGeometry",
+        "TorusGeometry",
+        "TorusGeometry",
+        "TorusGeometry",
+        "SphereGeometry",
+        "SphereGeometry",
+        "SphereGeometry",
+        "SphereGeometry",
+        "SphereGeometry",
+        "SphereGeometry",
+        "SphereGeometry",
+        "SphereGeometry",
+        "SphereGeometry",
+        "SphereGeometry",
+        "SphereGeometry",
+        "SphereGeometry",
+        "SphereGeometry",
+        "SphereGeometry",
+        "SphereGeometry",
+        "SphereGeometry",
+        "SphereGeometry",
+        "SphereGeometry"
+      ]
+    },
+    "head": {
+      "type": "Mesh",
+      "name": "AnatomicalHead",
+      "isMesh": true,
+      "isInstancedMesh": false,
+      "meshCount": 1,
+      "instancedMeshCount": 0,
+      "instanceCount": 0,
+      "geometryTriangles": 221184,
+      "renderedTriangles": 221184,
+      "missingPosition": [],
+      "missingNormals": [],
+      "planeGeometries": [],
+      "sprites": [],
+      "dimensions": {
+        "x": 5.732484703063965,
+        "y": 7.808498859405518,
+        "z": 5.433751440048219
+      },
+      "names": [
+        "AnatomicalHead"
+      ]
+    },
+    "face": {
+      "type": "Group",
+      "name": "SculptedFace",
+      "isMesh": false,
+      "isInstancedMesh": false,
+      "meshCount": 19,
+      "instancedMeshCount": 0,
+      "instanceCount": 0,
+      "geometryTriangles": 31592,
+      "renderedTriangles": 31592,
+      "missingPosition": [],
+      "missingNormals": [],
+      "planeGeometries": [],
+      "sprites": [],
+      "dimensions": {
+        "x": 4.330817599296569,
+        "y": 3.636333656311038,
+        "z": 1.2027455091476442
+      },
+      "names": [
+        "UpperEyelid",
+        "LowerEyelid",
+        "BrowRidge",
+        "UpperEyelid",
+        "LowerEyelid",
+        "BrowRidge",
+        "UpperLip",
+        "LowerLip",
+        "RecessedEyeSlit",
+        "RecessedEyePupil",
+        "NostrilRecess",
+        "RecessedEyeSlit",
+        "RecessedEyePupil",
+        "NostrilRecess",
+        "MouthRecess",
+        "UpperLipPigment",
+        "LowerLipPigment",
+        "UrnaBase",
+        "UrnaPigment"
+      ]
+    },
+    "raisedHand": {
+      "type": "Mesh",
+      "name": "AbhayaHand",
+      "isMesh": true,
+      "isInstancedMesh": false,
+      "meshCount": 1,
+      "instancedMeshCount": 0,
+      "instanceCount": 0,
+      "geometryTriangles": 11292,
+      "renderedTriangles": 11292,
+      "missingPosition": [],
+      "missingNormals": [],
+      "planeGeometries": [],
+      "sprites": [],
+      "dimensions": {
+        "x": 3.281432867050171,
+        "y": 4.913270950317383,
+        "z": 1.2746806144714355
+      },
+      "names": [
+        "AbhayaHand"
+      ]
+    },
+    "restingHand": {
+      "type": "Mesh",
+      "name": "RobedRestingHand",
+      "isMesh": true,
+      "isInstancedMesh": false,
+      "meshCount": 1,
+      "instancedMeshCount": 0,
+      "instanceCount": 0,
+      "geometryTriangles": 4752,
+      "renderedTriangles": 4752,
+      "missingPosition": [],
+      "missingNormals": [],
+      "planeGeometries": [],
+      "sprites": [],
+      "dimensions": {
+        "x": 2.2799997329711914,
+        "y": 2.0400009155273438,
+        "z": 1.4812331199645996
+      },
+      "names": [
+        "RobedRestingHand"
+      ]
+    },
+    "hair": {
+      "type": "Mesh",
+      "name": "ThreeDimensionalSpiralCurls",
+      "isMesh": true,
+      "isInstancedMesh": true,
+      "meshCount": 1,
+      "instancedMeshCount": 1,
+      "instanceCount": 301,
+      "geometryTriangles": 1834,
+      "renderedTriangles": 552034,
+      "missingPosition": [],
+      "missingNormals": [],
+      "planeGeometries": [],
+      "sprites": [],
+      "dimensions": {
+        "x": 6.314989518236551,
+        "y": 5.716027618049473,
+        "z": 5.444482414006946
+      },
+      "names": [
+        "ThreeDimensionalSpiralCurls"
+      ]
+    },
+    "hairCurlCount": 301
+  },
+  "views": [
+    {
+      "angle": -25,
+      "position": [
+        -33.16548915384171,
+        19.079917026683688,
+        72.34554899332278
+      ],
+      "target": [
+        4.911422726294745e-7,
+        19.079917026683688,
+        1.2219269275665283
+      ],
+      "fov": 32,
+      "subjectSize": [
+        24.47667534828186,
+        38.14016613736749,
+        16.772246837615967
+      ],
+      "file": "left25.png",
+      "bytes": 497902,
+      "sha256": "8531daf046a5f1b8a62f70dc1c8d69ec9b57c1ebde2df5c3d08c7133a3f35e12"
+    },
+    {
+      "angle": 0,
+      "position": [
+        4.911422726294745e-7,
+        19.079917026683688,
+        79.69816103155543
+      ],
+      "target": [
+        4.911422726294745e-7,
+        19.079917026683688,
+        1.2219269275665283
+      ],
+      "fov": 32,
+      "subjectSize": [
+        24.47667534828186,
+        38.14016613736749,
+        16.772246837615967
+      ],
+      "file": "front.png",
+      "bytes": 532766,
+      "sha256": "53dbce6a3bc00b5881d2635fce0472a479cfd9d267c1c5f223d151e2607a34d6"
+    },
+    {
+      "angle": 25,
+      "position": [
+        33.16549013612626,
+        19.079917026683688,
+        72.34554899332278
+      ],
+      "target": [
+        4.911422726294745e-7,
+        19.079917026683688,
+        1.2219269275665283
+      ],
+      "fov": 32,
+      "subjectSize": [
+        24.47667534828186,
+        38.14016613736749,
+        16.772246837615967
+      ],
+      "file": "right25.png",
+      "bytes": 520207,
+      "sha256": "2ba38d2580f83d72a365cfe8c80130b59706603b1a6a9941b914b4604644cc1d"
+    }
+  ],
+  "parallax": {
+    "front-vs-left25": {
+      "sameSize": true,
+      "width": 540,
+      "height": 960,
+      "meanAbsoluteDifference": 0.06493830942870976,
+      "changedPixelRatio": 0.3316184413580247,
+      "comparedPixelRatio": 1
+    },
+    "front-vs-right25": {
+      "sameSize": true,
+      "width": 540,
+      "height": 960,
+      "meanAbsoluteDifference": 0.07475550209795853,
+      "changedPixelRatio": 0.3513715277777778,
+      "comparedPixelRatio": 1
+    },
+    "left25-vs-right25": {
+      "sameSize": true,
+      "width": 540,
+      "height": 960,
+      "meanAbsoluteDifference": 0.11339904331073994,
+      "changedPixelRatio": 0.4441358024691358,
+      "comparedPixelRatio": 1
+    }
+  },
+  "console": [
+    {
+      "type": "warn",
+      "text": "[.WebGL-0x12403290e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warn",
+      "text": "[.WebGL-0x12403290e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warn",
+      "text": "[.WebGL-0x12403290e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warn",
+      "text": "[.WebGL-0x12403290e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+    }
+  ],
+  "pageErrors": [],
+  "finishedAt": "2026-08-04T19:40:49.101Z",
+  "pass": true
+}

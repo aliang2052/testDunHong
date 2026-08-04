@@ -14,6 +14,7 @@ const BUDDHA = {
   group: null,
   parts: {},
   haloMats: [],
+  cavityMats: [],  // 眼缝、鼻孔、唇缝：由真实凹槽网格形成，素胎阶段即应可见
   detailMats: [],   // 眉眼唇等，随上色淡入
 };
 
@@ -23,35 +24,58 @@ function buildBuddha() {
 
   /* ---------------- 材质 ---------------- */
   const matSkin = makeStageMaterial({
-    finalMap: TEX.skin.map, finalTint: new THREE.Color(0.955, 0.855, 0.715), finalScale: [1/7, 1/7], mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
-    roughSet: [1.0, 0.97, 0.94, 0.86, 0.72, 0.52, 0.46], normalScale: 1.0,
+    finalMap: TEX.skin.map, finalNormalMap: TEX.skin.normal,
+    /* 原片彩绘完成后是偏象牙白的暖肤彩；保留矿物斑驳，但不能被洞窟侧光压成灰泥。 */
+    finalTint: new THREE.Color(1.65, 1.45, 1.38), finalScale: [1/7, 1/7], finalNormalScale: [0.85, 0.85],
+    mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
+    roughSet: [1.0, 0.98, 0.96, 0.92, 0.86, 0.68, 0.60],
+    normalScale: 0.82, finalNormalStrength: 0.27, roughVariation: 0.035, envMapIntensity: 0.22,
   });
   const matRobe = makeStageMaterial({
-    finalMap: TEX.robeRed.map, finalScale: [1/5, 1/5], mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
-    roughSet: [1.0, 0.97, 0.94, 0.88, 0.76, 0.60, 0.68], normalScale: 1.1,
+    finalMap: TEX.robeRed.map, finalNormalMap: TEX.robeRed.normal,
+    finalTint: new THREE.Color(1.18, 1.09, 1.06),
+    finalScale: [1/5, 1/5], finalNormalScale: [0.88, 0.88],
+    mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
+    roughSet: [1.0, 0.98, 0.96, 0.92, 0.86, 0.68, 0.76],
+    normalScale: 0.76, finalNormalStrength: 0.48, roughVariation: 0.060, envMapIntensity: 0.17,
   });
   const matRobeLower = makeStageMaterial({
-    finalMap: TEX.robeRed.map, finalScale: [1/6, 1/6], mudScale: [1/2.8, 1/2.8], rockScale: [1/4.0, 1/4.0],
-    roughSet: [1.0, 0.97, 0.94, 0.88, 0.76, 0.60, 0.68], normalScale: 1.1,
+    finalMap: TEX.robeRed.map, finalNormalMap: TEX.robeRed.normal,
+    finalTint: new THREE.Color(1.18, 1.09, 1.06),
+    finalScale: [1/6, 1/6], finalNormalScale: [0.92, 0.92],
+    mudScale: [1/2.8, 1/2.8], rockScale: [1/4.0, 1/4.0],
+    roughSet: [1.0, 0.98, 0.96, 0.92, 0.86, 0.68, 0.77],
+    normalScale: 0.76, finalNormalStrength: 0.50, roughVariation: 0.065, envMapIntensity: 0.16,
   });
   const matInner = makeStageMaterial({
-    finalMap: TEX.innerBlue.map, finalScale: [1/8.5, 1/8.5], mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
-    roughSet: [1.0, 0.97, 0.94, 0.88, 0.76, 0.60, 0.70], normalScale: 1.0,
+    finalMap: TEX.innerBlue.map, finalNormalMap: TEX.innerBlue.normal,
+    finalScale: [1/6.5, 1/6.5], finalNormalScale: [0.90, 0.90],
+    mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
+    roughSet: [1.0, 0.98, 0.96, 0.92, 0.86, 0.68, 0.74],
+    normalScale: 0.84, finalNormalStrength: 0.43, roughVariation: 0.055, envMapIntensity: 0.17,
   });
   const matSash = makeStageMaterial({
-    finalMap: TEX.sash.map, finalScale: [1/8, 1/8], mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
-    roughSet: [1.0, 0.97, 0.94, 0.88, 0.76, 0.60, 0.70], normalScale: 1.0,
+    finalMap: TEX.sash.map, finalNormalMap: TEX.sash.normal,
+    finalScale: [1/5.8, 1/5.8], finalNormalScale: [0.90, 0.90],
+    mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
+    roughSet: [1.0, 0.98, 0.96, 0.92, 0.86, 0.68, 0.75],
+    normalScale: 0.84, finalNormalStrength: 0.44, roughVariation: 0.058, envMapIntensity: 0.17,
   });
   const matBelt = makeStageMaterial({
-    finalMap: TEX.skin.map, finalScale: [1/5, 1/5],
+    finalMap: TEX.skin.map, finalNormalMap: TEX.skin.normal,
+    finalScale: [1/5, 1/5], finalNormalScale: [0.82, 0.82],
     finalTint: new THREE.Color(0.072, 0.192, 0.330),
-    mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6], roughSet: [1.0, 0.97, 0.94, 0.88, 0.76, 0.60, 0.70],
+    mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
+    roughSet: [1.0, 0.98, 0.96, 0.92, 0.86, 0.68, 0.72],
+    normalScale: 0.76, finalNormalStrength: 0.28, roughVariation: 0.045, envMapIntensity: 0.17,
   });
   const matHair = makeStageMaterial({
-    finalMap: TEX.skin.map, finalScale: [1/1.2, 1/1.2],
-    finalTint: new THREE.Color(0.052, 0.048, 0.052),
+    finalMap: TEX.skin.map, finalNormalMap: TEX.skin.normal,
+    finalScale: [1/1.2, 1/1.2], finalNormalScale: [0.95, 0.95],
+    finalTint: new THREE.Color(0.195, 0.205, 0.225),
     mudScale: [1/1.4, 1/1.4], rockScale: [1/1.6, 1/1.6],
-    roughSet: [1.0, 0.97, 0.94, 0.86, 0.72, 0.55, 0.78], normalScale: 0.4,
+    roughSet: [1.0, 0.98, 0.96, 0.92, 0.86, 0.68, 0.67],
+    normalScale: 0.36, finalNormalStrength: 0.18, roughVariation: 0.035, envMapIntensity: 0.23,
   });
   BUDDHA.parts.mats = { matSkin, matRobe, matRobeLower, matInner, matSash, matBelt, matHair };
 
@@ -66,8 +90,18 @@ function buildBuddha() {
 
   /* ---------------- 2. 躯干皮肤（胸口裸露部分） ---------------- */
   const gTorso = buildLayerGeometry({
-    uSeg: 112, vSeg: 82, v0: yv(19.0), v1: yv(30.6),
+    uSeg: 112, vSeg: 82, v0: yv(19.0), v1: yv(29.35),
     offset: 0.0, uvScale: [1, 1],
+    offsetFn: (u, v) => {
+      const y = v * H;
+      const du = Math.abs(ucyc(u, 0));
+      const x = Math.abs(Math.sin(du * TAU) * PROF_RX(y));
+      /* 保留连续皮肤背衬，只把领口中央平滑压入喉部之后，杜绝矩形破洞。 */
+      return -0.70
+        * smoothstep(28.02, 28.38, y)
+        * smoothstep(29.22, 28.95, y)
+        * smoothstep(2.05, 1.75, x);
+    },
   });
   const mTorso = new THREE.Mesh(gTorso, matSkin);
   mTorso.castShadow = mTorso.receiveShadow = true;
@@ -84,7 +118,7 @@ function buildBuddha() {
 
   /* ---------------- 4. 内衣（孔雀蓝，覆佛之右肩/右臂/左下摆） ---------------- */
   const gInner = buildLayerGeometry({
-    uSeg: 136, vSeg: 118, v0: yv(6.0), v1: yv(29.6),
+    uSeg: 248, vSeg: 214, v0: yv(6.0), v1: yv(29.6),
     offset: 0.20, uvScale: [1, 1],
     mask: (u, v) => {
       const y = v * H;
@@ -110,7 +144,7 @@ function buildBuddha() {
 
   /* ---------------- 5. 斜披（土黄 + 绿菱纹），左肩高、右腰低 ---------------- */
   const gSash = buildLayerGeometry({
-    uSeg: 152, vSeg: 112, v0: yv(18.0), v1: yv(29.6),
+    uSeg: 280, vSeg: 206, v0: yv(18.0), v1: yv(29.6),
     offset: 0.32, uvScale: [1, 1],
     mask: (u, v) => {
       const du = ucyc(u, 0.055);              // 以正前略偏 +X 为中心
@@ -129,14 +163,14 @@ function buildBuddha() {
 
   /* ---------------- 6. 袈裟外披（赭红，覆佛之左肩/左臂/绕背） ---------------- */
   const gRobe = buildLayerGeometry({
-    uSeg: 144, vSeg: 116, v0: yv(15.0), v1: yv(29.7),
-    offset: 0.50, uvScale: [1, 1],
+    uSeg: 264, vSeg: 210, v0: yv(18.8), v1: yv(29.7),
+    offset: 0.34, uvScale: [1, 1],
     mask: (u, v) => {
       const y = v * H;
       const du = ucyc(u, 0.34);
       /* 正面开口边：腹部完全包住（edge 大），到胸/肩逐步让位给斜披与裸胸 */
       const edgeU = lerp(0.195, 0.000, smoothstep(23.2, 26.8, y));
-      const m = sband(du, -(0.190 + edgeU), 0.285, 0.055);
+      const m = sband(du, -(0.190 + edgeU), 0.285, 0.085);
       const hi = smoothstep(30.2, 29.2, y);
       return clamp(m * hi, 0, 1);
     },
@@ -147,8 +181,8 @@ function buildBuddha() {
 
   /* ---------------- 7. 腰带（深蓝横带 + 红边） ---------------- */
   const gBelt = buildLayerGeometry({
-    uSeg: 112, vSeg: 18, v0: yv(17.4), v1: yv(19.7),
-    offset: 0.40, uvScale: [1, 1],
+    uSeg: 220, vSeg: 48, v0: yv(17.4), v1: yv(19.7),
+    offset: 0.10, uvScale: [1, 1],
     mask: (u, v) => {
       const du = ucyc(u, 0.0);
       const y = v * H;
@@ -175,6 +209,12 @@ function buildBuddha() {
 
   /* ---------------- 13. 头光（上色阶段淡入） ---------------- */
   buildHalo3D(G);
+
+  /* Round 2 的头脸/手掌仅是轮廓占位。真实造像拓扑在 42-buddha-realism.js
+     中覆盖：所有解剖细节均为可产生视差和自阴影的实体网格。 */
+  if (typeof upgradeBuddhaRealism === 'function') {
+    upgradeBuddhaRealism(G, BUDDHA.parts.mats);
+  }
 
   G.position.set(0, 0, 0);
   return G;
@@ -248,6 +288,8 @@ function buildHair(G, mat) {
    五官：眉 / 眼 / 鼻 / 唇
    ------------------------------------------------------------ */
 function buildFace(G) {
+  const faceGroup = new THREE.Group();
+  faceGroup.name = 'LegacyFaceDetails';
   /* 形体已由 faceRelief 做成浮雕，这里只放「上色阶段」才出现的彩色薄片 */
   const lineMat = new THREE.MeshStandardMaterial({
     color: 0x2B2620, roughness: 0.52, transparent: true, opacity: 0,
@@ -268,7 +310,7 @@ function buildFace(G) {
       pts.push(P);
     }
     const g = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 22, 0.048, 6, false);
-    G.add(new THREE.Mesh(g, lineMat));
+    faceGroup.add(new THREE.Mesh(g, lineMat));
   }
 
   /* 眉：细长弯弧（y≈32.63~32.78，x 0.30→1.78） */
@@ -284,7 +326,7 @@ function buildFace(G) {
       pts.push(P);
     }
     const g = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 22, 0.060, 6, false);
-    G.add(new THREE.Mesh(g, lineMat));
+    faceGroup.add(new THREE.Mesh(g, lineMat));
   }
 
   /* 唇色：贴着唇部浮雕的薄片 */
@@ -318,8 +360,10 @@ function buildFace(G) {
     g.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
     g.setIndex(idx);
     g.computeVertexNormals();
-    G.add(new THREE.Mesh(g, lipMat));
+    faceGroup.add(new THREE.Mesh(g, lipMat));
   }
+  G.add(faceGroup);
+  BUDDHA.parts.legacyFace = faceGroup;
 }
 
 /* 给已 position 好的 Mesh 附加石胎 morph（世界位置计算） */
@@ -347,6 +391,8 @@ function attachRockMorphMesh(mesh) {
    耳：大耳垂
    ------------------------------------------------------------ */
 function buildEars(G, mat) {
+  const earGroup = new THREE.Group();
+  earGroup.name = 'LegacyEars';
   for (const sx of [-1, 1]) {
     const g = new THREE.SphereGeometry(1, 18, 14);
     const pa = g.attributes.position;
@@ -370,8 +416,10 @@ function buildEars(G, mat) {
     m.rotation.z = sx * 0.07;
     m.castShadow = true;
     attachRockMorphMesh(m);
-    G.add(m);
+    earGroup.add(m);
   }
+  G.add(earGroup);
+  BUDDHA.parts.legacyEars = earGroup;
 }
 
 /* ------------------------------------------------------------
