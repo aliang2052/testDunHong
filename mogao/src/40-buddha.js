@@ -12,14 +12,29 @@ function ucyc(u, c) { let d = u - c; while (d > 0.5) d -= 1; while (d < -0.5) d 
 
 const BUDDHA = {
   group: null,
+  proceduralGroup: null,
+  referenceGroup: null,
+  haloGroup: null,
+  referenceReady: false,
+  referenceOpacity: 0,
+  referencePaintProgress: 1,
+  referencePaintFront: -1.08,
+  referenceMaterials: [],
+  referenceMeshes: [],
+  referenceStats: null,
   parts: {},
   haloMats: [],
   detailMats: [],   // 眉眼唇等，随上色淡入
 };
 
 function buildBuddha() {
+  const root = new THREE.Group();
+  root.name = 'BuddhaRoot';
   const G = new THREE.Group();
-  BUDDHA.group = G;
+  G.name = 'ProceduralBuddha';
+  root.add(G);
+  BUDDHA.group = root;
+  BUDDHA.proceduralGroup = G;
 
   /* ---------------- 材质 ---------------- */
   const matSkin = makeStageMaterial({
@@ -174,10 +189,14 @@ function buildBuddha() {
   buildEars(G, matSkin);
 
   /* ---------------- 13. 头光（上色阶段淡入） ---------------- */
-  buildHalo3D(G);
+  const haloGroup = new THREE.Group();
+  haloGroup.name = 'BuddhaHalo';
+  root.add(haloGroup);
+  BUDDHA.haloGroup = haloGroup;
+  buildHalo3D(haloGroup);
 
-  G.position.set(0, 0, 0);
-  return G;
+  root.position.set(0, 0, 0);
+  return root;
 }
 
 /* ------------------------------------------------------------

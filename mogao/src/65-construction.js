@@ -948,7 +948,7 @@ function updateSurfaceTools(t, w) {
     placeSurfaceTool(tool, y, lat, 0.42, Math.sin(t * 3.6) * 0.55);
     tool.scale.setScalar(0.78);
   }
-  if (t >= 90.2 && t < 93.7) {
+  if (t >= 90.2 && t < 93.0) {
     const tool = CONSTRUCTION.paintBrush;
     tool.visible = true;
     const k = windowK(t, 90.2, 93.5);

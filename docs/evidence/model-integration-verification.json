@@ -1,0 +1,3000 @@
+{
+  "input": "/Users/sniper/Desktop/temp/testDunHong/index.html",
+  "inputBytes": 15236508,
+  "inputSha256": "24adc3c249f669345d2ff7b8e99867ad9b82842311cb3ee0b2bb28f40f99b9ae",
+  "startedAt": "2026-08-05T13:55:26.081Z",
+  "checks": {
+    "ready-hook": {
+      "pass": true,
+      "detail": "window.__READY__ 必须为 true"
+    },
+    "desktop-16-by-9": {
+      "pass": true,
+      "detail": {
+        "width": 1400,
+        "height": 788,
+        "aspect": 1.7766497461928934
+      }
+    },
+    "no-video-element": {
+      "pass": true,
+      "detail": "不得嵌入 video"
+    },
+    "no-remote-requests": {
+      "pass": true,
+      "detail": []
+    },
+    "embedded-reference-present": {
+      "pass": true,
+      "detail": {
+        "found": true,
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376"
+      }
+    },
+    "embedded-reference-bytes": {
+      "pass": true,
+      "detail": {
+        "found": true,
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376"
+      }
+    },
+    "embedded-reference-sha256": {
+      "pass": true,
+      "detail": {
+        "found": true,
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376"
+      }
+    },
+    "reference-glb-ready": {
+      "pass": true,
+      "detail": {
+        "ready": true,
+        "stats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "meshCount": 2,
+        "materialCount": 2,
+        "hasVertexColors": true
+      }
+    },
+    "reference-glb-sha256": {
+      "pass": true,
+      "detail": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      }
+    },
+    "reference-glb-bytes": {
+      "pass": true,
+      "detail": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      }
+    },
+    "reference-glb-meshes": {
+      "pass": true,
+      "detail": {
+        "ready": true,
+        "stats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "meshCount": 2,
+        "materialCount": 2,
+        "hasVertexColors": true
+      }
+    },
+    "reference-glb-geometry": {
+      "pass": true,
+      "detail": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      }
+    },
+    "reference-glb-vertex-colors": {
+      "pass": true,
+      "detail": {
+        "ready": true,
+        "stats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "meshCount": 2,
+        "materialCount": 2,
+        "hasVertexColors": true
+      }
+    },
+    "reference-glb-height": {
+      "pass": true,
+      "detail": {
+        "min": [
+          -6.502168832956918,
+          0,
+          -4.891035683501946
+        ],
+        "max": [
+          6.502168832956919,
+          35.5,
+          5.691035683501945
+        ],
+        "size": [
+          13.004337665913837,
+          35.5,
+          10.582071367003891
+        ]
+      }
+    },
+    "reference-glb-no-extensions": {
+      "pass": true,
+      "detail": []
+    },
+    "reference-used-at-opening": {
+      "pass": true,
+      "detail": {
+        "time": 0,
+        "playing": false,
+        "playUntil": null,
+        "playFromChapter": -1,
+        "speed": 1,
+        "free": false,
+        "chapter": 0,
+        "phase": 6,
+        "morph": 0,
+        "spreadOn": 0,
+        "spreadY": -999,
+        "revealY": -1.1,
+        "carveY": 0,
+        "doorProgress": 1,
+        "wallPhase": 0.3,
+        "wallProgress": -1,
+        "visibleWalkwayComponents": 0,
+        "visibleTowerFloors": 9,
+        "visiblePegs": 7,
+        "representation": "reference-glb",
+        "referenceReady": true,
+        "referenceOpacity": 1,
+        "referencePaintProgress": 1,
+        "referenceStats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "construction": {
+          "stage": "tower-reveal",
+          "progress": 0.1,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 2,
+          "towerProgress": 0.1,
+          "walkwayProgress": 0,
+          "walkwayBuilt": 0,
+          "dustCount": 0
+        },
+        "camera": {
+          "x": 4,
+          "y": 31,
+          "z": 136,
+          "fov": 37
+        }
+      }
+    },
+    "reference-hidden-before-excavation": {
+      "pass": true,
+      "detail": {
+        "time": 16.2,
+        "playing": false,
+        "playUntil": null,
+        "playFromChapter": -1,
+        "speed": 1,
+        "free": false,
+        "chapter": 1,
+        "phase": 0,
+        "morph": 1,
+        "spreadOn": 0,
+        "spreadY": -999,
+        "revealY": 97.9,
+        "carveY": 99,
+        "doorProgress": 0,
+        "wallPhase": 0,
+        "wallProgress": -1,
+        "visibleWalkwayComponents": 0,
+        "visibleTowerFloors": 0,
+        "visiblePegs": 7,
+        "representation": "none",
+        "referenceReady": true,
+        "referenceOpacity": 0,
+        "referencePaintProgress": 0,
+        "referenceStats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "construction": {
+          "stage": "bare-cliff",
+          "progress": 0.2,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 0,
+          "walkwayBuilt": 0,
+          "dustCount": 0
+        },
+        "camera": {
+          "x": 0,
+          "y": 11.78125,
+          "z": 120.015625,
+          "fov": 38.9765625
+        }
+      }
+    },
+    "procedural-used-for-construction": {
+      "pass": true,
+      "detail": {
+        "time": 31,
+        "playing": false,
+        "playUntil": null,
+        "playFromChapter": -1,
+        "speed": 1,
+        "free": false,
+        "chapter": 4,
+        "phase": 0,
+        "morph": 1,
+        "spreadOn": 0,
+        "spreadY": -999,
+        "revealY": 60.233333333333334,
+        "carveY": 61.333333333333336,
+        "doorProgress": 1,
+        "wallPhase": 0,
+        "wallProgress": -1,
+        "visibleWalkwayComponents": 120,
+        "visibleTowerFloors": 0,
+        "visiblePegs": 7,
+        "representation": "procedural",
+        "referenceReady": true,
+        "referenceOpacity": 0,
+        "referencePaintProgress": 0,
+        "referenceStats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "construction": {
+          "stage": "excavate-arch",
+          "progress": 0.11764705882352951,
+          "impact": 0.31862959009919806,
+          "activeGeometry": 12,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 180
+        },
+        "camera": {
+          "x": 5.804921215593232,
+          "y": 35.539578815641086,
+          "z": 40.88449829091665,
+          "fov": 32.068951257925825
+        }
+      }
+    },
+    "procedural-used-through-polish": {
+      "pass": true,
+      "detail": {
+        "time": 90.19,
+        "playing": false,
+        "playUntil": null,
+        "playFromChapter": -1,
+        "speed": 1,
+        "free": false,
+        "chapter": 12,
+        "phase": 5,
+        "morph": 0,
+        "spreadOn": 0,
+        "spreadY": -999,
+        "revealY": -1.1,
+        "carveY": 0,
+        "doorProgress": 1,
+        "wallPhase": 0,
+        "wallProgress": -1,
+        "visibleWalkwayComponents": 120,
+        "visibleTowerFloors": 0,
+        "visiblePegs": 7,
+        "representation": "procedural",
+        "referenceReady": true,
+        "referenceOpacity": 0,
+        "referencePaintProgress": 0,
+        "referenceStats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "construction": {
+          "stage": "complete",
+          "progress": 1,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 0
+        },
+        "camera": {
+          "x": 0.000011111111111128391,
+          "y": 32.600004444444444,
+          "z": 18.500055555555555,
+          "fov": 27.00002222222222
+        }
+      }
+    },
+    "reference-used-for-painting": {
+      "pass": true,
+      "detail": {
+        "time": 90.2,
+        "playing": false,
+        "playUntil": null,
+        "playFromChapter": -1,
+        "speed": 1,
+        "free": false,
+        "chapter": 13,
+        "phase": 6,
+        "morph": 0,
+        "spreadOn": 1,
+        "spreadY": 38.5,
+        "revealY": -1.1,
+        "carveY": 0,
+        "doorProgress": 1,
+        "wallPhase": 0,
+        "wallProgress": -1,
+        "visibleWalkwayComponents": 120,
+        "visibleTowerFloors": 0,
+        "visiblePegs": 7,
+        "representation": "reference-glb",
+        "referenceReady": true,
+        "referenceOpacity": 1,
+        "referencePaintProgress": 0,
+        "referenceStats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "construction": {
+          "stage": "paint-buddha",
+          "progress": 0,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        },
+        "camera": {
+          "x": 0,
+          "y": 32.6,
+          "z": 18.5,
+          "fov": 27.00002222222222
+        }
+      }
+    },
+    "reference-paint-progress": {
+      "pass": true,
+      "detail": {
+        "time": 92.9,
+        "playing": false,
+        "playUntil": null,
+        "playFromChapter": -1,
+        "speed": 1,
+        "free": false,
+        "chapter": 13,
+        "phase": 6,
+        "morph": 0,
+        "spreadOn": 1,
+        "spreadY": -0.25619834710748535,
+        "revealY": -1.1,
+        "carveY": 0,
+        "doorProgress": 1,
+        "wallPhase": 0,
+        "wallProgress": -1,
+        "visibleWalkwayComponents": 120,
+        "visibleTowerFloors": 0,
+        "visiblePegs": 7,
+        "representation": "reference-glb",
+        "referenceReady": true,
+        "referenceOpacity": 1,
+        "referencePaintProgress": 0.9642857142857163,
+        "referenceStats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "construction": {
+          "stage": "paint-buddha",
+          "progress": 0.8181818181818198,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        },
+        "camera": {
+          "x": -0.997448979591837,
+          "y": 32.400510204081634,
+          "z": 21.99107142857143,
+          "fov": 27.997448979591837
+        }
+      }
+    },
+    "reference-used-after-hard-cut": {
+      "pass": true,
+      "detail": {
+        "time": 93,
+        "playing": false,
+        "playUntil": null,
+        "playFromChapter": -1,
+        "speed": 1,
+        "free": false,
+        "chapter": 13,
+        "phase": 6,
+        "morph": 0,
+        "spreadOn": 1,
+        "spreadY": -1.0945821854912694,
+        "revealY": -1.1,
+        "carveY": 0,
+        "doorProgress": 1,
+        "wallPhase": 0,
+        "wallProgress": -1,
+        "visibleWalkwayComponents": 120,
+        "visibleTowerFloors": 0,
+        "visiblePegs": 7,
+        "representation": "reference-glb",
+        "referenceReady": true,
+        "referenceOpacity": 1,
+        "referencePaintProgress": 1,
+        "referenceStats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "construction": {
+          "stage": "paint-buddha",
+          "progress": 0.8484848484848484,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        },
+        "camera": {
+          "x": -4,
+          "y": 18,
+          "z": 66,
+          "fov": 33
+        }
+      }
+    },
+    "reference-used-in-finished-cave": {
+      "pass": true,
+      "detail": {
+        "time": 108.6,
+        "playing": false,
+        "playUntil": null,
+        "playFromChapter": -1,
+        "speed": 1,
+        "free": false,
+        "chapter": 14,
+        "phase": 6,
+        "morph": 0,
+        "spreadOn": 0,
+        "spreadY": -999,
+        "revealY": -1.1,
+        "carveY": 0,
+        "doorProgress": 1,
+        "wallPhase": 3,
+        "wallProgress": -1,
+        "visibleWalkwayComponents": 120,
+        "visibleTowerFloors": 0,
+        "visiblePegs": 7,
+        "representation": "reference-glb",
+        "referenceReady": true,
+        "referenceOpacity": 1,
+        "referencePaintProgress": 1,
+        "referenceStats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "construction": {
+          "stage": "completed-cave",
+          "progress": 0,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 0
+        },
+        "camera": {
+          "x": 0,
+          "y": 17,
+          "z": 58,
+          "fov": 36
+        }
+      }
+    },
+    "reference-model-rendered": {
+      "pass": true,
+      "detail": {
+        "drawCalls": 35,
+        "triangles": 438334,
+        "lines": 0,
+        "points": 0,
+        "geometries": 409,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "paint-buddha",
+          "progress": 0.8484848484848484,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      }
+    },
+    "paint-brush-stops-before-reference-cut": {
+      "pass": true,
+      "detail": {
+        "stats": {
+          "drawCalls": 35,
+          "triangles": 438334,
+          "lines": 0,
+          "points": 0,
+          "geometries": 409,
+          "textures": 39,
+          "pixelRatio": 1,
+          "canvas": {
+            "width": 1400,
+            "height": 788
+          },
+          "construction": {
+            "stage": "paint-buddha",
+            "progress": 0.8484848484848484,
+            "impact": 0,
+            "activeGeometry": 0,
+            "movingPieces": 0,
+            "towerProgress": 1,
+            "walkwayProgress": 1,
+            "walkwayBuilt": 120,
+            "dustCount": 96
+          }
+        },
+        "brushVisible": false
+      }
+    },
+    "chapter-count": {
+      "pass": true,
+      "detail": "期望 16，实际 16"
+    },
+    "keyframe-count": {
+      "pass": true,
+      "detail": 23
+    },
+    "chapter-seek-and-play": {
+      "pass": true,
+      "detail": {
+        "time": 20.716600000143053,
+        "playing": true
+      }
+    },
+    "play-pause-toggle": {
+      "pass": true,
+      "detail": {
+        "pausedState": false,
+        "resumedState": true
+      }
+    },
+    "speed-control": {
+      "pass": true,
+      "detail": "APP.speed 应为 2"
+    },
+    "free-camera-toggle": {
+      "pass": true,
+      "detail": "自由视角应开启"
+    },
+    "mobile-fit-16-by-9": {
+      "pass": true,
+      "detail": {
+        "width": 390,
+        "height": 219,
+        "aspect": 1.7808219178082192,
+        "viewport": [
+          390,
+          844
+        ]
+      }
+    },
+    "mobile-dpr2-reference-rendered": {
+      "pass": true,
+      "detail": [
+        {
+          "time": 5,
+          "representation": "reference-glb",
+          "referenceVisible": true,
+          "triangles": 438154,
+          "renderMs": 361.60000014305115,
+          "devicePixelRatio": 2,
+          "rendererPixelRatio": 1.5,
+          "canvas": {
+            "width": 604,
+            "height": 339,
+            "aspect": 1.7817109144542773
+          },
+          "anchors": {
+            "face": {
+              "x": 0,
+              "y": -0.0032343377139621636,
+              "z": 0.9638871814807352,
+              "visible": true
+            }
+          },
+          "file": "mobile-dpr2-t005.png",
+          "sha256": "be35b057c2c70ec2908f16746480f0c8e9db3f309de011c3e80f3db32b22fcc7"
+        },
+        {
+          "time": 93,
+          "representation": "reference-glb",
+          "referenceVisible": true,
+          "triangles": 438346,
+          "renderMs": 199.39999985694885,
+          "devicePixelRatio": 2,
+          "rendererPixelRatio": 1.5,
+          "canvas": {
+            "width": 604,
+            "height": 339,
+            "aspect": 1.7817109144542773
+          },
+          "anchors": {
+            "center": {
+              "x": 0.0006976297808069775,
+              "y": -0.00007754307590235143,
+              "z": 0.9854935712808908,
+              "visible": true
+            },
+            "crown": {
+              "x": 0.000698330817344137,
+              "y": 0.8971670123159756,
+              "z": 0.9854782759822485,
+              "visible": true
+            },
+            "foot": {
+              "x": 0.0006969301503637569,
+              "y": -0.8955224631218234,
+              "z": 0.9855088359012081,
+              "visible": true
+            }
+          },
+          "file": "mobile-dpr2-t093.png",
+          "sha256": "d8787ef1920687c789d2fc6f51784a5a4927aff86df72ed8e90a9bf5c0611600"
+        }
+      ]
+    },
+    "mobile-dpr2-16-by-9": {
+      "pass": true,
+      "detail": [
+        {
+          "time": 5,
+          "representation": "reference-glb",
+          "referenceVisible": true,
+          "triangles": 438154,
+          "renderMs": 361.60000014305115,
+          "devicePixelRatio": 2,
+          "rendererPixelRatio": 1.5,
+          "canvas": {
+            "width": 604,
+            "height": 339,
+            "aspect": 1.7817109144542773
+          },
+          "anchors": {
+            "face": {
+              "x": 0,
+              "y": -0.0032343377139621636,
+              "z": 0.9638871814807352,
+              "visible": true
+            }
+          },
+          "file": "mobile-dpr2-t005.png",
+          "sha256": "be35b057c2c70ec2908f16746480f0c8e9db3f309de011c3e80f3db32b22fcc7"
+        },
+        {
+          "time": 93,
+          "representation": "reference-glb",
+          "referenceVisible": true,
+          "triangles": 438346,
+          "renderMs": 199.39999985694885,
+          "devicePixelRatio": 2,
+          "rendererPixelRatio": 1.5,
+          "canvas": {
+            "width": 604,
+            "height": 339,
+            "aspect": 1.7817109144542773
+          },
+          "anchors": {
+            "center": {
+              "x": 0.0006976297808069775,
+              "y": -0.00007754307590235143,
+              "z": 0.9854935712808908,
+              "visible": true
+            },
+            "crown": {
+              "x": 0.000698330817344137,
+              "y": 0.8971670123159756,
+              "z": 0.9854782759822485,
+              "visible": true
+            },
+            "foot": {
+              "x": 0.0006969301503637569,
+              "y": -0.8955224631218234,
+              "z": 0.9855088359012081,
+              "visible": true
+            }
+          },
+          "file": "mobile-dpr2-t093.png",
+          "sha256": "d8787ef1920687c789d2fc6f51784a5a4927aff86df72ed8e90a9bf5c0611600"
+        }
+      ]
+    },
+    "mobile-dpr2-face-framing": {
+      "pass": true,
+      "detail": {
+        "face": {
+          "x": 0,
+          "y": -0.0032343377139621636,
+          "z": 0.9638871814807352,
+          "visible": true
+        }
+      }
+    },
+    "mobile-dpr2-full-body-framing": {
+      "pass": true,
+      "detail": {
+        "center": {
+          "x": 0.0006976297808069775,
+          "y": -0.00007754307590235143,
+          "z": 0.9854935712808908,
+          "visible": true
+        },
+        "crown": {
+          "x": 0.000698330817344137,
+          "y": 0.8971670123159756,
+          "z": 0.9854782759822485,
+          "visible": true
+        },
+        "foot": {
+          "x": 0.0006969301503637569,
+          "y": -0.8955224631218234,
+          "z": 0.9855088359012081,
+          "visible": true
+        }
+      }
+    },
+    "no-page-errors": {
+      "pass": true,
+      "detail": []
+    }
+  },
+  "keyframes": [
+    {
+      "requestedTime": 0,
+      "actualTime": 0,
+      "subtitle": "如果你把敦煌莫高窟撕下来",
+      "stats": {
+        "drawCalls": 495,
+        "triangles": 453962,
+        "lines": 0,
+        "points": 0,
+        "geometries": 409,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "tower-reveal",
+          "progress": 0.1,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 2,
+          "towerProgress": 0.1,
+          "walkwayProgress": 0,
+          "walkwayBuilt": 0,
+          "dustCount": 0
+        }
+      },
+      "file": "t000.png",
+      "sha256": "5337530771706be0250a65131125b056e119d60cd2abe1b9fcf08396328c8984"
+    },
+    {
+      "requestedTime": 5,
+      "actualTime": 5,
+      "subtitle": "神秘的巨型佛像",
+      "stats": {
+        "drawCalls": 21,
+        "triangles": 438154,
+        "lines": 0,
+        "points": 0,
+        "geometries": 409,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "tower-reveal",
+          "progress": 1,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 0,
+          "walkwayBuilt": 0,
+          "dustCount": 0
+        }
+      },
+      "file": "t005.png",
+      "sha256": "1561d39daaecd4d7fb49f05a4ec20fdcb89a2e24d8b303f0da4a031282066039"
+    },
+    {
+      "requestedTime": 9,
+      "actualTime": 9,
+      "subtitle": "相当于10层高楼",
+      "stats": {
+        "drawCalls": 26,
+        "triangles": 438210,
+        "lines": 0,
+        "points": 0,
+        "geometries": 409,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "tower-reveal",
+          "progress": 1,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 0,
+          "walkwayBuilt": 0,
+          "dustCount": 0
+        }
+      },
+      "file": "t009.png",
+      "sha256": "21c809c1206516e433c259221ba1d21aa14e1d6043a49cfcef287f2de9f85f06"
+    },
+    {
+      "requestedTime": 14.7,
+      "actualTime": 14.7,
+      "subtitle": "可一尊如此高大",
+      "stats": {
+        "drawCalls": 26,
+        "triangles": 780870,
+        "lines": 0,
+        "points": 0,
+        "geometries": 409,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "tower-reveal",
+          "progress": 1,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 0,
+          "walkwayBuilt": 0,
+          "dustCount": 0
+        }
+      },
+      "file": "t14.7.png",
+      "sha256": "19c70ce7e38e98b40d6ac028910fb7d57f7415182159e9bef9ecb8ec4f3d3d20"
+    },
+    {
+      "requestedTime": 16.2,
+      "actualTime": 16.2,
+      "subtitle": "且深藏在崖壁内部的佛像",
+      "stats": {
+        "drawCalls": 141,
+        "triangles": 99062,
+        "lines": 0,
+        "points": 0,
+        "geometries": 409,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "bare-cliff",
+          "progress": 0.2,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 0,
+          "walkwayBuilt": 0,
+          "dustCount": 0
+        }
+      },
+      "file": "t16.2.png",
+      "sha256": "64484029d55322465bfd66ce4d8bfd1084d5f452b0a42379febe96862435567f"
+    },
+    {
+      "requestedTime": 20,
+      "actualTime": 20,
+      "subtitle": "聪明的你",
+      "stats": {
+        "drawCalls": 143,
+        "triangles": 98294,
+        "lines": 1,
+        "points": 0,
+        "geometries": 430,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "bare-cliff",
+          "progress": 0.9600000000000002,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 17,
+          "towerProgress": 1,
+          "walkwayProgress": 0.24,
+          "walkwayBuilt": 16,
+          "dustCount": 0
+        }
+      },
+      "file": "t020.png",
+      "sha256": "2ece02c76a8e0a847008c8c21a069f07261989028847e95a949a37f23719340f"
+    },
+    {
+      "requestedTime": 25,
+      "actualTime": 25,
+      "subtitle": "并在合适的位置凿出一道窟门",
+      "stats": {
+        "drawCalls": 34,
+        "triangles": 95746,
+        "lines": 0,
+        "points": 180,
+        "geometries": 433,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "excavate-door",
+          "progress": 0.4560089758518979,
+          "impact": 0,
+          "activeGeometry": 14,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 180
+        }
+      },
+      "file": "t025.png",
+      "sha256": "77c8db28c8bff92f70a2c4c4acf07b25b5efccff2de7a83676531c53e536289d"
+    },
+    {
+      "requestedTime": 33,
+      "actualTime": 33,
+      "subtitle": "先凿出拱形的天花板",
+      "stats": {
+        "drawCalls": 55,
+        "triangles": 226588,
+        "lines": 8,
+        "points": 180,
+        "geometries": 433,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "excavate-arch",
+          "progress": 0.411764705882353,
+          "impact": 0.10479662920866573,
+          "activeGeometry": 12,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 180
+        }
+      },
+      "file": "t033.png",
+      "sha256": "09d0f451b4a7400d4203954c9556ce7d2d9c47d8653fb35535611be5bd9e6dcf"
+    },
+    {
+      "requestedTime": 40,
+      "actualTime": 40,
+      "subtitle": "同时还预留出大佛的岩石雏形",
+      "stats": {
+        "drawCalls": 75,
+        "triangles": 228968,
+        "lines": 8,
+        "points": 180,
+        "geometries": 435,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "excavate-main",
+          "progress": 0.31914893617021284,
+          "impact": 0,
+          "activeGeometry": 40,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 180
+        }
+      },
+      "file": "t040.png",
+      "sha256": "cc3c1a0fc73a91db5f4f812d007335ad42bfeb4726aaf6d5c8c0484902a04612"
+    },
+    {
+      "requestedTime": 49,
+      "actualTime": 49,
+      "subtitle": "在下方增加两个洞窟",
+      "stats": {
+        "drawCalls": 61,
+        "triangles": 232152,
+        "lines": 8,
+        "points": 180,
+        "geometries": 435,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "excavate-lower",
+          "progress": 0.4642857142857144,
+          "impact": 0,
+          "activeGeometry": 42,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 180
+        }
+      },
+      "file": "t049.png",
+      "sha256": "1e6f07788af222b8e448cdd736973c7921fe419697f49254d13d5ff301db2df4"
+    },
+    {
+      "requestedTime": 60,
+      "actualTime": 60,
+      "subtitle": "因此你在岩石上凿孔插桩",
+      "stats": {
+        "drawCalls": 59,
+        "triangles": 226272,
+        "lines": 0,
+        "points": 0,
+        "geometries": 443,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "peg-insertion",
+          "progress": 0.9630541871921182,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 0
+        }
+      },
+      "file": "t060.png",
+      "sha256": "9331c1897d8d83a9a255ed74e1de2baeed5aa3297856e4e2acc04eb768b8892e"
+    },
+    {
+      "requestedTime": 65,
+      "actualTime": 65,
+      "subtitle": "由于普通的泥土会开裂",
+      "stats": {
+        "drawCalls": 45,
+        "triangles": 225300,
+        "lines": 0,
+        "points": 0,
+        "geometries": 449,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "mud-layer",
+          "progress": 0.7222222222222223,
+          "impact": 0,
+          "activeGeometry": 18,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t065.png",
+      "sha256": "b9f0dbdd09bc371f20d8438d9ee6b1260b2bf4f584527a64f20fb69cd5d4b68c"
+    },
+    {
+      "requestedTime": 70,
+      "actualTime": 70,
+      "subtitle": "土中加入麦秆",
+      "stats": {
+        "drawCalls": 48,
+        "triangles": 224970,
+        "lines": 0,
+        "points": 0,
+        "geometries": 456,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "mud-layer",
+          "progress": 0.6,
+          "impact": 0,
+          "activeGeometry": 20,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t070.png",
+      "sha256": "c28c25c8c165ea8545efadbc948d9ab293fbb338c04ee0b77c64ced5beaccfa1"
+    },
+    {
+      "requestedTime": 79,
+      "actualTime": 79,
+      "subtitle": "并随之加入棉花等植物",
+      "stats": {
+        "drawCalls": 47,
+        "triangles": 227344,
+        "lines": 0,
+        "points": 0,
+        "geometries": 462,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "mud-layer",
+          "progress": 0.3124999999999997,
+          "impact": 0,
+          "activeGeometry": 18,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t079.png",
+      "sha256": "5fbd01795cf111d5e4bd6ca6e1f7a1e62898e795b0cbebc003f39be54c2d9dbf"
+    },
+    {
+      "requestedTime": 86,
+      "actualTime": 86,
+      "subtitle": "阴干时还不停地用塑刀按压收紧",
+      "stats": {
+        "drawCalls": 42,
+        "triangles": 223352,
+        "lines": 0,
+        "points": 0,
+        "geometries": 467,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "surface-polish",
+          "progress": 0.41935483870967727,
+          "impact": 0,
+          "activeGeometry": 19,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t086.png",
+      "sha256": "9b9269825f0fc21db3d2d6ddf86e43bf1d8c624d35575739db3cc836813a6968"
+    },
+    {
+      "requestedTime": 90.2,
+      "actualTime": 90.2,
+      "subtitle": "之后再给佛像上个色",
+      "stats": {
+        "drawCalls": 22,
+        "triangles": 438910,
+        "lines": 0,
+        "points": 96,
+        "geometries": 467,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "paint-buddha",
+          "progress": 0,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t90.2.png",
+      "sha256": "602cbe34b5ac4a1216cca33488070a4e665ac8da09386ed61da2990473e42598"
+    },
+    {
+      "requestedTime": 92.9,
+      "actualTime": 92.9,
+      "subtitle": "一身庄严肃穆的超级大佛",
+      "stats": {
+        "drawCalls": 22,
+        "triangles": 438154,
+        "lines": 0,
+        "points": 96,
+        "geometries": 467,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "paint-buddha",
+          "progress": 0.8181818181818198,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t92.9.png",
+      "sha256": "72261e5240e92b5f8b1da672f2e4130979b0739e4ac404c1c45d01bc2b3b2c42"
+    },
+    {
+      "requestedTime": 93,
+      "actualTime": 93,
+      "subtitle": "一身庄严肃穆的超级大佛",
+      "stats": {
+        "drawCalls": 35,
+        "triangles": 438334,
+        "lines": 0,
+        "points": 0,
+        "geometries": 467,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "paint-buddha",
+          "progress": 0.8484848484848484,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t093.png",
+      "sha256": "724f5a2a159c6ebbd04d7165c09cf73b1c09f92d4d8140a3725fcb86e8b620d4"
+    },
+    {
+      "requestedTime": 95.4,
+      "actualTime": 95.4,
+      "subtitle": "但此时你发现周围的墙壁过于简陋",
+      "stats": {
+        "drawCalls": 52,
+        "triangles": 438614,
+        "lines": 0,
+        "points": 96,
+        "geometries": 476,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "painted-buddha",
+          "progress": 0.38775510204081703,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t95.4.png",
+      "sha256": "6785d8759a63f3de4613034b467cd1f590865371f2cddd71a8419e2502e5735e"
+    },
+    {
+      "requestedTime": 101,
+      "actualTime": 101,
+      "subtitle": "一层比一层细腻的软土",
+      "stats": {
+        "drawCalls": 34,
+        "triangles": 438366,
+        "lines": 0,
+        "points": 96,
+        "geometries": 476,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "whitewash",
+          "progress": 0.27777777777777823,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t101.png",
+      "sha256": "23bb1de428b9d014d27278596edf65e53113a63828f18ee1954561e0d96c7c6d"
+    },
+    {
+      "requestedTime": 106,
+      "actualTime": 106,
+      "subtitle": "绘制出一张张栩栩如生的壁画",
+      "stats": {
+        "drawCalls": 34,
+        "triangles": 438366,
+        "lines": 0,
+        "points": 96,
+        "geometries": 476,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "mural",
+          "progress": 0.48000000000000115,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t106.png",
+      "sha256": "71132d364b7f6e14e1552db2406e37bea723d028119666eebe58362c4a57f451"
+    },
+    {
+      "requestedTime": 112,
+      "actualTime": 112,
+      "subtitle": "关注扇子有画",
+      "stats": {
+        "drawCalls": 508,
+        "triangles": 454274,
+        "lines": 0,
+        "points": 0,
+        "geometries": 479,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "tower-reassembly",
+          "progress": 0.3979999999999976,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 9,
+          "towerProgress": 0.6020000000000024,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 0
+        }
+      },
+      "file": "t112.png",
+      "sha256": "db7a46dbca2d065c9b4562d66e5a1353d30d906bea6bbb7b4a0c417e61650256"
+    },
+    {
+      "requestedTime": 116,
+      "actualTime": 116,
+      "subtitle": "用3D解锁更多华夏瑰宝",
+      "stats": {
+        "drawCalls": 614,
+        "triangles": 455606,
+        "lines": 0,
+        "points": 0,
+        "geometries": 483,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "tower-reassembly",
+          "progress": 1,
+          "impact": 0,
+          "activeGeometry": 0,
+          "movingPieces": 0,
+          "towerProgress": 0,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 0
+        }
+      },
+      "file": "t116.png",
+      "sha256": "d066400bb5488c76543f3b4bddde851de06cd200e6b8c2f53b39c424d7fe5989"
+    }
+  ],
+  "console": [
+    {
+      "type": "warn",
+      "text": "[.WebGL-0x11c079f2c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warn",
+      "text": "[.WebGL-0x11c079f2c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warn",
+      "text": "[.WebGL-0x11c079f2c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warn",
+      "text": "[.WebGL-0x11c079f2c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+    }
+  ],
+  "pageErrors": [],
+  "remoteRequests": [],
+  "referenceAsset": {
+    "path": "/Users/sniper/Desktop/temp/testDunHong/mogao/assets/buddha-reference-v3.glb",
+    "bytes": 10279844,
+    "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376"
+  },
+  "referenceEmbedded": {
+    "found": true,
+    "bytes": 10279844,
+    "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376"
+  },
+  "performance": {
+    "readyMs": 54866.799999952316,
+    "mobileDpr2ReadyMs": 23801
+  },
+  "referenceRuntime": {
+    "ready": true,
+    "stats": {
+      "glbVersion": 2,
+      "meshCount": 2,
+      "vertexCount": 171419,
+      "triangleCount": 342684,
+      "coloredMeshCount": 1,
+      "nodeCount": 2,
+      "materialCount": 2,
+      "extensionsRequired": [],
+      "bytes": 10279844,
+      "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+      "sourceBounds": {
+        "min": [
+          -0.3480651378631592,
+          -0.9504237771034241,
+          -0.28410694003105164
+        ],
+        "max": [
+          0.3474860191345215,
+          0.9483323693275452,
+          0.28188666701316833
+        ],
+        "size": [
+          0.6955511569976807,
+          1.8987561464309692,
+          0.56599360704422
+        ]
+      },
+      "fittedBounds": {
+        "min": [
+          -6.502168832956918,
+          0,
+          -4.891035683501946
+        ],
+        "max": [
+          6.502168832956919,
+          35.5,
+          5.691035683501945
+        ],
+        "size": [
+          13.004337665913837,
+          35.5,
+          10.582071367003891
+        ]
+      },
+      "scale": 18.6964503402547,
+      "frontAxis": "+Z"
+    },
+    "meshCount": 2,
+    "materialCount": 2,
+    "hasVertexColors": true
+  },
+  "representations": {
+    "0": {
+      "time": 0,
+      "playing": false,
+      "playUntil": null,
+      "playFromChapter": -1,
+      "speed": 1,
+      "free": false,
+      "chapter": 0,
+      "phase": 6,
+      "morph": 0,
+      "spreadOn": 0,
+      "spreadY": -999,
+      "revealY": -1.1,
+      "carveY": 0,
+      "doorProgress": 1,
+      "wallPhase": 0.3,
+      "wallProgress": -1,
+      "visibleWalkwayComponents": 0,
+      "visibleTowerFloors": 9,
+      "visiblePegs": 7,
+      "representation": "reference-glb",
+      "referenceReady": true,
+      "referenceOpacity": 1,
+      "referencePaintProgress": 1,
+      "referenceStats": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      },
+      "construction": {
+        "stage": "tower-reveal",
+        "progress": 0.1,
+        "impact": 0,
+        "activeGeometry": 0,
+        "movingPieces": 2,
+        "towerProgress": 0.1,
+        "walkwayProgress": 0,
+        "walkwayBuilt": 0,
+        "dustCount": 0
+      },
+      "camera": {
+        "x": 4,
+        "y": 31,
+        "z": 136,
+        "fov": 37
+      }
+    },
+    "31": {
+      "time": 31,
+      "playing": false,
+      "playUntil": null,
+      "playFromChapter": -1,
+      "speed": 1,
+      "free": false,
+      "chapter": 4,
+      "phase": 0,
+      "morph": 1,
+      "spreadOn": 0,
+      "spreadY": -999,
+      "revealY": 60.233333333333334,
+      "carveY": 61.333333333333336,
+      "doorProgress": 1,
+      "wallPhase": 0,
+      "wallProgress": -1,
+      "visibleWalkwayComponents": 120,
+      "visibleTowerFloors": 0,
+      "visiblePegs": 7,
+      "representation": "procedural",
+      "referenceReady": true,
+      "referenceOpacity": 0,
+      "referencePaintProgress": 0,
+      "referenceStats": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      },
+      "construction": {
+        "stage": "excavate-arch",
+        "progress": 0.11764705882352951,
+        "impact": 0.31862959009919806,
+        "activeGeometry": 12,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 180
+      },
+      "camera": {
+        "x": 5.804921215593232,
+        "y": 35.539578815641086,
+        "z": 40.88449829091665,
+        "fov": 32.068951257925825
+      }
+    },
+    "93": {
+      "time": 93,
+      "playing": false,
+      "playUntil": null,
+      "playFromChapter": -1,
+      "speed": 1,
+      "free": false,
+      "chapter": 13,
+      "phase": 6,
+      "morph": 0,
+      "spreadOn": 1,
+      "spreadY": -1.0945821854912694,
+      "revealY": -1.1,
+      "carveY": 0,
+      "doorProgress": 1,
+      "wallPhase": 0,
+      "wallProgress": -1,
+      "visibleWalkwayComponents": 120,
+      "visibleTowerFloors": 0,
+      "visiblePegs": 7,
+      "representation": "reference-glb",
+      "referenceReady": true,
+      "referenceOpacity": 1,
+      "referencePaintProgress": 1,
+      "referenceStats": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      },
+      "construction": {
+        "stage": "paint-buddha",
+        "progress": 0.8484848484848484,
+        "impact": 0,
+        "activeGeometry": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 96
+      },
+      "camera": {
+        "x": -4,
+        "y": 18,
+        "z": 66,
+        "fov": 33
+      }
+    },
+    "16.2": {
+      "time": 16.2,
+      "playing": false,
+      "playUntil": null,
+      "playFromChapter": -1,
+      "speed": 1,
+      "free": false,
+      "chapter": 1,
+      "phase": 0,
+      "morph": 1,
+      "spreadOn": 0,
+      "spreadY": -999,
+      "revealY": 97.9,
+      "carveY": 99,
+      "doorProgress": 0,
+      "wallPhase": 0,
+      "wallProgress": -1,
+      "visibleWalkwayComponents": 0,
+      "visibleTowerFloors": 0,
+      "visiblePegs": 7,
+      "representation": "none",
+      "referenceReady": true,
+      "referenceOpacity": 0,
+      "referencePaintProgress": 0,
+      "referenceStats": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      },
+      "construction": {
+        "stage": "bare-cliff",
+        "progress": 0.2,
+        "impact": 0,
+        "activeGeometry": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 0,
+        "walkwayBuilt": 0,
+        "dustCount": 0
+      },
+      "camera": {
+        "x": 0,
+        "y": 11.78125,
+        "z": 120.015625,
+        "fov": 38.9765625
+      }
+    },
+    "90.19": {
+      "time": 90.19,
+      "playing": false,
+      "playUntil": null,
+      "playFromChapter": -1,
+      "speed": 1,
+      "free": false,
+      "chapter": 12,
+      "phase": 5,
+      "morph": 0,
+      "spreadOn": 0,
+      "spreadY": -999,
+      "revealY": -1.1,
+      "carveY": 0,
+      "doorProgress": 1,
+      "wallPhase": 0,
+      "wallProgress": -1,
+      "visibleWalkwayComponents": 120,
+      "visibleTowerFloors": 0,
+      "visiblePegs": 7,
+      "representation": "procedural",
+      "referenceReady": true,
+      "referenceOpacity": 0,
+      "referencePaintProgress": 0,
+      "referenceStats": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      },
+      "construction": {
+        "stage": "complete",
+        "progress": 1,
+        "impact": 0,
+        "activeGeometry": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 0
+      },
+      "camera": {
+        "x": 0.000011111111111128391,
+        "y": 32.600004444444444,
+        "z": 18.500055555555555,
+        "fov": 27.00002222222222
+      }
+    },
+    "90.2": {
+      "time": 90.2,
+      "playing": false,
+      "playUntil": null,
+      "playFromChapter": -1,
+      "speed": 1,
+      "free": false,
+      "chapter": 13,
+      "phase": 6,
+      "morph": 0,
+      "spreadOn": 1,
+      "spreadY": 38.5,
+      "revealY": -1.1,
+      "carveY": 0,
+      "doorProgress": 1,
+      "wallPhase": 0,
+      "wallProgress": -1,
+      "visibleWalkwayComponents": 120,
+      "visibleTowerFloors": 0,
+      "visiblePegs": 7,
+      "representation": "reference-glb",
+      "referenceReady": true,
+      "referenceOpacity": 1,
+      "referencePaintProgress": 0,
+      "referenceStats": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      },
+      "construction": {
+        "stage": "paint-buddha",
+        "progress": 0,
+        "impact": 0,
+        "activeGeometry": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 96
+      },
+      "camera": {
+        "x": 0,
+        "y": 32.6,
+        "z": 18.5,
+        "fov": 27.00002222222222
+      }
+    },
+    "92.9": {
+      "time": 92.9,
+      "playing": false,
+      "playUntil": null,
+      "playFromChapter": -1,
+      "speed": 1,
+      "free": false,
+      "chapter": 13,
+      "phase": 6,
+      "morph": 0,
+      "spreadOn": 1,
+      "spreadY": -0.25619834710748535,
+      "revealY": -1.1,
+      "carveY": 0,
+      "doorProgress": 1,
+      "wallPhase": 0,
+      "wallProgress": -1,
+      "visibleWalkwayComponents": 120,
+      "visibleTowerFloors": 0,
+      "visiblePegs": 7,
+      "representation": "reference-glb",
+      "referenceReady": true,
+      "referenceOpacity": 1,
+      "referencePaintProgress": 0.9642857142857163,
+      "referenceStats": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      },
+      "construction": {
+        "stage": "paint-buddha",
+        "progress": 0.8181818181818198,
+        "impact": 0,
+        "activeGeometry": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 96
+      },
+      "camera": {
+        "x": -0.997448979591837,
+        "y": 32.400510204081634,
+        "z": 21.99107142857143,
+        "fov": 27.997448979591837
+      }
+    },
+    "108.6": {
+      "time": 108.6,
+      "playing": false,
+      "playUntil": null,
+      "playFromChapter": -1,
+      "speed": 1,
+      "free": false,
+      "chapter": 14,
+      "phase": 6,
+      "morph": 0,
+      "spreadOn": 0,
+      "spreadY": -999,
+      "revealY": -1.1,
+      "carveY": 0,
+      "doorProgress": 1,
+      "wallPhase": 3,
+      "wallProgress": -1,
+      "visibleWalkwayComponents": 120,
+      "visibleTowerFloors": 0,
+      "visiblePegs": 7,
+      "representation": "reference-glb",
+      "referenceReady": true,
+      "referenceOpacity": 1,
+      "referencePaintProgress": 1,
+      "referenceStats": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      },
+      "construction": {
+        "stage": "completed-cave",
+        "progress": 0,
+        "impact": 0,
+        "activeGeometry": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 0
+      },
+      "camera": {
+        "x": 0,
+        "y": 17,
+        "z": 58,
+        "fov": 36
+      }
+    }
+  },
+  "mobileDpr2": [
+    {
+      "time": 5,
+      "representation": "reference-glb",
+      "referenceVisible": true,
+      "triangles": 438154,
+      "renderMs": 361.60000014305115,
+      "devicePixelRatio": 2,
+      "rendererPixelRatio": 1.5,
+      "canvas": {
+        "width": 604,
+        "height": 339,
+        "aspect": 1.7817109144542773
+      },
+      "anchors": {
+        "face": {
+          "x": 0,
+          "y": -0.0032343377139621636,
+          "z": 0.9638871814807352,
+          "visible": true
+        }
+      },
+      "file": "mobile-dpr2-t005.png",
+      "sha256": "be35b057c2c70ec2908f16746480f0c8e9db3f309de011c3e80f3db32b22fcc7"
+    },
+    {
+      "time": 93,
+      "representation": "reference-glb",
+      "referenceVisible": true,
+      "triangles": 438346,
+      "renderMs": 199.39999985694885,
+      "devicePixelRatio": 2,
+      "rendererPixelRatio": 1.5,
+      "canvas": {
+        "width": 604,
+        "height": 339,
+        "aspect": 1.7817109144542773
+      },
+      "anchors": {
+        "center": {
+          "x": 0.0006976297808069775,
+          "y": -0.00007754307590235143,
+          "z": 0.9854935712808908,
+          "visible": true
+        },
+        "crown": {
+          "x": 0.000698330817344137,
+          "y": 0.8971670123159756,
+          "z": 0.9854782759822485,
+          "visible": true
+        },
+        "foot": {
+          "x": 0.0006969301503637569,
+          "y": -0.8955224631218234,
+          "z": 0.9855088359012081,
+          "visible": true
+        }
+      },
+      "file": "mobile-dpr2-t093.png",
+      "sha256": "d8787ef1920687c789d2fc6f51784a5a4927aff86df72ed8e90a9bf5c0611600"
+    }
+  ],
+  "finishedAt": "2026-08-05T13:57:46.413Z",
+  "pass": true
+}

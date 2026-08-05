@@ -90,7 +90,9 @@ function init() {
 
   const buddha = buildBuddha();
   scene.add(buddha);
-  buildPegs(buddha);
+  const referenceBuddha = buildImportedBuddha();
+  if (referenceBuddha) buddha.add(referenceBuddha);
+  buildPegs(BUDDHA.proceduralGroup || buddha);
 
   tower = buildNineStorey();
   tower.position.set(0, 0, CLIFF_Z + 5.2);
@@ -226,7 +228,8 @@ function applyCarveState(t) {
   if (t < 15.2 || t >= 27.0) doorProgress = 1;
   else if (t >= 24.55) doorProgress = easeOut(windowK(t, 24.55, 27.0));
   setDoorProgress(doorProgress);
-  if (WORLD.doorTunnel) WORLD.doorTunnel.visible = doorProgress > 0.035;
+  const unobstructedFaceShot = (t >= 2.6 && t < 5.6) || (t >= 87.2 && t < 93.0);
+  if (WORLD.doorTunnel) WORLD.doorTunnel.visible = doorProgress > 0.035 && !unobstructedFaceShot;
 
   const complete = t < 15.2 || t >= 51.6;
   let lower1 = complete ? 1 : 0;
@@ -251,18 +254,28 @@ function applyState(t, dt) {
   /* 佛像在开凿阶段由高度阈值从石胎中显露，不做整尊跳变。 */
   const excavationReveal = t >= 31.0 && t < 51.9;
   const bop = excavationReveal ? 1 : CURVE_BOPA(t);
-  BUDDHA.group.visible = bop > 0.004;
+  const referenceWindow = t < 16.2 || t >= 90.2;
+  const referenceOpacity = BUDDHA.referenceReady && referenceWindow ? bop : 0;
+  const proceduralOpacity = BUDDHA.referenceReady && referenceWindow ? 0 : bop;
+  const referencePaintProgress = t < 16.2 ? 1 : clamp((t - 90.2) / (93.0 - 90.2), 0, 1);
+  setImportedBuddhaPaintProgress(referencePaintProgress);
+  setImportedBuddhaOpacity(referenceOpacity);
+  if (BUDDHA.proceduralGroup) {
+    BUDDHA.proceduralGroup.visible = excavationReveal || proceduralOpacity > 0.004;
+  }
   for (const m of STAGE_MATS) {
-    if (bop >= 0.999) {
+    if (proceduralOpacity >= 0.999) {
       m.transparent = false; m.opacity = 1; m.depthWrite = true;
     } else {
-      m.transparent = true; m.opacity = bop; m.depthWrite = bop > 0.6;
+      m.transparent = true; m.opacity = proceduralOpacity; m.depthWrite = proceduralOpacity > 0.6;
     }
   }
-  const detailOpacity = CURVE_DETAIL(t) * bop;
+  const detailOpacity = CURVE_DETAIL(t) * proceduralOpacity;
   for (const m of BUDDHA.detailMats) m.opacity = detailOpacity;
   const haloOpacity = CURVE_HALO(t) * bop * 0.98;
   for (const m of BUDDHA.haloMats) m.opacity = haloOpacity;
+  if (BUDDHA.haloGroup) BUDDHA.haloGroup.visible = haloOpacity > 0.004;
+  BUDDHA.group.visible = referenceOpacity > 0.004 || proceduralOpacity > 0.004 || excavationReveal || haloOpacity > 0.004;
 
   // 螺发的逐颗显露/上色由施工系统接管，避免整组缩放。
   if (BUDDHA.parts.hair) BUDDHA.parts.hair.scale.setScalar(1);
@@ -281,7 +294,13 @@ function applyState(t, dt) {
   WORLD.plinth.visible = t < 15.2 || t >= 51.55;
 
   const construction = updateConstruction(t);
-  APP.lastVisualState = { t, ...sculpt, ...carve, construction };
+  const representation = referenceOpacity > 0.004
+    ? 'reference-glb'
+    : (proceduralOpacity > 0.004 || excavationReveal ? 'procedural' : 'none');
+  APP.lastVisualState = {
+    t, ...sculpt, ...carve, construction, representation,
+    referenceOpacity, referencePaintProgress, proceduralOpacity,
+  };
   return APP.lastVisualState;
 }
 
@@ -546,6 +565,11 @@ function visualState() {
     visibleWalkwayComponents: visibleCount(components),
     visibleTowerFloors: visibleCount(floors),
     visiblePegs: visibleCount(BUDDHA.parts.pegList || []),
+    representation: APP.lastVisualState?.representation || 'none',
+    referenceReady: BUDDHA.referenceReady,
+    referenceOpacity: BUDDHA.referenceOpacity,
+    referencePaintProgress: BUDDHA.referencePaintProgress,
+    referenceStats: BUDDHA.referenceStats,
     construction: { ...CONSTRUCTION.state },
     camera: {
       x: (APP.free ? freeCam : camera).position.x,
