@@ -1,8 +1,8 @@
 {
   "input": "/Users/sniper/Desktop/temp/testDunHong/index.html",
-  "inputBytes": 1584543,
-  "inputSha256": "3b94ed50e201bb092c9a175571176121afcf161286f23a37896d1b988365e219",
-  "startedAt": "2026-08-04T19:39:14.779Z",
+  "inputBytes": 1585145,
+  "inputSha256": "d9ee5df2fb03aaedda25823921c91e957b51fd67791631a21881b3e14fb90918",
+  "startedAt": "2026-08-05T02:06:50.349Z",
   "checks": {
     "realism-group-present": {
       "pass": true,
@@ -671,22 +671,22 @@
   "console": [
     {
       "type": "warn",
-      "text": "[.WebGL-0x12403290e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x11c02796400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x12403290e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x11c02796400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x12403290e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x11c02796400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x12403290e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+      "text": "[.WebGL-0x11c02796400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
     }
   ],
   "pageErrors": [],
-  "finishedAt": "2026-08-04T19:40:49.101Z",
+  "finishedAt": "2026-08-05T02:08:12.711Z",
   "pass": true
 }

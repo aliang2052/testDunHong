@@ -1,19 +1,28 @@
 {
   "input": "/Users/sniper/Desktop/temp/testDunHong/index.html",
-  "inputBytes": 1584543,
-  "inputSha256": "3b94ed50e201bb092c9a175571176121afcf161286f23a37896d1b988365e219",
-  "startedAt": "2026-08-04T19:40:55.921Z",
+  "inputBytes": 1585145,
+  "inputSha256": "d9ee5df2fb03aaedda25823921c91e957b51fd67791631a21881b3e14fb90918",
+  "startedAt": "2026-08-05T02:03:34.701Z",
   "checks": {
     "ready-hook": {
       "pass": true,
       "detail": "window.__READY__ 必须为 true"
     },
-    "initial-frame-paused-at-zero": {
+    "initial-buddha-preview-paused": {
+      "pass": true,
+      "detail": {
+        "time": 2.5,
+        "playing": false,
+        "initialPreview": true,
+        "playIcon": "▶"
+      }
+    },
+    "initial-preview-play-restarts-chapter-one": {
       "pass": true,
       "detail": {
         "time": 0,
-        "playing": false,
-        "playIcon": "▶"
+        "playing": true,
+        "initialPreview": false
       }
     },
     "no-video-element": {
@@ -44,7 +53,7 @@
     "chapter-seek-and-play": {
       "pass": true,
       "detail": {
-        "time": 20.502599999904636,
+        "time": 20.654700000047683,
         "playing": true
       }
     },
@@ -123,7 +132,7 @@
         }
       },
       "file": "t000.png",
-      "sha256": "63a5358471343cbc69f06bf209b16d638fd3b436986601c1d8616bbc9b1c30be"
+      "sha256": "93ebb0698b942ec861eebcd4fbccbbaad809287932ea86aa48986b799cfcc540"
     },
     {
       "requestedTime": 20,
@@ -185,7 +194,7 @@
         }
       },
       "file": "t025.png",
-      "sha256": "135201da292a3c06b9d5d7a591e0c1a5c513bebcf83ee2a7ae273841cbc2d989"
+      "sha256": "4ae9d113ddcac1c95e746bc541ce59ecbb308a15505b0905884653dafe6ea6e0"
     },
     {
       "requestedTime": 33,
@@ -247,7 +256,7 @@
         }
       },
       "file": "t040.png",
-      "sha256": "b574c60aeb46cce107c563a0a4b5facc2eb1c6fd53db737637dc8d7cb6025e2a"
+      "sha256": "1c287bff36bf560a50e8496efa729c22f8f2902793c46cb04748206c542cd626"
     },
     {
       "requestedTime": 49,
@@ -309,7 +318,7 @@
         }
       },
       "file": "t060.png",
-      "sha256": "58a7ceae0fff2a48d3716074912a1524574a1775cc8a8bf1c56630b34e2395e8"
+      "sha256": "1d966eb87400d8835fcf4faf71340a27bb73bfde733599c6cc49d42222609a04"
     },
     {
       "requestedTime": 65,
@@ -371,7 +380,7 @@
         }
       },
       "file": "t070.png",
-      "sha256": "d4ef0b8ea4babd77c23517ff416f2d05f4f3b8d00443ac06eb3c33311390745f"
+      "sha256": "4a617fbd2ea5f6035c013c646530c486781ff41775ff4b703138b0f39d48fea6"
     },
     {
       "requestedTime": 79,
@@ -433,7 +442,7 @@
         }
       },
       "file": "t086.png",
-      "sha256": "b2b004b3de3ab5a78126eb4f5257fbe70bc9a3df452ab3efc238ba2da2beb393"
+      "sha256": "d0e366ccc80e64ad1ff7cc1b1163774fcd6fe2cbd226b20d0223a016ac6ff7d1"
     },
     {
       "requestedTime": 92,
@@ -495,7 +504,7 @@
         }
       },
       "file": "t101.png",
-      "sha256": "418aced6715439ef546c9b4b2961c8cb3b2e5fd3716a2444d628f178e66261ba"
+      "sha256": "b2b573a071e2ab9f0c9cfca91b0f7b98ceca006314cc2eab4b26e4dc72f3d77a"
     },
     {
       "requestedTime": 106,
@@ -557,7 +566,7 @@
         }
       },
       "file": "t112.png",
-      "sha256": "076c00fe4e7d572ce7518efa305d6df90f2b2638ce1e3c1ee6141be16694f26c"
+      "sha256": "240782dbe8e80b365830116aac01a200f48cbd65abf377ed9a0a305c20791878"
     },
     {
       "requestedTime": 116,
@@ -591,26 +600,34 @@
       "sha256": "9940fa7a501122e61f43827e0079027c05ffad9209264125d1f27ff276688dfa"
     }
   ],
+  "initialPreview": {
+    "time": 2.5,
+    "playing": false,
+    "initialPreview": true,
+    "playIcon": "▶",
+    "file": "initial-buddha-preview.png",
+    "sha256": "28723a0b928d1f25fbce822f2d6a5d0c70ca96174d0ae92fbe8b26ee827cb4f0"
+  },
   "console": [
     {
       "type": "warn",
-      "text": "[.WebGL-0x124001b2e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x124032e9e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x124001b2e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x124032e9e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x124001b2e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x124032e9e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x124001b2e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+      "text": "[.WebGL-0x124032e9e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
     }
   ],
   "pageErrors": [],
   "remoteRequests": [],
-  "finishedAt": "2026-08-04T19:43:07.376Z",
+  "finishedAt": "2026-08-05T02:05:48.323Z",
   "pass": true
 }

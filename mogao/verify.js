@@ -29,6 +29,7 @@ const report = {
   startedAt: new Date().toISOString(),
   checks: {},
   keyframes: [],
+  initialPreview: null,
   console: [],
   pageErrors: [],
   remoteRequests: [],
@@ -66,9 +67,39 @@ function assert(name, condition, detail) {
     const initialState = await page.evaluate(() => ({
       time: window.MOGAO.APP.time,
       playing: window.MOGAO.APP.playing,
+      initialPreview: window.MOGAO.APP.initialPreview,
       playIcon: document.querySelector('#play')?.textContent,
     }));
-    assert('initial-frame-paused-at-zero', initialState.time === 0 && initialState.playing === false && initialState.playIcon === '▶', initialState);
+    assert(
+      'initial-buddha-preview-paused',
+      Math.abs(initialState.time - 2.5) < 0.001
+        && initialState.playing === false
+        && initialState.initialPreview === true
+        && initialState.playIcon === '▶',
+      initialState
+    );
+    const initialPreviewFile = path.join(outDir, 'initial-buddha-preview.png');
+    await page.screenshot({ path: initialPreviewFile });
+    report.initialPreview = {
+      ...initialState,
+      file: path.basename(initialPreviewFile),
+      sha256: crypto.createHash('sha256').update(fs.readFileSync(initialPreviewFile)).digest('hex'),
+    };
+
+    const firstPlay = await page.evaluate(() => {
+      document.querySelector('#play').click();
+      return {
+        time: window.MOGAO.APP.time,
+        playing: window.MOGAO.APP.playing,
+        initialPreview: window.MOGAO.APP.initialPreview,
+      };
+    });
+    assert(
+      'initial-preview-play-restarts-chapter-one',
+      firstPlay.time < 0.05 && firstPlay.playing === true && firstPlay.initialPreview === false,
+      firstPlay
+    );
+    await page.evaluate(() => window.MOGAO.pause());
     assert('no-video-element', await page.evaluate(() => document.querySelectorAll('video').length === 0), '不得嵌入 video');
     assert('no-remote-requests', report.remoteRequests.length === 0, report.remoteRequests);
 

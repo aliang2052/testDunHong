@@ -60111,8 +60111,11 @@ function updateProps(t, cam) {
    ============================================================ */
 
 const APP = {
-  time: 0,
+  // 首屏展示第一章中已经露出主体的静态预览；首次点击播放或章节 01
+  // 仍会回到 0 秒完整播放揭幕过程。
+  time: 2.5,
   playing: false,
+  initialPreview: true,
   speed: 1,
   free: false,
   renderSuspended: false,
@@ -60309,7 +60312,7 @@ function init() {
   installDebugAPI();
 
   // 首帧真实编译并渲染成功后才标记 ready。
-  renderFrame(0, 0);
+  renderFrame(APP.time, 0);
   window.__READY__ = true;
   elLoading.classList.add('gone');
   setTimeout(() => { if (elLoading) elLoading.style.display = 'none'; }, 560);
@@ -60627,6 +60630,7 @@ function buildChapterUI() {
     b.textContent = `${String(index + 1).padStart(2, '0')} ${name}`;
     b.dataset.time = String(t);
     b.onclick = () => {
+      APP.initialPreview = false;
       APP.time = t;
       APP.playUntil = index + 1 < CHAPTERS.length ? CHAPTERS[index + 1][0] : DURATION;
       APP.playFromChapter = index;
@@ -60663,6 +60667,7 @@ function updateTimelineUI(t) {
 
 function seekFromPointer(ev) {
   const r = elBar.getBoundingClientRect();
+  APP.initialPreview = false;
   APP.time = clamp((ev.clientX - r.left) / Math.max(1, r.width), 0, 1) * DURATION;
   APP.playUntil = null;
   APP.playFromChapter = -1;
@@ -60672,6 +60677,11 @@ function seekFromPointer(ev) {
 
 function bindUI() {
   elPlay.onclick = () => {
+    if (APP.initialPreview) {
+      APP.initialPreview = false;
+      APP.time = 0;
+      renderFrame(APP.time, 0);
+    }
     APP.playUntil = null;
     APP.playFromChapter = -1;
     APP.playing = !APP.playing;
@@ -60702,8 +60712,8 @@ function bindUI() {
   addEventListener('keydown', (e) => {
     FREE.keys[e.key.toLowerCase()] = true;
     if (e.code === 'Space') { e.preventDefault(); elPlay.onclick(); }
-    if (e.key === 'ArrowLeft') { APP.time = Math.max(0, APP.time - 3); APP.playUntil = null; APP.playFromChapter = -1; APP.dirty = true; }
-    if (e.key === 'ArrowRight') { APP.time = Math.min(DURATION, APP.time + 3); APP.playUntil = null; APP.playFromChapter = -1; APP.dirty = true; }
+    if (e.key === 'ArrowLeft') { APP.initialPreview = false; APP.time = Math.max(0, APP.time - 3); APP.playUntil = null; APP.playFromChapter = -1; APP.dirty = true; }
+    if (e.key === 'ArrowRight') { APP.initialPreview = false; APP.time = Math.min(DURATION, APP.time + 3); APP.playUntil = null; APP.playFromChapter = -1; APP.dirty = true; }
   });
   addEventListener('keyup', (e) => { FREE.keys[e.key.toLowerCase()] = false; });
 
@@ -60782,6 +60792,7 @@ function installDebugAPI() {
     get tower() { return tower; },
     get walkway() { return walkway; },
     seek(t) {
+      APP.initialPreview = false;
       APP.time = clamp(Number(t) || 0, 0, DURATION);
       APP.playUntil = null;
       APP.playFromChapter = -1;
@@ -60792,6 +60803,7 @@ function installDebugAPI() {
       return visualState();
     },
     renderAt(t) {
+      APP.initialPreview = false;
       APP.time = clamp(Number(t) || 0, 0, DURATION);
       APP.playUntil = null;
       APP.playFromChapter = -1;
@@ -60801,7 +60813,10 @@ function installDebugAPI() {
       renderFrame(APP.time, 0);
       return visualState();
     },
-    play() { APP.playUntil = null; APP.playFromChapter = -1; APP.playing = true; APP.dirty = true; elPlay.textContent = '⏸'; },
+    play() {
+      if (APP.initialPreview) { APP.initialPreview = false; APP.time = 0; renderFrame(APP.time, 0); }
+      APP.playUntil = null; APP.playFromChapter = -1; APP.playing = true; APP.dirty = true; elPlay.textContent = '⏸';
+    },
     pause() { APP.playUntil = null; APP.playFromChapter = -1; APP.playing = false; elPlay.textContent = '▶'; },
     playChapter(index) {
       const i = clamp(Math.floor(Number(index) || 0), 0, CHAPTERS.length - 1);
