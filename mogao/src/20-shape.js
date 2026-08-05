@@ -121,7 +121,7 @@ function foldDisp(u, y) {
     const lam = 2.05 + (19.5 - y) * 0.052;                  // 褶距自上而下加大
     const jig = (fbm2(y * 0.13, 3.7, 3, 21) - 0.5) * 0.42;
     const phase = (y + K * front + 0.42 * Math.sin(a * 2.0 + 0.7) + jig) / lam;
-    const amp = 0.0140 * smoothstep(19.5, 15.0, y) * smoothstep(0.0, 2.6, y)
+    const amp = 0.0262 * smoothstep(19.5, 15.0, y) * smoothstep(0.0, 2.6, y)
               * (0.80 + 0.34 * fbm2(y * 0.19, 1.3, 3, 7));
     // 尖底的褶形（|sin| 加权），比纯正弦更像布料堆叠
     const frontW = 0.30 + 0.70 * smoothstep(-0.35, 0.72, front);
@@ -129,7 +129,7 @@ function foldDisp(u, y) {
     d += (sv * 0.68 + Math.sign(sv) * Math.pow(Math.abs(sv), 2.2) * 0.32) * amp * frontW;
 
     /* 次级细褶：同样是水平走向 */
-    d += Math.sin(((y + K * 0.62 * front) / (lam * 0.42)) * TAU) * 0.0030
+    d += Math.sin(((y + K * 0.62 * front) / (lam * 0.42)) * TAU) * 0.0052
        * smoothstep(19.0, 14.0, y) * smoothstep(1.2, 4.5, y);
 
     /* 侧面的竖向瀑布褶（幅度小，只出现在正侧方） */
@@ -314,7 +314,6 @@ function buildLayerGeometry(opts) {
     mask = null,            // (u,v)->0..1
     offset = 0,             // 沿法线外偏移（米）
     offsetFn = null,        // (u,v)->米，优先于 offset
-    maskCutoff = 0.46,      // 让裁口落在遮罩名义边界附近，避免羽化区生成共面锯齿
     uvScale = [1, 1],
     rock = true,            // 是否生成石胎 morph 属性
   } = opts;
@@ -379,13 +378,13 @@ function buildLayerGeometry(opts) {
     }
   }
 
-  /* 索引：逐三角裁剪，不能让一个有效角把另外两个无效角拖进衣料裁片。 */
+  /* 索引：mask 全为 0 的 quad 丢弃 */
   const idxArr = [];
   for (let j = 0; j < vSeg; j++) {
     for (let i = 0; i < uSeg; i++) {
       const a = j * nu + i, b = j * nu + i + 1, c = (j + 1) * nu + i + 1, d = (j + 1) * nu + i;
-      if (!mask || Math.min(maskArr[a], maskArr[b], maskArr[d]) > maskCutoff) idxArr.push(a, b, d);
-      if (!mask || Math.min(maskArr[b], maskArr[c], maskArr[d]) > maskCutoff) idxArr.push(b, c, d);
+      if (mask && maskArr[a] <= 0 && maskArr[b] <= 0 && maskArr[c] <= 0 && maskArr[d] <= 0) continue;
+      idxArr.push(a, b, d, b, c, d);
     }
   }
 

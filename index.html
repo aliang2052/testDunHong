@@ -101,7 +101,7 @@
     </div>
   </div>
   <div id="ui">
-    <button id="play">▶</button>
+    <button id="play">⏸</button>
     <div id="bar"><div id="barfill"></div></div>
     <span id="time">0:00 / 1:56</span>
     <select id="speed">
@@ -46642,7 +46642,7 @@ class ObjectLoader extends Loader {
 			case 'SkinnedMesh':
 
 				geometry = getGeometry( data.geometry );
-				material = getMaterial( data.material );
+			 	material = getMaterial( data.material );
 
 				object = new SkinnedMesh( geometry, material );
 
@@ -53417,28 +53417,20 @@ function buildCaveWall(size = 512) {
    石胎岩石 —— 黄褐砂岩 + 明显灰斑与凿面
    ------------------------------------------------------------ */
 function buildRockCore(size = 512) {
-  const a = [0x98, 0x79, 0x55], b = [0xD5, 0xB8, 0x89];
-  const gy = [0x82, 0x81, 0x7E], ochre = [0xA3, 0x73, 0x45];
+  const a = [0xA8, 0x84, 0x54], b = [0xDD, 0xC0, 0x8A], gy = [0x8C, 0x88, 0x8E];
   const r = bake(size, (u, v) => {
     const macro = fbm2(u * 5.0, v * 5.0, 5, 23.3);
-    const bed = fbm2(u * 2.3, v * 17.0, 4, 46.1);
     const chunk = worley2(u * 9, v * 9, 5);
     const facet = smoothstep(0.5, 0.02, chunk.f2 - chunk.f1);  // 凿击面
-    const grain = fbm2(u * 118, v * 118, 3, 3.3);
-    const pores = worley2(u * 43, v * 43, 91);
-    const pit = smoothstep(0.085, 0.018, pores.f1)
-      * smoothstep(0.60, 0.92, fbm2(u * 23, v * 23, 2, 18.2));
-    let t = clamp(macro * 0.54 + bed * 0.18 + grain * 0.21 + facet * 0.07, 0, 1);
+    const grain = fbm2(u * 110, v * 110, 3, 3.3);
+    let t = clamp(macro * 0.68 + grain * 0.22 + facet * 0.1, 0, 1);
     let col = [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
-    const gm = smoothstep(0.58, 0.86, fbm2(u * 3.4, v * 3.4, 4, 61)) * 0.56;
+    const gm = smoothstep(0.62, 0.86, fbm2(u * 3.4, v * 3.4, 4, 61)) * 0.7;
     col = [lerp(col[0], gy[0], gm), lerp(col[1], gy[1], gm), lerp(col[2], gy[2], gm)];
-    const om = smoothstep(0.67, 0.90, fbm2(u * 8.0, v * 7.0, 3, 74.4)) * 0.24;
-    col = [lerp(col[0], ochre[0], om), lerp(col[1], ochre[1], om), lerp(col[2], ochre[2], om)];
-    col = [lerp(col[0], 0x63, pit * 0.44), lerp(col[1], 0x59, pit * 0.44), lerp(col[2], 0x48, pit * 0.44)];
-    const h = clamp(macro * 0.32 + bed * 0.17 + facet * 0.25 + grain * 0.24 + 0.08 - pit * 0.34, 0, 1);
+    const h = clamp(macro * 0.45 + facet * 0.35 + grain * 0.3, 0, 1);
     return [col[0], col[1], col[2], h];
   });
-  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 2.65)) };
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 3.2)) };
 }
 
 /* ------------------------------------------------------------
@@ -53472,47 +53464,33 @@ function buildMud(size, tint, grainScale, roughAmp) {
   const r = bake(size, (u, v) => {
     const macro = fbm2(u * 5, v * 5, 4, 17.7);
     const grain = fbm2(u * grainScale, v * grainScale, 3, 8.8);
-    const sweep = ridge2(u * 3.0 + fbm2(u * 2, v * 2, 2, 39.2) * 0.28, v * 22.0, 3, 26.4);
     const flake = worley2(u * grainScale * 0.35, v * grainScale * 0.35, 12);
     const fl = smoothstep(0.35, 0.0, flake.f1) * 0.25;
-    const pores = worley2(u * grainScale * 0.62, v * grainScale * 0.62, 113);
-    const pore = smoothstep(0.10, 0.015, pores.f1) * (0.20 + roughAmp * 0.18);
-    let t = clamp(macro * 0.43 + grain * 0.40 + sweep * 0.10 + fl * 0.32, 0, 1);
-    let col = [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
-    const cool = (fbm2(u * 9.0, v * 8.0, 3, 64.8) - 0.5) * (2.5 + roughAmp * 3.5);
-    col = [col[0] + cool * 0.45, col[1] + cool * 0.62, col[2] + cool];
-    const h = clamp(0.5 + (grain - 0.5) * roughAmp * 0.72
-      + (macro - 0.5) * 0.28 + (sweep - 0.5) * 0.10 - pore, 0, 1);
+    let t = clamp(macro * 0.45 + grain * 0.45 + fl * 0.4, 0, 1);
+    const col = [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+    const h = clamp(0.5 + (grain - 0.5) * roughAmp + (macro - 0.5) * 0.35, 0, 1);
     return [col[0], col[1], col[2], h];
   });
-  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 1.55 + roughAmp * 0.72)) };
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 2.0)) };
 }
 
 /* ------------------------------------------------------------
    袈裟：赭红，带细小深褐斑点（视频里泥塑表面的杂质）
    ------------------------------------------------------------ */
 function buildRobeRed(size = 512) {
-  const a = [0x8B, 0x54, 0x49], b = [0xB6, 0x7B, 0x67], dust = [0xB8, 0x94, 0x79];
+  const a = [0x96, 0x50, 0x3C], b = [0xB6, 0x6B, 0x50];
   const r = bake(size, (u, v) => {
     const macro = fbm2(u * 4, v * 4, 4, 3.9);
-    const grain = fbm2(u * 66, v * 66, 3, 6.1);
-    const warp = Math.sin((u * 118.0 + fbm2(u * 9, v * 9, 2, 48.2) * 0.65) * TAU);
-    const weft = Math.sin((v * 92.0 + fbm2(u * 8, v * 8, 2, 12.6) * 0.58) * TAU);
-    const weave = warp * 0.54 + weft * 0.46;
-    let t = clamp(macro * 0.58 + grain * 0.30 + weave * 0.035 + 0.06, 0, 1);
+    const grain = fbm2(u * 60, v * 60, 3, 6.1);
+    let t = clamp(macro * 0.55 + grain * 0.45, 0, 1);
     let col = [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
-    // 矿物颜料的褪色与泥尘，不用高对比黑点破坏布面连续性。
-    const wear = smoothstep(0.58, 0.86, fbm2(u * 7.0, v * 6.0, 4, 81.4)) * 0.34;
-    col = [lerp(col[0], dust[0], wear), lerp(col[1], dust[1], wear), lerp(col[2], dust[2], wear)];
+    // 杂质斑点
     const sp = worley2(u * 34, v * 34, 77);
-    const s = smoothstep(0.105, 0.018, sp.f1)
-      * smoothstep(0.62, 0.92, fbm2(u * 20, v * 20, 2, 55)) * 0.46;
-    col = [lerp(col[0], 0x61, s), lerp(col[1], 0x40, s), lerp(col[2], 0x34, s)];
-    const h = clamp(0.5 + (grain - 0.5) * 0.19 + weave * 0.055
-      + (macro - 0.5) * 0.07 - s * 0.11, 0, 1);
-    return [col[0], col[1], col[2], h];
+    const s = smoothstep(0.14, 0.0, sp.f1) * smoothstep(0.55, 0.95, fbm2(u * 20, v * 20, 2, 55));
+    col = [lerp(col[0], 0x4A, s), lerp(col[1], 0x2E, s), lerp(col[2], 0x1E, s)];
+    return [col[0], col[1], col[2], clamp(0.5 + (grain - 0.5) * 0.5, 0, 1)];
   });
-  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 1.75)) };
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 1.2)) };
 }
 
 /* ------------------------------------------------------------
@@ -53521,28 +53499,20 @@ function buildRobeRed(size = 512) {
 function buildInnerBlue(size = 512) {
   const c = makeCanvas(size, size);
   const g = c.getContext('2d');
-  g.fillStyle = '#5D8996'; g.fillRect(0, 0, size, size);
+  g.fillStyle = '#2E9DBE'; g.fillRect(0, 0, size, size);
   // 底纹
   const img = g.getImageData(0, 0, size, size); const d = img.data;
-  const heights = new Float32Array(size * size);
   for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
-    const u = x / size, v = y / size;
-    const n = fbm2(u * 42, v * 42, 3, 2.1);
-    const m = fbm2(u * 5.2, v * 4.6, 4, 33.7);
-    const wear = smoothstep(0.62, 0.88, fbm2(u * 10, v * 9, 3, 71.2));
-    const warp = Math.sin((x / 3.7 + fbm2(u * 8, v * 8, 2, 14.3) * 0.55) * TAU);
-    const weft = Math.sin((y / 4.2 + fbm2(u * 7, v * 7, 2, 25.9) * 0.48) * TAU);
+    const n = fbm2(x / size * 40, y / size * 40, 3, 2.1);
     const i = (y * size + x) * 4;
-    d[i] = clamp(d[i] + (n - 0.5) * 17 + (m - 0.5) * 12 + wear * 12, 0, 255);
-    d[i + 1] = clamp(d[i + 1] + (n - 0.5) * 20 + (m - 0.5) * 10 + wear * 8, 0, 255);
-    d[i + 2] = clamp(d[i + 2] + (n - 0.5) * 22 + (m - 0.5) * 7 - wear * 2, 0, 255);
-    heights[y * size + x] = clamp(0.5 + (n - 0.5) * 0.11
-      + (m - 0.5) * 0.045 + warp * 0.026 + weft * 0.023, 0, 1);
+    d[i] = clamp(d[i] + (n - 0.5) * 26, 0, 255);
+    d[i + 1] = clamp(d[i + 1] + (n - 0.5) * 26, 0, 255);
+    d[i + 2] = clamp(d[i + 2] + (n - 0.5) * 26, 0, 255);
   }
   g.putImageData(img, 0, 0);
   // 深蓝团花：中心圆 + 5 瓣
   const rnd = mulberry32(7);
-  g.fillStyle = 'rgba(39,72,88,0.58)';
+  g.fillStyle = 'rgba(21,86,124,0.92)';
   const step = size / 3;
   for (let gy = 0; gy < 3; gy++) for (let gx = 0; gx < 3; gx++) {
     const cx = gx * step + step * 0.5 + (rnd() - 0.5) * step * 0.18;
@@ -53556,14 +53526,7 @@ function buildInnerBlue(size = 512) {
       g.fill();
     }
   }
-  // 低透明尘斑压过纹样，表现彩绘磨蚀而非新印花。
-  g.fillStyle = 'rgba(164,151,126,0.11)';
-  for (let i = 0; i < 72; i++) {
-    const x = rnd() * size, y = rnd() * size;
-    const rx = size * (0.005 + rnd() * 0.023);
-    g.beginPath(); g.ellipse(x, y, rx, rx * (0.25 + rnd() * 0.65), rnd() * TAU, 0, TAU); g.fill();
-  }
-  return { map: toTex(c), normal: toDataTex(normalFromHeight(heights, size, 1.55)) };
+  return { map: toTex(c) };
 }
 
 /* ------------------------------------------------------------
@@ -53572,26 +53535,18 @@ function buildInnerBlue(size = 512) {
 function buildSash(size = 512) {
   const c = makeCanvas(size, size);
   const g = c.getContext('2d');
-  g.fillStyle = '#B69A6C'; g.fillRect(0, 0, size, size);
+  g.fillStyle = '#CFBB6E'; g.fillRect(0, 0, size, size);
   const img = g.getImageData(0, 0, size, size); const d = img.data;
-  const heights = new Float32Array(size * size);
   for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
-    const u = x / size, v = y / size;
-    const n = fbm2(u * 36, v * 36, 3, 9.3);
-    const m = fbm2(u * 5.4, v * 4.8, 4, 57.8);
-    const wear = smoothstep(0.60, 0.87, fbm2(u * 11, v * 8, 3, 21.4));
-    const warp = Math.sin((x / 3.5 + fbm2(u * 7, v * 7, 2, 36.8) * 0.50) * TAU);
-    const weft = Math.sin((y / 4.0 + fbm2(u * 8, v * 8, 2, 44.1) * 0.45) * TAU);
+    const n = fbm2(x / size * 34, y / size * 34, 3, 9.3);
     const i = (y * size + x) * 4;
-    d[i] = clamp(d[i] + (n - 0.5) * 20 + (m - 0.5) * 15 + wear * 8, 0, 255);
-    d[i + 1] = clamp(d[i + 1] + (n - 0.5) * 18 + (m - 0.5) * 10 + wear * 5, 0, 255);
-    d[i + 2] = clamp(d[i + 2] + (n - 0.5) * 13 + (m - 0.5) * 6 - wear * 2, 0, 255);
-    heights[y * size + x] = clamp(0.5 + (n - 0.5) * 0.10
-      + (m - 0.5) * 0.045 + warp * 0.027 + weft * 0.024, 0, 1);
+    d[i] = clamp(d[i] + (n - 0.5) * 30, 0, 255);
+    d[i + 1] = clamp(d[i + 1] + (n - 0.5) * 30, 0, 255);
+    d[i + 2] = clamp(d[i + 2] + (n - 0.5) * 24, 0, 255);
   }
   g.putImageData(img, 0, 0);
   // 连环菱格
-  g.strokeStyle = 'rgba(63,126,117,0.78)'; g.lineWidth = size * 0.0062; g.lineCap = 'round';
+  g.strokeStyle = '#3FBFA8'; g.lineWidth = size * 0.014; g.lineCap = 'round';
   const N = 5, s = size / N;
   for (let gy = -1; gy <= N; gy++) for (let gx = -1; gx <= N; gx++) {
     const cx = gx * s + s * 0.5, cy = gy * s + s * 0.5;
@@ -53608,14 +53563,7 @@ function buildSash(size = 512) {
     // 连接钩
     g.beginPath(); g.arc(cx + s * 0.5, cy, s * 0.16, -0.9, 0.9); g.stroke();
   }
-  const rnd = mulberry32(29);
-  g.fillStyle = 'rgba(181,157,113,0.20)';
-  for (let i = 0; i < 96; i++) {
-    const x = rnd() * size, y = rnd() * size;
-    const rx = size * (0.004 + rnd() * 0.018);
-    g.beginPath(); g.ellipse(x, y, rx, rx * (0.24 + rnd() * 0.72), rnd() * TAU, 0, TAU); g.fill();
-  }
-  return { map: toTex(c), normal: toDataTex(normalFromHeight(heights, size, 1.58)) };
+  return { map: toTex(c) };
 }
 
 /* ------------------------------------------------------------
@@ -53623,21 +53571,12 @@ function buildSash(size = 512) {
    ------------------------------------------------------------ */
 function buildSkin(size = 256) {
   const r = bake(size, (u, v) => {
-    const n = fbm2(u * 62, v * 62, 3, 12.2);
-    const m = fbm2(u * 6, v * 6, 4, 31.7);
-    const bloom = fbm2(u * 13, v * 11, 3, 74.1);
-    const poreCell = worley2(u * 74, v * 74, 129);
-    const pore = smoothstep(0.055, 0.012, poreCell.f1)
-      * smoothstep(0.70, 0.94, fbm2(u * 31, v * 31, 2, 52.6));
-    const t = clamp(n * 0.25 + m * 0.66 + bloom * 0.09, 0, 1);
-    let col = [lerp(0xCE, 0xE9, t), lerp(0xAE, 0xD0, t), lerp(0x91, 0xAF, t)];
-    const rosy = smoothstep(0.64, 0.88, bloom) * 0.12;
-    col = [lerp(col[0], 0xD8, rosy), lerp(col[1], 0xA0, rosy), lerp(col[2], 0x8D, rosy)];
-    col = [lerp(col[0], 0x9C, pore * 0.30), lerp(col[1], 0x83, pore * 0.30), lerp(col[2], 0x70, pore * 0.30)];
-    const h = clamp(0.5 + (n - 0.5) * 0.20 + (m - 0.5) * 0.055 - pore * 0.13, 0, 1);
-    return [col[0], col[1], col[2], h];
+    const n = fbm2(u * 55, v * 55, 3, 12.2);
+    const m = fbm2(u * 6, v * 6, 3, 31.7);
+    const t = clamp(n * 0.4 + m * 0.6, 0, 1);
+    return [lerp(0xE8, 0xF6, t), lerp(0xCE, 0xE1, t), lerp(0xA9, 0xC0, t), clamp(0.5 + (n - 0.5) * 0.35, 0, 1)];
   });
-  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 0.92)) };
+  return { map: toTex(r.canvas), normal: toDataTex(normalFromHeight(r.heights, size, 0.6)) };
 }
 
 /* ------------------------------------------------------------
@@ -53991,8 +53930,8 @@ function buildAllTextures(onProgress) {
     ['rockCore', () => buildRockCore(384)],
     ['crackedMud', () => buildCrackedMud(384)],
     ['mudCoarse', () => buildMud(256, { a: [0x93, 0x81, 0x66], b: [0xBC, 0xA8, 0x86] }, 46, 1.0)],
-    ['mudMid', () => buildMud(256, { a: [0x92, 0x72, 0x55], b: [0xB8, 0x96, 0x70] }, 80, 0.74)],
-    ['mudFine', () => buildMud(256, { a: [0xA5, 0x83, 0x64], b: [0xC3, 0xA2, 0x7C] }, 150, 0.46)],
+    ['mudMid', () => buildMud(256, { a: [0xA8, 0x94, 0x78], b: [0xCB, 0xB8, 0x9A] }, 80, 0.68)],
+    ['mudFine', () => buildMud(256, { a: [0xC3, 0xAE, 0x92], b: [0xE0, 0xCE, 0xB4] }, 150, 0.38)],
     ['mudPolish', () => buildMud(256, { a: [0xD6, 0xC2, 0xA6], b: [0xEE, 0xDF, 0xC6] }, 260, 0.16)],
     ['skin', () => buildSkin(256)],
     ['robeRed', () => buildRobeRed(384)],
@@ -54150,7 +54089,7 @@ function foldDisp(u, y) {
     const lam = 2.05 + (19.5 - y) * 0.052;                  // 褶距自上而下加大
     const jig = (fbm2(y * 0.13, 3.7, 3, 21) - 0.5) * 0.42;
     const phase = (y + K * front + 0.42 * Math.sin(a * 2.0 + 0.7) + jig) / lam;
-    const amp = 0.0140 * smoothstep(19.5, 15.0, y) * smoothstep(0.0, 2.6, y)
+    const amp = 0.0262 * smoothstep(19.5, 15.0, y) * smoothstep(0.0, 2.6, y)
               * (0.80 + 0.34 * fbm2(y * 0.19, 1.3, 3, 7));
     // 尖底的褶形（|sin| 加权），比纯正弦更像布料堆叠
     const frontW = 0.30 + 0.70 * smoothstep(-0.35, 0.72, front);
@@ -54158,7 +54097,7 @@ function foldDisp(u, y) {
     d += (sv * 0.68 + Math.sign(sv) * Math.pow(Math.abs(sv), 2.2) * 0.32) * amp * frontW;
 
     /* 次级细褶：同样是水平走向 */
-    d += Math.sin(((y + K * 0.62 * front) / (lam * 0.42)) * TAU) * 0.0030
+    d += Math.sin(((y + K * 0.62 * front) / (lam * 0.42)) * TAU) * 0.0052
        * smoothstep(19.0, 14.0, y) * smoothstep(1.2, 4.5, y);
 
     /* 侧面的竖向瀑布褶（幅度小，只出现在正侧方） */
@@ -54343,7 +54282,6 @@ function buildLayerGeometry(opts) {
     mask = null,            // (u,v)->0..1
     offset = 0,             // 沿法线外偏移（米）
     offsetFn = null,        // (u,v)->米，优先于 offset
-    maskCutoff = 0.46,      // 让裁口落在遮罩名义边界附近，避免羽化区生成共面锯齿
     uvScale = [1, 1],
     rock = true,            // 是否生成石胎 morph 属性
   } = opts;
@@ -54408,13 +54346,13 @@ function buildLayerGeometry(opts) {
     }
   }
 
-  /* 索引：逐三角裁剪，不能让一个有效角把另外两个无效角拖进衣料裁片。 */
+  /* 索引：mask 全为 0 的 quad 丢弃 */
   const idxArr = [];
   for (let j = 0; j < vSeg; j++) {
     for (let i = 0; i < uSeg; i++) {
       const a = j * nu + i, b = j * nu + i + 1, c = (j + 1) * nu + i + 1, d = (j + 1) * nu + i;
-      if (!mask || Math.min(maskArr[a], maskArr[b], maskArr[d]) > maskCutoff) idxArr.push(a, b, d);
-      if (!mask || Math.min(maskArr[b], maskArr[c], maskArr[d]) > maskCutoff) idxArr.push(b, c, d);
+      if (mask && maskArr[a] <= 0 && maskArr[b] <= 0 && maskArr[c] <= 0 && maskArr[d] <= 0) continue;
+      idxArr.push(a, b, d, b, c, d);
     }
   }
 
@@ -54490,17 +54428,12 @@ const PHASE = {
 function makeStageMaterial(opts) {
   const {
     finalMap,
-    finalNormalMap = TEX.mudPolish.normal,
     finalScale = [1, 1],
-    finalNormalScale = finalScale,
     finalTint = new THREE.Color(1, 1, 1),
     mudScale = [3, 6],
     rockScale = [4, 8],
     roughSet = [1.0, 0.97, 0.94, 0.88, 0.76, 0.58, 0.66],
     normalScale = 1.0,
-    finalNormalStrength = 0.35,
-    roughVariation = 0.04,
-    envMapIntensity = 0.24,
     side = THREE.FrontSide,
   } = opts;
 
@@ -54509,7 +54442,6 @@ function makeStageMaterial(opts) {
     normalMap: TEX.rockCore.normal,
     roughness: 1.0,
     metalness: 0.0,
-    envMapIntensity,
     side,
   });
 
@@ -54539,15 +54471,12 @@ function makeStageMaterial(opts) {
     tMid: { value: TEX.mudMid.map }, nMid: { value: TEX.mudMid.normal },
     tFine: { value: TEX.mudFine.map }, nFine: { value: TEX.mudFine.normal },
     tPolish: { value: TEX.mudPolish.map }, nPolish: { value: TEX.mudPolish.normal },
-    tFinal: { value: finalMap }, nFinal: { value: finalNormalMap }, uFinalTint: { value: finalTint },
+    tFinal: { value: finalMap }, uFinalTint: { value: finalTint },
     uRockScale: { value: new THREE.Vector2(rockScale[0], rockScale[1]) },
     uMudScale: { value: new THREE.Vector2(mudScale[0], mudScale[1]) },
     uFinalScale: { value: new THREE.Vector2(finalScale[0], finalScale[1]) },
-    uFinalNormalScale: { value: new THREE.Vector2(finalNormalScale[0], finalNormalScale[1]) },
     uRough: { value: new Float32Array(roughSet) },
     uNormalAmt: { value: normalScale },
-    uFinalNormalAmt: { value: finalNormalStrength },
-    uRoughVariation: { value: roughVariation },
     uWet: { value: 0 },
     uFrontGlow: { value: new THREE.Color(1.0, 0.55, 0.16) },
   };
@@ -54632,14 +54561,12 @@ function makeStageMaterial(opts) {
       uniform float uRevealOn;
       uniform float uRevealY;
       uniform sampler2D tRock, tCrack, tCoarse, tMid, tFine, tPolish, tFinal;
-      uniform sampler2D nRock, nCrack, nCoarse, nMid, nFine, nPolish, nFinal;
+      uniform sampler2D nRock, nCrack, nCoarse, nMid, nFine, nPolish;
       uniform vec3 uFinalTint;
       uniform vec3 uFrontGlow;
-      uniform vec2 uRockScale, uMudScale, uFinalScale, uFinalNormalScale;
+      uniform vec2 uRockScale, uMudScale, uFinalScale;
       uniform float uRough[7];
       uniform float uNormalAmt;
-      uniform float uFinalNormalAmt;
-      uniform float uRoughVariation;
       uniform float uWet;
       varying float vMorphW;
       varying float vStageCover;
@@ -54697,11 +54624,8 @@ function makeStageMaterial(opts) {
       mapN = mix(mapN, mapNd, phW(2.0));
       mapN = mix(mapN, mapNe, phW(3.0));
       mapN = mix(mapN, mapNf, phW(4.0));
-      float finalW = phW(5.0);
-      vec3 mapNg = texture2D(nFinal, vUvX * uFinalNormalScale).xyz * 2.0 - 1.0;
-      mapN = mix(mapN, mapNg, finalW);
-      float stageAmt = uNormalAmt * mix(1.0, 0.38, phW(4.0));
-      float amt = mix(stageAmt, uFinalNormalAmt, finalW);
+      mapN = mix(mapN, vec3(0.0, 0.0, 1.0), phW(5.0) * 0.78);
+      float amt = uNormalAmt * mix(1.0, 0.32, phW(4.0));
       mapN.xy *= amt;
       normal = normalize(tbn * mapN);
       `
@@ -54720,17 +54644,12 @@ function makeStageMaterial(opts) {
       rlo = mix(rlo, r4, step(3.5, rIdx));
       rlo = mix(rlo, r5, step(4.5, rIdx));
       rlo = mix(rlo, r6, step(5.5, rIdx));
-      float roughGrain = sin(dot(vUvX, vec2(57.7, 91.3)) * 6.2831853);
-      roughGrain += 0.55 * sin(dot(vUvX, vec2(-83.1, 43.9)) * 6.2831853);
-      roughGrain /= 1.55;
-      float pigment = clamp((dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) - 0.48) * 0.60, -0.35, 0.35);
-      float roughnessFactor = clamp(rlo + (roughGrain * 0.72 - pigment) * uRoughVariation, 0.18, 1.0);
-      roughnessFactor = mix(roughnessFactor, 0.24, vFrontEdge * uWet);
+      float roughnessFactor = mix(rlo, 0.24, vFrontEdge * uWet);
       `
     );
   };
 
-  mat.customProgramCacheKey = () => 'stage-material-spatial-v4';
+  mat.customProgramCacheKey = () => 'stage-material-spatial-v3';
   mat.userData.U = U;
   STAGE_MATS.push(mat);
   return mat;
@@ -54883,7 +54802,6 @@ const BUDDHA = {
   group: null,
   parts: {},
   haloMats: [],
-  cavityMats: [],  // 眼缝、鼻孔、唇缝：由真实凹槽网格形成，素胎阶段即应可见
   detailMats: [],   // 眉眼唇等，随上色淡入
 };
 
@@ -54893,58 +54811,35 @@ function buildBuddha() {
 
   /* ---------------- 材质 ---------------- */
   const matSkin = makeStageMaterial({
-    finalMap: TEX.skin.map, finalNormalMap: TEX.skin.normal,
-    /* 原片彩绘完成后是偏象牙白的暖肤彩；保留矿物斑驳，但不能被洞窟侧光压成灰泥。 */
-    finalTint: new THREE.Color(1.65, 1.45, 1.38), finalScale: [1/7, 1/7], finalNormalScale: [0.85, 0.85],
-    mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
-    roughSet: [1.0, 0.98, 0.96, 0.92, 0.86, 0.68, 0.60],
-    normalScale: 0.82, finalNormalStrength: 0.27, roughVariation: 0.035, envMapIntensity: 0.22,
+    finalMap: TEX.skin.map, finalTint: new THREE.Color(0.955, 0.855, 0.715), finalScale: [1/7, 1/7], mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
+    roughSet: [1.0, 0.97, 0.94, 0.86, 0.72, 0.52, 0.46], normalScale: 1.0,
   });
   const matRobe = makeStageMaterial({
-    finalMap: TEX.robeRed.map, finalNormalMap: TEX.robeRed.normal,
-    finalTint: new THREE.Color(1.18, 1.09, 1.06),
-    finalScale: [1/5, 1/5], finalNormalScale: [0.88, 0.88],
-    mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
-    roughSet: [1.0, 0.98, 0.96, 0.92, 0.86, 0.68, 0.76],
-    normalScale: 0.76, finalNormalStrength: 0.48, roughVariation: 0.060, envMapIntensity: 0.17,
+    finalMap: TEX.robeRed.map, finalScale: [1/5, 1/5], mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
+    roughSet: [1.0, 0.97, 0.94, 0.88, 0.76, 0.60, 0.68], normalScale: 1.1,
   });
   const matRobeLower = makeStageMaterial({
-    finalMap: TEX.robeRed.map, finalNormalMap: TEX.robeRed.normal,
-    finalTint: new THREE.Color(1.18, 1.09, 1.06),
-    finalScale: [1/6, 1/6], finalNormalScale: [0.92, 0.92],
-    mudScale: [1/2.8, 1/2.8], rockScale: [1/4.0, 1/4.0],
-    roughSet: [1.0, 0.98, 0.96, 0.92, 0.86, 0.68, 0.77],
-    normalScale: 0.76, finalNormalStrength: 0.50, roughVariation: 0.065, envMapIntensity: 0.16,
+    finalMap: TEX.robeRed.map, finalScale: [1/6, 1/6], mudScale: [1/2.8, 1/2.8], rockScale: [1/4.0, 1/4.0],
+    roughSet: [1.0, 0.97, 0.94, 0.88, 0.76, 0.60, 0.68], normalScale: 1.1,
   });
   const matInner = makeStageMaterial({
-    finalMap: TEX.innerBlue.map, finalNormalMap: TEX.innerBlue.normal,
-    finalScale: [1/6.5, 1/6.5], finalNormalScale: [0.90, 0.90],
-    mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
-    roughSet: [1.0, 0.98, 0.96, 0.92, 0.86, 0.68, 0.74],
-    normalScale: 0.84, finalNormalStrength: 0.43, roughVariation: 0.055, envMapIntensity: 0.17,
+    finalMap: TEX.innerBlue.map, finalScale: [1/8.5, 1/8.5], mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
+    roughSet: [1.0, 0.97, 0.94, 0.88, 0.76, 0.60, 0.70], normalScale: 1.0,
   });
   const matSash = makeStageMaterial({
-    finalMap: TEX.sash.map, finalNormalMap: TEX.sash.normal,
-    finalScale: [1/5.8, 1/5.8], finalNormalScale: [0.90, 0.90],
-    mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
-    roughSet: [1.0, 0.98, 0.96, 0.92, 0.86, 0.68, 0.75],
-    normalScale: 0.84, finalNormalStrength: 0.44, roughVariation: 0.058, envMapIntensity: 0.17,
+    finalMap: TEX.sash.map, finalScale: [1/8, 1/8], mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
+    roughSet: [1.0, 0.97, 0.94, 0.88, 0.76, 0.60, 0.70], normalScale: 1.0,
   });
   const matBelt = makeStageMaterial({
-    finalMap: TEX.skin.map, finalNormalMap: TEX.skin.normal,
-    finalScale: [1/5, 1/5], finalNormalScale: [0.82, 0.82],
+    finalMap: TEX.skin.map, finalScale: [1/5, 1/5],
     finalTint: new THREE.Color(0.072, 0.192, 0.330),
-    mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6],
-    roughSet: [1.0, 0.98, 0.96, 0.92, 0.86, 0.68, 0.72],
-    normalScale: 0.76, finalNormalStrength: 0.28, roughVariation: 0.045, envMapIntensity: 0.17,
+    mudScale: [1/2.4, 1/2.4], rockScale: [1/3.6, 1/3.6], roughSet: [1.0, 0.97, 0.94, 0.88, 0.76, 0.60, 0.70],
   });
   const matHair = makeStageMaterial({
-    finalMap: TEX.skin.map, finalNormalMap: TEX.skin.normal,
-    finalScale: [1/1.2, 1/1.2], finalNormalScale: [0.95, 0.95],
-    finalTint: new THREE.Color(0.195, 0.205, 0.225),
+    finalMap: TEX.skin.map, finalScale: [1/1.2, 1/1.2],
+    finalTint: new THREE.Color(0.052, 0.048, 0.052),
     mudScale: [1/1.4, 1/1.4], rockScale: [1/1.6, 1/1.6],
-    roughSet: [1.0, 0.98, 0.96, 0.92, 0.86, 0.68, 0.67],
-    normalScale: 0.36, finalNormalStrength: 0.18, roughVariation: 0.035, envMapIntensity: 0.23,
+    roughSet: [1.0, 0.97, 0.94, 0.86, 0.72, 0.55, 0.78], normalScale: 0.4,
   });
   BUDDHA.parts.mats = { matSkin, matRobe, matRobeLower, matInner, matSash, matBelt, matHair };
 
@@ -54959,18 +54854,8 @@ function buildBuddha() {
 
   /* ---------------- 2. 躯干皮肤（胸口裸露部分） ---------------- */
   const gTorso = buildLayerGeometry({
-    uSeg: 112, vSeg: 82, v0: yv(19.0), v1: yv(29.35),
+    uSeg: 112, vSeg: 82, v0: yv(19.0), v1: yv(30.6),
     offset: 0.0, uvScale: [1, 1],
-    offsetFn: (u, v) => {
-      const y = v * H;
-      const du = Math.abs(ucyc(u, 0));
-      const x = Math.abs(Math.sin(du * TAU) * PROF_RX(y));
-      /* 保留连续皮肤背衬，只把领口中央平滑压入喉部之后，杜绝矩形破洞。 */
-      return -0.70
-        * smoothstep(28.02, 28.38, y)
-        * smoothstep(29.22, 28.95, y)
-        * smoothstep(2.05, 1.75, x);
-    },
   });
   const mTorso = new THREE.Mesh(gTorso, matSkin);
   mTorso.castShadow = mTorso.receiveShadow = true;
@@ -54987,7 +54872,7 @@ function buildBuddha() {
 
   /* ---------------- 4. 内衣（孔雀蓝，覆佛之右肩/右臂/左下摆） ---------------- */
   const gInner = buildLayerGeometry({
-    uSeg: 248, vSeg: 214, v0: yv(6.0), v1: yv(29.6),
+    uSeg: 136, vSeg: 118, v0: yv(6.0), v1: yv(29.6),
     offset: 0.20, uvScale: [1, 1],
     mask: (u, v) => {
       const y = v * H;
@@ -55013,7 +54898,7 @@ function buildBuddha() {
 
   /* ---------------- 5. 斜披（土黄 + 绿菱纹），左肩高、右腰低 ---------------- */
   const gSash = buildLayerGeometry({
-    uSeg: 280, vSeg: 206, v0: yv(18.0), v1: yv(29.6),
+    uSeg: 152, vSeg: 112, v0: yv(18.0), v1: yv(29.6),
     offset: 0.32, uvScale: [1, 1],
     mask: (u, v) => {
       const du = ucyc(u, 0.055);              // 以正前略偏 +X 为中心
@@ -55032,14 +54917,14 @@ function buildBuddha() {
 
   /* ---------------- 6. 袈裟外披（赭红，覆佛之左肩/左臂/绕背） ---------------- */
   const gRobe = buildLayerGeometry({
-    uSeg: 264, vSeg: 210, v0: yv(18.8), v1: yv(29.7),
-    offset: 0.34, uvScale: [1, 1],
+    uSeg: 144, vSeg: 116, v0: yv(15.0), v1: yv(29.7),
+    offset: 0.50, uvScale: [1, 1],
     mask: (u, v) => {
       const y = v * H;
       const du = ucyc(u, 0.34);
       /* 正面开口边：腹部完全包住（edge 大），到胸/肩逐步让位给斜披与裸胸 */
       const edgeU = lerp(0.195, 0.000, smoothstep(23.2, 26.8, y));
-      const m = sband(du, -(0.190 + edgeU), 0.285, 0.085);
+      const m = sband(du, -(0.190 + edgeU), 0.285, 0.055);
       const hi = smoothstep(30.2, 29.2, y);
       return clamp(m * hi, 0, 1);
     },
@@ -55050,8 +54935,8 @@ function buildBuddha() {
 
   /* ---------------- 7. 腰带（深蓝横带 + 红边） ---------------- */
   const gBelt = buildLayerGeometry({
-    uSeg: 220, vSeg: 48, v0: yv(17.4), v1: yv(19.7),
-    offset: 0.10, uvScale: [1, 1],
+    uSeg: 112, vSeg: 18, v0: yv(17.4), v1: yv(19.7),
+    offset: 0.40, uvScale: [1, 1],
     mask: (u, v) => {
       const du = ucyc(u, 0.0);
       const y = v * H;
@@ -55078,12 +54963,6 @@ function buildBuddha() {
 
   /* ---------------- 13. 头光（上色阶段淡入） ---------------- */
   buildHalo3D(G);
-
-  /* Round 2 的头脸/手掌仅是轮廓占位。真实造像拓扑在 42-buddha-realism.js
-     中覆盖：所有解剖细节均为可产生视差和自阴影的实体网格。 */
-  if (typeof upgradeBuddhaRealism === 'function') {
-    upgradeBuddhaRealism(G, BUDDHA.parts.mats);
-  }
 
   G.position.set(0, 0, 0);
   return G;
@@ -55157,8 +55036,6 @@ function buildHair(G, mat) {
    五官：眉 / 眼 / 鼻 / 唇
    ------------------------------------------------------------ */
 function buildFace(G) {
-  const faceGroup = new THREE.Group();
-  faceGroup.name = 'LegacyFaceDetails';
   /* 形体已由 faceRelief 做成浮雕，这里只放「上色阶段」才出现的彩色薄片 */
   const lineMat = new THREE.MeshStandardMaterial({
     color: 0x2B2620, roughness: 0.52, transparent: true, opacity: 0,
@@ -55179,7 +55056,7 @@ function buildFace(G) {
       pts.push(P);
     }
     const g = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 22, 0.048, 6, false);
-    faceGroup.add(new THREE.Mesh(g, lineMat));
+    G.add(new THREE.Mesh(g, lineMat));
   }
 
   /* 眉：细长弯弧（y≈32.63~32.78，x 0.30→1.78） */
@@ -55195,7 +55072,7 @@ function buildFace(G) {
       pts.push(P);
     }
     const g = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 22, 0.060, 6, false);
-    faceGroup.add(new THREE.Mesh(g, lineMat));
+    G.add(new THREE.Mesh(g, lineMat));
   }
 
   /* 唇色：贴着唇部浮雕的薄片 */
@@ -55229,10 +55106,8 @@ function buildFace(G) {
     g.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
     g.setIndex(idx);
     g.computeVertexNormals();
-    faceGroup.add(new THREE.Mesh(g, lipMat));
+    G.add(new THREE.Mesh(g, lipMat));
   }
-  G.add(faceGroup);
-  BUDDHA.parts.legacyFace = faceGroup;
 }
 
 /* 给已 position 好的 Mesh 附加石胎 morph（世界位置计算） */
@@ -55260,8 +55135,6 @@ function attachRockMorphMesh(mesh) {
    耳：大耳垂
    ------------------------------------------------------------ */
 function buildEars(G, mat) {
-  const earGroup = new THREE.Group();
-  earGroup.name = 'LegacyEars';
   for (const sx of [-1, 1]) {
     const g = new THREE.SphereGeometry(1, 18, 14);
     const pa = g.attributes.position;
@@ -55285,10 +55158,8 @@ function buildEars(G, mat) {
     m.rotation.z = sx * 0.07;
     m.castShadow = true;
     attachRockMorphMesh(m);
-    earGroup.add(m);
+    G.add(m);
   }
-  G.add(earGroup);
-  BUDDHA.parts.legacyEars = earGroup;
 }
 
 /* ------------------------------------------------------------
@@ -55611,1368 +55482,6 @@ function buildPegs(G) {
 }
 
 
-/* ===== 42-buddha-realism.js ===== */
-/* ============================================================
-   42 - 真实三维造像升级
-
-   设计约束：
-   - 头、眼睑、鼻、唇、长耳、螺发和双手全部由实体网格构成；
-   - 不用人物照片、面部图片、法线烘焙卡片或 billboard 塑造轮廓；
-   - 延续现有石胎 → 泥塑 → 素胎 → 彩绘材质状态机；
-   - 保留 BUDDHA.parts.hair 的逐实例施工接口。
-   ============================================================ */
-
-const REAL_HEAD_Y0 = 29.12;
-const REAL_HEAD_Y1 = 35.55;
-const REAL_HEAD_SECTION_POW = 1.04;
-
-const REAL_HEAD_RX = makeCurve1D([
-  [28.95, 1.24], [29.30, 1.42], [29.62, 1.60], [30.05, 1.82], [30.52, 2.02],
-  [31.18, 2.18], [31.92, 2.31], [32.62, 2.24], [33.28, 2.08],
-  [33.88, 1.88], [34.35, 1.66], [34.78, 1.38], [35.18, 0.94],
-  [35.48, 0.34], [35.55, 0.05],
-]);
-
-const REAL_HEAD_FRONT = makeCurve1D([
-  [28.95, 1.02], [29.30, 1.29], [29.62, 1.54], [30.05, 1.77], [30.52, 1.96],
-  [31.18, 2.16], [31.92, 2.25], [32.62, 2.22], [33.28, 2.14],
-  [33.88, 2.02], [34.35, 1.84], [34.78, 1.51], [35.18, 1.02],
-  [35.48, 0.36], [35.55, 0.05],
-]);
-
-const REAL_HEAD_BACK = makeCurve1D([
-  [28.95, 1.00], [29.30, 1.31], [29.62, 1.58], [30.05, 1.82], [30.52, 2.00],
-  [31.18, 2.12], [31.92, 2.20], [32.62, 2.20], [33.28, 2.15],
-  [33.88, 2.04], [34.35, 1.86], [34.78, 1.53], [35.18, 1.04],
-  [35.48, 0.38], [35.55, 0.05],
-]);
-
-const REAL_HEAD_CZ = makeCurve1D([
-  [28.95, -0.46], [29.30, -0.44], [30.0, -0.39], [31.2, -0.31], [32.4, -0.29],
-  [33.5, -0.34], [34.5, -0.40], [35.55, -0.43],
-]);
-
-function realGauss(x, c, w) {
-  return Math.exp(-Math.pow((x - c) / w, 2));
-}
-
-/* 宽圆造像脸的体积起伏；鼻、唇另以封闭网格叠加。 */
-function realFacialRelief(x, y) {
-  let d = 0;
-  /*
-    直接把额弓、眼窝、颧颊、人中和下巴写入头部母曲面。参考片的庄严感
-    来自大面积平缓转折，而不是在球面上粘几根线。
-  */
-  const bilateral = (cx, wx) => realGauss(x, -cx, wx) + realGauss(x, cx, wx);
-  d += bilateral(1.00, 0.96) * realGauss(y, 31.38, 0.82) * 0.245;  // 颧颊大缓坡
-  d += bilateral(1.30, 0.46) * realGauss(y, 30.78, 0.72) * 0.100;  // 下颌转折
-  d += realGauss(x, 0, 1.10) * realGauss(y, 30.00, 0.48) * 0.260;  // 圆钝下巴
-  d += realGauss(x, 0, 0.92) * realGauss(y, 31.13, 0.70) * 0.052;
-  d -= bilateral(0.98, 0.70) * realGauss(y, 32.30, 0.48) * 0.280; // 宽阔眼窝
-  d += bilateral(0.96, 0.88) * realGauss(y, 32.76, 0.44) * 0.285; // 宽面额弓
-  d += realGauss(x, 0, 0.48) * realGauss(y, 32.48, 0.55) * 0.100; // 眉间鼻根
-  d += realGauss(x, 0, 0.46) * realGauss(y, 31.92, 0.92) * 0.075; // 鼻根与面部柔和衔接
-  d -= bilateral(0.46, 0.22) * realGauss(y, 30.82, 0.40) * 0.055; // 口角
-  d -= realGauss(x, 0, 0.13) * realGauss(y, 30.86, 0.30) * 0.052; // 人中
-  d -= bilateral(0.66, 0.19) * realGauss(y, 30.67, 0.46) * 0.030; // 鼻翼至口角的柔和鼻唇沟
-  d -= bilateral(1.62, 0.40) * realGauss(y, 31.38, 0.88) * 0.038; // 颊侧平面转折
-  d -= bilateral(1.55, 0.42) * realGauss(y, 30.55, 0.78) * 0.060; // 下颌阴影收束
-  d += realNoseDisplacement(x, y);                                // 与头面共拓扑的鼻体
-  d -= (realGauss(x, -0.41, 0.105) + realGauss(x, 0.41, 0.105))
-    * realGauss(y, 30.96, 0.075) * 0.050;                         // 鼻孔凹陷
-  return d;
-}
-
-/* u=0 朝 +Z；横截面用轻微超椭圆，使正脸宽圆而非球/方盒。 */
-function realHeadPoint(u, v, out) {
-  const vv = clamp(v, 0, 1);
-  const baseY = lerp(REAL_HEAD_Y0, REAL_HEAD_Y1, vv);
-  const a = u * TAU;
-  const sx = Math.sin(a), sz = Math.cos(a);
-  /*
-    最下一圈不能是水平切口。正面中心向下形成圆下巴，越靠耳后越早
-    回收到颈部；这是实际三维轮廓，不是正面贴片。
-  */
-  const lowerBlend = Math.pow(1 - smoothstep(0, 0.22, vv), 2);
-  const faceFacing = Math.max(0, sz);
-  const chinDrop = 0.36 * lowerBlend * Math.pow(faceFacing, 1.20);
-  const jawSideLift = 0.34 * lowerBlend * (1 - faceFacing);
-  const y = baseY + jawSideLift - chinDrop;
-  /* 接近椭圆而非超椭圆，消除方盒/面具式侧壁。 */
-  const pow = REAL_HEAD_SECTION_POW;
-  const x = REAL_HEAD_RX(y) * Math.sign(sx || 1) * Math.pow(Math.abs(sx), pow);
-  const rz = sz >= 0 ? REAL_HEAD_FRONT(y) : REAL_HEAD_BACK(y);
-  let z = REAL_HEAD_CZ(y) + rz * Math.sign(sz || 1) * Math.pow(Math.abs(sz), pow);
-  if (sz > 0.16) z += realFacialRelief(x, y) * smoothstep(0.16, 0.72, sz);
-  const p = out || new THREE.Vector3();
-  p.set(x, y, z);
-  return p;
-}
-
-const _rh0 = new THREE.Vector3(), _rh1 = new THREE.Vector3();
-const _rh2 = new THREE.Vector3(), _rh3 = new THREE.Vector3();
-const _rhu = new THREE.Vector3(), _rhv = new THREE.Vector3();
-function realHeadNormal(u, v, out) {
-  const du = 0.0016, dv = 0.0016;
-  realHeadPoint(u - du, v, _rh0);
-  realHeadPoint(u + du, v, _rh1);
-  realHeadPoint(u, Math.max(0, v - dv), _rh2);
-  realHeadPoint(u, Math.min(1, v + dv), _rh3);
-  _rhu.subVectors(_rh1, _rh0);
-  _rhv.subVectors(_rh3, _rh2);
-  const n = out || new THREE.Vector3();
-  n.crossVectors(_rhu, _rhv).normalize();
-  return n;
-}
-
-function realFaceSurfaceZ(x, y) {
-  const rx = Math.max(0.08, REAL_HEAD_RX(y));
-  const ax = Math.min(1, Math.abs(x) / rx);
-  const q = Math.pow(
-    Math.max(0, 1 - Math.pow(ax, 2 / REAL_HEAD_SECTION_POW)),
-    REAL_HEAD_SECTION_POW / 2
-  );
-  return REAL_HEAD_CZ(y) + REAL_HEAD_FRONT(y) * q + realFacialRelief(x, y);
-}
-
-function realFaceNormal(x, y, out) {
-  const e = 0.004;
-  const dzdx = (realFaceSurfaceZ(x + e, y) - realFaceSurfaceZ(x - e, y)) / (2 * e);
-  const dzdy = (realFaceSurfaceZ(x, y + e) - realFaceSurfaceZ(x, y - e)) / (2 * e);
-  const n = out || new THREE.Vector3();
-  return n.set(-dzdx, -dzdy, 1).normalize();
-}
-
-function realFacePoint(x, y, lift = 0) {
-  const p = new THREE.Vector3(x, y, realFaceSurfaceZ(x, y));
-  if (lift) p.addScaledVector(realFaceNormal(x, y, new THREE.Vector3()), lift);
-  return p;
-}
-
-function buildRealHeadGeometry() {
-  const uSeg = 384, vSeg = 288, nu = uSeg + 1;
-  const pos = [], nrm = [], uv = [], idx = [];
-  const rp = [], rn = [];
-  const P = new THREE.Vector3(), N = new THREE.Vector3(), R = new THREE.Vector3();
-  for (let j = 0; j <= vSeg; j++) {
-    const v = j / vSeg;
-    for (let i = 0; i <= uSeg; i++) {
-      const u = i / uSeg;
-      realHeadPoint(u, v, P);
-      realHeadNormal(u, v, N);
-      pos.push(P.x, P.y, P.z);
-      nrm.push(N.x, N.y, N.z);
-      uv.push(u * 5.4, v * 7.2);
-      rockPoint(P, R);
-      rp.push(R.x, R.y, R.z);
-      const rl = Math.hypot(R.x, R.z) || 1;
-      rn.push(R.x / rl * 0.94, 0.18, R.z / rl * 0.94);
-    }
-  }
-  for (let j = 0; j < vSeg; j++) for (let i = 0; i < uSeg; i++) {
-    const a = j * nu + i, b = a + 1, c = a + nu + 1, d = a + nu;
-    idx.push(a, b, d, b, c, d);
-  }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  g.setAttribute('normal', new THREE.Float32BufferAttribute(nrm, 3));
-  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  g.setAttribute('aRockPos', new THREE.Float32BufferAttribute(rp, 3));
-  g.setAttribute('aRockNrm', new THREE.Float32BufferAttribute(rn, 3));
-  g.setIndex(idx);
-  g.computeBoundingSphere();
-  return g;
-}
-
-function bakeEllipsoid(rx, ry, rz, x, y, z, seg = 28) {
-  const g = new THREE.SphereGeometry(1, seg, Math.max(12, Math.round(seg * 0.66)));
-  g.scale(rx, ry, rz);
-  g.translate(x, y, z);
-  g.computeVertexNormals();
-  return g;
-}
-
-const REAL_THROAT_Y0 = 28.10;
-const REAL_THROAT_Y1 = 29.55;
-
-function realThroatSection(y) {
-  const t = smoothstep(REAL_THROAT_Y0, REAL_THROAT_Y1, y);
-  const waist = Math.sin(Math.PI * t);
-  return {
-    /* 胸口外扩、下颌内收，中段略收腰，形成真正的颈胸过渡。 */
-    rx: lerp(2.12, 2.08, t) - waist * 0.32,
-    front: lerp(0.75, 0.72, t) - waist * 0.035,
-    back: lerp(1.05, 0.82, t),
-  };
-}
-
-function realThroatFrontZ(x, y) {
-  const s = realThroatSection(y);
-  const q = Math.sqrt(Math.max(0, 1 - Math.pow(x / s.rx, 2)));
-  return s.front * q;
-}
-
-/* 下宽上收、从胸口连续过渡到下颌的封闭喉部，不再用前凸椭球形成悬空圆盘。 */
-function buildSculptedThroatGeometry() {
-  const uSeg = 96, vSeg = 72, nu = uSeg + 1;
-  const pos = [], uv = [], idx = [];
-  for (let j = 0; j <= vSeg; j++) {
-    const t = j / vSeg;
-    const y = lerp(REAL_THROAT_Y0, REAL_THROAT_Y1, t);
-    const s = realThroatSection(y);
-    for (let i = 0; i <= uSeg; i++) {
-      const u = i / uSeg, a = u * TAU;
-      const sx = Math.sin(a), cz = Math.cos(a);
-      const x = s.rx * sx;
-      let z = cz >= 0 ? s.front * cz : s.back * cz;
-      /*
-        三道颈纹直接雕进封闭颈体。横向随正面朝向淡出、中央略下垂，
-        因而是随颈部曲率生长的软褶皱，不是套在脖子上的三根圆管。
-      */
-      if (cz > 0) {
-        const frontFade = Math.pow(cz, 1.35);
-        const centerSag = 0.085 * Math.pow(cz, 1.10);
-        let folds = 0;
-        for (let r = 0; r < 3; r++) {
-          const foldY = 28.29 + r * 0.225 - centerSag;
-          folds += realGauss(y, foldY + 0.022, 0.047) * 0.026;
-          folds -= realGauss(y, foldY - 0.034, 0.030) * 0.012;
-        }
-        z += folds * frontFade;
-      }
-      pos.push(x, y, z);
-      uv.push(u * 3.2, t * 1.8);
-    }
-  }
-  for (let j = 0; j < vSeg; j++) for (let i = 0; i < uSeg; i++) {
-    const a = j * nu + i, b = a + 1, c = b + nu, d = a + nu;
-    idx.push(a, b, d, b, c, d);
-  }
-  const bottomCenter = pos.length / 3;
-  pos.push(0, REAL_THROAT_Y0, 0); uv.push(0.5, 0.5);
-  const topCenter = pos.length / 3;
-  pos.push(0, REAL_THROAT_Y1, 0); uv.push(0.5, 0.5);
-  for (let i = 0; i < uSeg; i++) {
-    idx.push(bottomCenter, i + 1, i);
-    const a = vSeg * nu + i, b = a + 1;
-    idx.push(topCenter, a, b);
-  }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  g.setIndex(idx);
-  g.computeVertexNormals();
-  return g;
-}
-
-function addRealStageMesh(parent, geometry, material, name) {
-  if (!geometry.attributes.aRockPos) attachRockMorph(geometry);
-  const mesh = new THREE.Mesh(geometry, material);
-  mesh.name = name || '';
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
-  parent.add(mesh);
-  return mesh;
-}
-
-function realDetailMaterial(color, roughness, target) {
-  const mat = new THREE.MeshStandardMaterial({
-    color, roughness, metalness: 0, transparent: true, opacity: 0,
-    depthWrite: false,
-  });
-  (target || BUDDHA.detailMats).push(mat);
-  return mat;
-}
-
-function makeTubeThrough(points, radius, radial = 10, tubularOverride = 0) {
-  const curve = new THREE.CatmullRomCurve3(points);
-  const tubular = tubularOverride || Math.max(18, points.length * 4);
-  const frames = curve.computeFrenetFrames(tubular, false);
-  const pos = [], uv = [], idx = [];
-  const p = new THREE.Vector3(), offset = new THREE.Vector3();
-  for (let i = 0; i <= tubular; i++) {
-    const t = i / tubular;
-    curve.getPointAt(t, p);
-    for (let j = 0; j < radial; j++) {
-      const a = j / radial * TAU;
-      offset.copy(frames.normals[i]).multiplyScalar(Math.cos(a) * radius)
-        .addScaledVector(frames.binormals[i], Math.sin(a) * radius);
-      pos.push(p.x + offset.x, p.y + offset.y, p.z + offset.z);
-      uv.push(t, j / radial);
-    }
-  }
-  for (let i = 0; i < tubular; i++) for (let j = 0; j < radial; j++) {
-    const a = i * radial + j, b = i * radial + (j + 1) % radial;
-    const d = (i + 1) * radial + j, c = (i + 1) * radial + (j + 1) % radial;
-    idx.push(a, d, b, b, d, c);
-  }
-  const startCenter = pos.length / 3;
-  curve.getPointAt(0, p); pos.push(p.x, p.y, p.z); uv.push(0, 0.5);
-  const endCenter = pos.length / 3;
-  curve.getPointAt(1, p); pos.push(p.x, p.y, p.z); uv.push(1, 0.5);
-  const endBase = tubular * radial;
-  for (let j = 0; j < radial; j++) {
-    const next = (j + 1) % radial;
-    idx.push(startCenter, next, j);
-    idx.push(endCenter, endBase + j, endBase + next);
-  }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  g.setIndex(idx);
-  g.computeVertexNormals();
-  return g;
-}
-
-/*
-  鼻子是贴着面部母曲面生长的一块封闭体积。旧实现逐圈绕鼻轴 loft，底圈
-  在正面形成两根叉状棱线；这里改为“正面连续曲面 + 埋入脸内的背面”，
-  鼻梁、圆钝鼻头和鼻翼共享同一张拓扑，任何角度都不会裂成几颗小球。
-*/
-const REAL_NOSE_ROWS = [
-  [32.58, 0.120, 0.018], [32.36, 0.180, 0.050], [32.12, 0.250, 0.100],
-  [31.88, 0.310, 0.150], [31.62, 0.380, 0.205], [31.39, 0.460, 0.245],
-  [31.18, 0.580, 0.265], [31.08, 0.625, 0.235], [30.99, 0.640, 0.170],
-  [30.92, 0.560, 0.095], [30.86, 0.390, 0.035], [30.82, 0.130, 0.006],
-];
-const REAL_NOSE_WIDTH = makeCurve1D([...REAL_NOSE_ROWS].reverse().map((r) => [r[0], r[1]]));
-const REAL_NOSE_DEPTH = makeCurve1D([...REAL_NOSE_ROWS].reverse().map((r) => [r[0], r[2]]));
-
-function noseRowAt(y) {
-  return [Math.max(0.035, REAL_NOSE_WIDTH(y)), Math.max(0, REAL_NOSE_DEPTH(y))];
-}
-
-function realNoseDisplacement(x, y) {
-  if (y > REAL_NOSE_ROWS[0][0] || y < REAL_NOSE_ROWS[REAL_NOSE_ROWS.length - 1][0]) return 0;
-  const [width, depth] = noseRowAt(y);
-  if (Math.abs(x) >= width) return 0;
-  const s = clamp(x / Math.max(0.001, width), -1, 1);
-  /* 宽缓穹面让鼻梁和鼻翼从面颊连续长出，避免正面形成尖锐三角楔。 */
-  const edge = Math.max(0, 1 - Math.abs(s));
-  const edgeFade = smoothstep(0.0, 0.22, edge);
-  const dome = Math.pow(Math.max(0, 1 - s * s), 0.90);
-  const noseTip = realGauss(y, 31.08, 0.19);
-  const centralTip = realGauss(s, 0, 0.60) * noseTip * 0.130;
-  const wing = realGauss(Math.abs(s), 0.68, 0.25) * noseTip * 0.120;
-  const alarLobe = realGauss(Math.abs(x), 0.43, 0.16) * realGauss(y, 30.98, 0.13) * 0.070;
-  const columella = realGauss(x, 0, 0.15) * realGauss(y, 30.90, 0.10) * 0.040;
-  return (depth * dome + centralTip + wing + alarLobe + columella) * edgeFade;
-}
-
-function realNoseFrontZ(x, y) {
-  return realFaceSurfaceZ(x, y);
-}
-
-function buildNoseGeometry() {
-  const rows = REAL_NOSE_ROWS;
-  const xSeg = 32, nx = xSeg + 1;
-  const pos = [], uv = [], idx = [];
-  const frontCount = rows.length * nx;
-
-  for (let layer = 0; layer < 2; layer++) {
-    for (let j = 0; j < rows.length; j++) {
-      const [y, width, depth] = rows[j];
-      for (let i = 0; i <= xSeg; i++) {
-        const s = i / xSeg * 2 - 1;
-        const x = s * width;
-        const base = realFaceSurfaceZ(x, y);
-        let z;
-        if (layer === 0) {
-          z = realFaceSurfaceZ(x, y);
-        } else {
-          z = base - 0.030;
-        }
-        pos.push(x, y, z);
-        uv.push(i / xSeg, j / (rows.length - 1));
-      }
-    }
-  }
-
-  for (let j = 0; j < rows.length - 1; j++) for (let i = 0; i < xSeg; i++) {
-    const a = j * nx + i, b = a + 1, d = a + nx, c = d + 1;
-    idx.push(a, d, b, b, d, c); // 正面朝 +Z
-    const aa = frontCount + a, bb = frontCount + b;
-    const cc = frontCount + c, dd = frontCount + d;
-    idx.push(aa, bb, dd, bb, cc, dd); // 埋入脸内的背面
-  }
-  for (let j = 0; j < rows.length - 1; j++) {
-    const leftA = j * nx, leftB = (j + 1) * nx;
-    const rightA = leftA + xSeg, rightB = leftB + xSeg;
-    idx.push(leftA, frontCount + leftA, leftB,
-      leftB, frontCount + leftA, frontCount + leftB);
-    idx.push(rightA, rightB, frontCount + rightA,
-      rightB, frontCount + rightB, frontCount + rightA);
-  }
-  for (const j of [0, rows.length - 1]) for (let i = 0; i < xSeg; i++) {
-    const a = j * nx + i, b = a + 1;
-    if (j === 0) idx.push(a, b, frontCount + a, b, frontCount + b, frontCount + a);
-    else idx.push(a, frontCount + a, b, b, frontCount + a, frontCount + b);
-  }
-
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  g.setIndex(idx);
-  g.computeVertexNormals();
-  return g;
-}
-
-/* 封闭的上下唇体积。u 控制口角到口角，a 绕唇截面一周。 */
-function buildLipGeometry(kind, pigment) {
-  const uSeg = 52, vSeg = 16, nv = vSeg + 1;
-  const pos = [], uv = [], idx = [];
-  const isUpper = kind === 'upper';
-  const width = isUpper ? 0.62 : 0.65;
-  const frontCount = (uSeg + 1) * nv;
-  for (let layer = 0; layer < 2; layer++) {
-    for (let i = 0; i <= uSeg; i++) {
-      const u = i / uSeg * 2 - 1;
-      const env = Math.pow(Math.max(0, 1 - u * u), 0.72);
-      const seam = 30.325 + realGauss(Math.abs(u), 0.30, 0.19) * 0.008
-        - realGauss(u, 0, 0.15) * 0.003 - Math.abs(u) * 0.003;
-      const x = u * width;
-      const upperBow = 0.030 * realGauss(Math.abs(u), 0.28, 0.20)
-        - 0.014 * realGauss(u, 0, 0.15);
-      const outer = isUpper
-        ? seam + 0.160 * env + upperBow * 0.86
-        : seam - 0.235 * env;
-      for (let j = 0; j <= vSeg; j++) {
-        const q = j / vSeg;
-        const y = lerp(seam + (isUpper ? 0.006 : -0.006), outer, q);
-        const bulb = Math.pow(Math.max(0, Math.sin(q * Math.PI)), 0.76);
-        const depth = (isUpper ? 0.105 : 0.145) * env * bulb;
-        const p = realFacePoint(x, y);
-        const n = realFaceNormal(x, y, new THREE.Vector3());
-        const offset = layer === 0
-          ? depth + (pigment ? 0.002 : 0)
-          : -0.014;
-        p.addScaledVector(n, offset);
-        pos.push(p.x, p.y, p.z);
-        uv.push(i / uSeg, q);
-      }
-    }
-  }
-  for (let i = 0; i < uSeg; i++) for (let j = 0; j < vSeg; j++) {
-    const a = i * nv + j, b = (i + 1) * nv + j, c = b + 1, d = a + 1;
-    if (isUpper) idx.push(a, b, d, b, c, d);
-    else idx.push(a, d, b, b, d, c);
-    const aa = frontCount + a, bb = frontCount + b, cc = frontCount + c, dd = frontCount + d;
-    if (isUpper) idx.push(aa, dd, bb, bb, dd, cc);
-    else idx.push(aa, bb, dd, bb, cc, dd);
-  }
-  for (const i of [0, uSeg]) for (let j = 0; j < vSeg; j++) {
-    const a = i * nv + j, b = a + 1;
-    idx.push(a, frontCount + a, b, b, frontCount + a, frontCount + b);
-  }
-  for (const j of [0, vSeg]) for (let i = 0; i < uSeg; i++) {
-    const a = i * nv + j, b = (i + 1) * nv + j;
-    idx.push(a, b, frontCount + a, b, frontCount + b, frontCount + a);
-  }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  g.setIndex(idx);
-  g.computeVertexNormals();
-  return g;
-}
-
-function eyeCurve(side, kind) {
-  const pts = [];
-  for (let i = 0; i <= 32; i++) {
-    const t = i / 32;
-    const x = side * lerp(0.38, 1.63, t);
-    const arch = Math.pow(Math.max(0, Math.sin(t * Math.PI)), 0.80);
-    const centerY = 32.145 - t * 0.036;
-    let y;
-    if (kind === 'upper') y = centerY + arch * 0.195;
-    else if (kind === 'lower') y = centerY - arch * 0.075;
-    else y = centerY;
-    pts.push(realFacePoint(x, y, kind === 'slit' ? 0.125 : 0.095));
-  }
-  /* 两侧都保持从画面左到右的顶点序，避免负侧三角形法线反转。 */
-  if (side < 0) pts.reverse();
-  return pts;
-}
-
-function browCurve(side, lift) {
-  const pts = [];
-  for (let i = 0; i <= 32; i++) {
-    const t = i / 32;
-    const x = side * lerp(0.24, 1.74, t);
-    const y = 32.65 + Math.sin(t * Math.PI) * 0.310 - t * 0.070;
-    pts.push(realFacePoint(x, y, lift));
-  }
-  if (side < 0) pts.reverse();
-  return pts;
-}
-
-/* 闭合的杏仁形眼缝：前后两层曲面和侧壁均有真实厚度，不是平面贴片。 */
-function buildEyeOpeningGeometry(side) {
-  const seg = 40;
-  const front = [], back = [];
-  const pos = [], uv = [], idx = [];
-  for (let i = 0; i <= seg; i++) {
-    const t = i / seg;
-    const s = side < 0 ? 1 - t : t;
-    const rawX = side * lerp(0.38, 1.63, s);
-    const x = rawX;
-    /* 两端闭合的真实杏仁形开口；旧实现端点不闭合，投影后像矩形黑线。 */
-    const arch = Math.pow(Math.max(0, Math.sin(s * Math.PI)), 0.80);
-    const centerY = 32.145 - s * 0.036;
-    const upper = centerY + arch * 0.132;
-    const lower = centerY - arch * 0.040;
-    for (const y of [upper, lower]) {
-      /* 沿局部面法线嵌入，让三分之四视角仍读作凹腔，而非浮起的黑片。 */
-      const p = realFacePoint(x, y, 0.010);
-      const n = realFaceNormal(x, y, new THREE.Vector3());
-      const pb = p.clone().addScaledVector(n, -0.055);
-      front.push([p.x, p.y, p.z]);
-      back.push([pb.x, pb.y, pb.z]);
-    }
-  }
-  for (const layer of [front, back]) for (let i = 0; i < layer.length; i++) {
-    pos.push(layer[i][0], layer[i][1], layer[i][2]);
-    uv.push((i >> 1) / seg, i & 1);
-  }
-  const row = (seg + 1) * 2;
-  for (let i = 0; i < seg; i++) {
-    const a = i * 2, b = a + 2, c = b + 1, d = a + 1;
-    idx.push(a, d, b, b, d, c);
-    const aa = row + a, bb = row + b, cc = row + c, dd = row + d;
-    idx.push(aa, bb, dd, bb, cc, dd);
-  }
-  /* 上下边及两端封口。 */
-  for (let i = 0; i < seg; i++) for (const lane of [0, 1]) {
-    const a = i * 2 + lane, b = (i + 1) * 2 + lane;
-    const c = row + b, d = row + a;
-    idx.push(a, d, b, b, d, c);
-  }
-  for (const e of [0, seg * 2]) {
-    idx.push(e, e + 1, row + e, e + 1, row + e + 1, row + e);
-  }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  g.setIndex(idx);
-  g.computeVertexNormals();
-  return g;
-}
-
-/*
-  在头面曲面上生成宽而低的浮雕带。它是带法线与真实高度变化的网格，
-  用于眼睑和眉弓的体积，不使用 PlaneGeometry 或图片轮廓。
-*/
-function buildFaceReliefRibbonGeometry(points, halfWidth, height, baseLift, crossSeg = 10, crownPow = 1.75) {
-  const nc = crossSeg + 1;
-  const pos = [], uv = [], idx = [];
-  const layerSize = points.length * nc;
-  for (let layer = 0; layer < 2; layer++) {
-    for (let i = 0; i < points.length; i++) {
-      const c = points[i];
-      const along = i / Math.max(1, points.length - 1);
-      const endTaper = Math.pow(Math.sin(along * Math.PI), 0.42);
-      for (let j = 0; j <= crossSeg; j++) {
-        const s = j / crossSeg * 2 - 1;
-        const crown = Math.pow(Math.max(0, Math.cos(s * Math.PI * 0.5)), crownPow) * endTaper;
-        const lift = layer === 0 ? baseLift + crown * height : baseLift - 0.010;
-        const p = realFacePoint(c.x, c.y + s * halfWidth * endTaper, lift);
-        pos.push(p.x, p.y, p.z);
-        uv.push(along, j / crossSeg);
-      }
-    }
-  }
-  for (let i = 0; i < points.length - 1; i++) for (let j = 0; j < crossSeg; j++) {
-    const a = i * nc + j, b = (i + 1) * nc + j, c = b + 1, d = a + 1;
-    idx.push(a, b, d, b, c, d);
-    const aa = layerSize + a, bb = layerSize + b, cc = layerSize + c, dd = layerSize + d;
-    idx.push(aa, dd, bb, bb, dd, cc);
-  }
-  for (let i = 0; i < points.length - 1; i++) {
-    const a0 = i * nc, b0 = (i + 1) * nc;
-    idx.push(a0, layerSize + a0, b0, b0, layerSize + a0, layerSize + b0);
-    const a1 = i * nc + crossSeg, b1 = (i + 1) * nc + crossSeg;
-    idx.push(a1, b1, layerSize + a1, b1, layerSize + b1, layerSize + a1);
-  }
-  for (const i of [0, points.length - 1]) for (let j = 0; j < crossSeg; j++) {
-    const a = i * nc + j, b = a + 1;
-    idx.push(a, b, layerSize + a, b, layerSize + b, layerSize + a);
-  }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  g.setIndex(idx);
-  g.computeVertexNormals();
-  return g;
-}
-
-function buildRealFace(parent, mats) {
-  const group = new THREE.Group();
-  group.name = 'SculptedFace';
-  parent.add(group);
-
-  /* 眼窝、眼睑和额弓均为曲面几何；杏仁眼缝藏在上下睑之后。 */
-  for (const side of [-1, 1]) {
-    addRealStageMesh(group, buildFaceReliefRibbonGeometry(eyeCurve(side, 'upper'), 0.070, 0.040, 0.014, 14), mats.matSkin, 'UpperEyelid');
-    addRealStageMesh(group, buildFaceReliefRibbonGeometry(eyeCurve(side, 'lower'), 0.045, 0.028, 0.014, 12), mats.matSkin, 'LowerEyelid');
-    addRealStageMesh(group, buildFaceReliefRibbonGeometry(browCurve(side, 0), 0.320, 0.058, 0.008, 18, 1.30), mats.matSkin, 'BrowRidge');
-  }
-
-  /* 鼻梁、鼻头和鼻翼直接雕入 AnatomicalHead 母网格，保持连续轮廓与法线。 */
-
-  /* 嘴唇先以素胎实体塑出，再在同一体积上淡入矿物色。 */
-  addRealStageMesh(group, buildLipGeometry('upper', false), mats.matSkin, 'UpperLip');
-  addRealStageMesh(group, buildLipGeometry('lower', false), mats.matSkin, 'LowerLip');
-
-  const darkMat = realDetailMaterial(0x392820, 0.80, BUDDHA.cavityMats);
-  /* 眼腔在素胎阶段也是实体阴影，不能随彩绘 detailOpacity 一起消失。 */
-  const eyeSurfaceMat = realDetailMaterial(0x2F241F, 0.94, BUDDHA.cavityMats);
-  eyeSurfaceMat.userData.clayColor = new THREE.Color(0x2F241F);
-  eyeSurfaceMat.userData.paintColor = new THREE.Color(0x1F1512);
-  BUDDHA.parts.eyeSurfaceMats = [eyeSurfaceMat];
-  const pupilMat = realDetailMaterial(0x160E0C, 0.96, BUDDHA.cavityMats);
-  const lipUpperMat = realDetailMaterial(0x793C34, 0.56);
-  const lipLowerMat = realDetailMaterial(0x9B5043, 0.52);
-  const mouthMat = realDetailMaterial(0x70453A, 0.78, BUDDHA.cavityMats);
-  const urnaMat = realDetailMaterial(0xA82D31, 0.48);
-
-  for (const side of [-1, 1]) {
-    const slit = new THREE.Mesh(buildEyeOpeningGeometry(side), eyeSurfaceMat);
-    slit.name = 'RecessedEyeSlit'; slit.castShadow = true; slit.renderOrder = 2; group.add(slit);
-
-    /* 扁平封闭椭球藏在半睁眼腔内，形成实体瞳体，而不是贴图或平面黑线。 */
-    const px = side * 1.01, py = 32.125;
-    const pupil = new THREE.Mesh(
-      bakeEllipsoid(0.088, 0.046, 0.011, px, py, realFaceSurfaceZ(px, py) + 0.017, 18),
-      pupilMat
-    );
-    pupil.name = 'RecessedEyePupil'; pupil.castShadow = true; pupil.renderOrder = 3; group.add(pupil);
-
-    const nx = side * 0.41, ny = 30.96;
-    const nostril = new THREE.Mesh(
-      bakeEllipsoid(0.088, 0.030, 0.018, nx, ny, realNoseFrontZ(nx, ny) - 0.006, 18),
-      darkMat
-    );
-    nostril.name = 'NostrilRecess';
-    group.add(nostril);
-  }
-
-  const mouthPts = [];
-  for (let i = 0; i <= 24; i++) {
-    const t = i / 24, x = lerp(-0.530, 0.530, t);
-    const y = 30.315 - Math.pow(Math.abs(t - 0.5) * 2, 1.7) * 0.008;
-    mouthPts.push(realFacePoint(x, y, 0.002));
-  }
-  const mouth = new THREE.Mesh(makeTubeThrough(mouthPts, 0.0040, 8), mouthMat);
-  mouth.name = 'MouthRecess'; group.add(mouth);
-
-  {
-    const m = new THREE.Mesh(buildLipGeometry('upper', true), lipUpperMat);
-    m.name = 'UpperLipPigment'; m.castShadow = true; group.add(m);
-  }
-  {
-    const m = new THREE.Mesh(buildLipGeometry('lower', true), lipLowerMat);
-    m.name = 'LowerLipPigment'; m.castShadow = true; group.add(m);
-  }
-
-  /* 白毫是两层实体：泥塑底座 + 彩绘红珠。 */
-  const uy = 32.93, uz = realFaceSurfaceZ(0, uy) + 0.055;
-  const urnaBase = bakeEllipsoid(0.058, 0.058, 0.040, 0, uy, uz, 20);
-  addRealStageMesh(group, urnaBase, mats.matSkin, 'UrnaBase');
-  const urna = new THREE.Mesh(bakeEllipsoid(0.052, 0.052, 0.034, 0, uy, uz + 0.035, 20), urnaMat);
-  urna.name = 'UrnaPigment'; urna.castShadow = true; group.add(urna);
-  BUDDHA.parts.urna = urna;
-
-  BUDDHA.parts.face = group;
-}
-
-function buildRealEars(parent, matSkin) {
-  const group = new THREE.Group();
-  group.name = 'SculptedLongEars';
-  for (const side of [-1, 1]) {
-    /* 较短而厚的整块耳廓埋入颞侧；耳垂保留宽度，但不再垂成平板。 */
-    const shell = new THREE.SphereGeometry(1, 42, 34);
-    const pa = shell.attributes.position;
-    for (let i = 0; i < pa.count; i++) {
-      const x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i);
-      const lobe = smoothstep(0.12, -0.88, y);
-      const upperTaper = smoothstep(0.55, 0.98, y);
-      const width = 1 + lobe * 0.32 - upperTaper * 0.28;
-      const radial = Math.min(1, Math.hypot(x, y));
-      const concha = z > 0 ? 0.29 * radial * radial - 0.20 * (1 - radial * radial) : 0;
-      pa.setXYZ(i,
-        side * 2.10 + x * 0.39 * width,
-        30.98 + y * 1.50 - lobe * 0.050,
-        -0.035 + z * (0.265 + lobe * 0.110) + concha
-      );
-    }
-    pa.needsUpdate = true;
-    shell.computeVertexNormals();
-    addRealStageMesh(group, shell, matSkin, 'EarShell');
-
-    const pts = [];
-    for (let i = 0; i <= 24; i++) {
-      const t = i / 24;
-      pts.push(new THREE.Vector3(
-        side * (2.12 + Math.sin(t * Math.PI) * 0.130),
-        lerp(32.35, 29.58, t),
-        0.265 + Math.sin(t * Math.PI) * 0.070
-      ));
-    }
-    if (side < 0) pts.reverse();
-    addRealStageMesh(group, makeTubeThrough(pts, 0.045, 9), matSkin, 'EarInnerRidge');
-  }
-  parent.add(group);
-  BUDDHA.parts.ears = group;
-}
-
-function addIdentityRockAttributes(g) {
-  const p = g.attributes.position, n = g.attributes.normal;
-  const rp = new Float32Array(p.array.length);
-  rp.set(p.array);
-  const rn = new Float32Array(p.count * 3);
-  if (n) rn.set(n.array);
-  else for (let i = 0; i < p.count; i++) rn[i * 3 + 2] = 1;
-  g.setAttribute('aRockPos', new THREE.BufferAttribute(rp, 3));
-  g.setAttribute('aRockNrm', new THREE.BufferAttribute(rn, 3));
-  return g;
-}
-
-/* 单枚螺发：三层封闭锥状颗粒 + 真正抬离头皮的空间螺旋环脊。 */
-function buildCurlGeometry() {
-  const base = bakeEllipsoid(0.185, 0.185, 0.120, 0, 0, 0.055, 16);
-  const middle = bakeEllipsoid(0.132, 0.132, 0.085, 0, 0, 0.145, 14);
-  const crown = bakeEllipsoid(0.066, 0.066, 0.055, 0, 0, 0.225, 12);
-  const pts = [];
-  const turns = 2.85, steps = 44;
-  for (let i = 0; i <= steps; i++) {
-    const t = i / steps;
-    const a = t * turns * TAU;
-    const r = lerp(0.162, 0.018, Math.pow(t, 0.90));
-    pts.push(new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, 0.115 + t * 0.140));
-  }
-  const ridge = makeTubeThrough(pts, 0.018, 7, 64);
-  const g = mergeGeometries([base, middle, crown, ridge]);
-  g.computeVertexNormals();
-  return addIdentityRockAttributes(g);
-}
-
-/* 发卷下方的头皮帽也是随头颅弯曲的实体曲面，避免近景从发卷缝隙漏出背景。 */
-function buildHairCapGeometry() {
-  const uSeg = 128, vSeg = 34, nu = uSeg + 1;
-  const pos = [], uv = [], idx = [];
-  const P = new THREE.Vector3(), N = new THREE.Vector3();
-  for (let j = 0; j <= vSeg; j++) {
-    const t = j / vSeg;
-    for (let i = 0; i <= uSeg; i++) {
-      const u = i / uSeg;
-      const frontness = Math.cos(u * TAU) * 0.5 + 0.5;
-      const hairline = lerp(30.62, 33.44, Math.pow(frontness, 0.36));
-      const y = lerp(hairline, 35.49, Math.pow(t, 0.94));
-      const v = (y - REAL_HEAD_Y0) / (REAL_HEAD_Y1 - REAL_HEAD_Y0);
-      realHeadPoint(u, v, P);
-      realHeadNormal(u, v, N);
-      P.addScaledVector(N, 0.028);
-      pos.push(P.x, P.y, P.z);
-      uv.push(u * 6, t * 4);
-    }
-  }
-  for (let j = 0; j < vSeg; j++) for (let i = 0; i < uSeg; i++) {
-    const a = j * nu + i, b = a + 1, c = b + nu, d = a + nu;
-    idx.push(a, b, d, b, c, d);
-  }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  g.setIndex(idx);
-  g.computeVertexNormals();
-  return g;
-}
-
-function buildRealHair(parent, matHair) {
-  const cap = addRealStageMesh(parent, buildHairCapGeometry(), matHair, 'SculptedHairCap');
-  BUDDHA.parts.hairCap = cap;
-  const curlGeo = buildCurlGeometry();
-  const curls = [];
-  const P = new THREE.Vector3(), N = new THREE.Vector3();
-  const rows = 24;
-  for (let r = 0; r < rows; r++) {
-    const t = r / (rows - 1);
-    const y = lerp(30.72, 35.28, Math.pow(t, 0.93));
-    const v = (y - REAL_HEAD_Y0) / (REAL_HEAD_Y1 - REAL_HEAD_Y0);
-    const cols = Math.max(13, Math.round(lerp(37, 13, t)));
-    for (let c = 0; c < cols; c++) {
-      const u = (c + (r % 2) * 0.47) / cols;
-      const frontness = Math.cos(u * TAU) * 0.5 + 0.5;
-      const hairline = lerp(30.62, 33.44, Math.pow(frontness, 0.36));
-      if (y < hairline) continue;
-      realHeadPoint(u, v, P);
-      realHeadNormal(u, v, N);
-      P.addScaledVector(N, 0.038);
-      curls.push({
-        p: P.clone(), n: N.clone(),
-        s: 1.0 + (hash3(r, c, 17) - 0.5) * 0.12,
-        twist: (hash3(r, c, 29) - 0.5) * 0.36,
-      });
-    }
-  }
-
-  const inst = new THREE.InstancedMesh(curlGeo, matHair, curls.length);
-  inst.name = 'ThreeDimensionalSpiralCurls';
-  inst.castShadow = true;
-  inst.receiveShadow = true;
-  const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), twistQ = new THREE.Quaternion(), S = new THREE.Vector3();
-  const forward = new THREE.Vector3(0, 0, 1);
-  const baseMatrices = [], revealY = [];
-  curls.forEach((c, i) => {
-    Q.setFromUnitVectors(forward, c.n);
-    twistQ.setFromAxisAngle(forward, c.twist);
-    Q.multiply(twistQ);
-    S.setScalar(c.s);
-    M.compose(c.p, Q, S);
-    inst.setMatrixAt(i, M);
-    baseMatrices.push(M.clone());
-    revealY.push(c.p.y);
-  });
-  inst.userData.baseMatrices = baseMatrices;
-  inst.userData.revealY = revealY;
-  inst.userData.isTrueSpiralGeometry = true;
-  inst.instanceMatrix.needsUpdate = true;
-  parent.add(inst);
-  BUDDHA.parts.hair = inst;
-  BUDDHA.parts.hairCurlCount = curls.length;
-}
-
-function taperedFinger(points, r0, r1) {
-  return tubeAlong(points, (t) => {
-    const base = lerp(r0, r1, smoothstep(0, 1, t));
-    const knuckle = 1 + realGauss(t, 0.34, 0.10) * 0.060 + realGauss(t, 0.68, 0.085) * 0.045;
-    return base * knuckle;
-  }, 42, 14);
-}
-
-function fingertipGeometry(p, r, vertical) {
-  return bakeEllipsoid(r * 1.02, vertical ? r * 1.22 : r * 0.88, vertical ? r * 0.86 : r * 1.18, p.x, p.y, p.z, 20);
-}
-
-function buildPalmGeometry(cx, cy, cz, rx, ry, rz) {
-  const g = new THREE.SphereGeometry(1, 42, 30);
-  const p = g.attributes.position;
-  for (let i = 0; i < p.count; i++) {
-    const x = p.getX(i), y = p.getY(i), z = p.getZ(i);
-    /* 指根略宽、腕部收窄、掌弓前凸，形成真实掌形而非圆球。 */
-    const top = smoothstep(-0.15, 0.82, y);
-    const wrist = smoothstep(-0.15, -0.92, y);
-    const width = 0.94 + top * 0.10 - wrist * 0.34;
-    const arch = (1 - x * x) * (1 - y * y) * 0.16;
-    p.setXYZ(i, cx + x * rx * width, cy + y * ry, cz + z * rz + arch);
-  }
-  p.needsUpdate = true;
-  g.computeVertexNormals();
-  return g;
-}
-
-function buildRaisedHandGeometry() {
-  /* 参考片中施无畏印是前景视觉锚点：掌心略低于胸口，比例明显大于旧版。 */
-  const cx = -4.55, cy = 25.95, cz = 5.25;
-  const parts = [
-    buildPalmGeometry(cx, cy, cz, 1.17, 1.25, 0.44),
-    buildTaperedConnectorGeometry(
-      new THREE.Vector3(cx, cy - 1.42, cz - 0.20),
-      new THREE.Vector3(cx, cy - 0.80, cz - 0.07),
-      0.43,
-      0.62
-    ),
-  ];
-  const xs = [-0.65, -0.22, 0.22, 0.66];
-  const lens = [1.90, 2.32, 2.47, 2.18];
-  const r0 = [0.262, 0.282, 0.292, 0.270];
-  const r1 = [0.180, 0.194, 0.201, 0.187];
-  const lean = [-0.140, -0.040, 0.035, 0.120];
-  for (let i = 0; i < 4; i++) {
-    const x0 = cx + xs[i], y0 = cy + 0.68;
-    const end = new THREE.Vector3(x0 + lean[i] * 1.8, y0 + lens[i], cz - 0.01);
-    const pts = [
-      new THREE.Vector3(x0, y0, cz),
-      new THREE.Vector3(x0 + lean[i] * 0.38, y0 + lens[i] * 0.31, cz + 0.075),
-      new THREE.Vector3(x0 + lean[i] * 1.12, y0 + lens[i] * 0.68, cz - 0.045),
-      end,
-    ];
-    parts.push(taperedFinger(pts, r0[i], r1[i]));
-    parts.push(fingertipGeometry(end, r1[i] * 1.04, true));
-  }
-  /* 拇指位于靠身体一侧，离掌约 45° 张开。 */
-  const thumbEnd = new THREE.Vector3(cx + 1.94, cy + 1.34, cz + 0.02);
-  parts.push(taperedFinger([
-    new THREE.Vector3(cx + 0.70, cy - 0.02, cz + 0.01),
-    new THREE.Vector3(cx + 1.29, cy + 0.59, cz + 0.10),
-    thumbEnd,
-  ], 0.320, 0.218));
-  parts.push(fingertipGeometry(thumbEnd, 0.225, false));
-  const g = mergeGeometries(parts);
-  g.computeVertexNormals();
-  scaleUV(g, 4.5);
-  return g;
-}
-
-function buildRestingHandGeometry() {
-  /* 参考片为收拢在膝侧的圆钝袖端/握拳，不是四指直垂的张开白手。 */
-  const cx = 3.85, cy = 20.85, cz = 6.66;
-  const parts = [bakeEllipsoid(1.14, 1.02, 0.58, cx, cy, cz, 36)];
-  const xs = [-0.62, -0.22, 0.20, 0.59];
-  for (let i = 0; i < 4; i++) {
-    parts.push(bakeEllipsoid(
-      0.29, 0.38, 0.25,
-      cx + xs[i], cy + 0.40 - Math.abs(i - 1.5) * 0.035, cz + 0.48,
-      20
-    ));
-  }
-  parts.push(taperedFinger([
-    new THREE.Vector3(cx - 0.76, cy + 0.36, cz + 0.44),
-    new THREE.Vector3(cx - 0.10, cy + 0.02, cz + 0.62),
-    new THREE.Vector3(cx + 0.66, cy - 0.18, cz + 0.48),
-  ], 0.32, 0.23));
-  const g = mergeGeometries(parts);
-  g.computeVertexNormals();
-  scaleUV(g, 4.5);
-  return g;
-}
-
-function buildTaperedConnectorGeometry(a, b, r0, r1) {
-  const dir = new THREE.Vector3().subVectors(b, a);
-  const len = dir.length();
-  const mid = new THREE.Vector3().addVectors(a, b).multiplyScalar(0.5);
-  const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
-  const m = new THREE.Matrix4().compose(mid, q, new THREE.Vector3(1, 1, 1));
-  const g = new THREE.CylinderGeometry(r1, r0, len, 32, 8, false);
-  g.applyMatrix4(m);
-  g.computeVertexNormals();
-  return g;
-}
-
-function buildRealHands(parent, mats) {
-  const raisedSleeve = addRealStageMesh(
-    parent,
-    tubeAlong([
-      new THREE.Vector3(-4.45, 27.65, 0.05),
-      new THREE.Vector3(-4.62, 26.55, 1.55),
-      new THREE.Vector3(-4.63, 25.35, 3.55),
-      new THREE.Vector3(-4.57, 24.70, 4.88),
-    ], (t) => lerp(1.78, 0.82, Math.pow(t, 0.82)), 54, 20),
-    mats.matInner,
-    'VolumetricRaisedSleeve'
-  );
-  const cuff = addRealStageMesh(
-    parent,
-    buildTaperedConnectorGeometry(
-      new THREE.Vector3(-4.59, 24.55, 4.78),
-      new THREE.Vector3(-4.56, 25.12, 5.12),
-      0.90,
-      0.80
-    ),
-    mats.matInner,
-    'BlueSleeveCuff'
-  );
-  const restingSleeve = addRealStageMesh(
-    parent,
-    tubeAlong([
-      new THREE.Vector3(5.70, 24.20, 0.45),
-      new THREE.Vector3(5.20, 23.50, 2.65),
-      new THREE.Vector3(4.50, 22.45, 4.70),
-      new THREE.Vector3(3.98, 21.70, 6.34),
-    ], (t) => lerp(1.78, 0.72, Math.pow(t, 0.78)), 54, 20),
-    mats.matRobe,
-    'VolumetricRestingSleeve'
-  );
-  const restingCuff = addRealStageMesh(
-    parent,
-    buildTaperedConnectorGeometry(
-      new THREE.Vector3(4.10, 21.78, 6.24),
-      new THREE.Vector3(3.88, 21.25, 6.60),
-      0.78,
-      0.66
-    ),
-    mats.matRobe,
-    'RestingSleeveCuff'
-  );
-  const raised = addRealStageMesh(parent, buildRaisedHandGeometry(), mats.matSkin, 'AbhayaHand');
-  const resting = addRealStageMesh(parent, buildRestingHandGeometry(), mats.matRobe, 'RobedRestingHand');
-  BUDDHA.parts.cuffR = cuff;
-  BUDDHA.parts.raisedSleeve = raisedSleeve;
-  BUDDHA.parts.restingSleeve = restingSleeve;
-  BUDDHA.parts.restingCuff = restingCuff;
-  BUDDHA.parts.handR = raised;
-  BUDDHA.parts.handL = resting;
-}
-
-function robeFrontPoint(x, y, lift) {
-  const rx = Math.max(0.2, PROF_RX(y));
-  const a = Math.asin(clamp(x / rx, -0.995, 0.995));
-  const u = a / TAU;
-  const p = bodyPoint(u, yv(y), new THREE.Vector3());
-  const n = bodyNormal(u, yv(y), new THREE.Vector3());
-  return p.addScaledVector(n, lift);
-}
-
-function buildFoldRibbonGeometry(centers, halfWidth, height, baseLift) {
-  const crossSeg = 12, nc = crossSeg + 1;
-  const pos = [], uv = [], idx = [];
-  for (let i = 0; i < centers.length; i++) {
-    const x = centers[i][0], y = centers[i][1];
-    const along = i / Math.max(1, centers.length - 1);
-    /* 左右端同时把浮雕高度和离面距离压回裙面，侧视不再露出悬空尖角。 */
-    const endTaper = smoothstep(0, 0.18, along) * smoothstep(0, 0.18, 1 - along);
-    for (let j = 0; j <= crossSeg; j++) {
-      const s = j / crossSeg * 2 - 1;
-      const crown = Math.pow(Math.max(0, Math.cos(s * Math.PI * 0.5)), 2.2);
-      const p = robeFrontPoint(x, y + s * halfWidth, (baseLift + crown * height) * endTaper);
-      pos.push(p.x, p.y, p.z);
-      uv.push(i / Math.max(1, centers.length - 1) * 5, j / crossSeg * 2);
-    }
-  }
-  for (let i = 0; i < centers.length - 1; i++) for (let j = 0; j < crossSeg; j++) {
-    const a = i * nc + j, b = (i + 1) * nc + j, c = b + 1, d = a + 1;
-    idx.push(a, b, d, b, c, d);
-  }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  g.setIndex(idx);
-  g.computeVertexNormals();
-  return g;
-}
-
-function bodyLayerPoint(u, y, lift) {
-  const uu = ((u % 1) + 1) % 1;
-  const p = bodyPoint(uu, yv(y), new THREE.Vector3());
-  const n = bodyNormal(uu, yv(y), new THREE.Vector3());
-  return p.addScaledVector(n, lift);
-}
-
-/*
-  孔雀蓝内披使用明确的肩、腹轮廓生成连续厚布片。旧版 inner 依靠母网格
-  mask 删三角形，斜边会随网格阶梯化；这里生成前后两层并封住四边。
-*/
-function buildCoherentInnerDrapeGeometry() {
-  const alongSeg = 104, crossSeg = 30;
-  const nc = crossSeg + 1, layerStride = (alongSeg + 1) * nc;
-  const pos = [], uv = [], idx = [];
-
-  for (let layer = 0; layer < 2; layer++) {
-    for (let i = 0; i <= alongSeg; i++) {
-      const t = i / alongSeg;
-      const rise = smoothstep(0, 1, t);
-      /* 观者左侧：腹部收窄，向上展开到左肩与颈侧。 */
-      const outerU = lerp(-0.160, -0.235, rise);
-      const innerU = lerp(-0.090, 0.018, smoothstep(0.06, 0.96, t));
-      const outerY = lerp(18.75, 27.85, t);
-      const innerY = lerp(19.00, 29.18, t);
-
-      for (let j = 0; j <= crossSeg; j++) {
-        const q = j / crossSeg;
-        const u = lerp(outerU, innerU, q);
-        const y = lerp(outerY, innerY, q);
-        const broadFold = Math.pow(Math.sin(q * Math.PI), 1.25)
-          * (0.5 + 0.5 * Math.cos(q * Math.PI * 3.0 - t * 0.8));
-        const lift = layer === 0 ? 0.235 + broadFold * 0.050 : 0.165;
-        const p = bodyLayerPoint(u, y, lift);
-        pos.push(p.x, p.y, p.z);
-        uv.push(q * 3.2, t * 5.0);
-      }
-    }
-  }
-
-  for (let i = 0; i < alongSeg; i++) for (let j = 0; j < crossSeg; j++) {
-    const a = i * nc + j, b = (i + 1) * nc + j, c = b + 1, d = a + 1;
-    idx.push(a, b, d, b, c, d);
-    const aa = layerStride + a, bb = layerStride + b;
-    const cc = layerStride + c, dd = layerStride + d;
-    idx.push(aa, dd, bb, bb, dd, cc);
-  }
-  const seal = (a, b) => {
-    const aa = layerStride + a, bb = layerStride + b;
-    idx.push(a, aa, b, b, aa, bb);
-  };
-  for (let i = 0; i < alongSeg; i++) {
-    seal(i * nc, (i + 1) * nc);
-    seal(i * nc + crossSeg, (i + 1) * nc + crossSeg);
-  }
-  for (let j = 0; j < crossSeg; j++) {
-    seal(j, j + 1);
-    seal(alongSeg * nc + j + 1, alongSeg * nc + j);
-  }
-
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  g.setIndex(idx);
-  g.computeVertexNormals();
-  return g;
-}
-
-/*
-  胸前斜披是一整块有厚度的弯曲布片。旧版依靠参数遮罩裁剪母网格，近景会
-  把三角形裁口读成碎布条；这里直接生成前后两层并封住四边，纹样只负责
-  表面颜色，轮廓、厚度、褶皱和阴影全部来自实体几何。
-*/
-function buildCoherentSashGeometry() {
-  const alongSeg = 112, crossSeg = 28;
-  const nc = crossSeg + 1, layerStride = (alongSeg + 1) * nc;
-  const pos = [], uv = [], idx = [];
-  for (let layer = 0; layer < 2; layer++) {
-    for (let i = 0; i <= alongSeg; i++) {
-      const t = i / alongSeg;
-      const du = lerp(-0.205, 0.225, t);
-      const s = (du + 0.205) / 0.43;
-      const vLo = 0.5720 + s * 0.1220;
-      const vHi = 0.6820 + s * 0.1350;
-      for (let j = 0; j <= crossSeg; j++) {
-        const q = j / crossSeg;
-        const y = lerp(vLo, vHi, q) * H;
-        const edge = Math.pow(Math.sin(q * Math.PI), 0.55);
-        const broadFold = Math.pow(0.5 + 0.5 * Math.cos(q * Math.PI * 3.0 + t * 0.65), 1.45);
-        const lift = layer === 0
-          ? 0.395 + edge * (0.070 + broadFold * 0.185)
-          : 0.285;
-        const p = bodyLayerPoint(0.055 + du, y, lift);
-        pos.push(p.x, p.y, p.z);
-        uv.push(t * 7.0, q * 3.0);
-      }
-    }
-  }
-
-  for (let i = 0; i < alongSeg; i++) for (let j = 0; j < crossSeg; j++) {
-    const a = i * nc + j, b = (i + 1) * nc + j, c = b + 1, d = a + 1;
-    idx.push(a, b, d, b, c, d);
-    const aa = layerStride + a, bb = layerStride + b;
-    const cc = layerStride + c, dd = layerStride + d;
-    idx.push(aa, dd, bb, bb, dd, cc);
-  }
-  const seal = (a, b) => {
-    const aa = layerStride + a, bb = layerStride + b;
-    idx.push(a, aa, b, b, aa, bb);
-  };
-  for (let i = 0; i < alongSeg; i++) {
-    seal(i * nc, (i + 1) * nc);
-    seal(i * nc + crossSeg, (i + 1) * nc + crossSeg);
-  }
-  for (let j = 0; j < crossSeg; j++) {
-    seal(j, j + 1);
-    seal(alongSeg * nc + j + 1, alongSeg * nc + j);
-  }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  g.setIndex(idx);
-  g.computeVertexNormals();
-  return g;
-}
-
-function buildGarmentHemPath(sample, segments, lift) {
-  const pts = [];
-  for (let i = 0; i <= segments; i++) {
-    const [u, y] = sample(i / segments);
-    pts.push(bodyLayerPoint(u, y, lift));
-  }
-  return pts;
-}
-
-/*
-  衣片边缘使用有封口的薄带，而不是圆管或共面的透明三角形。这样斜向裁片
-  在超近景中仍是一条连续布边，能投下细阴影，也不会露出网格阶梯。
-*/
-function buildGarmentBorderGeometry(sample, segments, halfWidth, lift, height, thickness = 0.035) {
-  const centers = [];
-  const params = [];
-  for (let i = 0; i <= segments; i++) {
-    const [u, y] = sample(i / segments);
-    params.push([u, y]);
-    centers.push(bodyLayerPoint(u, y, lift));
-  }
-
-  const pos = [], uv = [], idx = [];
-  const tangent = new THREE.Vector3(), normal = new THREE.Vector3();
-  const side = new THREE.Vector3(), left = new THREE.Vector3(), right = new THREE.Vector3();
-  for (let i = 0; i <= segments; i++) {
-    const prev = centers[Math.max(0, i - 1)];
-    const next = centers[Math.min(segments, i + 1)];
-    tangent.subVectors(next, prev).normalize();
-    const [u, y] = params[i];
-    bodyNormal(((u % 1) + 1) % 1, yv(y), normal).normalize();
-    side.crossVectors(normal, tangent).normalize();
-    left.copy(centers[i]).addScaledVector(side, halfWidth);
-    right.copy(centers[i]).addScaledVector(side, -halfWidth);
-    for (const p of [
-      left.clone().addScaledVector(normal, height),
-      right.clone().addScaledVector(normal, height),
-      left.clone().addScaledVector(normal, -thickness),
-      right.clone().addScaledVector(normal, -thickness),
-    ]) pos.push(p.x, p.y, p.z);
-    const t = i / segments;
-    uv.push(t * 4, 1, t * 4, 0, t * 4, 1, t * 4, 0);
-  }
-
-  for (let i = 0; i < segments; i++) {
-    const a = i * 4, b = a + 4;
-    idx.push(a, a + 1, b, b, a + 1, b + 1);                 // top
-    idx.push(a + 2, b + 2, a + 3, b + 2, b + 3, a + 3);     // underside
-    idx.push(a, b, a + 2, b, b + 2, a + 2);                 // left wall
-    idx.push(a + 1, a + 3, b + 1, b + 1, a + 3, b + 3);     // right wall
-  }
-  const last = segments * 4;
-  idx.push(0, 2, 1, 1, 2, 3);
-  idx.push(last, last + 1, last + 2, last + 1, last + 3, last + 2);
-
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
-  g.setIndex(idx);
-  g.computeVertexNormals();
-  return g;
-}
-
-/* 胸腹和下裙的大 U 形衣褶是宽缓的实体浮雕带，可投影和产生视差。 */
-function buildRealRobeFolds(parent, mats) {
-  const group = new THREE.Group();
-  group.name = 'VolumetricRobeFolds';
-
-  const innerDrape = addRealStageMesh(
-    group,
-    buildCoherentInnerDrapeGeometry(),
-    mats.matInner,
-    'CoherentBlueShoulderDrape'
-  );
-  BUDDHA.parts.innerDrape = innerDrape;
-  addRealStageMesh(group, buildCoherentSashGeometry(), mats.matSash, 'CoherentDiagonalSashCloth');
-
-  const lowerFolds = [
-    [15.35, 7.05, 1.55, 0.48, 0.27],
-    [12.70, 7.55, 1.85, 0.55, 0.29],
-    [9.85, 8.05, 2.10, 0.61, 0.31],
-    [6.90, 8.45, 2.25, 0.67, 0.32],
-    [3.95, 8.80, 2.05, 0.72, 0.30],
-  ];
-  for (const [baseY, span, rise, halfWidth, height] of lowerFolds) {
-    const centers = [];
-    for (let i = 0; i <= 42; i++) {
-      const t = i / 42, x = lerp(-span, span, t);
-      const y = baseY + rise * Math.pow(Math.abs(x) / span, 1.55);
-      centers.push([x, y]);
-    }
-    /* 圆管会像绳索缠在裙面；宽缓浮雕带才符合参考片的厚重泥塑衣褶。 */
-    const g = buildFoldRibbonGeometry(centers, halfWidth, height, 0.25);
-    addRealStageMesh(group, g, mats.matRobeLower, 'LowerUShapeFoldRidge');
-  }
-
-  /* 参考片胸前斜披的三道厚褶：沿胸廓弯曲，而不是画在颜色纹样里。 */
-  for (const edge of ['lower', 'upper']) {
-    const g = buildGarmentBorderGeometry((t) => {
-      const du = lerp(-0.205, 0.225, t);
-      const s = (du + 0.205) / 0.43;
-      const v = edge === 'upper' ? 0.6820 + s * 0.1350 : 0.5720 + s * 0.1220;
-      return [0.055 + du, v * H];
-    }, 128, 0.105, 0.345, 0.028);
-    addRealStageMesh(group, g, mats.matSash, `TailoredSash${edge === 'upper' ? 'Upper' : 'Lower'}Edge`);
-  }
-
-  parent.add(group);
-  BUDDHA.parts.volumetricFolds = group;
-}
-
-/* 开场背屏也改为薄浮雕实体；施工和彩绘段按参考片隐藏。 */
-function buildGeometricBackscreen(parent) {
-  const group = new THREE.Group();
-  group.name = 'GeometricOpeningBackscreen';
-  const baseMat = realDetailMaterial(0xC6A06F, 0.82, BUDDHA.haloMats);
-  const redMat = realDetailMaterial(0xA65343, 0.76, BUDDHA.haloMats);
-  const blueMat = realDetailMaterial(0x4D8787, 0.72, BUDDHA.haloMats);
-  const greenMat = realDetailMaterial(0x7EA17D, 0.80, BUDDHA.haloMats);
-
-  const disk = new THREE.Mesh(new THREE.CylinderGeometry(6.15, 6.15, 0.16, 80), baseMat);
-  disk.rotation.x = Math.PI / 2;
-  disk.position.set(0, 32.0, -3.66);
-  disk.receiveShadow = true;
-  group.add(disk);
-  for (const [r, tube, mat, z] of [
-    [5.72, 0.16, redMat, -3.54], [4.88, 0.13, blueMat, -3.48],
-    [4.15, 0.11, greenMat, -3.43], [3.42, 0.10, redMat, -3.39],
-  ]) {
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(r, tube, 12, 80), mat);
-    ring.position.set(0, 32.0, z);
-    ring.castShadow = true;
-    group.add(ring);
-  }
-  /* 周缘莲瓣/宝珠为独立实体，产生真实视差。 */
-  for (let i = 0; i < 18; i++) {
-    const a = i / 18 * TAU;
-    const x = Math.sin(a) * 5.24, y = 32.0 + Math.cos(a) * 5.24;
-    const petal = new THREE.Mesh(new THREE.SphereGeometry(1, 14, 10), i % 2 ? blueMat : greenMat);
-    petal.scale.set(0.30, 0.48, 0.11);
-    petal.rotation.z = -a;
-    petal.position.set(x, y, -3.30);
-    petal.castShadow = true;
-    group.add(petal);
-  }
-  parent.add(group);
-  BUDDHA.parts.halo = group;
-  BUDDHA.parts.haloCrown = group;
-}
-
-function upgradeBuddhaRealism(parent, mats) {
-  const legacyHair = BUDDHA.parts.hair;
-  for (const key of [
-    'head', 'legacyFace', 'legacyEars', 'handR', 'handL',
-    'armR', 'armL', 'sleeveR', 'sleeveL', 'footL', 'footR', 'belt', 'inner',
-    'urna', 'halo', 'haloCrown',
-  ]) {
-    if (BUDDHA.parts[key]) BUDDHA.parts[key].visible = false;
-  }
-  if (legacyHair) legacyHair.visible = false;
-
-  const realism = new THREE.Group();
-  realism.name = 'RealThreeDimensionalBuddhaUpgrade';
-  parent.add(realism);
-
-  const headAssembly = new THREE.Group();
-  headAssembly.name = 'AnatomicalHeadAssembly';
-  /* 原 Round2 胸腔过深；将头颈整体前移到肩带上方，避免近景被胸腔横向截断。 */
-  headAssembly.position.z = 1.94;
-  /* 参考全身镜头的头掌比例明显大于旧 Round2 骨架；围绕颈根放大，而非用镜头假放大。 */
-  headAssembly.scale.set(1.24, 1.15, 1.10);
-  headAssembly.position.y = REAL_THROAT_Y0 * (1 - headAssembly.scale.y);
-  realism.add(headAssembly);
-
-  const neck = addRealStageMesh(
-    headAssembly,
-    buildSculptedThroatGeometry(),
-    mats.matSkin,
-    'SculptedNeck'
-  );
-  BUDDHA.parts.neck = neck;
-  const head = addRealStageMesh(headAssembly, buildRealHeadGeometry(), mats.matSkin, 'AnatomicalHead');
-  BUDDHA.parts.head = head;
-  buildRealFace(headAssembly, mats);
-  buildRealEars(headAssembly, mats.matSkin);
-  buildRealHands(realism, mats);
-  buildRealRobeFolds(realism, mats);
-  buildRealHair(headAssembly, mats.matHair);
-  buildGeometricBackscreen(realism);
-
-  /* 用连续封闭布片替换遮罩裁片，并校正参考片里宽肩、宽胸的坐佛比例。 */
-  if (BUDDHA.parts.sash) BUDDHA.parts.sash.visible = false;
-  for (const key of ['torso', 'robe']) {
-    if (BUDDHA.parts[key]) BUDDHA.parts[key].scale.x = 1.06;
-  }
-  if (BUDDHA.parts.lower) BUDDHA.parts.lower.scale.x = 1.03;
-  if (BUDDHA.parts.volumetricFolds) BUDDHA.parts.volumetricFolds.scale.x = 1.06;
-
-  realism.userData.usesImageImpostor = false;
-  realism.userData.geometryContract = 'volumetric-surfaces-with-normals-no-impostors';
-  realism.userData.referencePose = 'abhaya-right-hand-resting-left-hand';
-  BUDDHA.parts.realism = realism;
-  BUDDHA.parts.headAssembly = headAssembly;
-}
-
-
 /* ===== 50-cliff.js ===== */
 /* ============================================================
    50 - 崖壁 / 洞窟 / 开凿系统
@@ -56990,107 +55499,6 @@ const CLIFF_Z = 10.0;
 const CLIFF_TOP = 46.0;
 
 const WORLD = { group: null };
-
-function buildIrregularRockSlab(width, height, depth, seed) {
-  const rnd = mulberry32(seed);
-  const shape = new THREE.Shape();
-  const pts = [
-    [-0.36, -0.48], [0.42 + rnd() * 0.08, -0.50],
-    [0.50, -0.18 + rnd() * 0.10], [0.43 + rnd() * 0.07, 0.18],
-    [0.36 + rnd() * 0.10, 0.50], [-0.42, 0.47 + rnd() * 0.05],
-    [-0.46, 0.12], [-0.31, -0.18],
-  ];
-  shape.moveTo(pts[0][0] * width, pts[0][1] * height);
-  for (let i = 1; i < pts.length; i++) shape.lineTo(pts[i][0] * width, pts[i][1] * height);
-  shape.closePath();
-  const g = new THREE.ExtrudeGeometry(shape, {
-    depth,
-    steps: 1,
-    bevelEnabled: true,
-    bevelThickness: 0.16,
-    bevelSize: 0.18,
-    bevelSegments: 2,
-    curveSegments: 1,
-  });
-  g.translate(0, 0, -depth * 0.5);
-  const pa = g.attributes.position;
-  for (let i = 0; i < pa.count; i++) {
-    const x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i);
-    const rough = (fbm2(x * 0.28 + seed, y * 0.24 + z * 0.18, 3, seed + 13) - 0.5) * 0.16;
-    pa.setXYZ(i, x + rough * 0.22, y + rough * 0.34, z + rough);
-  }
-  pa.needsUpdate = true;
-  g.computeVertexNormals();
-  scaleUV(g, 0.55);
-  return g;
-}
-
-/* 完成镜头左侧是上宽下窄的天然岩楔，不是一根等宽立柱。 */
-function buildRevealLeftJamb(width, height, depth, seed) {
-  const shape = new THREE.Shape();
-  const pts = [
-    [-0.50, -0.50], [-0.42, -0.50], [-0.30, -0.24], [-0.16, 0.02],
-    [0.08, 0.22], [0.34, 0.40], [0.48, 0.50], [-0.43, 0.49],
-  ];
-  shape.moveTo(pts[0][0] * width, pts[0][1] * height);
-  for (let i = 1; i < pts.length; i++) shape.lineTo(pts[i][0] * width, pts[i][1] * height);
-  shape.closePath();
-  const g = new THREE.ExtrudeGeometry(shape, {
-    depth, steps: 1, bevelEnabled: true,
-    bevelThickness: 0.18, bevelSize: 0.20, bevelSegments: 3, curveSegments: 1,
-  });
-  g.translate(0, 0, -depth * 0.5);
-  const pa = g.attributes.position;
-  for (let i = 0; i < pa.count; i++) {
-    const x = pa.getX(i), y = pa.getY(i), z = pa.getZ(i);
-    const rough = (fbm2(x * 0.21 + seed, y * 0.18 + z * 0.15, 4, seed + 31) - 0.5) * 0.62;
-    pa.setXYZ(i, x + rough * 0.22, y + rough * 0.34, z + rough * 0.44);
-  }
-  pa.needsUpdate = true;
-  g.computeVertexNormals();
-  scaleUV(g, 0.55);
-  return g;
-}
-
-function buildSculptureRevealFrame(parent) {
-  const group = new THREE.Group();
-  group.name = 'ThreeDimensionalSculptureRevealFrame';
-  const mat = new THREE.MeshStandardMaterial({
-    map: TEX.rockCore.map,
-    normalMap: TEX.rockCore.normal,
-    color: 0xC39B76,
-    roughness: 0.98,
-    metalness: 0,
-    envMapIntensity: 0.04,
-  });
-  mat.normalScale.set(0.34, 0.34);
-
-  const left = new THREE.Group();
-  left.name = 'LeftRockJamb';
-  const lm = new THREE.Mesh(buildRevealLeftJamb(7.0, 44.5, 2.6, 951), mat);
-  /* 岩楔退到造像之后，只形成洞口轮廓，不再像木柱一样穿过佛手与脸。 */
-  lm.position.set(-9.55, 22.2, 1.0);
-  lm.rotation.set(0.015, -0.28, -0.012);
-  lm.castShadow = lm.receiveShadow = true;
-  left.add(lm);
-  group.add(left);
-
-  const right = new THREE.Group();
-  right.name = 'RightRockJamb';
-  const rm = new THREE.Mesh(buildIrregularRockSlab(5.8, 44.5, 1.8, 987), mat);
-  rm.position.set(9.55, 22.2, 7.15);
-  /* 终景从左下仰视，岩壁正面也朝向该机位，避免挤出侧面读成黑木柱。 */
-  rm.rotation.set(-0.008, -0.42, 0.010);
-  rm.castShadow = rm.receiveShadow = true;
-  right.add(rm);
-  group.add(right);
-  group.visible = false;
-  parent.add(group);
-  WORLD.sculptureFrame = group;
-  WORLD.sculptureFrameLeft = left;
-  WORLD.sculptureFrameRight = right;
-  return group;
-}
 
 /* 崖壁面的起伏 */
 function cliffFaceZ(x, y) {
@@ -57235,7 +55643,6 @@ function buildWorld(scene) {
 
   /* ---------------- 洞窟内壁 ---------------- */
   buildCaveInterior(G);
-  buildSculptureRevealFrame(G);
 
   /* ---------------- 地面广场 ---------------- */
   {
@@ -58509,16 +56916,8 @@ function buildConstruction(scene, tower, walkway) {
 
   /* 棉花团 */
   {
-    const geo = new THREE.IcosahedronGeometry(1, 3);
-    const gp = geo.attributes.position;
-    for (let i = 0; i < gp.count; i++) {
-      const x = gp.getX(i), y = gp.getY(i), z = gp.getZ(i);
-      const r = 1 + (fbm2(x * 2.7 + 9.1, y * 2.9 + z * 1.7, 3, 47) - 0.5) * 0.18;
-      gp.setXYZ(i, x * r, y * r, z * r);
-    }
-    gp.needsUpdate = true;
-    geo.computeVertexNormals();
-    const mat = new THREE.MeshStandardMaterial({ color: 0xF7F4EE, roughness: 0.90 });
+    const geo = new THREE.IcosahedronGeometry(1, 1);
+    const mat = new THREE.MeshStandardMaterial({ color: 0xF3EFE5, roughness: 0.98 });
     const mesh = new THREE.InstancedMesh(geo, mat, 48);
     mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     mesh.frustumCulled = false;
@@ -58928,7 +57327,7 @@ const MUD_WINDOWS = [
   { a: 72.0, b: 77.2, fromP: PHASE.COARSE, toP: PHASE.MID, fromM: 0.44, toM: 0.26, color: 0xB09A7D },
   { a: 77.0, b: 83.4, fromP: PHASE.MID, toP: PHASE.FINE, fromM: 0.26, toM: 0.08, color: 0xCBB79B },
   { a: 83.4, b: 89.6, fromP: PHASE.FINE, toP: PHASE.POLISH, fromM: 0.08, toM: 0.00, color: 0xDECBAF },
-  { a: 91.5, b: 93.1, fromP: PHASE.POLISH, toP: PHASE.PAINT, fromM: 0.00, toM: 0.00, color: 0xD7B57B, dir: -1 },
+  { a: 90.2, b: 93.5, fromP: PHASE.POLISH, toP: PHASE.PAINT, fromM: 0.00, toM: 0.00, color: 0xD7B57B, dir: -1 },
 ];
 
 function activeMudWindow(t) {
@@ -58939,7 +57338,7 @@ function activeMudWindow(t) {
 function updateMudPatches(t, w) {
   const mesh = CONSTRUCTION.mudPatches;
   for (let i = 0; i < mesh.count; i++) hideInstance(mesh, i);
-  if (!w || w.a >= 77.0) { mesh.instanceMatrix.needsUpdate = true; return 0; }
+  if (!w || w.a >= 90) { mesh.instanceMatrix.needsUpdate = true; return 0; }
   mesh.material.color.setHex(w.color);
   let visible = 0;
   for (let i = 0; i < mesh.count; i++) {
@@ -59000,24 +57399,16 @@ function updateCotton(t) {
   const mesh = CONSTRUCTION.cotton;
   for (let i = 0; i < mesh.count; i++) hideInstance(mesh, i);
   if (t < 78.2 || t >= 82.2) { mesh.instanceMatrix.needsUpdate = true; return; }
-  /* 参考片是胸前一团清晰棉纤维，不是几十颗随机雪球铺满画面。 */
   const k = windowK(t, 78.2, 81.4);
-  const p0 = new THREE.Vector3(), n0 = new THREE.Vector3();
-  pointOnFront(23.0, 0.035, p0, n0);
-  p0.addScaledVector(n0, lerp(3.3, 0.24, easeOut(k)));
-  p0.y += Math.sin(k * Math.PI) * 0.45;
-  orientZTo(_cgQ, n0);
-  const lobes = [
-    [0.00, 0.00, 0.90], [0.66, 0.16, 0.66], [-0.62, 0.10, 0.72],
-    [0.10, 0.62, 0.70], [-0.08, -0.54, 0.64], [0.43, -0.38, 0.52],
-    [-0.38, -0.36, 0.50], [-0.34, 0.46, 0.48],
-  ];
-  for (let i = 0; i < lobes.length; i++) {
-    const [dx, dy, s] = lobes[i];
-    const p = _cgA.copy(p0);
-    p.x += dx; p.y += dy;
-    const ss = s * (1 - smoothstep(0.80, 1, k) * 0.62);
-    setInstance(mesh, i, p, _cgQ, _cgS.set(ss * 1.18, ss, ss * 0.74));
+  for (let i = 0; i < mesh.count; i++) {
+    const d = mesh.userData.data[i];
+    const qv = clamp((k - d.order * 0.72) / 0.28, 0, 1);
+    if (qv <= 0) continue;
+    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(2.8, 0.16, easeOut(qv)));
+    p.y += Math.sin(qv * Math.PI) * (0.5 + d.phase);
+    orientZTo(_cgQ, d.n);
+    const ss = d.s * (1 - smoothstep(0.78, 1, qv) * 0.72);
+    setInstance(mesh, i, p, _cgQ, _cgS.set(ss * 1.25, ss, ss * 0.72));
   }
   mesh.instanceMatrix.needsUpdate = true;
 }
@@ -59054,7 +57445,7 @@ function updateSurfaceTools(t, w) {
   CONSTRUCTION.polishTrowel.visible = false;
   CONSTRUCTION.paintBrush.visible = false;
 
-  if (w && w.a < 83.4 && w.k > 0.045 && !(t >= 78.2 && t < 82.2)) {
+  if (w && w.a < 83.4) {
     CONSTRUCTION.mudTrowels.forEach((tool, i) => {
       tool.visible = true;
       const local = frac((t - w.a) / 1.9 + i * 0.43);
@@ -59073,10 +57464,10 @@ function updateSurfaceTools(t, w) {
     placeSurfaceTool(tool, y, lat, 0.42, Math.sin(t * 3.6) * 0.55);
     tool.scale.setScalar(0.78);
   }
-  if (t >= 91.5 && t < 93.3) {
+  if (t >= 90.2 && t < 93.7) {
     const tool = CONSTRUCTION.paintBrush;
     tool.visible = true;
-    const k = windowK(t, 91.5, 93.1);
+    const k = windowK(t, 90.2, 93.5);
     const y = lerp(34.0, 5.5, k) + Math.sin(t * 4.0) * 0.8;
     const lat = Math.sin(t * 2.5) * 0.55;
     placeSurfaceTool(tool, y, lat, 0.55, Math.sin(t * 5.1) * 0.26);
@@ -59149,20 +57540,20 @@ function updateHairConstruction(t) {
   let mode = 'full';
   let k = 1;
   if (t >= 15.2 && t < 51.6) { mode = 'carve'; k = CURVE_CARVE(t); }
-  else if (t >= 56.0 && t < 68.8) { mode = 'hidden'; }
-  else if (t >= 68.8 && t < 72.0) { mode = 'shape'; k = windowK(t, 68.8, 72.0); }
+  else if (t >= 56.0 && t < 90.2) { mode = 'hidden'; }
+  else if (t >= 90.2 && t < 93.6) { mode = 'paint'; k = windowK(t, 90.2, 93.6); }
   for (let i = 0; i < hair.count; i++) {
     if (mode === 'hidden') {
       hideInstance(hair, i);
       continue;
     }
     if (mode === 'carve' && ys[i] < k) { hideInstance(hair, i); continue; }
-    if (mode === 'shape') {
+    if (mode === 'paint') {
       const threshold = 1 - clamp((ys[i] - 30.2) / 5.4, 0, 1);
       const q = clamp((k - threshold * 0.72) / 0.28, 0, 1);
       if (q <= 0) { hideInstance(hair, i); continue; }
       base[i].decompose(_cgP, _cgQ, _cgS);
-      _cgP.add(_cgA.set(0, (1 - q) * 0.34, (1 - q) * 0.24));
+      _cgP.add(_cgA.set(0, (1 - q) * 0.8, (1 - q) * 0.7));
       _cgS.multiplyScalar(easeOut(q));
       setInstance(hair, i, _cgP, _cgQ, _cgS);
       continue;
@@ -59217,7 +57608,7 @@ function updateConstruction(t) {
 
   if (t >= 66.0 && t < 67.0) { stage = 'mud-cracking'; progress = windowK(t, 66.0, 67.0); }
   if (w && w.a >= 83.4 && w.a < 90.0) { stage = 'surface-polish'; progress = w.k; }
-  if (t >= 93.1 && t < 98.4) { stage = 'painted-buddha'; progress = windowK(t, 93.1, 98.4); }
+  if (t >= 93.5 && t < 98.4) { stage = 'painted-buddha'; progress = windowK(t, 93.5, 98.4); }
   if (t >= 108.6 && t < 110.6) { stage = 'completed-cave'; progress = windowK(t, 108.6, 110.6); }
 
   CONSTRUCTION.state = {
@@ -59353,20 +57744,17 @@ const SHOTS = [
   // 河流沉淀土 / 麦秆
   { t0: 67.0, t1: 72.0, p0: V(-20, 25, 25), p1: V(-17, 24.4, 22), l0: V(-5.2, 24.4, 4.2), l1: V(-5.0, 24.0, 4.4), f0: 30, f1: 29 },
   // 大致造型（中景）
-  { t0: 72.0, t1: 77.0, p0: V(-15.4, 24.0, 46.0), p1: V(-11.0, 25.0, 40.0), l0: V(-3.1, 21.0, 1.8), l1: V(-1.5, 23.0, 2.0), f0: 35, f1: 32, cut: true },
+  { t0: 72.0, t1: 77.0, p0: V(-20, 27, 56), p1: V(-15, 25.5, 48), l0: V(-2, 25, 0), l1: V(-1, 24, 0), f0: 34, f1: 33, cut: true },
   // 继续敷泥 / 棉花
-  { t0: 77.0, t1: 83.0, p0: V(-4.0, 26.0, 32), p1: V(0.0, 24.8, 27), l0: V(0.15, 24.0, 2.0), l1: V(0.40, 23.5, 2.2), f0: 28.4, f1: 27.8 },
+  { t0: 77.0, t1: 83.0, p0: V(-17, 27, 38), p1: V(-12, 26.5, 31), l0: V(-2, 26, 2), l1: V(-1, 26, 2.5), f0: 32, f1: 30 },
   // 蛋清米汁 / 塑刀（胸部）
   { t0: 83.0, t1: 87.2, p0: V(-9, 27.5, 27), p1: V(-5, 28.5, 23), l0: V(0, 26.5, 3), l1: V(0, 27.5, 3), f0: 30, f1: 28 },
-  // 素胎脸部：从参考片的左前侧轻微 3/4 视角起镜。
-  { t0: 87.2, t1: 88.0, p0: V(-7.2, 31.9, 31.2), p1: V(-7.2, 31.9, 31.2), l0: V(0.3, 27.8, 1.8), l1: V(0.3, 27.8, 1.8), f0: 30.5, f1: 30.5, cut: true },
-  { t0: 88.0, t1: 90.2, p0: V(-7.2, 31.9, 31.2), p1: V(-6.64, 31.7, 30.4), l0: V(0.3, 27.8, 1.8), l1: V(0.4, 29.5, 1.8), f0: 30.5, f1: 30.3 },
-  // 上色：91 s 稍拉远并向左重构，保留稳定的轻微 3/4 透视。
-  { t0: 90.2, t1: 91.0, p0: V(-6.64, 31.7, 30.4), p1: V(-6.1, 31.61, 29.52), l0: V(0.4, 29.5, 1.8), l1: V(0.5, 30.4, 1.8), f0: 30.3, f1: 30.5 },
-  { t0: 91.0, t1: 93.0, p0: V(-6.1, 31.61, 29.52), p1: V(-2.01, 31.61, 24.79), l0: V(0.5, 30.4, 1.8), l1: V(0.25, 30.45, 1.8), f0: 30.5, f1: 31.2 },
-  // 彩绘脸胸特写 → 在最后一秒退到上半身
-  { t0: 93.0, t1: 94.1, p0: V(-2.01, 31.61, 24.79), p1: V(-4.64, 28.66, 27.1), l0: V(0.25, 30.45, 1.8), l1: V(-0.2, 28.0, 1.8), f0: 31.2, f1: 30.2, cut: true },
-  { t0: 94.1, t1: 95.4, p0: V(-8.2, 29.5, 26.0), p1: V(-14.74, 15.31, 53.76), l0: V(-0.3, 28.7, 1.8), l1: V(0.81, 21.42, 1.8), f0: 31, f1: 33.3 },
+  // 素胎脸部
+  { t0: 87.2, t1: 90.2, p0: V(0.5, 32.8, 21), p1: V(0, 32.6, 18.5), l0: V(0, 32.3, 1), l1: V(0, 32.2, 1), f0: 28, f1: 27, cut: true },
+  // 上色
+  { t0: 90.2, t1: 93.0, p0: V(0, 32.6, 18.5), p1: V(-1, 32.4, 22), l0: V(0, 32.2, 1), l1: V(0, 32.0, 1), f0: 27, f1: 28 },
+  // 全彩全身
+  { t0: 93.0, t1: 95.4, p0: V(-4, 22, 62), p1: V(0, 20, 78), l0: V(0, 21, 0), l1: V(0, 19, 0), f0: 33, f1: 32, cut: true },
   // 侧面 → 发现墙壁简陋
   { t0: 95.4, t1: 99.0, p0: V(26, 14, 66), p1: V(20, 18, 56), l0: V(1, 17, 0), l1: V(-2, 19, -3), f0: 36, f1: 36, cut: true },
   // 敷软土 → 白粉
@@ -59610,10 +57998,9 @@ const BUDDHA_OPACITY_KEYS = [
 const CURVE_BOPA = makeLinear1D(BUDDHA_OPACITY_KEYS);
 
 /* 头光 / 细节（眉眼唇）淡入 */
-const DETAIL_KEYS = [[0.0, 1.0], [14.8, 1.0], [15.4, 0.0], [91.5, 0.0], [92.9, 1.0], [DURATION, 1.0]];
+const DETAIL_KEYS = [[0.0, 1.0], [14.8, 1.0], [15.4, 0.0], [90.4, 0.0], [92.4, 1.0], [DURATION, 1.0]];
 const CURVE_DETAIL = makeLinear1D(DETAIL_KEYS);
-/* 参考片施工/彩绘段的头后是窟腔，不出现发光圆盘；装饰背屏只在开场成像。 */
-const HALO_KEYS = [[0.0, 1.0], [14.8, 1.0], [15.4, 0.0], [DURATION, 0.0]];
+const HALO_KEYS = [[0.0, 1.0], [14.8, 1.0], [15.4, 0.0], [91.2, 0.0], [93.4, 1.0], [DURATION, 1.0]];
 const CURVE_HALO = makeLinear1D(HALO_KEYS);
 
 
@@ -60074,13 +58461,6 @@ function updateProps(t, cam) {
   show(PROPS.mud, false); show(PROPS.wheat, false); show(PROPS.cotton, false);
   show(PROPS.egg, false); show(PROPS.trowel, false); show(PROPS.chisel, false);
 
-  /*
-    造像阶段已经有贴着佛身运动的世界空间材料与工具。旧 HUD 道具固定在
-    相机前，近景里会变成横跨画面的白色/泥黄色板块，也不会随镜头产生正确
-    视差。56 秒以后只保留真实场景道具，彻底避免这种二维遮挡式伪装。
-  */
-  if (t >= 56.0) return;
-
   if (t >= 66.9 && t < 68.7) {
     show(PROPS.mud, true);
     placeProp(PROPS.mud, cam, 0.115, -0.075, 6.5, 0.082, t * 0.5);
@@ -60111,11 +58491,8 @@ function updateProps(t, cam) {
    ============================================================ */
 
 const APP = {
-  // 首屏展示第一章中已经露出主体的静态预览；首次点击播放或章节 01
-  // 仍会回到 0 秒完整播放揭幕过程。
-  time: 2.5,
-  playing: false,
-  initialPreview: true,
+  time: 0,
+  playing: true,
   speed: 1,
   free: false,
   renderSuspended: false,
@@ -60153,40 +58530,15 @@ function init() {
   APP.sectionBackground = new THREE.Color(0x241B16);
   APP.sectionFogColor = new THREE.Color(0x4A3324);
   scene.background = APP.skyBackground;
-  /* 中性暖色程序化光场只参与 PBR 反射，不承载任何佛像图像或轮廓。 */
-  {
-    const envCanvas = makeCanvas(512, 256);
-    const eg = envCanvas.getContext('2d');
-    const base = eg.createLinearGradient(0, 0, 0, 256);
-    base.addColorStop(0.00, '#F4E7D8');
-    base.addColorStop(0.42, '#B9A995');
-    base.addColorStop(1.00, '#42382F');
-    eg.fillStyle = base;
-    eg.fillRect(0, 0, 512, 256);
-    const softbox = eg.createRadialGradient(122, 76, 3, 122, 76, 112);
-    softbox.addColorStop(0.00, 'rgba(255,248,238,0.95)');
-    softbox.addColorStop(0.35, 'rgba(255,232,209,0.48)');
-    softbox.addColorStop(1.00, 'rgba(255,224,198,0)');
-    eg.fillStyle = softbox;
-    eg.fillRect(0, 0, 512, 256);
-    const envTex = new THREE.CanvasTexture(envCanvas);
-    envTex.colorSpace = THREE.SRGBColorSpace;
-    envTex.mapping = THREE.EquirectangularReflectionMapping;
-    const pmrem = new THREE.PMREMGenerator(renderer);
-    pmrem.compileEquirectangularShader();
-    APP.environmentTarget = pmrem.fromEquirectangular(envTex);
-    scene.environment = APP.environmentTarget.texture;
-    envTex.dispose();
-    pmrem.dispose();
-  }
+  scene.environment = null;
   scene.fog = new THREE.Fog(APP.skyFogColor, 380, 1100);
 
   camera = new THREE.PerspectiveCamera(35, 9 / 16, 0.5, 1400);
   freeCam = new THREE.PerspectiveCamera(45, 9 / 16, 0.5, 1400);
 
   /* ---------------- 光照 ---------------- */
-  scene.add(new THREE.AmbientLight(0xFFF2E2, 0.07));
-  scene.add(new THREE.HemisphereLight(0xC6E6EC, 0x8B684C, 0.17));
+  scene.add(new THREE.AmbientLight(0xFFF2E2, 0.30));
+  scene.add(new THREE.HemisphereLight(0xC6E6EC, 0xC09872, 0.64));
 
   const sun = new THREE.DirectionalLight(0xFFF3E0, 2.15);
   sun.position.set(76, 108, 128);
@@ -60199,49 +58551,25 @@ function init() {
   sun.shadow.normalBias = 0.55;
   sun.target.position.set(0, 18, 0);
   scene.add(sun, sun.target);
-  APP.sun = sun;
 
-  const fill = new THREE.DirectionalLight(0xDCE8EE, 0.13);
+  const fill = new THREE.DirectionalLight(0xDCE8EE, 0.40);
   fill.position.set(-70, 40, 120);
   scene.add(fill);
 
-  const inner = new THREE.PointLight(0xFFE7C6, 12, 130, 1.6);
+  const inner = new THREE.PointLight(0xFFE7C6, 60, 130, 1.6);
   inner.position.set(0, 27, 22);
   scene.add(inner);
   APP.innerLight = inner;
 
-  const inner2 = new THREE.DirectionalLight(0xFFF0DC, 0.16);
+  const inner2 = new THREE.DirectionalLight(0xFFF0DC, 1.08);
   inner2.position.set(4, 34, 90);
   inner2.target.position.set(0, 20, -8);
   scene.add(inner2, inner2.target);
 
-  const inner3 = new THREE.DirectionalLight(0xE8F0F4, 0.16);
+  const inner3 = new THREE.DirectionalLight(0xE8F0F4, 0.52);
   inner3.position.set(-46, 22, 70);
   inner3.target.position.set(0, 22, -6);
   scene.add(inner3, inner3.target);
-
-  /* 造像局部塑形光：让眼睑、鼻翼、唇峰、指缝和螺发产生可读的实体阴影。 */
-  const sculptKey = new THREE.DirectionalLight(0xFFF0E4, 2.18);
-  sculptKey.position.set(-42, 54, 24);
-  sculptKey.target.position.set(0, 26, 0);
-  sculptKey.castShadow = true;
-  sculptKey.shadow.mapSize.set(2048, 2048);
-  sculptKey.shadow.camera.left = -18;
-  sculptKey.shadow.camera.right = 18;
-  sculptKey.shadow.camera.top = 22;
-  sculptKey.shadow.camera.bottom = -18;
-  sculptKey.shadow.camera.near = 18;
-  sculptKey.shadow.camera.far = 105;
-  sculptKey.shadow.bias = -0.00020;
-  sculptKey.shadow.normalBias = 0.035;
-  scene.add(sculptKey, sculptKey.target);
-  APP.sculptKey = sculptKey;
-
-  const sculptFill = new THREE.DirectionalLight(0xFFF7F0, 0);
-  sculptFill.position.set(34, 38, 58);
-  sculptFill.target.position.set(0, 27.5, 1.5);
-  scene.add(sculptFill, sculptFill.target);
-  APP.sculptFill = sculptFill;
 
   /* ---------------- 场景 ---------------- */
   buildWorld(scene);
@@ -60312,7 +58640,7 @@ function init() {
   installDebugAPI();
 
   // 首帧真实编译并渲染成功后才标记 ready。
-  renderFrame(APP.time, 0);
+  renderFrame(0, 0);
   window.__READY__ = true;
   elLoading.classList.add('gone');
   setTimeout(() => { if (elLoading) elLoading.style.display = 'none'; }, 560);
@@ -60334,13 +58662,6 @@ function onResize() {
   elSvg.style.width = w + 'px'; elSvg.style.height = h + 'px';
   elSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
   elHud.style.width = w + 'px'; elHud.style.height = h + 'px';
-  // 浏览器窗口在不同 DPR 的屏幕间移动，或测试/系统动态切换缩放时，
-  // resize 不会重新创建 renderer。同步像素比后再 setSize，避免高分屏
-  // 仍沿用初始化时的 1x backing buffer 而出现明显模糊。
-  const pixelRatio = Math.min(devicePixelRatio || 1, 1.5);
-  if (Math.abs(renderer.getPixelRatio() - pixelRatio) > 0.001) {
-    renderer.setPixelRatio(pixelRatio);
-  }
   renderer.setSize(w, h, false);
   camera.aspect = w / h; camera.updateProjectionMatrix();
   freeCam.aspect = w / h; freeCam.updateProjectionMatrix();
@@ -60392,13 +58713,7 @@ function applyCarveState(t) {
   if (t < 15.2 || t >= 27.0) doorProgress = 1;
   else if (t >= 24.55) doorProgress = easeOut(windowK(t, 24.55, 27.0));
   setDoorProgress(doorProgress);
-  /*
-    门洞盒体只用于外部凿门镜头。旧逻辑让它在佛像施工期仍常驻，近景相机
-    实际钻进盒体后，前壁会像一块巨型横板截掉佛脸与胸口。
-  */
-  if (WORLD.doorTunnel) {
-    WORLD.doorTunnel.visible = doorProgress > 0.035 && (t < 30.4 || t >= 111.4);
-  }
+  if (WORLD.doorTunnel) WORLD.doorTunnel.visible = doorProgress > 0.035;
 
   const complete = t < 15.2 || t >= 51.6;
   let lower1 = complete ? 1 : 0;
@@ -60420,14 +58735,6 @@ function applyState(t, dt) {
   scene.fog.color.copy(sectionOn ? APP.sectionFogColor : APP.skyFogColor);
   const sculpt = applySculptState(t, carve.carveY);
 
-  if (APP.sculptKey) {
-    const focus = (t < 15.2 || (t >= 51.0 && t < 99.0) || t >= 108.6) ? 1 : 0;
-    const paintedLift = smoothstep(90.2, 92.6, t);
-    APP.sculptKey.intensity = lerp(0.14, lerp(3.60, 5.80, paintedLift), focus);
-  }
-  if (APP.sculptFill) APP.sculptFill.intensity = (t >= 56.0 && t < 99.0) ? 0.06 : 0;
-  if (APP.sun) APP.sun.intensity = (t >= 56.0 && t < 99.0) ? 0.32 : 2.15;
-
   /* 佛像在开凿阶段由高度阈值从石胎中显露，不做整尊跳变。 */
   const excavationReveal = t >= 31.0 && t < 51.9;
   const bop = excavationReveal ? 1 : CURVE_BOPA(t);
@@ -60441,23 +58748,8 @@ function applyState(t, dt) {
   }
   const detailOpacity = CURVE_DETAIL(t) * bop;
   for (const m of BUDDHA.detailMats) m.opacity = detailOpacity;
-  /* 雕刻凹槽在素胎阶段已经存在；彩绘只改变其综合色，而不是凭空出现。 */
-  const cavityOpacity = (t < 72 ? 0 : smoothstep(72, 78, t)) * bop;
-  for (const m of BUDDHA.cavityMats) m.opacity = cavityOpacity;
-  if (BUDDHA.parts.eyeSurfaceMats) {
-    const eyePaint = smoothstep(90.2, 92.6, t);
-    for (const m of BUDDHA.parts.eyeSurfaceMats) {
-      m.color.copy(m.userData.clayColor).lerp(m.userData.paintColor, eyePaint);
-    }
-  }
   const haloOpacity = CURVE_HALO(t) * bop * 0.98;
   for (const m of BUDDHA.haloMats) m.opacity = haloOpacity;
-
-  /* 原片 87.2–94.1 s 是正面脸胸特写，举手位于镜头外；95 s 低机位再完整入画。 */
-  const faceCloseWithoutHand = t >= 87.2 && t < 94.1;
-  for (const part of [BUDDHA.parts.handR, BUDDHA.parts.cuffR, BUDDHA.parts.raisedSleeve]) {
-    if (part) part.visible = !faceCloseWithoutHand;
-  }
 
   // 螺发的逐颗显露/上色由施工系统接管，避免整组缩放。
   if (BUDDHA.parts.hair) BUDDHA.parts.hair.scale.setScalar(1);
@@ -60468,31 +58760,11 @@ function applyState(t, dt) {
   tower.visible = true;
   walkway.visible = true;
   if (decorGroup) decorGroup.visible = t < 26.6 || t >= 108.4;
-  if (WORLD.sculptureFrame) {
-    const materialClose = t >= 71.6 && t < 83.4;
-    const completedReveal = t >= 94.1 && t < 95.4;
-    WORLD.sculptureFrame.visible = materialClose || completedReveal;
-    WORLD.sculptureFrameLeft.visible = materialClose || completedReveal;
-    WORLD.sculptureFrameRight.visible = completedReveal;
-    if (materialClose) {
-      WORLD.sculptureFrameLeft.position.x = -7.0;
-      WORLD.sculptureFrameLeft.scale.x = 0.30;
-    } else {
-      /* 完成镜头的岩壁只在左右构成天然画框，不能移到佛身中央。 */
-      WORLD.sculptureFrameLeft.position.x = 4.0;
-      WORLD.sculptureFrameLeft.scale.x = 0.75;
-    }
-    WORLD.sculptureFrameRight.position.x = -3.5;
-    WORLD.sculptureFrameRight.scale.x = 1.12;
-  }
 
   const caveOpen = carve.complete
     ? 1
     : clamp((CAVE.yTop + 1 - carve.carveY) / (CAVE.yTop + 1), 0, 1);
-  /* 正面点光在近景会把鼻翼、眼窝和唇峰全部洗平；造像段改由侧上方塑形光主导。 */
-  APP.innerLight.intensity = (t >= 56.0 && t < 99.0)
-    ? lerp(1.10, 0.55, smoothstep(90.2, 92.6, t))
-    : lerp(9, 28, easeOut(caveOpen));
+  APP.innerLight.intensity = lerp(42, 185, easeOut(caveOpen));
   WORLD.plinth.visible = t < 15.2 || t >= 51.55;
 
   const construction = updateConstruction(t);
@@ -60513,10 +58785,7 @@ function setScriptedCamera(t) {
     camera.fov = fov;
     camera.updateProjectionMatrix();
   }
-  const sculptExposure = t >= 56.0 && t < 95.4
-    ? lerp(0.48, 0.88, smoothstep(90.2, 92.6, t))
-    : 0;
-  renderer.toneMappingExposure = APP.baseExposure + fb.exposure + sculptExposure;
+  renderer.toneMappingExposure = APP.baseExposure + fb.exposure;
 }
 
 function renderFrame(t, dt) {
@@ -60630,7 +58899,6 @@ function buildChapterUI() {
     b.textContent = `${String(index + 1).padStart(2, '0')} ${name}`;
     b.dataset.time = String(t);
     b.onclick = () => {
-      APP.initialPreview = false;
       APP.time = t;
       APP.playUntil = index + 1 < CHAPTERS.length ? CHAPTERS[index + 1][0] : DURATION;
       APP.playFromChapter = index;
@@ -60667,7 +58935,6 @@ function updateTimelineUI(t) {
 
 function seekFromPointer(ev) {
   const r = elBar.getBoundingClientRect();
-  APP.initialPreview = false;
   APP.time = clamp((ev.clientX - r.left) / Math.max(1, r.width), 0, 1) * DURATION;
   APP.playUntil = null;
   APP.playFromChapter = -1;
@@ -60677,11 +58944,6 @@ function seekFromPointer(ev) {
 
 function bindUI() {
   elPlay.onclick = () => {
-    if (APP.initialPreview) {
-      APP.initialPreview = false;
-      APP.time = 0;
-      renderFrame(APP.time, 0);
-    }
     APP.playUntil = null;
     APP.playFromChapter = -1;
     APP.playing = !APP.playing;
@@ -60712,8 +58974,8 @@ function bindUI() {
   addEventListener('keydown', (e) => {
     FREE.keys[e.key.toLowerCase()] = true;
     if (e.code === 'Space') { e.preventDefault(); elPlay.onclick(); }
-    if (e.key === 'ArrowLeft') { APP.initialPreview = false; APP.time = Math.max(0, APP.time - 3); APP.playUntil = null; APP.playFromChapter = -1; APP.dirty = true; }
-    if (e.key === 'ArrowRight') { APP.initialPreview = false; APP.time = Math.min(DURATION, APP.time + 3); APP.playUntil = null; APP.playFromChapter = -1; APP.dirty = true; }
+    if (e.key === 'ArrowLeft') { APP.time = Math.max(0, APP.time - 3); APP.playUntil = null; APP.playFromChapter = -1; APP.dirty = true; }
+    if (e.key === 'ArrowRight') { APP.time = Math.min(DURATION, APP.time + 3); APP.playUntil = null; APP.playFromChapter = -1; APP.dirty = true; }
   });
   addEventListener('keyup', (e) => { FREE.keys[e.key.toLowerCase()] = false; });
 
@@ -60792,7 +59054,6 @@ function installDebugAPI() {
     get tower() { return tower; },
     get walkway() { return walkway; },
     seek(t) {
-      APP.initialPreview = false;
       APP.time = clamp(Number(t) || 0, 0, DURATION);
       APP.playUntil = null;
       APP.playFromChapter = -1;
@@ -60803,7 +59064,6 @@ function installDebugAPI() {
       return visualState();
     },
     renderAt(t) {
-      APP.initialPreview = false;
       APP.time = clamp(Number(t) || 0, 0, DURATION);
       APP.playUntil = null;
       APP.playFromChapter = -1;
@@ -60813,10 +59073,7 @@ function installDebugAPI() {
       renderFrame(APP.time, 0);
       return visualState();
     },
-    play() {
-      if (APP.initialPreview) { APP.initialPreview = false; APP.time = 0; renderFrame(APP.time, 0); }
-      APP.playUntil = null; APP.playFromChapter = -1; APP.playing = true; APP.dirty = true; elPlay.textContent = '⏸';
-    },
+    play() { APP.playUntil = null; APP.playFromChapter = -1; APP.playing = true; APP.dirty = true; elPlay.textContent = '⏸'; },
     pause() { APP.playUntil = null; APP.playFromChapter = -1; APP.playing = false; elPlay.textContent = '▶'; },
     playChapter(index) {
       const i = clamp(Math.floor(Number(index) || 0), 0, CHAPTERS.length - 1);

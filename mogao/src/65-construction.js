@@ -400,16 +400,8 @@ function buildConstruction(scene, tower, walkway) {
 
   /* 棉花团 */
   {
-    const geo = new THREE.IcosahedronGeometry(1, 3);
-    const gp = geo.attributes.position;
-    for (let i = 0; i < gp.count; i++) {
-      const x = gp.getX(i), y = gp.getY(i), z = gp.getZ(i);
-      const r = 1 + (fbm2(x * 2.7 + 9.1, y * 2.9 + z * 1.7, 3, 47) - 0.5) * 0.18;
-      gp.setXYZ(i, x * r, y * r, z * r);
-    }
-    gp.needsUpdate = true;
-    geo.computeVertexNormals();
-    const mat = new THREE.MeshStandardMaterial({ color: 0xF7F4EE, roughness: 0.90 });
+    const geo = new THREE.IcosahedronGeometry(1, 1);
+    const mat = new THREE.MeshStandardMaterial({ color: 0xF3EFE5, roughness: 0.98 });
     const mesh = new THREE.InstancedMesh(geo, mat, 48);
     mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     mesh.frustumCulled = false;
@@ -819,7 +811,7 @@ const MUD_WINDOWS = [
   { a: 72.0, b: 77.2, fromP: PHASE.COARSE, toP: PHASE.MID, fromM: 0.44, toM: 0.26, color: 0xB09A7D },
   { a: 77.0, b: 83.4, fromP: PHASE.MID, toP: PHASE.FINE, fromM: 0.26, toM: 0.08, color: 0xCBB79B },
   { a: 83.4, b: 89.6, fromP: PHASE.FINE, toP: PHASE.POLISH, fromM: 0.08, toM: 0.00, color: 0xDECBAF },
-  { a: 91.5, b: 93.1, fromP: PHASE.POLISH, toP: PHASE.PAINT, fromM: 0.00, toM: 0.00, color: 0xD7B57B, dir: -1 },
+  { a: 90.2, b: 93.5, fromP: PHASE.POLISH, toP: PHASE.PAINT, fromM: 0.00, toM: 0.00, color: 0xD7B57B, dir: -1 },
 ];
 
 function activeMudWindow(t) {
@@ -830,7 +822,7 @@ function activeMudWindow(t) {
 function updateMudPatches(t, w) {
   const mesh = CONSTRUCTION.mudPatches;
   for (let i = 0; i < mesh.count; i++) hideInstance(mesh, i);
-  if (!w || w.a >= 77.0) { mesh.instanceMatrix.needsUpdate = true; return 0; }
+  if (!w || w.a >= 90) { mesh.instanceMatrix.needsUpdate = true; return 0; }
   mesh.material.color.setHex(w.color);
   let visible = 0;
   for (let i = 0; i < mesh.count; i++) {
@@ -891,24 +883,16 @@ function updateCotton(t) {
   const mesh = CONSTRUCTION.cotton;
   for (let i = 0; i < mesh.count; i++) hideInstance(mesh, i);
   if (t < 78.2 || t >= 82.2) { mesh.instanceMatrix.needsUpdate = true; return; }
-  /* 参考片是胸前一团清晰棉纤维，不是几十颗随机雪球铺满画面。 */
   const k = windowK(t, 78.2, 81.4);
-  const p0 = new THREE.Vector3(), n0 = new THREE.Vector3();
-  pointOnFront(23.0, 0.035, p0, n0);
-  p0.addScaledVector(n0, lerp(3.3, 0.24, easeOut(k)));
-  p0.y += Math.sin(k * Math.PI) * 0.45;
-  orientZTo(_cgQ, n0);
-  const lobes = [
-    [0.00, 0.00, 0.90], [0.66, 0.16, 0.66], [-0.62, 0.10, 0.72],
-    [0.10, 0.62, 0.70], [-0.08, -0.54, 0.64], [0.43, -0.38, 0.52],
-    [-0.38, -0.36, 0.50], [-0.34, 0.46, 0.48],
-  ];
-  for (let i = 0; i < lobes.length; i++) {
-    const [dx, dy, s] = lobes[i];
-    const p = _cgA.copy(p0);
-    p.x += dx; p.y += dy;
-    const ss = s * (1 - smoothstep(0.80, 1, k) * 0.62);
-    setInstance(mesh, i, p, _cgQ, _cgS.set(ss * 1.18, ss, ss * 0.74));
+  for (let i = 0; i < mesh.count; i++) {
+    const d = mesh.userData.data[i];
+    const qv = clamp((k - d.order * 0.72) / 0.28, 0, 1);
+    if (qv <= 0) continue;
+    const p = _cgA.copy(d.p).addScaledVector(d.n, lerp(2.8, 0.16, easeOut(qv)));
+    p.y += Math.sin(qv * Math.PI) * (0.5 + d.phase);
+    orientZTo(_cgQ, d.n);
+    const ss = d.s * (1 - smoothstep(0.78, 1, qv) * 0.72);
+    setInstance(mesh, i, p, _cgQ, _cgS.set(ss * 1.25, ss, ss * 0.72));
   }
   mesh.instanceMatrix.needsUpdate = true;
 }
@@ -945,7 +929,7 @@ function updateSurfaceTools(t, w) {
   CONSTRUCTION.polishTrowel.visible = false;
   CONSTRUCTION.paintBrush.visible = false;
 
-  if (w && w.a < 83.4 && w.k > 0.045 && !(t >= 78.2 && t < 82.2)) {
+  if (w && w.a < 83.4) {
     CONSTRUCTION.mudTrowels.forEach((tool, i) => {
       tool.visible = true;
       const local = frac((t - w.a) / 1.9 + i * 0.43);
@@ -964,10 +948,10 @@ function updateSurfaceTools(t, w) {
     placeSurfaceTool(tool, y, lat, 0.42, Math.sin(t * 3.6) * 0.55);
     tool.scale.setScalar(0.78);
   }
-  if (t >= 91.5 && t < 93.3) {
+  if (t >= 90.2 && t < 93.7) {
     const tool = CONSTRUCTION.paintBrush;
     tool.visible = true;
-    const k = windowK(t, 91.5, 93.1);
+    const k = windowK(t, 90.2, 93.5);
     const y = lerp(34.0, 5.5, k) + Math.sin(t * 4.0) * 0.8;
     const lat = Math.sin(t * 2.5) * 0.55;
     placeSurfaceTool(tool, y, lat, 0.55, Math.sin(t * 5.1) * 0.26);
@@ -1040,20 +1024,20 @@ function updateHairConstruction(t) {
   let mode = 'full';
   let k = 1;
   if (t >= 15.2 && t < 51.6) { mode = 'carve'; k = CURVE_CARVE(t); }
-  else if (t >= 56.0 && t < 68.8) { mode = 'hidden'; }
-  else if (t >= 68.8 && t < 72.0) { mode = 'shape'; k = windowK(t, 68.8, 72.0); }
+  else if (t >= 56.0 && t < 90.2) { mode = 'hidden'; }
+  else if (t >= 90.2 && t < 93.6) { mode = 'paint'; k = windowK(t, 90.2, 93.6); }
   for (let i = 0; i < hair.count; i++) {
     if (mode === 'hidden') {
       hideInstance(hair, i);
       continue;
     }
     if (mode === 'carve' && ys[i] < k) { hideInstance(hair, i); continue; }
-    if (mode === 'shape') {
+    if (mode === 'paint') {
       const threshold = 1 - clamp((ys[i] - 30.2) / 5.4, 0, 1);
       const q = clamp((k - threshold * 0.72) / 0.28, 0, 1);
       if (q <= 0) { hideInstance(hair, i); continue; }
       base[i].decompose(_cgP, _cgQ, _cgS);
-      _cgP.add(_cgA.set(0, (1 - q) * 0.34, (1 - q) * 0.24));
+      _cgP.add(_cgA.set(0, (1 - q) * 0.8, (1 - q) * 0.7));
       _cgS.multiplyScalar(easeOut(q));
       setInstance(hair, i, _cgP, _cgQ, _cgS);
       continue;
@@ -1108,7 +1092,7 @@ function updateConstruction(t) {
 
   if (t >= 66.0 && t < 67.0) { stage = 'mud-cracking'; progress = windowK(t, 66.0, 67.0); }
   if (w && w.a >= 83.4 && w.a < 90.0) { stage = 'surface-polish'; progress = w.k; }
-  if (t >= 93.1 && t < 98.4) { stage = 'painted-buddha'; progress = windowK(t, 93.1, 98.4); }
+  if (t >= 93.5 && t < 98.4) { stage = 'painted-buddha'; progress = windowK(t, 93.5, 98.4); }
   if (t >= 108.6 && t < 110.6) { stage = 'completed-cave'; progress = windowK(t, 108.6, 110.6); }
 
   CONSTRUCTION.state = {

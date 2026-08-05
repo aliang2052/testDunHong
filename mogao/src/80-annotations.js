@@ -454,13 +454,6 @@ function updateProps(t, cam) {
   show(PROPS.mud, false); show(PROPS.wheat, false); show(PROPS.cotton, false);
   show(PROPS.egg, false); show(PROPS.trowel, false); show(PROPS.chisel, false);
 
-  /*
-    造像阶段已经有贴着佛身运动的世界空间材料与工具。旧 HUD 道具固定在
-    相机前，近景里会变成横跨画面的白色/泥黄色板块，也不会随镜头产生正确
-    视差。56 秒以后只保留真实场景道具，彻底避免这种二维遮挡式伪装。
-  */
-  if (t >= 56.0) return;
-
   if (t >= 66.9 && t < 68.7) {
     show(PROPS.mud, true);
     placeProp(PROPS.mud, cam, 0.115, -0.075, 6.5, 0.082, t * 0.5);

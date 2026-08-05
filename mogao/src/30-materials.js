@@ -21,17 +21,12 @@ const PHASE = {
 function makeStageMaterial(opts) {
   const {
     finalMap,
-    finalNormalMap = TEX.mudPolish.normal,
     finalScale = [1, 1],
-    finalNormalScale = finalScale,
     finalTint = new THREE.Color(1, 1, 1),
     mudScale = [3, 6],
     rockScale = [4, 8],
     roughSet = [1.0, 0.97, 0.94, 0.88, 0.76, 0.58, 0.66],
     normalScale = 1.0,
-    finalNormalStrength = 0.35,
-    roughVariation = 0.04,
-    envMapIntensity = 0.24,
     side = THREE.FrontSide,
   } = opts;
 
@@ -40,7 +35,6 @@ function makeStageMaterial(opts) {
     normalMap: TEX.rockCore.normal,
     roughness: 1.0,
     metalness: 0.0,
-    envMapIntensity,
     side,
   });
 
@@ -70,15 +64,12 @@ function makeStageMaterial(opts) {
     tMid: { value: TEX.mudMid.map }, nMid: { value: TEX.mudMid.normal },
     tFine: { value: TEX.mudFine.map }, nFine: { value: TEX.mudFine.normal },
     tPolish: { value: TEX.mudPolish.map }, nPolish: { value: TEX.mudPolish.normal },
-    tFinal: { value: finalMap }, nFinal: { value: finalNormalMap }, uFinalTint: { value: finalTint },
+    tFinal: { value: finalMap }, uFinalTint: { value: finalTint },
     uRockScale: { value: new THREE.Vector2(rockScale[0], rockScale[1]) },
     uMudScale: { value: new THREE.Vector2(mudScale[0], mudScale[1]) },
     uFinalScale: { value: new THREE.Vector2(finalScale[0], finalScale[1]) },
-    uFinalNormalScale: { value: new THREE.Vector2(finalNormalScale[0], finalNormalScale[1]) },
     uRough: { value: new Float32Array(roughSet) },
     uNormalAmt: { value: normalScale },
-    uFinalNormalAmt: { value: finalNormalStrength },
-    uRoughVariation: { value: roughVariation },
     uWet: { value: 0 },
     uFrontGlow: { value: new THREE.Color(1.0, 0.55, 0.16) },
   };
@@ -163,14 +154,12 @@ function makeStageMaterial(opts) {
       uniform float uRevealOn;
       uniform float uRevealY;
       uniform sampler2D tRock, tCrack, tCoarse, tMid, tFine, tPolish, tFinal;
-      uniform sampler2D nRock, nCrack, nCoarse, nMid, nFine, nPolish, nFinal;
+      uniform sampler2D nRock, nCrack, nCoarse, nMid, nFine, nPolish;
       uniform vec3 uFinalTint;
       uniform vec3 uFrontGlow;
-      uniform vec2 uRockScale, uMudScale, uFinalScale, uFinalNormalScale;
+      uniform vec2 uRockScale, uMudScale, uFinalScale;
       uniform float uRough[7];
       uniform float uNormalAmt;
-      uniform float uFinalNormalAmt;
-      uniform float uRoughVariation;
       uniform float uWet;
       varying float vMorphW;
       varying float vStageCover;
@@ -228,11 +217,8 @@ function makeStageMaterial(opts) {
       mapN = mix(mapN, mapNd, phW(2.0));
       mapN = mix(mapN, mapNe, phW(3.0));
       mapN = mix(mapN, mapNf, phW(4.0));
-      float finalW = phW(5.0);
-      vec3 mapNg = texture2D(nFinal, vUvX * uFinalNormalScale).xyz * 2.0 - 1.0;
-      mapN = mix(mapN, mapNg, finalW);
-      float stageAmt = uNormalAmt * mix(1.0, 0.38, phW(4.0));
-      float amt = mix(stageAmt, uFinalNormalAmt, finalW);
+      mapN = mix(mapN, vec3(0.0, 0.0, 1.0), phW(5.0) * 0.78);
+      float amt = uNormalAmt * mix(1.0, 0.32, phW(4.0));
       mapN.xy *= amt;
       normal = normalize(tbn * mapN);
       `
@@ -251,17 +237,12 @@ function makeStageMaterial(opts) {
       rlo = mix(rlo, r4, step(3.5, rIdx));
       rlo = mix(rlo, r5, step(4.5, rIdx));
       rlo = mix(rlo, r6, step(5.5, rIdx));
-      float roughGrain = sin(dot(vUvX, vec2(57.7, 91.3)) * 6.2831853);
-      roughGrain += 0.55 * sin(dot(vUvX, vec2(-83.1, 43.9)) * 6.2831853);
-      roughGrain /= 1.55;
-      float pigment = clamp((dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) - 0.48) * 0.60, -0.35, 0.35);
-      float roughnessFactor = clamp(rlo + (roughGrain * 0.72 - pigment) * uRoughVariation, 0.18, 1.0);
-      roughnessFactor = mix(roughnessFactor, 0.24, vFrontEdge * uWet);
+      float roughnessFactor = mix(rlo, 0.24, vFrontEdge * uWet);
       `
     );
   };
 
-  mat.customProgramCacheKey = () => 'stage-material-spatial-v4';
+  mat.customProgramCacheKey = () => 'stage-material-spatial-v3';
   mat.userData.U = U;
   STAGE_MATS.push(mat);
   return mat;
