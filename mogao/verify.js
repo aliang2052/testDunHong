@@ -51,7 +51,7 @@ function assert(name, condition, detail) {
     ],
   });
   const page = await browser.newPage();
-  await page.setViewport({ width: 760, height: 1340, deviceScaleFactor: 1 });
+  await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
   page.on('console', (m) => report.console.push({ type: m.type(), text: m.text() }));
   page.on('pageerror', (e) => report.pageErrors.push(e.message));
   page.on('request', (req) => {
@@ -63,6 +63,11 @@ function assert(name, condition, detail) {
     await page.goto(`file://${input}`, { waitUntil: 'load', timeout: 120000 });
     await page.waitForFunction('window.__READY__ === true', { timeout: 180000 });
     assert('ready-hook', await page.evaluate(() => window.__READY__ === true), 'window.__READY__ 必须为 true');
+    const desktopCanvas = await page.evaluate(() => {
+      const c = document.querySelector('#c').getBoundingClientRect();
+      return { width: c.width, height: c.height, aspect: c.width / c.height };
+    });
+    assert('desktop-16-by-9', Math.abs(desktopCanvas.aspect - 16 / 9) < 0.006, desktopCanvas);
     assert('no-video-element', await page.evaluate(() => document.querySelectorAll('video').length === 0), '不得嵌入 video');
     assert('no-remote-requests', report.remoteRequests.length === 0, report.remoteRequests);
 
@@ -121,9 +126,16 @@ function assert(name, condition, detail) {
     await new Promise((r) => setTimeout(r, 150));
     const mobile = await page.evaluate(() => {
       const c = document.querySelector('#c').getBoundingClientRect();
-      return { width: c.width, height: c.height, viewport: [innerWidth, innerHeight] };
+      return { width: c.width, height: c.height, aspect: c.width / c.height, viewport: [innerWidth, innerHeight] };
     });
-    assert('mobile-fit', mobile.width <= 390.1 && mobile.height <= 844.1 && mobile.width > 200, mobile);
+    assert(
+      'mobile-fit-16-by-9',
+      mobile.width <= 390.1
+        && mobile.height <= 844.1
+        && mobile.width > 200
+        && Math.abs(mobile.aspect - 16 / 9) < 0.006,
+      mobile
+    );
 
     assert('no-page-errors', report.pageErrors.length === 0, report.pageErrors);
     report.finishedAt = new Date().toISOString();

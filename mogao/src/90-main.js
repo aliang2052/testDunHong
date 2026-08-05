@@ -20,6 +20,7 @@ let renderer, scene, camera, freeCam, debris, tower, walkway, decorGroup, clock;
 let elSub, elTime, elBar, elBarFill, elChapters, elPlay, elLoading, elSvg, elHud;
 let elStepNo, elStepTitle, elStepAction, elStepFill;
 let chapterButtons = [];
+const FRAME_ASPECT = 16 / 9;
 
 function init() {
   const canvas = document.getElementById('c');
@@ -45,8 +46,8 @@ function init() {
   scene.environment = null;
   scene.fog = new THREE.Fog(APP.skyFogColor, 380, 1100);
 
-  camera = new THREE.PerspectiveCamera(35, 9 / 16, 0.5, 1400);
-  freeCam = new THREE.PerspectiveCamera(45, 9 / 16, 0.5, 1400);
+  camera = new THREE.PerspectiveCamera(35, FRAME_ASPECT, 0.5, 1400);
+  freeCam = new THREE.PerspectiveCamera(45, FRAME_ASPECT, 0.5, 1400);
 
   /* ---------------- 光照 ---------------- */
   scene.add(new THREE.AmbientLight(0xFFF2E2, 0.30));
@@ -160,13 +161,13 @@ function init() {
 }
 
 /* ------------------------------------------------------------
-   画布尺寸：竖屏 9:16 居中
+   画布尺寸：标准宽屏 16:9 居中
    ------------------------------------------------------------ */
 function onResize() {
   const wrap = document.getElementById('stage');
   const aw = Math.max(1, wrap.clientWidth), ah = Math.max(1, wrap.clientHeight);
-  let w = ah * 9 / 16, h = ah;
-  if (w > aw) { w = aw; h = aw * 16 / 9; }
+  let w = aw, h = aw / FRAME_ASPECT;
+  if (h > ah) { h = ah; w = ah * FRAME_ASPECT; }
   w = Math.max(1, Math.floor(w));
   h = Math.max(1, Math.floor(h));
   const el = renderer.domElement;

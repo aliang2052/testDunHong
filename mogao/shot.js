@@ -24,7 +24,7 @@ fs.mkdirSync(OUTDIR, { recursive: true });
     ],
   });
   const page = await browser.newPage();
-  await page.setViewport({ width: 760, height: 1340, deviceScaleFactor: 1 });
+  await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
 
   const logs = [];
   page.on('console', (m) => logs.push(`[${m.type()}] ${m.text()}`));
