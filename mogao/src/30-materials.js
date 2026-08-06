@@ -327,6 +327,16 @@ function applyCarve(mat) {
       bool inBox(vec3 p, vec3 mn, vec3 mx){
         return all(greaterThan(p, mn)) && all(lessThan(p, mx));
       }
+      bool inServiceCave(vec3 p, vec3 mn, vec3 mx){
+        if (p.x <= mn.x || p.x >= mx.x || p.z <= mn.z || p.z >= mx.z || p.y <= mn.y) return false;
+        float width = mx.x - mn.x;
+        float springY = mx.y - min(width * 0.34, (mx.y - mn.y) * 0.42);
+        if (p.y < springY) return true;
+        float cx = (mn.x + mx.x) * 0.5;
+        float rx = width * 0.5;
+        float k = clamp(1.0 - pow((p.x - cx) / max(0.01, rx), 2.0), 0.0, 1.0);
+        return p.y < springY + (mx.y - springY) * sqrt(k);
+      }
       bool inCave(vec3 p, vec3 mn, vec3 mx){
         if (p.x <= mn.x || p.x >= mx.x) return false;
         if (p.z <= mn.z || p.z >= mx.z) return false;
@@ -345,9 +355,11 @@ function applyCarve(mat) {
                           vWorldP.y > -2.0 && vWorldP.y < 43.5 &&
                           vWorldP.z > -14.5 && vWorldP.z < 18.5;
        if (uSectionX < 9000.0 && sectionZone && vWorldP.x > uSectionX) discard;
-       if (inCave(vWorldP, uCarveMin, uCarveMax) && vWorldP.y > uCarveY) discard;
-       if (inBox(vWorldP, uCarveMin2, uCarveMax2)) discard;
-       if (inBox(vWorldP, uCarveMin3, uCarveMax3)) discard;
+       float roughEdge = sin(vWorldP.x * 0.63 + vWorldP.z * 0.31) * 0.28
+                       + sin(vWorldP.x * 1.47 - vWorldP.z * 0.54) * 0.13;
+       if (inCave(vWorldP, uCarveMin, uCarveMax) && vWorldP.y > uCarveY + roughEdge) discard;
+       if (inServiceCave(vWorldP, uCarveMin2, uCarveMax2)) discard;
+       if (inServiceCave(vWorldP, uCarveMin3, uCarveMax3)) discard;
        {
          vec3 dmn = uDoorMin, dmx = uDoorMax;
          if (uDoorProgress > 0.001 &&
@@ -372,7 +384,7 @@ function applyCarve(mat) {
       `
     );
   };
-  mat.customProgramCacheKey = () => 'carve-spatial-v3-' + mat.uuid;
+  mat.customProgramCacheKey = () => 'carve-spatial-v4-' + mat.uuid;
   CARVE_MATS.push(mat);
   return mat;
 }

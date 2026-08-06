@@ -156,6 +156,33 @@ function buildWorld(scene) {
     WORLD.rockFillDepth = d;
   }
 
+  /* ---------------- V2 当前开凿层：薄切面，不再移动整块岩芯 ---------------- */
+  {
+    const w = CAVE.x1 - CAVE.x0 + 0.5;
+    const d = (CLIFF_Z + 0.9) - CAVE.zBack;
+    const g = new THREE.PlaneGeometry(w, d, 20, 16);
+    g.rotateX(-Math.PI / 2);
+    const pa = g.attributes.position;
+    for (let i = 0; i < pa.count; i++) {
+      const x = pa.getX(i), z = pa.getZ(i);
+      pa.setY(i, (fbm2(x * 0.18 + 7, z * 0.16, 3, 11) - 0.5) * 0.34);
+    }
+    pa.needsUpdate = true;
+    g.computeVertexNormals();
+    const mat = new THREE.MeshStandardMaterial({
+      map: TEX.rockCore.map, normalMap: TEX.rockCore.normal,
+      color: 0xA77A50, roughness: 1.0, metalness: 0,
+      side: THREE.DoubleSide,
+    });
+    mat.normalScale.set(0.9, 0.9);
+    const m = new THREE.Mesh(g, mat);
+    m.position.set((CAVE.x0 + CAVE.x1) * 0.5, 0, (CAVE.zBack + CLIFF_Z + 0.9) * 0.5);
+    m.receiveShadow = true;
+    m.visible = false;
+    G.add(m);
+    WORLD.excavationFloor = m;
+  }
+
   /* ---------------- 洞窟内壁 ---------------- */
   buildCaveInterior(G);
 
@@ -305,6 +332,10 @@ function buildCaveInterior(G) {
   WORLD.cave = grp;
 
   const { x0, x1, yTop, yArch, zBack, zFront } = CAVE;
+  // Extend the interior shell slightly into the cliff face.  The procedural
+  // cliff is not perfectly planar, so ending the shell behind CLIFF_Z leaves
+  // sub-pixel gaps that expose the blue sky around the cut opening.
+  const sealedFrontZ = CLIFF_Z + 0.9;
 
   /* 后壁：矩形墙 + 半椭圆拱顶，完整封闭窟腔后端 */
   {
@@ -344,16 +375,17 @@ function buildCaveInterior(G) {
   /* 左右侧壁：竖直整壁，从后壁一直延伸出洞口（避免侧缝漏天光） */
   for (const sx of [-1, 1]) {
     const X = sx < 0 ? x0 : x1;
-    const zEnd = CLIFF_Z - 0.6;
+    const zEnd = sealedFrontZ;
     const uSeg = 30, vSeg = 40;
     const pos = [], uvs = [], idx = [];
     for (let j = 0; j <= vSeg; j++) {
       const yy = (j / vSeg) * (yArch + 0.6);
       for (let i = 0; i <= uSeg; i++) {
         const zz = lerp(zBack, zEnd, i / uSeg);
-        // 窟壁在深处略微内收，形成开凿的层次
-        const inset = Math.sin((yy / yArch) * Math.PI * 2.0) * 0.55 + (fbm2(zz * 0.08, yy * 0.06, 3, 9) - 0.5) * 1.1;
-        pos.push(X - sx * inset, yy, zz);
+        // Keep the seam shared with the back wall and arch exactly on X.  A
+        // lateral noise offset here creates literal holes between independent
+        // meshes; surface roughness is already supplied by the normal map.
+        pos.push(X, yy, zz);
         uvs.push(zz - zBack, yy);
       }
     }
@@ -379,14 +411,14 @@ function buildCaveInterior(G) {
     const segU = 44, segV = 34;
     const pos = [], uvs = [], idx = [], nrm = [];
     for (let j = 0; j <= segV; j++) {
-      const z = lerp(zBack, CLIFF_Z - 0.6, j / segV);
+      const z = lerp(zBack, sealedFrontZ, j / segV);
       for (let i = 0; i <= segU; i++) {
         const a = Math.PI * (i / segU);
         const x = (x0 + x1) / 2 - Math.cos(a) * rx;
         const y = (yArch - 0.6) + Math.sin(a) * (ry + 0.6);
         pos.push(x, y, z);
         nrm.push(Math.cos(a), -Math.sin(a), 0);
-        uvs.push((i / segU) * Math.PI * rx, (j / segV) * (CLIFF_Z - 0.6 - zBack));
+        uvs.push((i / segU) * Math.PI * rx, (j / segV) * (sealedFrontZ - zBack));
       }
     }
     const nu = segU + 1;
@@ -407,7 +439,7 @@ function buildCaveInterior(G) {
 
   /* 窟内地面 */
   {
-    const zE = CLIFF_Z - 0.6;
+    const zE = sealedFrontZ;
     const g = new THREE.PlaneGeometry(x1 - x0, zE - zBack, 2, 2);
     g.rotateX(-Math.PI / 2);
     g.translate((x0 + x1) / 2, 0.02, (zBack + zE) / 2);
@@ -427,7 +459,7 @@ const CARVE = {
   doorOpen: false,
 };
 
-function setCarveY(y) {
+function setCarveY(y, showExcavationFloor = false) {
   CARVE.y = y;
   if (WORLD.rockFill) {
     const top = Math.min(y, CAVE.yTop + 1);
@@ -441,6 +473,11 @@ function setCarveY(y) {
         top - WORLD.rockFillH / 2,
         (CAVE.zBack - 1.5 + CLIFF_Z - 0.2) / 2);
     }
+  }
+  if (WORLD.excavationFloor) {
+    const active = showExcavationFloor && y > 0.15 && y <= CAVE.yTop + 1.05;
+    WORLD.excavationFloor.visible = active;
+    WORLD.excavationFloor.position.y = y - 0.18;
   }
   CARVE_U.uCarveY.value = y;
   CARVE_U.uCarveMin.value.set(CAVE.x0 + 0.25, -2, CAVE.zBack - 2);

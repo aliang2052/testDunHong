@@ -48,9 +48,9 @@ function initAnnotations(svg) {
   q.textContent = '?';
   svg.appendChild(q); ANNO.els.q = q;
 
-  /* 红色箭头 */
+  /* 低饱和铜色结构箭头 */
   const arrow = mk('g', { id: 'a-arrow', opacity: '0' });
-  arrow.appendChild(mk('path', { id: 'a-arrow-path', fill: '#E01F1F' }));
+  arrow.appendChild(mk('path', { id: 'a-arrow-path', fill: '#C88A50' }));
   svg.appendChild(arrow); ANNO.els.arrow = arrow; ANNO.els.arrowPath = arrow.querySelector('#a-arrow-path');
 
   /* 红色高亮区（拱顶） */
@@ -175,52 +175,35 @@ function updateAnnotations(t, cam, w, h) {
     }
   }
 
-  /* 红箭头 27.2–30.0：沿窟门水平向内 */
+  /* V2：只在窟顶成形后短暂说明荷载向两侧传递。 */
   {
-    const o = fadeWin(t, 27.2, 30.0, 0.25);
+    const o = fadeWin(t, 34.0, 36.7, 0.28);
     setOp(E.arrow, o);
     if (o > 0) {
-      const k = (t - 27.2) % 1.2 / 1.2;
-      const zTip = lerp(6, -6, k);
-      const a = P(0, 34.6, zTip), b = P(0, 34.6, zTip + 9);
-      const dx = b.x - a.x, dy = b.y - a.y;
-      const L = Math.hypot(dx, dy) || 1;
-      const ux = dx / L, uy = dy / L;
-      const nx = -uy, ny = ux;
-      const hw = 24, hl = 40, sw = 11;
-      const d = `M ${a.x} ${a.y}
-                 L ${a.x + ux * hl + nx * hw} ${a.y + uy * hl + ny * hw}
-                 L ${a.x + ux * hl + nx * sw} ${a.y + uy * hl + ny * sw}
-                 L ${b.x + nx * sw} ${b.y + ny * sw}
-                 L ${b.x - nx * sw} ${b.y - ny * sw}
-                 L ${a.x + ux * hl - nx * sw} ${a.y + uy * hl - ny * sw}
-                 L ${a.x + ux * hl - nx * hw} ${a.y + uy * hl - ny * hw} Z`;
-      E.arrowPath.setAttribute('d', d);
-      setOp(E.arrow, o * (0.55 + 0.45 * Math.sin(t * 5) * 0.5 + 0.225));
+      const arrowPoly = (a, b) => {
+        const dx = b.x - a.x, dy = b.y - a.y;
+        const L = Math.hypot(dx, dy) || 1;
+        const ux = dx / L, uy = dy / L;
+        const nx = -uy, ny = ux;
+        const sw = 4.5, hw = 13, hl = 23;
+        const hx = b.x - ux * hl, hy = b.y - uy * hl;
+        return `M ${a.x + nx * sw} ${a.y + ny * sw}
+                L ${hx + nx * sw} ${hy + ny * sw}
+                L ${hx + nx * hw} ${hy + ny * hw}
+                L ${b.x} ${b.y}
+                L ${hx - nx * hw} ${hy - ny * hw}
+                L ${hx - nx * sw} ${hy - ny * sw}
+                L ${a.x - nx * sw} ${a.y - ny * sw} Z`;
+      };
+      const leftA = P(-3.2, 40.2, -1), leftB = P(-10.2, 35.9, -1);
+      const rightA = P(3.2, 40.2, -1), rightB = P(10.2, 35.9, -1);
+      E.arrowPath.setAttribute('d', `${arrowPoly(leftA, leftB)} ${arrowPoly(rightA, rightB)}`);
     }
   }
 
-  /* 拱顶红色高亮 34.2–36.8 */
+  /* V2 不再使用整片红色拱壳，避免遮挡真实岩面。 */
   {
-    const o = fadeWin(t, 34.2, 36.8, 0.3);
-    setOp(E.hi, o);
-    if (o > 0) {
-      const pts = [];
-      const N = 22;
-      for (let i = 0; i <= N; i++) {
-        const a = Math.PI * (i / N);
-        const x = -Math.cos(a) * (CAVE.x1 - CAVE.x0) / 2;
-        const y = CAVE.yArch + Math.sin(a) * (CAVE.yTop - CAVE.yArch);
-        pts.push(P(x, y, CAVE.zBack + 1.5));
-      }
-      for (let i = N; i >= 0; i--) {
-        const a = Math.PI * (i / N);
-        const x = -Math.cos(a) * (CAVE.x1 - CAVE.x0) / 2;
-        const y = CAVE.yArch + Math.sin(a) * (CAVE.yTop - CAVE.yArch);
-        pts.push(P(x, y, CAVE.zFront - 1.0));
-      }
-      E.hi.setAttribute('d', 'M ' + pts.map(p => `${p.x} ${p.y}`).join(' L ') + ' Z');
-    }
+    setOp(E.hi, 0);
   }
 
   /* 石胎轮廓 + 文字 39.4–43.2 */

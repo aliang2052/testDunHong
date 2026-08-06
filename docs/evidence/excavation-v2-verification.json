@@ -1,0 +1,7119 @@
+{
+  "input": "/private/tmp/testDunHong-v2-final-audit/index.html",
+  "inputBytes": 15238425,
+  "inputSha256": "1aed12dee35b7373aa08c8dbe6bf78a0df25ac790afc25aff96c107de2179488",
+  "startedAt": "2026-08-06T04:30:47.388Z",
+  "checks": {
+    "ready-hook": {
+      "pass": true,
+      "detail": "window.__READY__ 必须为 true"
+    },
+    "desktop-16-by-9": {
+      "pass": true,
+      "detail": {
+        "width": 1400,
+        "height": 788,
+        "aspect": 1.7766497461928934
+      }
+    },
+    "no-video-element": {
+      "pass": true,
+      "detail": "不得嵌入 video"
+    },
+    "no-remote-requests": {
+      "pass": true,
+      "detail": []
+    },
+    "embedded-reference-present": {
+      "pass": true,
+      "detail": {
+        "found": true,
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376"
+      }
+    },
+    "embedded-reference-bytes": {
+      "pass": true,
+      "detail": {
+        "found": true,
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376"
+      }
+    },
+    "embedded-reference-sha256": {
+      "pass": true,
+      "detail": {
+        "found": true,
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376"
+      }
+    },
+    "reference-glb-ready": {
+      "pass": true,
+      "detail": {
+        "ready": true,
+        "stats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "meshCount": 2,
+        "materialCount": 2,
+        "hasColorAccessor": true,
+        "usesLegacyVertexColors": false
+      }
+    },
+    "reference-glb-sha256": {
+      "pass": true,
+      "detail": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      }
+    },
+    "reference-glb-bytes": {
+      "pass": true,
+      "detail": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      }
+    },
+    "reference-glb-meshes": {
+      "pass": true,
+      "detail": {
+        "ready": true,
+        "stats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "meshCount": 2,
+        "materialCount": 2,
+        "hasColorAccessor": true,
+        "usesLegacyVertexColors": false
+      }
+    },
+    "reference-glb-geometry": {
+      "pass": true,
+      "detail": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      }
+    },
+    "reference-glb-color-accessor": {
+      "pass": true,
+      "detail": {
+        "ready": true,
+        "stats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "meshCount": 2,
+        "materialCount": 2,
+        "hasColorAccessor": true,
+        "usesLegacyVertexColors": false
+      }
+    },
+    "reference-position-shader-replaces-legacy-colors": {
+      "pass": true,
+      "detail": {
+        "ready": true,
+        "stats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "meshCount": 2,
+        "materialCount": 2,
+        "hasColorAccessor": true,
+        "usesLegacyVertexColors": false
+      }
+    },
+    "reference-glb-height": {
+      "pass": true,
+      "detail": {
+        "min": [
+          -6.502168832956918,
+          0,
+          -4.891035683501946
+        ],
+        "max": [
+          6.502168832956919,
+          35.5,
+          5.691035683501945
+        ],
+        "size": [
+          13.004337665913837,
+          35.5,
+          10.582071367003891
+        ]
+      }
+    },
+    "reference-glb-no-extensions": {
+      "pass": true,
+      "detail": []
+    },
+    "reference-position-shader-configured": {
+      "pass": true,
+      "detail": {
+        "cacheKey": "reference-buddha-position-paint-v2",
+        "vertexColors": false,
+        "roughness": 0.72,
+        "metalness": 0.02,
+        "side": 2,
+        "doubleSide": 2,
+        "uniformKeys": [
+          "uBuddhaMin",
+          "uBuddhaSize",
+          "uReferenceClay",
+          "uReferencePaintFront",
+          "uReferencePaintSoft"
+        ],
+        "syntheticUniformKeys": [
+          "uBuddhaMin",
+          "uBuddhaSize",
+          "uReferenceClay",
+          "uReferencePaintFront",
+          "uReferencePaintSoft"
+        ],
+        "vertexInjected": true,
+        "fragmentTokens": {
+          "vBuddhaPos": true,
+          "uBuddhaMin": true,
+          "uBuddhaSize": true,
+          "vec3 blue": true,
+          "vec3 red": true,
+          "vec3 ochre": true,
+          "chestMask": true,
+          "weave": true,
+          "mix(uReferenceClay, robe, referencePaint)": true
+        },
+        "mapFragmentReplaced": true,
+        "programCompiled": true,
+        "boxMin": [
+          -0.3480651378631592,
+          -0.9504237771034241,
+          -0.28410694003105164
+        ],
+        "boxSize": [
+          0.6955511569976807,
+          1.8987561464309692,
+          0.56599360704422
+        ],
+        "uniformMin": [
+          -0.3480651378631592,
+          -0.9504237771034241,
+          -0.28410694003105164
+        ],
+        "uniformSize": [
+          0.6955511569976807,
+          1.8987561464309692,
+          0.56599360704422
+        ]
+      }
+    },
+    "reference-position-shader-compiled": {
+      "pass": true,
+      "detail": {
+        "cacheKey": "reference-buddha-position-paint-v2",
+        "vertexColors": false,
+        "roughness": 0.72,
+        "metalness": 0.02,
+        "side": 2,
+        "doubleSide": 2,
+        "uniformKeys": [
+          "uBuddhaMin",
+          "uBuddhaSize",
+          "uReferenceClay",
+          "uReferencePaintFront",
+          "uReferencePaintSoft"
+        ],
+        "syntheticUniformKeys": [
+          "uBuddhaMin",
+          "uBuddhaSize",
+          "uReferenceClay",
+          "uReferencePaintFront",
+          "uReferencePaintSoft"
+        ],
+        "vertexInjected": true,
+        "fragmentTokens": {
+          "vBuddhaPos": true,
+          "uBuddhaMin": true,
+          "uBuddhaSize": true,
+          "vec3 blue": true,
+          "vec3 red": true,
+          "vec3 ochre": true,
+          "chestMask": true,
+          "weave": true,
+          "mix(uReferenceClay, robe, referencePaint)": true
+        },
+        "mapFragmentReplaced": true,
+        "programCompiled": true,
+        "boxMin": [
+          -0.3480651378631592,
+          -0.9504237771034241,
+          -0.28410694003105164
+        ],
+        "boxSize": [
+          0.6955511569976807,
+          1.8987561464309692,
+          0.56599360704422
+        ],
+        "uniformMin": [
+          -0.3480651378631592,
+          -0.9504237771034241,
+          -0.28410694003105164
+        ],
+        "uniformSize": [
+          0.6955511569976807,
+          1.8987561464309692,
+          0.56599360704422
+        ]
+      }
+    },
+    "reference-position-shader-bounds": {
+      "pass": true,
+      "detail": {
+        "cacheKey": "reference-buddha-position-paint-v2",
+        "vertexColors": false,
+        "roughness": 0.72,
+        "metalness": 0.02,
+        "side": 2,
+        "doubleSide": 2,
+        "uniformKeys": [
+          "uBuddhaMin",
+          "uBuddhaSize",
+          "uReferenceClay",
+          "uReferencePaintFront",
+          "uReferencePaintSoft"
+        ],
+        "syntheticUniformKeys": [
+          "uBuddhaMin",
+          "uBuddhaSize",
+          "uReferenceClay",
+          "uReferencePaintFront",
+          "uReferencePaintSoft"
+        ],
+        "vertexInjected": true,
+        "fragmentTokens": {
+          "vBuddhaPos": true,
+          "uBuddhaMin": true,
+          "uBuddhaSize": true,
+          "vec3 blue": true,
+          "vec3 red": true,
+          "vec3 ochre": true,
+          "chestMask": true,
+          "weave": true,
+          "mix(uReferenceClay, robe, referencePaint)": true
+        },
+        "mapFragmentReplaced": true,
+        "programCompiled": true,
+        "boxMin": [
+          -0.3480651378631592,
+          -0.9504237771034241,
+          -0.28410694003105164
+        ],
+        "boxSize": [
+          0.6955511569976807,
+          1.8987561464309692,
+          0.56599360704422
+        ],
+        "uniformMin": [
+          -0.3480651378631592,
+          -0.9504237771034241,
+          -0.28410694003105164
+        ],
+        "uniformSize": [
+          0.6955511569976807,
+          1.8987561464309692,
+          0.56599360704422
+        ]
+      }
+    },
+    "reference-urna-material-preserved": {
+      "pass": true,
+      "detail": {
+        "meshName": "白毫红点",
+        "materialName": "白毫红点材质",
+        "color": [
+          0.520995557308197,
+          0.014443843625485897,
+          0.020288562402129173
+        ],
+        "paintY": 0.79,
+        "hasPositionShader": false,
+        "cacheKey": "onBeforeCompile( /* shaderobject, renderer */ ) {}"
+      }
+    },
+    "reference-used-at-opening": {
+      "pass": true,
+      "detail": {
+        "time": 0,
+        "playing": false,
+        "playUntil": null,
+        "playFromChapter": -1,
+        "speed": 1,
+        "free": false,
+        "chapter": 0,
+        "phase": 6,
+        "morph": 0,
+        "spreadOn": 0,
+        "spreadY": -999,
+        "revealY": -1.1,
+        "carveY": 0,
+        "doorProgress": 1,
+        "wallPhase": 0.3,
+        "wallProgress": -1,
+        "visibleWalkwayComponents": 0,
+        "visibleTowerFloors": 9,
+        "visiblePegs": 7,
+        "representation": "reference-glb",
+        "referenceReady": true,
+        "referenceOpacity": 1,
+        "referencePaintProgress": 1,
+        "referenceStats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "construction": {
+          "stage": "tower-reveal",
+          "progress": 0.1,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 2,
+          "towerProgress": 0.1,
+          "walkwayProgress": 0,
+          "walkwayBuilt": 0,
+          "dustCount": 0
+        },
+        "excavation": {
+          "stage": "tower-reveal",
+          "progress": 0.1,
+          "carveY": 0,
+          "doorProgress": 1,
+          "lower1": 1,
+          "lower2": 1,
+          "complete": true,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": false,
+          "cutFrontVisible": false
+        },
+        "camera": {
+          "x": 4,
+          "y": 31,
+          "z": 136,
+          "fov": 37
+        }
+      }
+    },
+    "reference-hidden-before-excavation": {
+      "pass": true,
+      "detail": {
+        "time": 16.2,
+        "playing": false,
+        "playUntil": null,
+        "playFromChapter": -1,
+        "speed": 1,
+        "free": false,
+        "chapter": 1,
+        "phase": 0,
+        "morph": 1,
+        "spreadOn": 0,
+        "spreadY": -999,
+        "revealY": 97.9,
+        "carveY": 99,
+        "doorProgress": 0,
+        "wallPhase": 0,
+        "wallProgress": -1,
+        "visibleWalkwayComponents": 0,
+        "visibleTowerFloors": 0,
+        "visiblePegs": 7,
+        "representation": "none",
+        "referenceReady": true,
+        "referenceOpacity": 0,
+        "referencePaintProgress": 0,
+        "referenceStats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "construction": {
+          "stage": "bare-cliff",
+          "progress": 0.2,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 0,
+          "walkwayBuilt": 0,
+          "dustCount": 0
+        },
+        "excavation": {
+          "stage": "bare-cliff",
+          "progress": 0.2,
+          "carveY": 99,
+          "doorProgress": 0,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": false,
+          "cutFrontVisible": false
+        },
+        "camera": {
+          "x": 0,
+          "y": 11.78125,
+          "z": 120.015625,
+          "fov": 38.9765625
+        }
+      }
+    },
+    "procedural-used-for-construction": {
+      "pass": true,
+      "detail": {
+        "time": 31,
+        "playing": false,
+        "playUntil": null,
+        "playFromChapter": -1,
+        "speed": 1,
+        "free": false,
+        "chapter": 4,
+        "phase": 0,
+        "morph": 1,
+        "spreadOn": 0,
+        "spreadY": -999,
+        "revealY": 60.233333333333334,
+        "carveY": 61.333333333333336,
+        "doorProgress": 1,
+        "wallPhase": 0,
+        "wallProgress": -1,
+        "visibleWalkwayComponents": 120,
+        "visibleTowerFloors": 0,
+        "visiblePegs": 7,
+        "representation": "procedural",
+        "referenceReady": true,
+        "referenceOpacity": 0,
+        "referencePaintProgress": 0,
+        "referenceStats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "construction": {
+          "stage": "excavate-arch",
+          "progress": 0.11764705882352951,
+          "impact": 0,
+          "activeGeometry": 7,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 38
+        },
+        "excavation": {
+          "stage": "excavate-arch",
+          "progress": 0.11764705882352951,
+          "carveY": 61.333333333333336,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        },
+        "camera": {
+          "x": 7.911357340720222,
+          "y": 36,
+          "z": 69.82271468144044,
+          "fov": 32.91135734072022
+        }
+      }
+    },
+    "procedural-used-through-polish": {
+      "pass": true,
+      "detail": {
+        "time": 90.19,
+        "playing": false,
+        "playUntil": null,
+        "playFromChapter": -1,
+        "speed": 1,
+        "free": false,
+        "chapter": 12,
+        "phase": 5,
+        "morph": 0,
+        "spreadOn": 0,
+        "spreadY": -999,
+        "revealY": -1.1,
+        "carveY": 0,
+        "doorProgress": 1,
+        "wallPhase": 0,
+        "wallProgress": -1,
+        "visibleWalkwayComponents": 120,
+        "visibleTowerFloors": 0,
+        "visiblePegs": 7,
+        "representation": "procedural",
+        "referenceReady": true,
+        "referenceOpacity": 0,
+        "referencePaintProgress": 0,
+        "referenceStats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "construction": {
+          "stage": "complete",
+          "progress": 1,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 0
+        },
+        "excavation": {
+          "stage": "complete",
+          "progress": 1,
+          "carveY": 0,
+          "doorProgress": 1,
+          "lower1": 1,
+          "lower2": 1,
+          "complete": true,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": false,
+          "cutFrontVisible": false
+        },
+        "camera": {
+          "x": 0.000011111111111128391,
+          "y": 32.600004444444444,
+          "z": 18.500055555555555,
+          "fov": 27.00002222222222
+        }
+      }
+    },
+    "reference-used-for-painting": {
+      "pass": true,
+      "detail": {
+        "time": 90.2,
+        "playing": false,
+        "playUntil": null,
+        "playFromChapter": -1,
+        "speed": 1,
+        "free": false,
+        "chapter": 13,
+        "phase": 6,
+        "morph": 0,
+        "spreadOn": 1,
+        "spreadY": 38.5,
+        "revealY": -1.1,
+        "carveY": 0,
+        "doorProgress": 1,
+        "wallPhase": 0,
+        "wallProgress": -1,
+        "visibleWalkwayComponents": 120,
+        "visibleTowerFloors": 0,
+        "visiblePegs": 7,
+        "representation": "reference-glb",
+        "referenceReady": true,
+        "referenceOpacity": 1,
+        "referencePaintProgress": 0,
+        "referenceStats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "construction": {
+          "stage": "paint-buddha",
+          "progress": 0,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        },
+        "excavation": {
+          "stage": "paint-buddha",
+          "progress": 0,
+          "carveY": 0,
+          "doorProgress": 1,
+          "lower1": 1,
+          "lower2": 1,
+          "complete": true,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": false,
+          "cutFrontVisible": false
+        },
+        "camera": {
+          "x": 0,
+          "y": 32.6,
+          "z": 18.5,
+          "fov": 27.00002222222222
+        }
+      }
+    },
+    "reference-paint-progress": {
+      "pass": true,
+      "detail": {
+        "time": 92.9,
+        "playing": false,
+        "playUntil": null,
+        "playFromChapter": -1,
+        "speed": 1,
+        "free": false,
+        "chapter": 13,
+        "phase": 6,
+        "morph": 0,
+        "spreadOn": 1,
+        "spreadY": -0.25619834710748535,
+        "revealY": -1.1,
+        "carveY": 0,
+        "doorProgress": 1,
+        "wallPhase": 0,
+        "wallProgress": -1,
+        "visibleWalkwayComponents": 120,
+        "visibleTowerFloors": 0,
+        "visiblePegs": 7,
+        "representation": "reference-glb",
+        "referenceReady": true,
+        "referenceOpacity": 1,
+        "referencePaintProgress": 0.9642857142857163,
+        "referenceStats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "construction": {
+          "stage": "paint-buddha",
+          "progress": 0.8181818181818198,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        },
+        "excavation": {
+          "stage": "paint-buddha",
+          "progress": 0.8181818181818198,
+          "carveY": 0,
+          "doorProgress": 1,
+          "lower1": 1,
+          "lower2": 1,
+          "complete": true,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": false,
+          "cutFrontVisible": false
+        },
+        "camera": {
+          "x": -0.997448979591837,
+          "y": 32.400510204081634,
+          "z": 21.99107142857143,
+          "fov": 27.997448979591837
+        }
+      }
+    },
+    "reference-used-after-hard-cut": {
+      "pass": true,
+      "detail": {
+        "time": 93,
+        "playing": false,
+        "playUntil": null,
+        "playFromChapter": -1,
+        "speed": 1,
+        "free": false,
+        "chapter": 13,
+        "phase": 6,
+        "morph": 0,
+        "spreadOn": 1,
+        "spreadY": -1.0945821854912694,
+        "revealY": -1.1,
+        "carveY": 0,
+        "doorProgress": 1,
+        "wallPhase": 0,
+        "wallProgress": -1,
+        "visibleWalkwayComponents": 120,
+        "visibleTowerFloors": 0,
+        "visiblePegs": 7,
+        "representation": "reference-glb",
+        "referenceReady": true,
+        "referenceOpacity": 1,
+        "referencePaintProgress": 1,
+        "referenceStats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "construction": {
+          "stage": "paint-buddha",
+          "progress": 0.8484848484848484,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        },
+        "excavation": {
+          "stage": "paint-buddha",
+          "progress": 0.8484848484848484,
+          "carveY": 0,
+          "doorProgress": 1,
+          "lower1": 1,
+          "lower2": 1,
+          "complete": true,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": false,
+          "cutFrontVisible": false
+        },
+        "camera": {
+          "x": -4,
+          "y": 18,
+          "z": 66,
+          "fov": 33
+        }
+      }
+    },
+    "reference-used-in-finished-cave": {
+      "pass": true,
+      "detail": {
+        "time": 108.6,
+        "playing": false,
+        "playUntil": null,
+        "playFromChapter": -1,
+        "speed": 1,
+        "free": false,
+        "chapter": 14,
+        "phase": 6,
+        "morph": 0,
+        "spreadOn": 0,
+        "spreadY": -999,
+        "revealY": -1.1,
+        "carveY": 0,
+        "doorProgress": 1,
+        "wallPhase": 3,
+        "wallProgress": -1,
+        "visibleWalkwayComponents": 120,
+        "visibleTowerFloors": 0,
+        "visiblePegs": 7,
+        "representation": "reference-glb",
+        "referenceReady": true,
+        "referenceOpacity": 1,
+        "referencePaintProgress": 1,
+        "referenceStats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "construction": {
+          "stage": "completed-cave",
+          "progress": 0,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 0
+        },
+        "excavation": {
+          "stage": "completed-cave",
+          "progress": 0,
+          "carveY": 0,
+          "doorProgress": 1,
+          "lower1": 1,
+          "lower2": 1,
+          "complete": true,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": false,
+          "cutFrontVisible": false
+        },
+        "camera": {
+          "x": 0,
+          "y": 17,
+          "z": 58,
+          "fov": 36
+        }
+      }
+    },
+    "reference-paint-uniform-synchronized": {
+      "pass": true,
+      "detail": {
+        "0": {
+          "representation": "reference-glb",
+          "progress": 1,
+          "stateFront": -1.08,
+          "uniformFront": -1.08,
+          "soft": 0.055,
+          "minPaint": 1,
+          "maxPaint": 1,
+          "nearFullFraction": 1,
+          "bodyOpacity": 1,
+          "urnaOpacity": 1,
+          "urnaColor": [
+            0.520995557308197,
+            0.014443843625485897,
+            0.020288562402129173
+          ]
+        },
+        "93": {
+          "representation": "reference-glb",
+          "progress": 1,
+          "stateFront": -1.08,
+          "uniformFront": -1.08,
+          "soft": 0.055,
+          "minPaint": 1,
+          "maxPaint": 1,
+          "nearFullFraction": 1,
+          "bodyOpacity": 1,
+          "urnaOpacity": 1,
+          "urnaColor": [
+            0.520995557308197,
+            0.014443843625485897,
+            0.020288562402129173
+          ]
+        },
+        "90.2": {
+          "representation": "reference-glb",
+          "progress": 0,
+          "stateFront": 1.08,
+          "uniformFront": 1.08,
+          "soft": 0.055,
+          "minPaint": 0,
+          "maxPaint": 0,
+          "nearFullFraction": 0,
+          "bodyOpacity": 1,
+          "urnaOpacity": 0,
+          "urnaColor": [
+            0.520995557308197,
+            0.014443843625485897,
+            0.020288562402129173
+          ]
+        },
+        "92.9": {
+          "representation": "reference-glb",
+          "progress": 0.9642857142857163,
+          "stateFront": -1.074489795918368,
+          "uniformFront": -1.074489795918368,
+          "soft": 0.055,
+          "minPaint": 1,
+          "maxPaint": 1,
+          "nearFullFraction": 1,
+          "bodyOpacity": 1,
+          "urnaOpacity": 1,
+          "urnaColor": [
+            0.520995557308197,
+            0.014443843625485897,
+            0.020288562402129173
+          ]
+        }
+      }
+    },
+    "reference-opening-fully-painted": {
+      "pass": true,
+      "detail": {
+        "representation": "reference-glb",
+        "progress": 1,
+        "stateFront": -1.08,
+        "uniformFront": -1.08,
+        "soft": 0.055,
+        "minPaint": 1,
+        "maxPaint": 1,
+        "nearFullFraction": 1,
+        "bodyOpacity": 1,
+        "urnaOpacity": 1,
+        "urnaColor": [
+          0.520995557308197,
+          0.014443843625485897,
+          0.020288562402129173
+        ]
+      }
+    },
+    "reference-paint-start-is-clay": {
+      "pass": true,
+      "detail": {
+        "representation": "reference-glb",
+        "progress": 0,
+        "stateFront": 1.08,
+        "uniformFront": 1.08,
+        "soft": 0.055,
+        "minPaint": 0,
+        "maxPaint": 0,
+        "nearFullFraction": 0,
+        "bodyOpacity": 1,
+        "urnaOpacity": 0,
+        "urnaColor": [
+          0.520995557308197,
+          0.014443843625485897,
+          0.020288562402129173
+        ]
+      }
+    },
+    "reference-nearly-painted-before-cut": {
+      "pass": true,
+      "detail": {
+        "representation": "reference-glb",
+        "progress": 0.9642857142857163,
+        "stateFront": -1.074489795918368,
+        "uniformFront": -1.074489795918368,
+        "soft": 0.055,
+        "minPaint": 1,
+        "maxPaint": 1,
+        "nearFullFraction": 1,
+        "bodyOpacity": 1,
+        "urnaOpacity": 1,
+        "urnaColor": [
+          0.520995557308197,
+          0.014443843625485897,
+          0.020288562402129173
+        ]
+      }
+    },
+    "reference-full-paint-at-cut": {
+      "pass": true,
+      "detail": {
+        "representation": "reference-glb",
+        "progress": 1,
+        "stateFront": -1.08,
+        "uniformFront": -1.08,
+        "soft": 0.055,
+        "minPaint": 1,
+        "maxPaint": 1,
+        "nearFullFraction": 1,
+        "bodyOpacity": 1,
+        "urnaOpacity": 1,
+        "urnaColor": [
+          0.520995557308197,
+          0.014443843625485897,
+          0.020288562402129173
+        ]
+      }
+    },
+    "reference-urna-paint-sequence": {
+      "pass": true,
+      "detail": {
+        "0": {
+          "representation": "reference-glb",
+          "progress": 1,
+          "stateFront": -1.08,
+          "uniformFront": -1.08,
+          "soft": 0.055,
+          "minPaint": 1,
+          "maxPaint": 1,
+          "nearFullFraction": 1,
+          "bodyOpacity": 1,
+          "urnaOpacity": 1,
+          "urnaColor": [
+            0.520995557308197,
+            0.014443843625485897,
+            0.020288562402129173
+          ]
+        },
+        "93": {
+          "representation": "reference-glb",
+          "progress": 1,
+          "stateFront": -1.08,
+          "uniformFront": -1.08,
+          "soft": 0.055,
+          "minPaint": 1,
+          "maxPaint": 1,
+          "nearFullFraction": 1,
+          "bodyOpacity": 1,
+          "urnaOpacity": 1,
+          "urnaColor": [
+            0.520995557308197,
+            0.014443843625485897,
+            0.020288562402129173
+          ]
+        },
+        "90.2": {
+          "representation": "reference-glb",
+          "progress": 0,
+          "stateFront": 1.08,
+          "uniformFront": 1.08,
+          "soft": 0.055,
+          "minPaint": 0,
+          "maxPaint": 0,
+          "nearFullFraction": 0,
+          "bodyOpacity": 1,
+          "urnaOpacity": 0,
+          "urnaColor": [
+            0.520995557308197,
+            0.014443843625485897,
+            0.020288562402129173
+          ]
+        },
+        "92.9": {
+          "representation": "reference-glb",
+          "progress": 0.9642857142857163,
+          "stateFront": -1.074489795918368,
+          "uniformFront": -1.074489795918368,
+          "soft": 0.055,
+          "minPaint": 1,
+          "maxPaint": 1,
+          "nearFullFraction": 1,
+          "bodyOpacity": 1,
+          "urnaOpacity": 1,
+          "urnaColor": [
+            0.520995557308197,
+            0.014443843625485897,
+            0.020288562402129173
+          ]
+        }
+      }
+    },
+    "reference-model-rendered": {
+      "pass": true,
+      "detail": {
+        "drawCalls": 35,
+        "triangles": 438334,
+        "lines": 0,
+        "points": 0,
+        "geometries": 400,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "paint-buddha",
+          "progress": 0.8484848484848484,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      }
+    },
+    "paint-brush-stops-before-reference-cut": {
+      "pass": true,
+      "detail": {
+        "stats": {
+          "drawCalls": 35,
+          "triangles": 438334,
+          "lines": 0,
+          "points": 0,
+          "geometries": 400,
+          "textures": 39,
+          "pixelRatio": 1,
+          "canvas": {
+            "width": 1400,
+            "height": 788
+          },
+          "construction": {
+            "stage": "paint-buddha",
+            "progress": 0.8484848484848484,
+            "impact": 0,
+            "activeGeometry": 0,
+            "excavationLayers": 0,
+            "movingPieces": 0,
+            "towerProgress": 1,
+            "walkwayProgress": 1,
+            "walkwayBuilt": 120,
+            "dustCount": 96
+          }
+        },
+        "brushVisible": false
+      }
+    },
+    "excavation-v2-no-legacy-visuals": {
+      "pass": true,
+      "detail": {
+        "27": {
+          "stage": "excavate-tunnel",
+          "progress": 0,
+          "carveY": 99,
+          "doorProgress": 0.818321,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        },
+        "33": {
+          "stage": "excavate-arch",
+          "progress": 0.411765,
+          "carveY": 38,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        },
+        "37": {
+          "stage": "excavate-main",
+          "progress": 0,
+          "carveY": 35.5,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        },
+        "41": {
+          "stage": "excavate-main",
+          "progress": 0.434783,
+          "carveY": 27.352941,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        },
+        "24.55": {
+          "stage": "excavate-door",
+          "progress": 0,
+          "carveY": 99,
+          "doorProgress": 0,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        },
+        "30.2": {
+          "stage": "excavate-arch",
+          "progress": 0,
+          "carveY": 99,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        },
+        "46.2": {
+          "stage": "excavate-lower",
+          "progress": 0,
+          "carveY": 14.5,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        },
+        "49.6": {
+          "stage": "excavate-lower",
+          "progress": 0.62963,
+          "carveY": 7.230769,
+          "doorProgress": 1,
+          "lower1": 1,
+          "lower2": 0.106509,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        },
+        "51.6": {
+          "stage": "stone-core",
+          "progress": 0,
+          "carveY": 0,
+          "doorProgress": 1,
+          "lower1": 1,
+          "lower2": 1,
+          "complete": true,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": false,
+          "cutFrontVisible": false
+        }
+      }
+    },
+    "excavation-v2-door-boundary-24.55": {
+      "pass": true,
+      "detail": {
+        "stage": "excavate-door",
+        "progress": 0,
+        "carveY": 99,
+        "doorProgress": 0,
+        "lower1": 0,
+        "lower2": 0,
+        "complete": false,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": true,
+        "cutFrontVisible": false
+      }
+    },
+    "excavation-v2-arch-boundary-30.2": {
+      "pass": true,
+      "detail": {
+        "stage": "excavate-arch",
+        "progress": 0,
+        "carveY": 99,
+        "doorProgress": 1,
+        "lower1": 0,
+        "lower2": 0,
+        "complete": false,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": true,
+        "cutFrontVisible": false
+      }
+    },
+    "excavation-v2-main-boundary-37": {
+      "pass": true,
+      "detail": {
+        "stage": "excavate-main",
+        "progress": 0,
+        "carveY": 35.5,
+        "doorProgress": 1,
+        "lower1": 0,
+        "lower2": 0,
+        "complete": false,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": true,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": true,
+        "cutFrontVisible": false
+      }
+    },
+    "excavation-v2-lower-boundary-46.2": {
+      "pass": true,
+      "detail": {
+        "stage": "excavate-lower",
+        "progress": 0,
+        "carveY": 14.5,
+        "doorProgress": 1,
+        "lower1": 0,
+        "lower2": 0,
+        "complete": false,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": true,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": true,
+        "cutFrontVisible": false
+      }
+    },
+    "excavation-v2-stage-continuity": {
+      "pass": true,
+      "detail": {
+        "27": {
+          "stage": "excavate-tunnel",
+          "progress": 0,
+          "carveY": 99,
+          "doorProgress": 0.818321,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        },
+        "33": {
+          "stage": "excavate-arch",
+          "progress": 0.411765,
+          "carveY": 38,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        },
+        "41": {
+          "stage": "excavate-main",
+          "progress": 0.434783,
+          "carveY": 27.352941,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        },
+        "49.6": {
+          "stage": "excavate-lower",
+          "progress": 0.62963,
+          "carveY": 7.230769,
+          "doorProgress": 1,
+          "lower1": 1,
+          "lower2": 0.106509,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      }
+    },
+    "excavation-v2-carve-front-descends": {
+      "pass": true,
+      "detail": {
+        "27": 99,
+        "33": 38,
+        "37": 35.5,
+        "41": 27.352941,
+        "24.55": 99,
+        "30.2": 99,
+        "46.2": 14.5,
+        "49.6": 7.230769,
+        "51.6": 0
+      }
+    },
+    "excavation-v2-completion-clears-residuals-51.6": {
+      "pass": true,
+      "detail": {
+        "stage": "stone-core",
+        "progress": 0,
+        "carveY": 0,
+        "doorProgress": 1,
+        "lower1": 1,
+        "lower2": 1,
+        "complete": true,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": false,
+        "cutFrontVisible": false
+      }
+    },
+    "excavation-v2-seek-order-deterministic": {
+      "pass": true,
+      "detail": {
+        "forward": {
+          "27": {
+            "time": 27,
+            "chapter": 3,
+            "representation": "none",
+            "excavation": {
+              "stage": "excavate-tunnel",
+              "progress": 0,
+              "carveY": 99,
+              "doorProgress": 0.818321,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": false,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "33": {
+            "time": 33,
+            "chapter": 4,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "excavate-arch",
+              "progress": 0.411765,
+              "carveY": 38,
+              "doorProgress": 1,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": true,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "37": {
+            "time": 37,
+            "chapter": 5,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "excavate-main",
+              "progress": 0,
+              "carveY": 35.5,
+              "doorProgress": 1,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": true,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "41": {
+            "time": 41,
+            "chapter": 5,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "excavate-main",
+              "progress": 0.434783,
+              "carveY": 27.352941,
+              "doorProgress": 1,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": true,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "24.55": {
+            "time": 24.55,
+            "chapter": 3,
+            "representation": "none",
+            "excavation": {
+              "stage": "excavate-door",
+              "progress": 0,
+              "carveY": 99,
+              "doorProgress": 0,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": false,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "30.2": {
+            "time": 30.2,
+            "chapter": 4,
+            "representation": "none",
+            "excavation": {
+              "stage": "excavate-arch",
+              "progress": 0,
+              "carveY": 99,
+              "doorProgress": 1,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": false,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "46.2": {
+            "time": 46.2,
+            "chapter": 6,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "excavate-lower",
+              "progress": 0,
+              "carveY": 14.5,
+              "doorProgress": 1,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": true,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "49.6": {
+            "time": 49.6,
+            "chapter": 6,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "excavate-lower",
+              "progress": 0.62963,
+              "carveY": 7.230769,
+              "doorProgress": 1,
+              "lower1": 1,
+              "lower2": 0.106509,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": true,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "51.6": {
+            "time": 51.6,
+            "chapter": 7,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "stone-core",
+              "progress": 0,
+              "carveY": 0,
+              "doorProgress": 1,
+              "lower1": 1,
+              "lower2": 1,
+              "complete": true,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": false,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": false,
+              "cutFrontVisible": false
+            }
+          }
+        },
+        "reverse": {
+          "27": {
+            "time": 27,
+            "chapter": 3,
+            "representation": "none",
+            "excavation": {
+              "stage": "excavate-tunnel",
+              "progress": 0,
+              "carveY": 99,
+              "doorProgress": 0.818321,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": false,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "33": {
+            "time": 33,
+            "chapter": 4,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "excavate-arch",
+              "progress": 0.411765,
+              "carveY": 38,
+              "doorProgress": 1,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": true,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "37": {
+            "time": 37,
+            "chapter": 5,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "excavate-main",
+              "progress": 0,
+              "carveY": 35.5,
+              "doorProgress": 1,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": true,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "41": {
+            "time": 41,
+            "chapter": 5,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "excavate-main",
+              "progress": 0.434783,
+              "carveY": 27.352941,
+              "doorProgress": 1,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": true,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "51.6": {
+            "time": 51.6,
+            "chapter": 7,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "stone-core",
+              "progress": 0,
+              "carveY": 0,
+              "doorProgress": 1,
+              "lower1": 1,
+              "lower2": 1,
+              "complete": true,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": false,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": false,
+              "cutFrontVisible": false
+            }
+          },
+          "49.6": {
+            "time": 49.6,
+            "chapter": 6,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "excavate-lower",
+              "progress": 0.62963,
+              "carveY": 7.230769,
+              "doorProgress": 1,
+              "lower1": 1,
+              "lower2": 0.106509,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": true,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "46.2": {
+            "time": 46.2,
+            "chapter": 6,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "excavate-lower",
+              "progress": 0,
+              "carveY": 14.5,
+              "doorProgress": 1,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": true,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "30.2": {
+            "time": 30.2,
+            "chapter": 4,
+            "representation": "none",
+            "excavation": {
+              "stage": "excavate-arch",
+              "progress": 0,
+              "carveY": 99,
+              "doorProgress": 1,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": false,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "24.55": {
+            "time": 24.55,
+            "chapter": 3,
+            "representation": "none",
+            "excavation": {
+              "stage": "excavate-door",
+              "progress": 0,
+              "carveY": 99,
+              "doorProgress": 0,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": false,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          }
+        },
+        "shuffled": {
+          "27": {
+            "time": 27,
+            "chapter": 3,
+            "representation": "none",
+            "excavation": {
+              "stage": "excavate-tunnel",
+              "progress": 0,
+              "carveY": 99,
+              "doorProgress": 0.818321,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": false,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "33": {
+            "time": 33,
+            "chapter": 4,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "excavate-arch",
+              "progress": 0.411765,
+              "carveY": 38,
+              "doorProgress": 1,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": true,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "37": {
+            "time": 37,
+            "chapter": 5,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "excavate-main",
+              "progress": 0,
+              "carveY": 35.5,
+              "doorProgress": 1,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": true,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "41": {
+            "time": 41,
+            "chapter": 5,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "excavate-main",
+              "progress": 0.434783,
+              "carveY": 27.352941,
+              "doorProgress": 1,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": true,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "51.6": {
+            "time": 51.6,
+            "chapter": 7,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "stone-core",
+              "progress": 0,
+              "carveY": 0,
+              "doorProgress": 1,
+              "lower1": 1,
+              "lower2": 1,
+              "complete": true,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": false,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": false,
+              "cutFrontVisible": false
+            }
+          },
+          "24.55": {
+            "time": 24.55,
+            "chapter": 3,
+            "representation": "none",
+            "excavation": {
+              "stage": "excavate-door",
+              "progress": 0,
+              "carveY": 99,
+              "doorProgress": 0,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": false,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "49.6": {
+            "time": 49.6,
+            "chapter": 6,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "excavate-lower",
+              "progress": 0.62963,
+              "carveY": 7.230769,
+              "doorProgress": 1,
+              "lower1": 1,
+              "lower2": 0.106509,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": true,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "30.2": {
+            "time": 30.2,
+            "chapter": 4,
+            "representation": "none",
+            "excavation": {
+              "stage": "excavate-arch",
+              "progress": 0,
+              "carveY": 99,
+              "doorProgress": 1,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": false,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          },
+          "46.2": {
+            "time": 46.2,
+            "chapter": 6,
+            "representation": "procedural",
+            "excavation": {
+              "stage": "excavate-lower",
+              "progress": 0,
+              "carveY": 14.5,
+              "doorProgress": 1,
+              "lower1": 0,
+              "lower2": 0,
+              "complete": false,
+              "sectionX": 99999,
+              "sectionVisible": false,
+              "rockFillVisible": false,
+              "floorVisible": true,
+              "activeTools": 0,
+              "movingLayers": 0,
+              "dustVisible": true,
+              "cutFrontVisible": false
+            }
+          }
+        }
+      }
+    },
+    "excavation-v2-floor-lifecycle": {
+      "pass": true,
+      "detail": {
+        "37": {
+          "excavation": {
+            "stage": "excavate-main",
+            "progress": 0,
+            "carveY": 35.5,
+            "doorProgress": 1,
+            "lower1": 0,
+            "lower2": 0,
+            "complete": false,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": true,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": true,
+            "cutFrontVisible": false
+          },
+          "construction": {
+            "stage": "excavate-main",
+            "progress": 0,
+            "impact": 0,
+            "activeGeometry": 4,
+            "excavationLayers": 0,
+            "movingPieces": 0,
+            "towerProgress": 1,
+            "walkwayProgress": 1,
+            "walkwayBuilt": 120,
+            "dustCount": 52
+          },
+          "visiblePegs": 7
+        },
+        "15.1": {
+          "excavation": {
+            "stage": "tower-reveal",
+            "progress": 1,
+            "carveY": 16.499999999999954,
+            "doorProgress": 1,
+            "lower1": 1,
+            "lower2": 1,
+            "complete": true,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": true,
+            "floorVisible": false,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": false,
+            "cutFrontVisible": false
+          },
+          "construction": {
+            "stage": "tower-reveal",
+            "progress": 1,
+            "impact": 0,
+            "activeGeometry": 0,
+            "excavationLayers": 0,
+            "movingPieces": 0,
+            "towerProgress": 1,
+            "walkwayProgress": 0,
+            "walkwayBuilt": 0,
+            "dustCount": 0
+          },
+          "visiblePegs": 7
+        },
+        "24.55": {
+          "excavation": {
+            "stage": "excavate-door",
+            "progress": 0,
+            "carveY": 99,
+            "doorProgress": 0,
+            "lower1": 0,
+            "lower2": 0,
+            "complete": false,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": false,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": true,
+            "cutFrontVisible": false
+          },
+          "construction": {
+            "stage": "excavate-door",
+            "progress": 0,
+            "impact": 0,
+            "activeGeometry": 2,
+            "excavationLayers": 0,
+            "movingPieces": 0,
+            "towerProgress": 1,
+            "walkwayProgress": 1,
+            "walkwayBuilt": 120,
+            "dustCount": 38
+          },
+          "visiblePegs": 7
+        },
+        "51.6": {
+          "excavation": {
+            "stage": "stone-core",
+            "progress": 0,
+            "carveY": 0,
+            "doorProgress": 1,
+            "lower1": 1,
+            "lower2": 1,
+            "complete": true,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": false,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": false,
+            "cutFrontVisible": false
+          },
+          "construction": {
+            "stage": "stone-core",
+            "progress": 0,
+            "impact": 0,
+            "activeGeometry": 0,
+            "excavationLayers": 0,
+            "movingPieces": 0,
+            "towerProgress": 1,
+            "walkwayProgress": 1,
+            "walkwayBuilt": 120,
+            "dustCount": 0
+          },
+          "visiblePegs": 7
+        },
+        "56.2": {
+          "excavation": {
+            "stage": "peg-insertion",
+            "progress": 0,
+            "carveY": 0,
+            "doorProgress": 1,
+            "lower1": 1,
+            "lower2": 1,
+            "complete": true,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": false,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": false,
+            "cutFrontVisible": false
+          },
+          "construction": {
+            "stage": "peg-insertion",
+            "progress": 0,
+            "impact": 0,
+            "activeGeometry": 0,
+            "excavationLayers": 0,
+            "movingPieces": 0,
+            "towerProgress": 1,
+            "walkwayProgress": 1,
+            "walkwayBuilt": 120,
+            "dustCount": 0
+          },
+          "visiblePegs": 0
+        },
+        "56.45": {
+          "excavation": {
+            "stage": "peg-insertion",
+            "progress": 0,
+            "carveY": 0,
+            "doorProgress": 1,
+            "lower1": 1,
+            "lower2": 1,
+            "complete": true,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": false,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": false,
+            "cutFrontVisible": false
+          },
+          "construction": {
+            "stage": "peg-insertion",
+            "progress": 0,
+            "impact": 0,
+            "activeGeometry": 0,
+            "excavationLayers": 0,
+            "movingPieces": 0,
+            "towerProgress": 1,
+            "walkwayProgress": 1,
+            "walkwayBuilt": 120,
+            "dustCount": 0
+          },
+          "visiblePegs": 0
+        },
+        "56.46": {
+          "excavation": {
+            "stage": "peg-insertion",
+            "progress": 0.0024630541871916286,
+            "carveY": 0,
+            "doorProgress": 1,
+            "lower1": 1,
+            "lower2": 1,
+            "complete": true,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": false,
+            "activeTools": 1,
+            "movingLayers": 0,
+            "dustVisible": false,
+            "cutFrontVisible": false
+          },
+          "construction": {
+            "stage": "peg-insertion",
+            "progress": 0.0024630541871916286,
+            "impact": 0.7279280419084411,
+            "activeGeometry": 0,
+            "excavationLayers": 0,
+            "movingPieces": 0,
+            "towerProgress": 1,
+            "walkwayProgress": 1,
+            "walkwayBuilt": 120,
+            "dustCount": 0
+          },
+          "visiblePegs": 1
+        }
+      }
+    },
+    "peg-insertion-progress-monotonic-at-start": {
+      "pass": true,
+      "detail": {
+        "37": {
+          "excavation": {
+            "stage": "excavate-main",
+            "progress": 0,
+            "carveY": 35.5,
+            "doorProgress": 1,
+            "lower1": 0,
+            "lower2": 0,
+            "complete": false,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": true,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": true,
+            "cutFrontVisible": false
+          },
+          "construction": {
+            "stage": "excavate-main",
+            "progress": 0,
+            "impact": 0,
+            "activeGeometry": 4,
+            "excavationLayers": 0,
+            "movingPieces": 0,
+            "towerProgress": 1,
+            "walkwayProgress": 1,
+            "walkwayBuilt": 120,
+            "dustCount": 52
+          },
+          "visiblePegs": 7
+        },
+        "15.1": {
+          "excavation": {
+            "stage": "tower-reveal",
+            "progress": 1,
+            "carveY": 16.499999999999954,
+            "doorProgress": 1,
+            "lower1": 1,
+            "lower2": 1,
+            "complete": true,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": true,
+            "floorVisible": false,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": false,
+            "cutFrontVisible": false
+          },
+          "construction": {
+            "stage": "tower-reveal",
+            "progress": 1,
+            "impact": 0,
+            "activeGeometry": 0,
+            "excavationLayers": 0,
+            "movingPieces": 0,
+            "towerProgress": 1,
+            "walkwayProgress": 0,
+            "walkwayBuilt": 0,
+            "dustCount": 0
+          },
+          "visiblePegs": 7
+        },
+        "24.55": {
+          "excavation": {
+            "stage": "excavate-door",
+            "progress": 0,
+            "carveY": 99,
+            "doorProgress": 0,
+            "lower1": 0,
+            "lower2": 0,
+            "complete": false,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": false,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": true,
+            "cutFrontVisible": false
+          },
+          "construction": {
+            "stage": "excavate-door",
+            "progress": 0,
+            "impact": 0,
+            "activeGeometry": 2,
+            "excavationLayers": 0,
+            "movingPieces": 0,
+            "towerProgress": 1,
+            "walkwayProgress": 1,
+            "walkwayBuilt": 120,
+            "dustCount": 38
+          },
+          "visiblePegs": 7
+        },
+        "51.6": {
+          "excavation": {
+            "stage": "stone-core",
+            "progress": 0,
+            "carveY": 0,
+            "doorProgress": 1,
+            "lower1": 1,
+            "lower2": 1,
+            "complete": true,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": false,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": false,
+            "cutFrontVisible": false
+          },
+          "construction": {
+            "stage": "stone-core",
+            "progress": 0,
+            "impact": 0,
+            "activeGeometry": 0,
+            "excavationLayers": 0,
+            "movingPieces": 0,
+            "towerProgress": 1,
+            "walkwayProgress": 1,
+            "walkwayBuilt": 120,
+            "dustCount": 0
+          },
+          "visiblePegs": 7
+        },
+        "56.2": {
+          "excavation": {
+            "stage": "peg-insertion",
+            "progress": 0,
+            "carveY": 0,
+            "doorProgress": 1,
+            "lower1": 1,
+            "lower2": 1,
+            "complete": true,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": false,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": false,
+            "cutFrontVisible": false
+          },
+          "construction": {
+            "stage": "peg-insertion",
+            "progress": 0,
+            "impact": 0,
+            "activeGeometry": 0,
+            "excavationLayers": 0,
+            "movingPieces": 0,
+            "towerProgress": 1,
+            "walkwayProgress": 1,
+            "walkwayBuilt": 120,
+            "dustCount": 0
+          },
+          "visiblePegs": 0
+        },
+        "56.45": {
+          "excavation": {
+            "stage": "peg-insertion",
+            "progress": 0,
+            "carveY": 0,
+            "doorProgress": 1,
+            "lower1": 1,
+            "lower2": 1,
+            "complete": true,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": false,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": false,
+            "cutFrontVisible": false
+          },
+          "construction": {
+            "stage": "peg-insertion",
+            "progress": 0,
+            "impact": 0,
+            "activeGeometry": 0,
+            "excavationLayers": 0,
+            "movingPieces": 0,
+            "towerProgress": 1,
+            "walkwayProgress": 1,
+            "walkwayBuilt": 120,
+            "dustCount": 0
+          },
+          "visiblePegs": 0
+        },
+        "56.46": {
+          "excavation": {
+            "stage": "peg-insertion",
+            "progress": 0.0024630541871916286,
+            "carveY": 0,
+            "doorProgress": 1,
+            "lower1": 1,
+            "lower2": 1,
+            "complete": true,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": false,
+            "activeTools": 1,
+            "movingLayers": 0,
+            "dustVisible": false,
+            "cutFrontVisible": false
+          },
+          "construction": {
+            "stage": "peg-insertion",
+            "progress": 0.0024630541871916286,
+            "impact": 0.7279280419084411,
+            "activeGeometry": 0,
+            "excavationLayers": 0,
+            "movingPieces": 0,
+            "towerProgress": 1,
+            "walkwayProgress": 1,
+            "walkwayBuilt": 120,
+            "dustCount": 0
+          },
+          "visiblePegs": 1
+        }
+      }
+    },
+    "chapter-count": {
+      "pass": true,
+      "detail": "期望 16，实际 16"
+    },
+    "keyframe-count": {
+      "pass": true,
+      "detail": 23
+    },
+    "chapter-seek-and-play": {
+      "pass": true,
+      "detail": {
+        "time": 20.65239999985695,
+        "playing": true
+      }
+    },
+    "play-pause-toggle": {
+      "pass": true,
+      "detail": {
+        "pausedState": false,
+        "resumedState": true
+      }
+    },
+    "speed-control": {
+      "pass": true,
+      "detail": "APP.speed 应为 2"
+    },
+    "free-camera-toggle": {
+      "pass": true,
+      "detail": "自由视角应开启"
+    },
+    "mobile-fit-16-by-9": {
+      "pass": true,
+      "detail": {
+        "width": 390,
+        "height": 219,
+        "aspect": 1.7808219178082192,
+        "viewport": [
+          390,
+          844
+        ]
+      }
+    },
+    "mobile-dpr2-reference-rendered": {
+      "pass": true,
+      "detail": [
+        {
+          "time": 5,
+          "representation": "reference-glb",
+          "referenceVisible": true,
+          "triangles": 438154,
+          "renderMs": 191.5,
+          "devicePixelRatio": 2,
+          "rendererPixelRatio": 1.5,
+          "canvas": {
+            "width": 604,
+            "height": 339,
+            "aspect": 1.7817109144542773
+          },
+          "anchors": {
+            "face": {
+              "x": 0,
+              "y": -0.0032343377139621636,
+              "z": 0.9638871814807352,
+              "visible": true
+            }
+          },
+          "file": "mobile-dpr2-t005.png",
+          "sha256": "61c0f631cff451e309b8fff4c63b84176e705850d3ef9c6e0fcfbf876966528e"
+        },
+        {
+          "time": 93,
+          "representation": "reference-glb",
+          "referenceVisible": true,
+          "triangles": 438346,
+          "renderMs": 1700.2000000476837,
+          "devicePixelRatio": 2,
+          "rendererPixelRatio": 1.5,
+          "canvas": {
+            "width": 604,
+            "height": 339,
+            "aspect": 1.7817109144542773
+          },
+          "anchors": {
+            "center": {
+              "x": 0.0006976297808069775,
+              "y": -0.00007754307590235143,
+              "z": 0.9854935712808908,
+              "visible": true
+            },
+            "crown": {
+              "x": 0.000698330817344137,
+              "y": 0.8971670123159756,
+              "z": 0.9854782759822485,
+              "visible": true
+            },
+            "foot": {
+              "x": 0.0006969301503637569,
+              "y": -0.8955224631218234,
+              "z": 0.9855088359012081,
+              "visible": true
+            }
+          },
+          "file": "mobile-dpr2-t093.png",
+          "sha256": "731ee6daa253f4174e77b33da6ee82845485a8bd8170c0870beecad9d661d500"
+        }
+      ]
+    },
+    "mobile-dpr2-16-by-9": {
+      "pass": true,
+      "detail": [
+        {
+          "time": 5,
+          "representation": "reference-glb",
+          "referenceVisible": true,
+          "triangles": 438154,
+          "renderMs": 191.5,
+          "devicePixelRatio": 2,
+          "rendererPixelRatio": 1.5,
+          "canvas": {
+            "width": 604,
+            "height": 339,
+            "aspect": 1.7817109144542773
+          },
+          "anchors": {
+            "face": {
+              "x": 0,
+              "y": -0.0032343377139621636,
+              "z": 0.9638871814807352,
+              "visible": true
+            }
+          },
+          "file": "mobile-dpr2-t005.png",
+          "sha256": "61c0f631cff451e309b8fff4c63b84176e705850d3ef9c6e0fcfbf876966528e"
+        },
+        {
+          "time": 93,
+          "representation": "reference-glb",
+          "referenceVisible": true,
+          "triangles": 438346,
+          "renderMs": 1700.2000000476837,
+          "devicePixelRatio": 2,
+          "rendererPixelRatio": 1.5,
+          "canvas": {
+            "width": 604,
+            "height": 339,
+            "aspect": 1.7817109144542773
+          },
+          "anchors": {
+            "center": {
+              "x": 0.0006976297808069775,
+              "y": -0.00007754307590235143,
+              "z": 0.9854935712808908,
+              "visible": true
+            },
+            "crown": {
+              "x": 0.000698330817344137,
+              "y": 0.8971670123159756,
+              "z": 0.9854782759822485,
+              "visible": true
+            },
+            "foot": {
+              "x": 0.0006969301503637569,
+              "y": -0.8955224631218234,
+              "z": 0.9855088359012081,
+              "visible": true
+            }
+          },
+          "file": "mobile-dpr2-t093.png",
+          "sha256": "731ee6daa253f4174e77b33da6ee82845485a8bd8170c0870beecad9d661d500"
+        }
+      ]
+    },
+    "mobile-dpr2-face-framing": {
+      "pass": true,
+      "detail": {
+        "face": {
+          "x": 0,
+          "y": -0.0032343377139621636,
+          "z": 0.9638871814807352,
+          "visible": true
+        }
+      }
+    },
+    "mobile-dpr2-full-body-framing": {
+      "pass": true,
+      "detail": {
+        "center": {
+          "x": 0.0006976297808069775,
+          "y": -0.00007754307590235143,
+          "z": 0.9854935712808908,
+          "visible": true
+        },
+        "crown": {
+          "x": 0.000698330817344137,
+          "y": 0.8971670123159756,
+          "z": 0.9854782759822485,
+          "visible": true
+        },
+        "foot": {
+          "x": 0.0006969301503637569,
+          "y": -0.8955224631218234,
+          "z": 0.9855088359012081,
+          "visible": true
+        }
+      }
+    },
+    "mobile-dpr2-excavation-16-by-9": {
+      "pass": true,
+      "detail": [
+        {
+          "time": 30.2,
+          "representation": "none",
+          "excavation": {
+            "stage": "excavate-arch",
+            "progress": 0,
+            "carveY": 99,
+            "doorProgress": 1,
+            "lower1": 0,
+            "lower2": 0,
+            "complete": false,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": false,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": true,
+            "cutFrontVisible": false
+          },
+          "camera": {
+            "x": 8,
+            "y": 36,
+            "z": 70,
+            "fov": 33
+          },
+          "viewport": [
+            604,
+            816
+          ],
+          "devicePixelRatio": 2,
+          "rendererPixelRatio": 1.5,
+          "canvas": {
+            "width": 604,
+            "height": 339,
+            "aspect": 1.7817109144542773
+          },
+          "anchors": {
+            "cave": {
+              "arch": {
+                "x": 5.151880638693527e-18,
+                "y": -3.356950661092912e-16,
+                "z": 0.9867149699012979,
+                "visible": true
+              },
+              "chamber": {
+                "x": 4.797984300519108e-18,
+                "y": -0.7106916205628695,
+                "z": 0.9866737219018691,
+                "visible": true
+              }
+            },
+            "stoneCore": {
+              "crown": {
+                "x": -0.004240643333365235,
+                "y": -0.08581344385075525,
+                "z": 0.9864318903405115,
+                "visible": true
+              },
+              "center": {
+                "x": -0.0042554807171797295,
+                "y": -0.930067383944674,
+                "z": 0.9863819174586416,
+                "visible": true
+              }
+            }
+          },
+          "file": "mobile-dpr2-excavation-t30.2.png",
+          "sha256": "54303b73f6b391f57401dfc1f7535c57358273983ea618a4dfc484823303fef4"
+        },
+        {
+          "time": 37,
+          "representation": "procedural",
+          "excavation": {
+            "stage": "excavate-main",
+            "progress": 0,
+            "carveY": 35.5,
+            "doorProgress": 1,
+            "lower1": 0,
+            "lower2": 0,
+            "complete": false,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": true,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": true,
+            "cutFrontVisible": false
+          },
+          "camera": {
+            "x": 8,
+            "y": 26,
+            "z": 84,
+            "fov": 35
+          },
+          "viewport": [
+            604,
+            816
+          ],
+          "devicePixelRatio": 2,
+          "rendererPixelRatio": 1.5,
+          "canvas": {
+            "width": 604,
+            "height": 339,
+            "aspect": 1.7817109144542773
+          },
+          "anchors": {
+            "cave": {
+              "arch": {
+                "x": 3.738540786619795e-17,
+                "y": 0.4464582651762379,
+                "z": 0.9889788990950654,
+                "visible": true
+              },
+              "chamber": {
+                "x": 3.759772809492859e-17,
+                "y": -0.11138500116387866,
+                "z": 0.9890030365730837,
+                "visible": true
+              }
+            },
+            "stoneCore": {
+              "crown": {
+                "x": -0.002784368581783991,
+                "y": 0.3850832406326921,
+                "z": 0.988786823178909,
+                "visible": true
+              },
+              "center": {
+                "x": -0.0027775999081167137,
+                "y": -0.2740993272176709,
+                "z": 0.9888158189194257,
+                "visible": true
+              }
+            }
+          },
+          "file": "mobile-dpr2-excavation-t37.png",
+          "sha256": "81f6a901586f58710b405571b4e290ff1a48a3fdf20f552f698deca7f75c20e6"
+        },
+        {
+          "time": 46.2,
+          "representation": "procedural",
+          "excavation": {
+            "stage": "excavate-lower",
+            "progress": 0,
+            "carveY": 14.5,
+            "doorProgress": 1,
+            "lower1": 0,
+            "lower2": 0,
+            "complete": false,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": true,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": true,
+            "cutFrontVisible": false
+          },
+          "camera": {
+            "x": 12,
+            "y": 18,
+            "z": 88,
+            "fov": 36
+          },
+          "viewport": [
+            604,
+            816
+          ],
+          "devicePixelRatio": 2,
+          "rendererPixelRatio": 1.5,
+          "canvas": {
+            "width": 604,
+            "height": 339,
+            "aspect": 1.7817109144542773
+          },
+          "anchors": {
+            "cave": {
+              "arch": {
+                "x": 0.1075427885549757,
+                "y": 0.875710633025761,
+                "z": 0.9893637384692809,
+                "visible": true
+              },
+              "chamber": {
+                "x": 0.10630729570713962,
+                "y": 0.3490510996484093,
+                "z": 0.9894941408460279,
+                "visible": true
+              }
+            },
+            "stoneCore": {
+              "crown": {
+                "x": 0.1036890444534786,
+                "y": 0.8213477078733592,
+                "z": 0.9892007855263875,
+                "visible": true
+              },
+              "center": {
+                "x": 0.10228626597093163,
+                "y": 0.20188963811337624,
+                "z": 0.9893565517250927,
+                "visible": true
+              }
+            }
+          },
+          "file": "mobile-dpr2-excavation-t46.2.png",
+          "sha256": "238fcc48e56ee0dc7b3ab83ecf99c208736f779cea2c80b510de02eba1adc8ba"
+        },
+        {
+          "time": 51.6,
+          "representation": "procedural",
+          "excavation": {
+            "stage": "stone-core",
+            "progress": 0,
+            "carveY": 0,
+            "doorProgress": 1,
+            "lower1": 1,
+            "lower2": 1,
+            "complete": true,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": false,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": false,
+            "cutFrontVisible": false
+          },
+          "camera": {
+            "x": 5.893491124260355,
+            "y": 20.94674556213018,
+            "z": 95.78698224852072,
+            "fov": 36.97337278106509
+          },
+          "viewport": [
+            604,
+            816
+          ],
+          "devicePixelRatio": 2,
+          "rendererPixelRatio": 1.5,
+          "canvas": {
+            "width": 604,
+            "height": 339,
+            "aspect": 1.7817109144542773
+          },
+          "anchors": {
+            "cave": {
+              "arch": {
+                "x": -0.0005881362736650096,
+                "y": 0.5572817182902545,
+                "z": 0.9903613698858748,
+                "visible": true
+              },
+              "chamber": {
+                "x": -0.0005863032108381773,
+                "y": 0.09275761715910379,
+                "z": 0.9903936379397072,
+                "visible": true
+              }
+            },
+            "stoneCore": {
+              "crown": {
+                "x": -0.002087408931028372,
+                "y": 0.5078554133716883,
+                "z": 0.9902134656844048,
+                "visible": true
+              },
+              "center": {
+                "x": -0.0020797365888466143,
+                "y": -0.039772083123785905,
+                "z": 0.9902520627418333,
+                "visible": true
+              }
+            }
+          },
+          "file": "mobile-dpr2-excavation-t51.6.png",
+          "sha256": "08b6a2b51bdad604084aaa61102504bf7111400794dcfda989c68d34290bf4b4"
+        }
+      ]
+    },
+    "mobile-dpr2-excavation-anchors-in-ndc": {
+      "pass": true,
+      "detail": [
+        {
+          "time": 30.2,
+          "anchors": {
+            "cave": {
+              "arch": {
+                "x": 5.151880638693527e-18,
+                "y": -3.356950661092912e-16,
+                "z": 0.9867149699012979,
+                "visible": true
+              },
+              "chamber": {
+                "x": 4.797984300519108e-18,
+                "y": -0.7106916205628695,
+                "z": 0.9866737219018691,
+                "visible": true
+              }
+            },
+            "stoneCore": {
+              "crown": {
+                "x": -0.004240643333365235,
+                "y": -0.08581344385075525,
+                "z": 0.9864318903405115,
+                "visible": true
+              },
+              "center": {
+                "x": -0.0042554807171797295,
+                "y": -0.930067383944674,
+                "z": 0.9863819174586416,
+                "visible": true
+              }
+            }
+          }
+        },
+        {
+          "time": 37,
+          "anchors": {
+            "cave": {
+              "arch": {
+                "x": 3.738540786619795e-17,
+                "y": 0.4464582651762379,
+                "z": 0.9889788990950654,
+                "visible": true
+              },
+              "chamber": {
+                "x": 3.759772809492859e-17,
+                "y": -0.11138500116387866,
+                "z": 0.9890030365730837,
+                "visible": true
+              }
+            },
+            "stoneCore": {
+              "crown": {
+                "x": -0.002784368581783991,
+                "y": 0.3850832406326921,
+                "z": 0.988786823178909,
+                "visible": true
+              },
+              "center": {
+                "x": -0.0027775999081167137,
+                "y": -0.2740993272176709,
+                "z": 0.9888158189194257,
+                "visible": true
+              }
+            }
+          }
+        },
+        {
+          "time": 46.2,
+          "anchors": {
+            "cave": {
+              "arch": {
+                "x": 0.1075427885549757,
+                "y": 0.875710633025761,
+                "z": 0.9893637384692809,
+                "visible": true
+              },
+              "chamber": {
+                "x": 0.10630729570713962,
+                "y": 0.3490510996484093,
+                "z": 0.9894941408460279,
+                "visible": true
+              }
+            },
+            "stoneCore": {
+              "crown": {
+                "x": 0.1036890444534786,
+                "y": 0.8213477078733592,
+                "z": 0.9892007855263875,
+                "visible": true
+              },
+              "center": {
+                "x": 0.10228626597093163,
+                "y": 0.20188963811337624,
+                "z": 0.9893565517250927,
+                "visible": true
+              }
+            }
+          }
+        },
+        {
+          "time": 51.6,
+          "anchors": {
+            "cave": {
+              "arch": {
+                "x": -0.0005881362736650096,
+                "y": 0.5572817182902545,
+                "z": 0.9903613698858748,
+                "visible": true
+              },
+              "chamber": {
+                "x": -0.0005863032108381773,
+                "y": 0.09275761715910379,
+                "z": 0.9903936379397072,
+                "visible": true
+              }
+            },
+            "stoneCore": {
+              "crown": {
+                "x": -0.002087408931028372,
+                "y": 0.5078554133716883,
+                "z": 0.9902134656844048,
+                "visible": true
+              },
+              "center": {
+                "x": -0.0020797365888466143,
+                "y": -0.039772083123785905,
+                "z": 0.9902520627418333,
+                "visible": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "mobile-dpr2-excavation-boundary-stages": {
+      "pass": true,
+      "detail": [
+        {
+          "time": 30.2,
+          "excavation": {
+            "stage": "excavate-arch",
+            "progress": 0,
+            "carveY": 99,
+            "doorProgress": 1,
+            "lower1": 0,
+            "lower2": 0,
+            "complete": false,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": false,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": true,
+            "cutFrontVisible": false
+          }
+        },
+        {
+          "time": 37,
+          "excavation": {
+            "stage": "excavate-main",
+            "progress": 0,
+            "carveY": 35.5,
+            "doorProgress": 1,
+            "lower1": 0,
+            "lower2": 0,
+            "complete": false,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": true,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": true,
+            "cutFrontVisible": false
+          }
+        },
+        {
+          "time": 46.2,
+          "excavation": {
+            "stage": "excavate-lower",
+            "progress": 0,
+            "carveY": 14.5,
+            "doorProgress": 1,
+            "lower1": 0,
+            "lower2": 0,
+            "complete": false,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": true,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": true,
+            "cutFrontVisible": false
+          }
+        },
+        {
+          "time": 51.6,
+          "excavation": {
+            "stage": "stone-core",
+            "progress": 0,
+            "carveY": 0,
+            "doorProgress": 1,
+            "lower1": 1,
+            "lower2": 1,
+            "complete": true,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": false,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": false,
+            "cutFrontVisible": false
+          }
+        }
+      ]
+    },
+    "mobile-dpr2-excavation-no-legacy-visuals": {
+      "pass": true,
+      "detail": [
+        {
+          "time": 30.2,
+          "excavation": {
+            "stage": "excavate-arch",
+            "progress": 0,
+            "carveY": 99,
+            "doorProgress": 1,
+            "lower1": 0,
+            "lower2": 0,
+            "complete": false,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": false,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": true,
+            "cutFrontVisible": false
+          }
+        },
+        {
+          "time": 37,
+          "excavation": {
+            "stage": "excavate-main",
+            "progress": 0,
+            "carveY": 35.5,
+            "doorProgress": 1,
+            "lower1": 0,
+            "lower2": 0,
+            "complete": false,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": true,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": true,
+            "cutFrontVisible": false
+          }
+        },
+        {
+          "time": 46.2,
+          "excavation": {
+            "stage": "excavate-lower",
+            "progress": 0,
+            "carveY": 14.5,
+            "doorProgress": 1,
+            "lower1": 0,
+            "lower2": 0,
+            "complete": false,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": true,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": true,
+            "cutFrontVisible": false
+          }
+        },
+        {
+          "time": 51.6,
+          "excavation": {
+            "stage": "stone-core",
+            "progress": 0,
+            "carveY": 0,
+            "doorProgress": 1,
+            "lower1": 1,
+            "lower2": 1,
+            "complete": true,
+            "sectionX": 99999,
+            "sectionVisible": false,
+            "rockFillVisible": false,
+            "floorVisible": false,
+            "activeTools": 0,
+            "movingLayers": 0,
+            "dustVisible": false,
+            "cutFrontVisible": false
+          }
+        }
+      ]
+    },
+    "mobile-dpr2-excavation-clears-residuals-51.6": {
+      "pass": true,
+      "detail": {
+        "time": 51.6,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "stone-core",
+          "progress": 0,
+          "carveY": 0,
+          "doorProgress": 1,
+          "lower1": 1,
+          "lower2": 1,
+          "complete": true,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": false,
+          "cutFrontVisible": false
+        },
+        "camera": {
+          "x": 5.893491124260355,
+          "y": 20.94674556213018,
+          "z": 95.78698224852072,
+          "fov": 36.97337278106509
+        },
+        "viewport": [
+          604,
+          816
+        ],
+        "devicePixelRatio": 2,
+        "rendererPixelRatio": 1.5,
+        "canvas": {
+          "width": 604,
+          "height": 339,
+          "aspect": 1.7817109144542773
+        },
+        "anchors": {
+          "cave": {
+            "arch": {
+              "x": -0.0005881362736650096,
+              "y": 0.5572817182902545,
+              "z": 0.9903613698858748,
+              "visible": true
+            },
+            "chamber": {
+              "x": -0.0005863032108381773,
+              "y": 0.09275761715910379,
+              "z": 0.9903936379397072,
+              "visible": true
+            }
+          },
+          "stoneCore": {
+            "crown": {
+              "x": -0.002087408931028372,
+              "y": 0.5078554133716883,
+              "z": 0.9902134656844048,
+              "visible": true
+            },
+            "center": {
+              "x": -0.0020797365888466143,
+              "y": -0.039772083123785905,
+              "z": 0.9902520627418333,
+              "visible": true
+            }
+          }
+        },
+        "file": "mobile-dpr2-excavation-t51.6.png",
+        "sha256": "08b6a2b51bdad604084aaa61102504bf7111400794dcfda989c68d34290bf4b4"
+      }
+    },
+    "no-page-errors": {
+      "pass": true,
+      "detail": []
+    }
+  },
+  "keyframes": [
+    {
+      "requestedTime": 0,
+      "actualTime": 0,
+      "subtitle": "九层楼缓缓拆解",
+      "stats": {
+        "drawCalls": 495,
+        "triangles": 453962,
+        "lines": 0,
+        "points": 0,
+        "geometries": 422,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "tower-reveal",
+          "progress": 0.1,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 2,
+          "towerProgress": 0.1,
+          "walkwayProgress": 0,
+          "walkwayBuilt": 0,
+          "dustCount": 0
+        }
+      },
+      "file": "t000.png",
+      "sha256": "e7bd1357fe14754f1da66564d4b338fb55566fda45bdf41065552ef223eebd59"
+    },
+    {
+      "requestedTime": 5,
+      "actualTime": 5,
+      "subtitle": "它几乎占满整座佛窟",
+      "stats": {
+        "drawCalls": 21,
+        "triangles": 438154,
+        "lines": 0,
+        "points": 0,
+        "geometries": 422,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "tower-reveal",
+          "progress": 1,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 0,
+          "walkwayBuilt": 0,
+          "dustCount": 0
+        }
+      },
+      "file": "t005.png",
+      "sha256": "acb427c2d997d0fac12625b36a20954623788ab6e21423de8d120600884e9f1e"
+    },
+    {
+      "requestedTime": 9,
+      "actualTime": 9,
+      "subtitle": "接近十层楼的高度",
+      "stats": {
+        "drawCalls": 26,
+        "triangles": 438210,
+        "lines": 0,
+        "points": 0,
+        "geometries": 422,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "tower-reveal",
+          "progress": 1,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 0,
+          "walkwayBuilt": 0,
+          "dustCount": 0
+        }
+      },
+      "file": "t009.png",
+      "sha256": "fd0133a79a4f1603bf9d36461dbf8b53dfd9ae289c3b2721e8d60dea3d962654"
+    },
+    {
+      "requestedTime": 14.7,
+      "actualTime": 14.7,
+      "subtitle": "如此庞大的造像",
+      "stats": {
+        "drawCalls": 26,
+        "triangles": 780870,
+        "lines": 0,
+        "points": 0,
+        "geometries": 422,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "tower-reveal",
+          "progress": 1,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 0,
+          "walkwayBuilt": 0,
+          "dustCount": 0
+        }
+      },
+      "file": "t14.7.png",
+      "sha256": "ff69862712234b77ffb4d34a5c2a3aa7e39583d366f7a9f604ca22154e1f2f0d"
+    },
+    {
+      "requestedTime": 16.2,
+      "actualTime": 16.2,
+      "subtitle": "是怎样在崖壁中建成的？",
+      "stats": {
+        "drawCalls": 141,
+        "triangles": 99062,
+        "lines": 0,
+        "points": 0,
+        "geometries": 422,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "bare-cliff",
+          "progress": 0.2,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 0,
+          "walkwayBuilt": 0,
+          "dustCount": 0
+        }
+      },
+      "file": "t16.2.png",
+      "sha256": "3136d42a717a45ff916608cc73821442c8b44ef690c87b36b70ef5eba7be69d7"
+    },
+    {
+      "requestedTime": 20,
+      "actualTime": 20,
+      "subtitle": "工程开始之前",
+      "stats": {
+        "drawCalls": 143,
+        "triangles": 98294,
+        "lines": 1,
+        "points": 0,
+        "geometries": 438,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "bare-cliff",
+          "progress": 0.9600000000000002,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 17,
+          "towerProgress": 1,
+          "walkwayProgress": 0.24,
+          "walkwayBuilt": 16,
+          "dustCount": 0
+        }
+      },
+      "file": "t020.png",
+      "sha256": "ddc1001485892d8b2308184b090867f7306b990fe669b8ebbb182adc6c1f326b"
+    },
+    {
+      "requestedTime": 25,
+      "actualTime": 25,
+      "subtitle": "随后从预定高度开始分层开凿",
+      "stats": {
+        "drawCalls": 41,
+        "triangles": 95790,
+        "lines": 0,
+        "points": 180,
+        "geometries": 438,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "excavate-door",
+          "progress": 0.4560089758518979,
+          "impact": 0,
+          "activeGeometry": 5,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 38
+        }
+      },
+      "file": "t025.png",
+      "sha256": "8af6645c6a20a56db9f2369638f75e93d82640350bd15b512275b6d4a068189a"
+    },
+    {
+      "requestedTime": 33,
+      "actualTime": 33,
+      "subtitle": "使承重结构逐渐成形",
+      "stats": {
+        "drawCalls": 57,
+        "triangles": 226320,
+        "lines": 0,
+        "points": 180,
+        "geometries": 438,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "excavate-arch",
+          "progress": 0.411764705882353,
+          "impact": 0,
+          "activeGeometry": 5,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 38
+        }
+      },
+      "file": "t033.png",
+      "sha256": "c71778402fa7ea82b261714d2bec8468da171e21ef4969ea119521b849da4fe1"
+    },
+    {
+      "requestedTime": 40,
+      "actualTime": 40,
+      "subtitle": "洞腔四周逐步移除，中央岩体则被保留",
+      "stats": {
+        "drawCalls": 95,
+        "triangles": 230296,
+        "lines": 0,
+        "points": 180,
+        "geometries": 438,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "excavate-main",
+          "progress": 0.326086956521739,
+          "impact": 0,
+          "activeGeometry": 5,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 52
+        }
+      },
+      "file": "t040.png",
+      "sha256": "0de15cf85b1df7443e457408b71d64c0aa137dfced72246d35a6a060d993e965"
+    },
+    {
+      "requestedTime": 49,
+      "actualTime": 49,
+      "subtitle": "增设两处施工与运土洞口",
+      "stats": {
+        "drawCalls": 84,
+        "triangles": 230148,
+        "lines": 0,
+        "points": 180,
+        "geometries": 438,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "excavate-lower",
+          "progress": 0.5185185185185182,
+          "impact": 0,
+          "activeGeometry": 4,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 52
+        }
+      },
+      "file": "t049.png",
+      "sha256": "c62ca500340ab16effa9a50d047101d3914c5a4e0d2f1e644be7785e24a07a3b"
+    },
+    {
+      "requestedTime": 60,
+      "actualTime": 60,
+      "subtitle": "工匠在岩面凿孔并嵌入木桩",
+      "stats": {
+        "drawCalls": 59,
+        "triangles": 226272,
+        "lines": 0,
+        "points": 0,
+        "geometries": 438,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "peg-insertion",
+          "progress": 0.9630541871921182,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 0
+        }
+      },
+      "file": "t060.png",
+      "sha256": "98f3314185963deb0a996260aded53ebc72bdf5180d9e7b0f6690266226e6fe3"
+    },
+    {
+      "requestedTime": 65,
+      "actualTime": 65,
+      "subtitle": "泥层干燥时容易收缩开裂",
+      "stats": {
+        "drawCalls": 45,
+        "triangles": 225300,
+        "lines": 0,
+        "points": 0,
+        "geometries": 444,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "mud-layer",
+          "progress": 0.7222222222222223,
+          "impact": 0,
+          "activeGeometry": 18,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t065.png",
+      "sha256": "89fea6ecff51d72aed1aac77622476add287835273d82cbcf3b2ae4292bd8854"
+    },
+    {
+      "requestedTime": 70,
+      "actualTime": 70,
+      "subtitle": "再掺入切碎的麦秆纤维",
+      "stats": {
+        "drawCalls": 48,
+        "triangles": 224970,
+        "lines": 0,
+        "points": 0,
+        "geometries": 451,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "mud-layer",
+          "progress": 0.6,
+          "impact": 0,
+          "activeGeometry": 20,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t070.png",
+      "sha256": "740bedc7b43f7559d0eb59cba64c288dfb925c70ff1c2f3464c0e72756d563d2"
+    },
+    {
+      "requestedTime": 79,
+      "actualTime": 79,
+      "subtitle": "掺入棉纤维等柔性材料",
+      "stats": {
+        "drawCalls": 47,
+        "triangles": 227344,
+        "lines": 0,
+        "points": 0,
+        "geometries": 457,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "mud-layer",
+          "progress": 0.3124999999999997,
+          "impact": 0,
+          "activeGeometry": 18,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t079.png",
+      "sha256": "d800399371996e855555a735c8237498edd193940485a876e7b26008d1672768"
+    },
+    {
+      "requestedTime": 86,
+      "actualTime": 86,
+      "subtitle": "随后用塑刀反复压实修整",
+      "stats": {
+        "drawCalls": 42,
+        "triangles": 223352,
+        "lines": 0,
+        "points": 0,
+        "geometries": 462,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "surface-polish",
+          "progress": 0.41935483870967727,
+          "impact": 0,
+          "activeGeometry": 19,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t086.png",
+      "sha256": "5043eb8766f3a952c0ee09eb196ac25888d1e5311824579d72e5e430eb95450a"
+    },
+    {
+      "requestedTime": 90.2,
+      "actualTime": 90.2,
+      "subtitle": "彩绘从面部与衣纹开始",
+      "stats": {
+        "drawCalls": 22,
+        "triangles": 438910,
+        "lines": 0,
+        "points": 96,
+        "geometries": 462,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "paint-buddha",
+          "progress": 0,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t90.2.png",
+      "sha256": "387a995ca781f2201bdbadde1cbf04d30dfd38b06b3ee98d524f28a4c446226f"
+    },
+    {
+      "requestedTime": 92.9,
+      "actualTime": 92.9,
+      "subtitle": "矿物色层层显现",
+      "stats": {
+        "drawCalls": 22,
+        "triangles": 438154,
+        "lines": 0,
+        "points": 96,
+        "geometries": 462,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "paint-buddha",
+          "progress": 0.8181818181818198,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t92.9.png",
+      "sha256": "693e5ab4bb743caf950129a2881d2903fbf4393bb985af0cd8fe77ea0d167379"
+    },
+    {
+      "requestedTime": 93,
+      "actualTime": 93,
+      "subtitle": "矿物色层层显现",
+      "stats": {
+        "drawCalls": 35,
+        "triangles": 438334,
+        "lines": 0,
+        "points": 0,
+        "geometries": 462,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "paint-buddha",
+          "progress": 0.8484848484848484,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t093.png",
+      "sha256": "1ce7ae75a20e1d8bc613eef64c64289717d8d40cd880e88c7a134c8314469e49"
+    },
+    {
+      "requestedTime": 95.4,
+      "actualTime": 95.4,
+      "subtitle": "洞窟四壁仍需继续处理",
+      "stats": {
+        "drawCalls": 52,
+        "triangles": 438614,
+        "lines": 0,
+        "points": 96,
+        "geometries": 471,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "painted-buddha",
+          "progress": 0.38775510204081703,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t95.4.png",
+      "sha256": "33168dbd4fe6216493e6405dcf3b35dea43d0bd29421a17db8ab8375e9afbd21"
+    },
+    {
+      "requestedTime": 101,
+      "actualTime": 101,
+      "subtitle": "再铺设更细的壁画地仗",
+      "stats": {
+        "drawCalls": 34,
+        "triangles": 438366,
+        "lines": 0,
+        "points": 96,
+        "geometries": 471,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "whitewash",
+          "progress": 0.27777777777777823,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t101.png",
+      "sha256": "65145e99701166f71ba2ab058c301314402cc26680a2ca71a819b00cb558f543"
+    },
+    {
+      "requestedTime": 106,
+      "actualTime": 106,
+      "subtitle": "壁画在洞窟四周渐次铺开",
+      "stats": {
+        "drawCalls": 34,
+        "triangles": 438366,
+        "lines": 0,
+        "points": 96,
+        "geometries": 471,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "mural",
+          "progress": 0.48000000000000115,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 1,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 96
+        }
+      },
+      "file": "t106.png",
+      "sha256": "8588d4ba1cdacc0dd869f0b3df9bf405411f495eb587a8590d0091021ba8ade7"
+    },
+    {
+      "requestedTime": 112,
+      "actualTime": 112,
+      "subtitle": "最后，崖前的九层楼重新合拢",
+      "stats": {
+        "drawCalls": 508,
+        "triangles": 454274,
+        "lines": 0,
+        "points": 0,
+        "geometries": 471,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "tower-reassembly",
+          "progress": 0.3979999999999976,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 9,
+          "towerProgress": 0.6020000000000024,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 0
+        }
+      },
+      "file": "t112.png",
+      "sha256": "6223a3508bbb149297950955d3cc9720e725bc51feafb36a642da2bce5f20adb"
+    },
+    {
+      "requestedTime": 116,
+      "actualTime": 116,
+      "subtitle": "一座石窟，凝结千年的营造智慧",
+      "stats": {
+        "drawCalls": 614,
+        "triangles": 455606,
+        "lines": 0,
+        "points": 0,
+        "geometries": 475,
+        "textures": 39,
+        "pixelRatio": 1,
+        "canvas": {
+          "width": 1400,
+          "height": 788
+        },
+        "construction": {
+          "stage": "tower-reassembly",
+          "progress": 1,
+          "impact": 0,
+          "activeGeometry": 0,
+          "excavationLayers": 0,
+          "movingPieces": 0,
+          "towerProgress": 0,
+          "walkwayProgress": 1,
+          "walkwayBuilt": 120,
+          "dustCount": 0
+        }
+      },
+      "file": "t116.png",
+      "sha256": "8e9c6d98abed917fdfa45dd40559212e163af214341e4c9508cb1ec2f989a5ba"
+    }
+  ],
+  "console": [
+    {
+      "type": "warn",
+      "text": "[.WebGL-0x13407fc9800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warn",
+      "text": "[.WebGL-0x13407fc9800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warn",
+      "text": "[.WebGL-0x13407fc9800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warn",
+      "text": "[.WebGL-0x13407fc9800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+    }
+  ],
+  "pageErrors": [],
+  "remoteRequests": [],
+  "referenceAsset": {
+    "path": "/Users/sniper/Desktop/temp/testDunHong/mogao/assets/buddha-reference-v3.glb",
+    "bytes": 10279844,
+    "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376"
+  },
+  "referenceEmbedded": {
+    "found": true,
+    "bytes": 10279844,
+    "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376"
+  },
+  "performance": {
+    "readyMs": 44471.299999952316,
+    "mobileReadyMs": 20263.5,
+    "mobileDpr2ReadyMs": 9769.200000047684
+  },
+  "referenceRuntime": {
+    "ready": true,
+    "stats": {
+      "glbVersion": 2,
+      "meshCount": 2,
+      "vertexCount": 171419,
+      "triangleCount": 342684,
+      "coloredMeshCount": 1,
+      "nodeCount": 2,
+      "materialCount": 2,
+      "extensionsRequired": [],
+      "bytes": 10279844,
+      "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+      "sourceBounds": {
+        "min": [
+          -0.3480651378631592,
+          -0.9504237771034241,
+          -0.28410694003105164
+        ],
+        "max": [
+          0.3474860191345215,
+          0.9483323693275452,
+          0.28188666701316833
+        ],
+        "size": [
+          0.6955511569976807,
+          1.8987561464309692,
+          0.56599360704422
+        ]
+      },
+      "fittedBounds": {
+        "min": [
+          -6.502168832956918,
+          0,
+          -4.891035683501946
+        ],
+        "max": [
+          6.502168832956919,
+          35.5,
+          5.691035683501945
+        ],
+        "size": [
+          13.004337665913837,
+          35.5,
+          10.582071367003891
+        ]
+      },
+      "scale": 18.6964503402547,
+      "frontAxis": "+Z"
+    },
+    "meshCount": 2,
+    "materialCount": 2,
+    "hasColorAccessor": true,
+    "usesLegacyVertexColors": false
+  },
+  "referenceShader": {
+    "bodyFound": true,
+    "urnaFound": true,
+    "body": {
+      "cacheKey": "reference-buddha-position-paint-v2",
+      "vertexColors": false,
+      "roughness": 0.72,
+      "metalness": 0.02,
+      "side": 2,
+      "doubleSide": 2,
+      "uniformKeys": [
+        "uBuddhaMin",
+        "uBuddhaSize",
+        "uReferenceClay",
+        "uReferencePaintFront",
+        "uReferencePaintSoft"
+      ],
+      "syntheticUniformKeys": [
+        "uBuddhaMin",
+        "uBuddhaSize",
+        "uReferenceClay",
+        "uReferencePaintFront",
+        "uReferencePaintSoft"
+      ],
+      "vertexInjected": true,
+      "fragmentTokens": {
+        "vBuddhaPos": true,
+        "uBuddhaMin": true,
+        "uBuddhaSize": true,
+        "vec3 blue": true,
+        "vec3 red": true,
+        "vec3 ochre": true,
+        "chestMask": true,
+        "weave": true,
+        "mix(uReferenceClay, robe, referencePaint)": true
+      },
+      "mapFragmentReplaced": true,
+      "programCompiled": true,
+      "boxMin": [
+        -0.3480651378631592,
+        -0.9504237771034241,
+        -0.28410694003105164
+      ],
+      "boxSize": [
+        0.6955511569976807,
+        1.8987561464309692,
+        0.56599360704422
+      ],
+      "uniformMin": [
+        -0.3480651378631592,
+        -0.9504237771034241,
+        -0.28410694003105164
+      ],
+      "uniformSize": [
+        0.6955511569976807,
+        1.8987561464309692,
+        0.56599360704422
+      ]
+    },
+    "urna": {
+      "meshName": "白毫红点",
+      "materialName": "白毫红点材质",
+      "color": [
+        0.520995557308197,
+        0.014443843625485897,
+        0.020288562402129173
+      ],
+      "paintY": 0.79,
+      "hasPositionShader": false,
+      "cacheKey": "onBeforeCompile( /* shaderobject, renderer */ ) {}"
+    }
+  },
+  "representations": {
+    "0": {
+      "time": 0,
+      "playing": false,
+      "playUntil": null,
+      "playFromChapter": -1,
+      "speed": 1,
+      "free": false,
+      "chapter": 0,
+      "phase": 6,
+      "morph": 0,
+      "spreadOn": 0,
+      "spreadY": -999,
+      "revealY": -1.1,
+      "carveY": 0,
+      "doorProgress": 1,
+      "wallPhase": 0.3,
+      "wallProgress": -1,
+      "visibleWalkwayComponents": 0,
+      "visibleTowerFloors": 9,
+      "visiblePegs": 7,
+      "representation": "reference-glb",
+      "referenceReady": true,
+      "referenceOpacity": 1,
+      "referencePaintProgress": 1,
+      "referenceStats": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      },
+      "construction": {
+        "stage": "tower-reveal",
+        "progress": 0.1,
+        "impact": 0,
+        "activeGeometry": 0,
+        "excavationLayers": 0,
+        "movingPieces": 2,
+        "towerProgress": 0.1,
+        "walkwayProgress": 0,
+        "walkwayBuilt": 0,
+        "dustCount": 0
+      },
+      "excavation": {
+        "stage": "tower-reveal",
+        "progress": 0.1,
+        "carveY": 0,
+        "doorProgress": 1,
+        "lower1": 1,
+        "lower2": 1,
+        "complete": true,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": false,
+        "cutFrontVisible": false
+      },
+      "camera": {
+        "x": 4,
+        "y": 31,
+        "z": 136,
+        "fov": 37
+      }
+    },
+    "31": {
+      "time": 31,
+      "playing": false,
+      "playUntil": null,
+      "playFromChapter": -1,
+      "speed": 1,
+      "free": false,
+      "chapter": 4,
+      "phase": 0,
+      "morph": 1,
+      "spreadOn": 0,
+      "spreadY": -999,
+      "revealY": 60.233333333333334,
+      "carveY": 61.333333333333336,
+      "doorProgress": 1,
+      "wallPhase": 0,
+      "wallProgress": -1,
+      "visibleWalkwayComponents": 120,
+      "visibleTowerFloors": 0,
+      "visiblePegs": 7,
+      "representation": "procedural",
+      "referenceReady": true,
+      "referenceOpacity": 0,
+      "referencePaintProgress": 0,
+      "referenceStats": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      },
+      "construction": {
+        "stage": "excavate-arch",
+        "progress": 0.11764705882352951,
+        "impact": 0,
+        "activeGeometry": 7,
+        "excavationLayers": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 38
+      },
+      "excavation": {
+        "stage": "excavate-arch",
+        "progress": 0.11764705882352951,
+        "carveY": 61.333333333333336,
+        "doorProgress": 1,
+        "lower1": 0,
+        "lower2": 0,
+        "complete": false,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": true,
+        "cutFrontVisible": false
+      },
+      "camera": {
+        "x": 7.911357340720222,
+        "y": 36,
+        "z": 69.82271468144044,
+        "fov": 32.91135734072022
+      }
+    },
+    "93": {
+      "time": 93,
+      "playing": false,
+      "playUntil": null,
+      "playFromChapter": -1,
+      "speed": 1,
+      "free": false,
+      "chapter": 13,
+      "phase": 6,
+      "morph": 0,
+      "spreadOn": 1,
+      "spreadY": -1.0945821854912694,
+      "revealY": -1.1,
+      "carveY": 0,
+      "doorProgress": 1,
+      "wallPhase": 0,
+      "wallProgress": -1,
+      "visibleWalkwayComponents": 120,
+      "visibleTowerFloors": 0,
+      "visiblePegs": 7,
+      "representation": "reference-glb",
+      "referenceReady": true,
+      "referenceOpacity": 1,
+      "referencePaintProgress": 1,
+      "referenceStats": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      },
+      "construction": {
+        "stage": "paint-buddha",
+        "progress": 0.8484848484848484,
+        "impact": 0,
+        "activeGeometry": 0,
+        "excavationLayers": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 96
+      },
+      "excavation": {
+        "stage": "paint-buddha",
+        "progress": 0.8484848484848484,
+        "carveY": 0,
+        "doorProgress": 1,
+        "lower1": 1,
+        "lower2": 1,
+        "complete": true,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": false,
+        "cutFrontVisible": false
+      },
+      "camera": {
+        "x": -4,
+        "y": 18,
+        "z": 66,
+        "fov": 33
+      }
+    },
+    "16.2": {
+      "time": 16.2,
+      "playing": false,
+      "playUntil": null,
+      "playFromChapter": -1,
+      "speed": 1,
+      "free": false,
+      "chapter": 1,
+      "phase": 0,
+      "morph": 1,
+      "spreadOn": 0,
+      "spreadY": -999,
+      "revealY": 97.9,
+      "carveY": 99,
+      "doorProgress": 0,
+      "wallPhase": 0,
+      "wallProgress": -1,
+      "visibleWalkwayComponents": 0,
+      "visibleTowerFloors": 0,
+      "visiblePegs": 7,
+      "representation": "none",
+      "referenceReady": true,
+      "referenceOpacity": 0,
+      "referencePaintProgress": 0,
+      "referenceStats": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      },
+      "construction": {
+        "stage": "bare-cliff",
+        "progress": 0.2,
+        "impact": 0,
+        "activeGeometry": 0,
+        "excavationLayers": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 0,
+        "walkwayBuilt": 0,
+        "dustCount": 0
+      },
+      "excavation": {
+        "stage": "bare-cliff",
+        "progress": 0.2,
+        "carveY": 99,
+        "doorProgress": 0,
+        "lower1": 0,
+        "lower2": 0,
+        "complete": false,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": false,
+        "cutFrontVisible": false
+      },
+      "camera": {
+        "x": 0,
+        "y": 11.78125,
+        "z": 120.015625,
+        "fov": 38.9765625
+      }
+    },
+    "90.19": {
+      "time": 90.19,
+      "playing": false,
+      "playUntil": null,
+      "playFromChapter": -1,
+      "speed": 1,
+      "free": false,
+      "chapter": 12,
+      "phase": 5,
+      "morph": 0,
+      "spreadOn": 0,
+      "spreadY": -999,
+      "revealY": -1.1,
+      "carveY": 0,
+      "doorProgress": 1,
+      "wallPhase": 0,
+      "wallProgress": -1,
+      "visibleWalkwayComponents": 120,
+      "visibleTowerFloors": 0,
+      "visiblePegs": 7,
+      "representation": "procedural",
+      "referenceReady": true,
+      "referenceOpacity": 0,
+      "referencePaintProgress": 0,
+      "referenceStats": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      },
+      "construction": {
+        "stage": "complete",
+        "progress": 1,
+        "impact": 0,
+        "activeGeometry": 0,
+        "excavationLayers": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 0
+      },
+      "excavation": {
+        "stage": "complete",
+        "progress": 1,
+        "carveY": 0,
+        "doorProgress": 1,
+        "lower1": 1,
+        "lower2": 1,
+        "complete": true,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": false,
+        "cutFrontVisible": false
+      },
+      "camera": {
+        "x": 0.000011111111111128391,
+        "y": 32.600004444444444,
+        "z": 18.500055555555555,
+        "fov": 27.00002222222222
+      }
+    },
+    "90.2": {
+      "time": 90.2,
+      "playing": false,
+      "playUntil": null,
+      "playFromChapter": -1,
+      "speed": 1,
+      "free": false,
+      "chapter": 13,
+      "phase": 6,
+      "morph": 0,
+      "spreadOn": 1,
+      "spreadY": 38.5,
+      "revealY": -1.1,
+      "carveY": 0,
+      "doorProgress": 1,
+      "wallPhase": 0,
+      "wallProgress": -1,
+      "visibleWalkwayComponents": 120,
+      "visibleTowerFloors": 0,
+      "visiblePegs": 7,
+      "representation": "reference-glb",
+      "referenceReady": true,
+      "referenceOpacity": 1,
+      "referencePaintProgress": 0,
+      "referenceStats": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      },
+      "construction": {
+        "stage": "paint-buddha",
+        "progress": 0,
+        "impact": 0,
+        "activeGeometry": 0,
+        "excavationLayers": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 96
+      },
+      "excavation": {
+        "stage": "paint-buddha",
+        "progress": 0,
+        "carveY": 0,
+        "doorProgress": 1,
+        "lower1": 1,
+        "lower2": 1,
+        "complete": true,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": false,
+        "cutFrontVisible": false
+      },
+      "camera": {
+        "x": 0,
+        "y": 32.6,
+        "z": 18.5,
+        "fov": 27.00002222222222
+      }
+    },
+    "92.9": {
+      "time": 92.9,
+      "playing": false,
+      "playUntil": null,
+      "playFromChapter": -1,
+      "speed": 1,
+      "free": false,
+      "chapter": 13,
+      "phase": 6,
+      "morph": 0,
+      "spreadOn": 1,
+      "spreadY": -0.25619834710748535,
+      "revealY": -1.1,
+      "carveY": 0,
+      "doorProgress": 1,
+      "wallPhase": 0,
+      "wallProgress": -1,
+      "visibleWalkwayComponents": 120,
+      "visibleTowerFloors": 0,
+      "visiblePegs": 7,
+      "representation": "reference-glb",
+      "referenceReady": true,
+      "referenceOpacity": 1,
+      "referencePaintProgress": 0.9642857142857163,
+      "referenceStats": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      },
+      "construction": {
+        "stage": "paint-buddha",
+        "progress": 0.8181818181818198,
+        "impact": 0,
+        "activeGeometry": 0,
+        "excavationLayers": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 96
+      },
+      "excavation": {
+        "stage": "paint-buddha",
+        "progress": 0.8181818181818198,
+        "carveY": 0,
+        "doorProgress": 1,
+        "lower1": 1,
+        "lower2": 1,
+        "complete": true,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": false,
+        "cutFrontVisible": false
+      },
+      "camera": {
+        "x": -0.997448979591837,
+        "y": 32.400510204081634,
+        "z": 21.99107142857143,
+        "fov": 27.997448979591837
+      }
+    },
+    "108.6": {
+      "time": 108.6,
+      "playing": false,
+      "playUntil": null,
+      "playFromChapter": -1,
+      "speed": 1,
+      "free": false,
+      "chapter": 14,
+      "phase": 6,
+      "morph": 0,
+      "spreadOn": 0,
+      "spreadY": -999,
+      "revealY": -1.1,
+      "carveY": 0,
+      "doorProgress": 1,
+      "wallPhase": 3,
+      "wallProgress": -1,
+      "visibleWalkwayComponents": 120,
+      "visibleTowerFloors": 0,
+      "visiblePegs": 7,
+      "representation": "reference-glb",
+      "referenceReady": true,
+      "referenceOpacity": 1,
+      "referencePaintProgress": 1,
+      "referenceStats": {
+        "glbVersion": 2,
+        "meshCount": 2,
+        "vertexCount": 171419,
+        "triangleCount": 342684,
+        "coloredMeshCount": 1,
+        "nodeCount": 2,
+        "materialCount": 2,
+        "extensionsRequired": [],
+        "bytes": 10279844,
+        "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+        "sourceBounds": {
+          "min": [
+            -0.3480651378631592,
+            -0.9504237771034241,
+            -0.28410694003105164
+          ],
+          "max": [
+            0.3474860191345215,
+            0.9483323693275452,
+            0.28188666701316833
+          ],
+          "size": [
+            0.6955511569976807,
+            1.8987561464309692,
+            0.56599360704422
+          ]
+        },
+        "fittedBounds": {
+          "min": [
+            -6.502168832956918,
+            0,
+            -4.891035683501946
+          ],
+          "max": [
+            6.502168832956919,
+            35.5,
+            5.691035683501945
+          ],
+          "size": [
+            13.004337665913837,
+            35.5,
+            10.582071367003891
+          ]
+        },
+        "scale": 18.6964503402547,
+        "frontAxis": "+Z"
+      },
+      "construction": {
+        "stage": "completed-cave",
+        "progress": 0,
+        "impact": 0,
+        "activeGeometry": 0,
+        "excavationLayers": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 0
+      },
+      "excavation": {
+        "stage": "completed-cave",
+        "progress": 0,
+        "carveY": 0,
+        "doorProgress": 1,
+        "lower1": 1,
+        "lower2": 1,
+        "complete": true,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": false,
+        "cutFrontVisible": false
+      },
+      "camera": {
+        "x": 0,
+        "y": 17,
+        "z": 58,
+        "fov": 36
+      }
+    }
+  },
+  "referencePaintFrames": {
+    "0": {
+      "representation": "reference-glb",
+      "progress": 1,
+      "stateFront": -1.08,
+      "uniformFront": -1.08,
+      "soft": 0.055,
+      "minPaint": 1,
+      "maxPaint": 1,
+      "nearFullFraction": 1,
+      "bodyOpacity": 1,
+      "urnaOpacity": 1,
+      "urnaColor": [
+        0.520995557308197,
+        0.014443843625485897,
+        0.020288562402129173
+      ]
+    },
+    "93": {
+      "representation": "reference-glb",
+      "progress": 1,
+      "stateFront": -1.08,
+      "uniformFront": -1.08,
+      "soft": 0.055,
+      "minPaint": 1,
+      "maxPaint": 1,
+      "nearFullFraction": 1,
+      "bodyOpacity": 1,
+      "urnaOpacity": 1,
+      "urnaColor": [
+        0.520995557308197,
+        0.014443843625485897,
+        0.020288562402129173
+      ]
+    },
+    "90.2": {
+      "representation": "reference-glb",
+      "progress": 0,
+      "stateFront": 1.08,
+      "uniformFront": 1.08,
+      "soft": 0.055,
+      "minPaint": 0,
+      "maxPaint": 0,
+      "nearFullFraction": 0,
+      "bodyOpacity": 1,
+      "urnaOpacity": 0,
+      "urnaColor": [
+        0.520995557308197,
+        0.014443843625485897,
+        0.020288562402129173
+      ]
+    },
+    "92.9": {
+      "representation": "reference-glb",
+      "progress": 0.9642857142857163,
+      "stateFront": -1.074489795918368,
+      "uniformFront": -1.074489795918368,
+      "soft": 0.055,
+      "minPaint": 1,
+      "maxPaint": 1,
+      "nearFullFraction": 1,
+      "bodyOpacity": 1,
+      "urnaOpacity": 1,
+      "urnaColor": [
+        0.520995557308197,
+        0.014443843625485897,
+        0.020288562402129173
+      ]
+    }
+  },
+  "excavationV2": {
+    "forward": {
+      "27": {
+        "time": 27,
+        "chapter": 3,
+        "representation": "none",
+        "excavation": {
+          "stage": "excavate-tunnel",
+          "progress": 0,
+          "carveY": 99,
+          "doorProgress": 0.818321,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "33": {
+        "time": 33,
+        "chapter": 4,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "excavate-arch",
+          "progress": 0.411765,
+          "carveY": 38,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "37": {
+        "time": 37,
+        "chapter": 5,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "excavate-main",
+          "progress": 0,
+          "carveY": 35.5,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "41": {
+        "time": 41,
+        "chapter": 5,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "excavate-main",
+          "progress": 0.434783,
+          "carveY": 27.352941,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "24.55": {
+        "time": 24.55,
+        "chapter": 3,
+        "representation": "none",
+        "excavation": {
+          "stage": "excavate-door",
+          "progress": 0,
+          "carveY": 99,
+          "doorProgress": 0,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "30.2": {
+        "time": 30.2,
+        "chapter": 4,
+        "representation": "none",
+        "excavation": {
+          "stage": "excavate-arch",
+          "progress": 0,
+          "carveY": 99,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "46.2": {
+        "time": 46.2,
+        "chapter": 6,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "excavate-lower",
+          "progress": 0,
+          "carveY": 14.5,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "49.6": {
+        "time": 49.6,
+        "chapter": 6,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "excavate-lower",
+          "progress": 0.62963,
+          "carveY": 7.230769,
+          "doorProgress": 1,
+          "lower1": 1,
+          "lower2": 0.106509,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "51.6": {
+        "time": 51.6,
+        "chapter": 7,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "stone-core",
+          "progress": 0,
+          "carveY": 0,
+          "doorProgress": 1,
+          "lower1": 1,
+          "lower2": 1,
+          "complete": true,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": false,
+          "cutFrontVisible": false
+        }
+      }
+    },
+    "reverse": {
+      "27": {
+        "time": 27,
+        "chapter": 3,
+        "representation": "none",
+        "excavation": {
+          "stage": "excavate-tunnel",
+          "progress": 0,
+          "carveY": 99,
+          "doorProgress": 0.818321,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "33": {
+        "time": 33,
+        "chapter": 4,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "excavate-arch",
+          "progress": 0.411765,
+          "carveY": 38,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "37": {
+        "time": 37,
+        "chapter": 5,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "excavate-main",
+          "progress": 0,
+          "carveY": 35.5,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "41": {
+        "time": 41,
+        "chapter": 5,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "excavate-main",
+          "progress": 0.434783,
+          "carveY": 27.352941,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "51.6": {
+        "time": 51.6,
+        "chapter": 7,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "stone-core",
+          "progress": 0,
+          "carveY": 0,
+          "doorProgress": 1,
+          "lower1": 1,
+          "lower2": 1,
+          "complete": true,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": false,
+          "cutFrontVisible": false
+        }
+      },
+      "49.6": {
+        "time": 49.6,
+        "chapter": 6,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "excavate-lower",
+          "progress": 0.62963,
+          "carveY": 7.230769,
+          "doorProgress": 1,
+          "lower1": 1,
+          "lower2": 0.106509,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "46.2": {
+        "time": 46.2,
+        "chapter": 6,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "excavate-lower",
+          "progress": 0,
+          "carveY": 14.5,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "30.2": {
+        "time": 30.2,
+        "chapter": 4,
+        "representation": "none",
+        "excavation": {
+          "stage": "excavate-arch",
+          "progress": 0,
+          "carveY": 99,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "24.55": {
+        "time": 24.55,
+        "chapter": 3,
+        "representation": "none",
+        "excavation": {
+          "stage": "excavate-door",
+          "progress": 0,
+          "carveY": 99,
+          "doorProgress": 0,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      }
+    },
+    "shuffled": {
+      "27": {
+        "time": 27,
+        "chapter": 3,
+        "representation": "none",
+        "excavation": {
+          "stage": "excavate-tunnel",
+          "progress": 0,
+          "carveY": 99,
+          "doorProgress": 0.818321,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "33": {
+        "time": 33,
+        "chapter": 4,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "excavate-arch",
+          "progress": 0.411765,
+          "carveY": 38,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "37": {
+        "time": 37,
+        "chapter": 5,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "excavate-main",
+          "progress": 0,
+          "carveY": 35.5,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "41": {
+        "time": 41,
+        "chapter": 5,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "excavate-main",
+          "progress": 0.434783,
+          "carveY": 27.352941,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "51.6": {
+        "time": 51.6,
+        "chapter": 7,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "stone-core",
+          "progress": 0,
+          "carveY": 0,
+          "doorProgress": 1,
+          "lower1": 1,
+          "lower2": 1,
+          "complete": true,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": false,
+          "cutFrontVisible": false
+        }
+      },
+      "24.55": {
+        "time": 24.55,
+        "chapter": 3,
+        "representation": "none",
+        "excavation": {
+          "stage": "excavate-door",
+          "progress": 0,
+          "carveY": 99,
+          "doorProgress": 0,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "49.6": {
+        "time": 49.6,
+        "chapter": 6,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "excavate-lower",
+          "progress": 0.62963,
+          "carveY": 7.230769,
+          "doorProgress": 1,
+          "lower1": 1,
+          "lower2": 0.106509,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "30.2": {
+        "time": 30.2,
+        "chapter": 4,
+        "representation": "none",
+        "excavation": {
+          "stage": "excavate-arch",
+          "progress": 0,
+          "carveY": 99,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": false,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      },
+      "46.2": {
+        "time": 46.2,
+        "chapter": 6,
+        "representation": "procedural",
+        "excavation": {
+          "stage": "excavate-lower",
+          "progress": 0,
+          "carveY": 14.5,
+          "doorProgress": 1,
+          "lower1": 0,
+          "lower2": 0,
+          "complete": false,
+          "sectionX": 99999,
+          "sectionVisible": false,
+          "rockFillVisible": false,
+          "floorVisible": true,
+          "activeTools": 0,
+          "movingLayers": 0,
+          "dustVisible": true,
+          "cutFrontVisible": false
+        }
+      }
+    }
+  },
+  "lifecycleBoundaries": {
+    "37": {
+      "excavation": {
+        "stage": "excavate-main",
+        "progress": 0,
+        "carveY": 35.5,
+        "doorProgress": 1,
+        "lower1": 0,
+        "lower2": 0,
+        "complete": false,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": true,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": true,
+        "cutFrontVisible": false
+      },
+      "construction": {
+        "stage": "excavate-main",
+        "progress": 0,
+        "impact": 0,
+        "activeGeometry": 4,
+        "excavationLayers": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 52
+      },
+      "visiblePegs": 7
+    },
+    "15.1": {
+      "excavation": {
+        "stage": "tower-reveal",
+        "progress": 1,
+        "carveY": 16.499999999999954,
+        "doorProgress": 1,
+        "lower1": 1,
+        "lower2": 1,
+        "complete": true,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": true,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": false,
+        "cutFrontVisible": false
+      },
+      "construction": {
+        "stage": "tower-reveal",
+        "progress": 1,
+        "impact": 0,
+        "activeGeometry": 0,
+        "excavationLayers": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 0,
+        "walkwayBuilt": 0,
+        "dustCount": 0
+      },
+      "visiblePegs": 7
+    },
+    "24.55": {
+      "excavation": {
+        "stage": "excavate-door",
+        "progress": 0,
+        "carveY": 99,
+        "doorProgress": 0,
+        "lower1": 0,
+        "lower2": 0,
+        "complete": false,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": true,
+        "cutFrontVisible": false
+      },
+      "construction": {
+        "stage": "excavate-door",
+        "progress": 0,
+        "impact": 0,
+        "activeGeometry": 2,
+        "excavationLayers": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 38
+      },
+      "visiblePegs": 7
+    },
+    "51.6": {
+      "excavation": {
+        "stage": "stone-core",
+        "progress": 0,
+        "carveY": 0,
+        "doorProgress": 1,
+        "lower1": 1,
+        "lower2": 1,
+        "complete": true,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": false,
+        "cutFrontVisible": false
+      },
+      "construction": {
+        "stage": "stone-core",
+        "progress": 0,
+        "impact": 0,
+        "activeGeometry": 0,
+        "excavationLayers": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 0
+      },
+      "visiblePegs": 7
+    },
+    "56.2": {
+      "excavation": {
+        "stage": "peg-insertion",
+        "progress": 0,
+        "carveY": 0,
+        "doorProgress": 1,
+        "lower1": 1,
+        "lower2": 1,
+        "complete": true,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": false,
+        "cutFrontVisible": false
+      },
+      "construction": {
+        "stage": "peg-insertion",
+        "progress": 0,
+        "impact": 0,
+        "activeGeometry": 0,
+        "excavationLayers": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 0
+      },
+      "visiblePegs": 0
+    },
+    "56.45": {
+      "excavation": {
+        "stage": "peg-insertion",
+        "progress": 0,
+        "carveY": 0,
+        "doorProgress": 1,
+        "lower1": 1,
+        "lower2": 1,
+        "complete": true,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": false,
+        "cutFrontVisible": false
+      },
+      "construction": {
+        "stage": "peg-insertion",
+        "progress": 0,
+        "impact": 0,
+        "activeGeometry": 0,
+        "excavationLayers": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 0
+      },
+      "visiblePegs": 0
+    },
+    "56.46": {
+      "excavation": {
+        "stage": "peg-insertion",
+        "progress": 0.0024630541871916286,
+        "carveY": 0,
+        "doorProgress": 1,
+        "lower1": 1,
+        "lower2": 1,
+        "complete": true,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 1,
+        "movingLayers": 0,
+        "dustVisible": false,
+        "cutFrontVisible": false
+      },
+      "construction": {
+        "stage": "peg-insertion",
+        "progress": 0.0024630541871916286,
+        "impact": 0.7279280419084411,
+        "activeGeometry": 0,
+        "excavationLayers": 0,
+        "movingPieces": 0,
+        "towerProgress": 1,
+        "walkwayProgress": 1,
+        "walkwayBuilt": 120,
+        "dustCount": 0
+      },
+      "visiblePegs": 1
+    }
+  },
+  "mobileDpr2": [
+    {
+      "time": 5,
+      "representation": "reference-glb",
+      "referenceVisible": true,
+      "triangles": 438154,
+      "renderMs": 191.5,
+      "devicePixelRatio": 2,
+      "rendererPixelRatio": 1.5,
+      "canvas": {
+        "width": 604,
+        "height": 339,
+        "aspect": 1.7817109144542773
+      },
+      "anchors": {
+        "face": {
+          "x": 0,
+          "y": -0.0032343377139621636,
+          "z": 0.9638871814807352,
+          "visible": true
+        }
+      },
+      "file": "mobile-dpr2-t005.png",
+      "sha256": "61c0f631cff451e309b8fff4c63b84176e705850d3ef9c6e0fcfbf876966528e"
+    },
+    {
+      "time": 93,
+      "representation": "reference-glb",
+      "referenceVisible": true,
+      "triangles": 438346,
+      "renderMs": 1700.2000000476837,
+      "devicePixelRatio": 2,
+      "rendererPixelRatio": 1.5,
+      "canvas": {
+        "width": 604,
+        "height": 339,
+        "aspect": 1.7817109144542773
+      },
+      "anchors": {
+        "center": {
+          "x": 0.0006976297808069775,
+          "y": -0.00007754307590235143,
+          "z": 0.9854935712808908,
+          "visible": true
+        },
+        "crown": {
+          "x": 0.000698330817344137,
+          "y": 0.8971670123159756,
+          "z": 0.9854782759822485,
+          "visible": true
+        },
+        "foot": {
+          "x": 0.0006969301503637569,
+          "y": -0.8955224631218234,
+          "z": 0.9855088359012081,
+          "visible": true
+        }
+      },
+      "file": "mobile-dpr2-t093.png",
+      "sha256": "731ee6daa253f4174e77b33da6ee82845485a8bd8170c0870beecad9d661d500"
+    }
+  ],
+  "mobileDpr2Excavation": [
+    {
+      "time": 30.2,
+      "representation": "none",
+      "excavation": {
+        "stage": "excavate-arch",
+        "progress": 0,
+        "carveY": 99,
+        "doorProgress": 1,
+        "lower1": 0,
+        "lower2": 0,
+        "complete": false,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": true,
+        "cutFrontVisible": false
+      },
+      "camera": {
+        "x": 8,
+        "y": 36,
+        "z": 70,
+        "fov": 33
+      },
+      "viewport": [
+        604,
+        816
+      ],
+      "devicePixelRatio": 2,
+      "rendererPixelRatio": 1.5,
+      "canvas": {
+        "width": 604,
+        "height": 339,
+        "aspect": 1.7817109144542773
+      },
+      "anchors": {
+        "cave": {
+          "arch": {
+            "x": 5.151880638693527e-18,
+            "y": -3.356950661092912e-16,
+            "z": 0.9867149699012979,
+            "visible": true
+          },
+          "chamber": {
+            "x": 4.797984300519108e-18,
+            "y": -0.7106916205628695,
+            "z": 0.9866737219018691,
+            "visible": true
+          }
+        },
+        "stoneCore": {
+          "crown": {
+            "x": -0.004240643333365235,
+            "y": -0.08581344385075525,
+            "z": 0.9864318903405115,
+            "visible": true
+          },
+          "center": {
+            "x": -0.0042554807171797295,
+            "y": -0.930067383944674,
+            "z": 0.9863819174586416,
+            "visible": true
+          }
+        }
+      },
+      "file": "mobile-dpr2-excavation-t30.2.png",
+      "sha256": "54303b73f6b391f57401dfc1f7535c57358273983ea618a4dfc484823303fef4"
+    },
+    {
+      "time": 37,
+      "representation": "procedural",
+      "excavation": {
+        "stage": "excavate-main",
+        "progress": 0,
+        "carveY": 35.5,
+        "doorProgress": 1,
+        "lower1": 0,
+        "lower2": 0,
+        "complete": false,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": true,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": true,
+        "cutFrontVisible": false
+      },
+      "camera": {
+        "x": 8,
+        "y": 26,
+        "z": 84,
+        "fov": 35
+      },
+      "viewport": [
+        604,
+        816
+      ],
+      "devicePixelRatio": 2,
+      "rendererPixelRatio": 1.5,
+      "canvas": {
+        "width": 604,
+        "height": 339,
+        "aspect": 1.7817109144542773
+      },
+      "anchors": {
+        "cave": {
+          "arch": {
+            "x": 3.738540786619795e-17,
+            "y": 0.4464582651762379,
+            "z": 0.9889788990950654,
+            "visible": true
+          },
+          "chamber": {
+            "x": 3.759772809492859e-17,
+            "y": -0.11138500116387866,
+            "z": 0.9890030365730837,
+            "visible": true
+          }
+        },
+        "stoneCore": {
+          "crown": {
+            "x": -0.002784368581783991,
+            "y": 0.3850832406326921,
+            "z": 0.988786823178909,
+            "visible": true
+          },
+          "center": {
+            "x": -0.0027775999081167137,
+            "y": -0.2740993272176709,
+            "z": 0.9888158189194257,
+            "visible": true
+          }
+        }
+      },
+      "file": "mobile-dpr2-excavation-t37.png",
+      "sha256": "81f6a901586f58710b405571b4e290ff1a48a3fdf20f552f698deca7f75c20e6"
+    },
+    {
+      "time": 46.2,
+      "representation": "procedural",
+      "excavation": {
+        "stage": "excavate-lower",
+        "progress": 0,
+        "carveY": 14.5,
+        "doorProgress": 1,
+        "lower1": 0,
+        "lower2": 0,
+        "complete": false,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": true,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": true,
+        "cutFrontVisible": false
+      },
+      "camera": {
+        "x": 12,
+        "y": 18,
+        "z": 88,
+        "fov": 36
+      },
+      "viewport": [
+        604,
+        816
+      ],
+      "devicePixelRatio": 2,
+      "rendererPixelRatio": 1.5,
+      "canvas": {
+        "width": 604,
+        "height": 339,
+        "aspect": 1.7817109144542773
+      },
+      "anchors": {
+        "cave": {
+          "arch": {
+            "x": 0.1075427885549757,
+            "y": 0.875710633025761,
+            "z": 0.9893637384692809,
+            "visible": true
+          },
+          "chamber": {
+            "x": 0.10630729570713962,
+            "y": 0.3490510996484093,
+            "z": 0.9894941408460279,
+            "visible": true
+          }
+        },
+        "stoneCore": {
+          "crown": {
+            "x": 0.1036890444534786,
+            "y": 0.8213477078733592,
+            "z": 0.9892007855263875,
+            "visible": true
+          },
+          "center": {
+            "x": 0.10228626597093163,
+            "y": 0.20188963811337624,
+            "z": 0.9893565517250927,
+            "visible": true
+          }
+        }
+      },
+      "file": "mobile-dpr2-excavation-t46.2.png",
+      "sha256": "238fcc48e56ee0dc7b3ab83ecf99c208736f779cea2c80b510de02eba1adc8ba"
+    },
+    {
+      "time": 51.6,
+      "representation": "procedural",
+      "excavation": {
+        "stage": "stone-core",
+        "progress": 0,
+        "carveY": 0,
+        "doorProgress": 1,
+        "lower1": 1,
+        "lower2": 1,
+        "complete": true,
+        "sectionX": 99999,
+        "sectionVisible": false,
+        "rockFillVisible": false,
+        "floorVisible": false,
+        "activeTools": 0,
+        "movingLayers": 0,
+        "dustVisible": false,
+        "cutFrontVisible": false
+      },
+      "camera": {
+        "x": 5.893491124260355,
+        "y": 20.94674556213018,
+        "z": 95.78698224852072,
+        "fov": 36.97337278106509
+      },
+      "viewport": [
+        604,
+        816
+      ],
+      "devicePixelRatio": 2,
+      "rendererPixelRatio": 1.5,
+      "canvas": {
+        "width": 604,
+        "height": 339,
+        "aspect": 1.7817109144542773
+      },
+      "anchors": {
+        "cave": {
+          "arch": {
+            "x": -0.0005881362736650096,
+            "y": 0.5572817182902545,
+            "z": 0.9903613698858748,
+            "visible": true
+          },
+          "chamber": {
+            "x": -0.0005863032108381773,
+            "y": 0.09275761715910379,
+            "z": 0.9903936379397072,
+            "visible": true
+          }
+        },
+        "stoneCore": {
+          "crown": {
+            "x": -0.002087408931028372,
+            "y": 0.5078554133716883,
+            "z": 0.9902134656844048,
+            "visible": true
+          },
+          "center": {
+            "x": -0.0020797365888466143,
+            "y": -0.039772083123785905,
+            "z": 0.9902520627418333,
+            "visible": true
+          }
+        }
+      },
+      "file": "mobile-dpr2-excavation-t51.6.png",
+      "sha256": "08b6a2b51bdad604084aaa61102504bf7111400794dcfda989c68d34290bf4b4"
+    }
+  ],
+  "finishedAt": "2026-08-06T04:33:18.409Z",
+  "pass": true
+}

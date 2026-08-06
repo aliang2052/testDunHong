@@ -24,6 +24,7 @@ const CONSTRUCTION = {
   cutCircleGeo: null,
   cutArchGeo: null,
   sectionBackdrop: null,
+  excavationLayers: [],
 };
 
 const _cgM = new THREE.Matrix4();
@@ -478,6 +479,10 @@ function hideConstructionTransient() {
     CONSTRUCTION.sectionEdge.material.opacity = 0;
     CONSTRUCTION.sectionEdge.visible = false;
   }
+  if (CONSTRUCTION.sectionBackdrop) {
+    CONSTRUCTION.sectionBackdrop.visible = false;
+    CONSTRUCTION.sectionBackdrop.material.opacity = 0;
+  }
   if (CONSTRUCTION.cutFront) { CONSTRUCTION.cutFront.visible = false; CONSTRUCTION.cutFront.material.opacity = 0; }
   if (CONSTRUCTION.walkPile) CONSTRUCTION.walkPile.visible = false;
   if (CONSTRUCTION.pegHoles) CONSTRUCTION.pegHoles.visible = false;
@@ -570,19 +575,18 @@ function excavationDescriptor(t) {
   }
   if (t >= 30.2 && t < 37.0) {
     const k = windowK(t, 30.2, 37.0);
-    const a = lerp(0.08, Math.PI - 0.08, easeInOut(k));
-    return { stage: 'arch', k, center: new THREE.Vector3(Math.cos(a) * 12.0, CAVE.yArch + Math.sin(a) * 4.4, -2.0), normal: new THREE.Vector3(0, -0.15, 1).normalize(), scale: 1.05, start: 30.2 };
+    return { stage: 'arch', k, center: new THREE.Vector3(0, lerp(CAVE.yTop, CAVE.yArch - 0.2, easeInOut(k)), CLIFF_Z + 0.7), normal: new THREE.Vector3(0, 0, 1), scale: 1.05, start: 30.2 };
   }
-  if (t >= 37.0 && t < 46.4) {
+  if (t >= 37.0 && t < 46.2) {
     const cy = CURVE_CARVE(t);
-    const k = windowK(t, 37.0, 46.4);
-    return { stage: 'main', k, center: new THREE.Vector3(Math.sin(t * 1.31) * 7.5, cy + 0.8, -0.5 + Math.cos(t * 0.8) * 3.2), normal: new THREE.Vector3(0, 1, 0), scale: 1.25, start: 37.0, cy };
+    const k = windowK(t, 37.0, 46.2);
+    return { stage: 'main', k, center: new THREE.Vector3(0, cy + 0.6, CLIFF_Z + 0.8), normal: new THREE.Vector3(0, 0, 1), scale: 1.25, start: 37.0, cy };
   }
-  if (t >= 46.4 && t < 52.0) {
-    const k = windowK(t, 46.4, 52.0);
+  if (t >= 46.2 && t < 51.6) {
+    const k = windowK(t, 46.2, 51.6);
     const upper = k < 0.52;
     const local = upper ? k / 0.52 : (k - 0.52) / 0.48;
-    return { stage: 'lower', k, center: new THREE.Vector3(-7.5, upper ? 16.0 : 4.0, lerp(CLIFF_Z + 0.6, -3.0, easeInOut(local))), normal: new THREE.Vector3(0, 0, 1), scale: 1.1, start: upper ? 46.4 : 49.3, local };
+    return { stage: 'lower', k, center: new THREE.Vector3(-7.5, upper ? 16.0 : 4.0, lerp(CLIFF_Z + 0.6, -3.0, easeInOut(local))), normal: new THREE.Vector3(0, 0, 1), scale: 1.1, start: upper ? 46.2 : 49.0, local };
   }
   return null;
 }
@@ -600,71 +604,40 @@ function updateExcavationBlocks(t, d) {
 
   let visible = 0;
   const q = new THREE.Quaternion();
-  for (let i = 0; i < mesh.count; i++) {
-    const sx = hash3(i * 11, 4, 17) - 0.5;
-    const sy = hash3(i * 17, 9, 7) - 0.5;
-    const sz = hash3(i * 29, 3, 23) - 0.5;
-    const seed = hash3(i * 37, 19, 5);
-    let p = _cgA;
-    let age = frac(t * (0.54 + seed * 0.22) + seed);
-    let show = age < 0.72;
-    if (d.stage === 'door') {
-      const row = Math.floor(i / 10), col = i % 10;
-      const x = (col - 4.5) * 0.78;
-      const y = 30.9 + row * 0.68;
-      const archTop = 34.4 + Math.sqrt(Math.max(0, 1 - Math.pow(x / 4.0, 2))) * 4.0;
-      if (y > archTop + 0.18) { show = false; }
-      const order = (row / 11) * 0.64 + (Math.abs(col - 4.5) / 5) * 0.23 + seed * 0.05;
-      const life = d.k - order;
-      show = show && life > 0 && life < 0.145;
-      age = clamp(life / 0.145, 0, 1);
-      p.set(x + sx * age * 3.0, y - age * age * 7.5, CLIFF_Z + 0.28 + age * (4.5 + seed * 4.5));
-    } else if (d.stage === 'tunnel') {
-      p.copy(d.center).add(_cgB.set(sx * 6.2, sy * 6.0, sz * 1.8));
-      p.z += age * (4.0 + seed * 5.0);
-      p.y -= age * age * 8.0;
-      show = age < 0.42 && seed > 0.22;
-    } else if (d.stage === 'arch') {
-      const a = (i / mesh.count) * Math.PI;
-      p.set(Math.cos(a) * 14.4 + sx * 1.2, CAVE.yArch + Math.sin(a) * 4.8 + sy, -2 + sz * 8);
-      const reveal = d.k - i / mesh.count;
-      show = reveal > 0 && reveal < 0.105;
-      age = clamp(reveal / 0.105, 0, 1);
-      p.x += sx * age * 5;
-      p.y -= age * age * 11;
-      p.z += age * 4;
-    } else if (d.stage === 'main') {
-      p.set(d.center.x + sx * 18.0, d.cy + sy * 2.0, d.center.z + sz * 14.0);
-      p.y -= age * age * (10 + seed * 7);
-      p.x += sx * age * 5;
-      p.z += sz * age * 5;
-      show = age < 0.42 && seed > 0.32;
-    } else if (d.stage === 'lower') {
-      p.copy(d.center).add(_cgB.set(sx * 7.5, sy * 5.8, sz * 2));
-      p.z += age * (7 + seed * 7);
-      p.y -= age * age * 10;
-      p.x += sx * age * 5;
-      show = age < 0.44 && seed > 0.20;
-    }
-    if (!show) continue;
-    q.setFromEuler(new THREE.Euler(age * (2 + seed * 4), age * (3 + sx * 5), age * (1 + sy * 4)));
-    const ss = (0.34 + seed * 0.72) * (1 - smoothstep(0.34, 0.48, age));
-    setInstance(mesh, i, p, q, _cgS.set(ss * (1 + Math.abs(sx)), ss * (0.7 + Math.abs(sy)), ss * (0.75 + Math.abs(sz))));
+  const largeLimit = d.stage === 'main' ? 14 : 10;
+  for (let i = 0; i < largeLimit; i++) {
+    const seed = hash3(i * 37 + Math.floor(d.start * 10), 19, 5);
+    const age = frac((t - d.start) * (0.42 + seed * 0.10) + seed * 0.83);
+    if (age > 0.30 || seed < 0.20) continue;
+    const a = hash3(i * 7, 2, 31) * TAU;
+    const spread = 1.2 + seed * 2.0;
+    const p = _cgA.copy(d.center).add(_cgB.set(
+      Math.cos(a) * spread * age,
+      0.45 - age * age * 5.5,
+      Math.sin(a) * spread * 0.35 + age * 2.4
+    ));
+    q.setFromEuler(new THREE.Euler(age * 3.2, age * (2.2 + seed), age * 2.4));
+    const ss = (0.18 + seed * 0.32) * (1 - smoothstep(0.20, 0.31, age));
+    setInstance(mesh, i, p, q, _cgS.set(ss * 1.25, ss * 0.82, ss));
     visible++;
   }
 
-  for (let i = 0; i < chips.count; i++) {
-    const seed = hash3(i * 19, 23, 5);
-    const age = frac(t * (1.35 + seed * 0.7) + seed);
-    if (age > 0.38 || seed < 0.18) continue;
+  const chipLimit = d.stage === 'main' || d.stage === 'lower' ? 22 : 15;
+  for (let i = 0; i < chipLimit; i++) {
+    const seed = hash3(i * 19 + Math.floor(d.start * 7), 23, 5);
+    const age = frac((t - d.start) * (0.78 + seed * 0.24) + seed);
+    if (age > 0.25 || seed < 0.28) continue;
     const a = hash3(i * 7, 2, 31) * TAU;
-    const v = 4 + hash3(i * 13, 11, 17) * 9;
-    const p = _cgA.copy(d.center);
-    if (d.normal.y > 0.5) p.add(_cgB.set(Math.cos(a) * v * age, 1.2 - age * age * 10, Math.sin(a) * v * age));
-    else p.add(_cgB.set(Math.cos(a) * v * age, Math.sin(a) * v * age - age * age * 6, d.normal.z * v * age));
-    q.setFromEuler(new THREE.Euler(age * 9, age * 6, age * 12));
-    const ss = (0.08 + seed * 0.18) * (1 - smoothstep(0.28, 0.40, age));
+    const v = 1.8 + hash3(i * 13, 11, 17) * 3.8;
+    const p = _cgA.copy(d.center).add(_cgB.set(
+      Math.cos(a) * v * age,
+      Math.sin(a) * v * age - age * age * 4.2,
+      0.3 + v * age
+    ));
+    q.setFromEuler(new THREE.Euler(age * 6, age * 4, age * 7));
+    const ss = (0.055 + seed * 0.11) * (1 - smoothstep(0.18, 0.26, age));
     setInstance(chips, i, p, q, _cgS.setScalar(ss));
+    visible++;
   }
   mesh.instanceMatrix.needsUpdate = true;
   chips.instanceMatrix.needsUpdate = true;
@@ -673,98 +646,59 @@ function updateExcavationBlocks(t, d) {
 
 function updateDustCloud(t, d) {
   const cloud = CONSTRUCTION.dust;
-  if (!cloud) return;
+  if (!cloud) return 0;
   if (!d) {
     cloud.points.visible = false;
     cloud.points.material.opacity = 0;
-    return;
+    return 0;
   }
   cloud.points.visible = true;
-  cloud.points.material.opacity = d.stage === 'main' || d.stage === 'lower' ? 0.74 : 0.62;
+  cloud.points.material.opacity = d.stage === 'main' || d.stage === 'lower' ? 0.24 : 0.18;
+  cloud.points.material.size = d.stage === 'main' ? 1.05 : 0.88;
+  const activeCount = d.stage === 'main' || d.stage === 'lower' ? 52 : 38;
   const arr = cloud.pos;
   for (let i = 0; i < cloud.count; i++) {
+    if (i >= activeCount) {
+      arr[i * 3] = 0; arr[i * 3 + 1] = -9999; arr[i * 3 + 2] = 0;
+      continue;
+    }
     const s = cloud.seeds[i];
-    const age = frac(t * (0.24 + s.phase * 0.18) + s.phase);
+    const age = frac((t - d.start) * (0.18 + s.phase * 0.10) + s.phase);
     const grow = Math.sin(Math.min(1, age * 1.5) * Math.PI * 0.5);
-    const r = s.r * (0.5 + age * (d.stage === 'main' ? 5.2 : 3.2));
-    const x = d.center.x + Math.cos(s.a) * r + s.drift * age * 4;
-    const z = d.center.z + Math.sin(s.a) * r + (d.normal.z > 0.5 ? age * 3.5 : 0);
-    const y = d.center.y + s.lift * grow + age * (d.normal.y > 0.5 ? 1.1 : 0.2) - age * age * 1.4;
+    const r = s.r * (0.25 + age * 1.35);
+    const x = d.center.x + Math.cos(s.a) * r + s.drift * age * 1.5;
+    const z = d.center.z + Math.sin(s.a) * r * 0.45 + age * 1.6;
+    const y = d.center.y + s.lift * grow * 0.55 - age * age * 0.9;
     arr[i * 3] = x; arr[i * 3 + 1] = y; arr[i * 3 + 2] = z;
   }
   cloud.points.geometry.attributes.position.needsUpdate = true;
+  return activeCount;
 }
 
 function updateExcavationTools(t, d) {
-  const tools = CONSTRUCTION.tools;
-  for (const tool of tools) tool.visible = false;
-  if (!d) return 0;
-  const period = d.stage === 'main' ? 0.62 : 0.74;
-  const impact = Math.max(pulse01((t - d.start) / period, 0.20), pulse01((t - d.start + 0.23) / period, 0.16) * 0.75);
-  for (let i = 0; i < tools.length; i++) {
-    if (i === 1 && d.stage !== 'main' && d.stage !== 'lower' && d.stage !== 'arch') continue;
-    const tool = tools[i];
-    tool.visible = true;
-    const offset = i === 0 ? -1 : 1;
-    const p = d.center.clone();
-    if (d.normal.y > 0.5) p.add(new THREE.Vector3(offset * 3.4, 1.0, 1.8));
-    else p.add(new THREE.Vector3(offset * 1.35, i * 0.8, 0.7));
-    tool.position.copy(p);
-    orientZTo(tool.quaternion, d.normal);
-    tool.scale.setScalar(d.scale * (i === 0 ? 1 : 0.86));
-    const ph = frac((t - d.start + i * 0.25) / period);
-    let swing;
-    if (ph < 0.72) swing = lerp(-1.05, 0.10, easeInOut(ph / 0.72));
-    else swing = lerp(0.10, -0.62, easeOut((ph - 0.72) / 0.28));
-    tool.userData.hammerPivot.rotation.x = swing;
-    tool.userData.hammerPivot.rotation.z = (i ? -0.13 : 0.13) + Math.sin(t * 2.2 + i) * 0.05;
-    tool.userData.chisel.position.z = impact * -0.12;
-  }
-  if (CONSTRUCTION.flash) {
-    CONSTRUCTION.flash.position.copy(d.center).addScaledVector(d.normal, 1.1);
-    CONSTRUCTION.flash.intensity = impact * 220;
-  }
-  return impact;
+  for (const tool of CONSTRUCTION.tools) tool.visible = false;
+  if (CONSTRUCTION.flash) CONSTRUCTION.flash.intensity = 0;
+  return 0;
 }
 
 function updateSectionAndFront(t, d) {
-  const sectionOn = t >= 26.7 && t < 51.6;
   const plane = CONSTRUCTION.sectionPlane;
   if (plane) {
-    const sx = CURVE_SECTION(t);
-    if (sx < 9000) {
-      plane.position.x = sx;
-      CONSTRUCTION.sectionEdge.position.x = sx;
-    }
-    plane.visible = sectionOn;
-    CONSTRUCTION.sectionEdge.visible = sectionOn;
-    const fade = sectionOn ? smoothstep(26.7, 27.4, t) * smoothstep(51.6, 50.8, t) : 0;
-    // 只保留极轻的切面提示；主体由后方岩层背景封闭，避免切面像一块挡板。
-    plane.material.opacity = 0.035 * fade;
+    plane.visible = false;
+    CONSTRUCTION.sectionEdge.visible = false;
+    plane.material.opacity = 0;
     plane.material.depthWrite = false;
-    CONSTRUCTION.sectionEdge.material.opacity = 0.24 * fade;
+    CONSTRUCTION.sectionEdge.material.opacity = 0;
     if (CONSTRUCTION.sectionBackdrop) {
-      CONSTRUCTION.sectionBackdrop.visible = sectionOn;
-      CONSTRUCTION.sectionBackdrop.material.opacity = 0.96 * fade;
-      CONSTRUCTION.sectionBackdrop.material.depthWrite = fade > 0.08;
+      CONSTRUCTION.sectionBackdrop.visible = false;
+      CONSTRUCTION.sectionBackdrop.material.opacity = 0;
+      CONSTRUCTION.sectionBackdrop.material.depthWrite = false;
     }
   }
   const front = CONSTRUCTION.cutFront;
   if (!front) return;
-  front.visible = !!d && (d.stage === 'main' || d.stage === 'arch');
-  if (!front.visible) { front.material.opacity = 0; return; }
-  if (d.stage === 'main') {
-    if (front.geometry !== CONSTRUCTION.cutCircleGeo) front.geometry = CONSTRUCTION.cutCircleGeo;
-    front.rotation.set(-Math.PI / 2, 0, 0);
-    front.position.set(0, d.cy + 0.18, -0.8);
-    front.scale.set(1, 0.70, 1);
-  } else {
-    if (front.geometry !== CONSTRUCTION.cutArchGeo) front.geometry = CONSTRUCTION.cutArchGeo;
-    front.rotation.set(0, 0, 0);
-    front.position.set(0, CAVE.yArch - 0.15, -1.8);
-    front.scale.set(1.45, 0.48, 1);
-  }
-  front.material.opacity = 0.18 + Math.sin(t * 5) * 0.035;
+  front.visible = false;
+  front.material.opacity = 0;
 }
 
 function updatePegConstruction(t) {
@@ -776,6 +710,7 @@ function updatePegConstruction(t) {
   if (!on) return { impact: 0, active: 0 };
   let active = -1;
   let activeK = 0;
+  let completed = 0;
   for (let i = 0; i < pegs.length; i++) {
     const p = pegs[i];
     const st = 56.45 + i * 0.52;
@@ -784,6 +719,7 @@ function updatePegConstruction(t) {
     p.scale.setScalar(k > 0.001 ? 1 : 0.001);
     p.quaternion.copy(p.userData.finalQuaternion);
     p.position.copy(p.userData.finalPosition).addScaledVector(p.userData.axis, (1 - easeOut(k)) * 3.2);
+    if (k >= 1) completed++;
     if (k > 0 && k < 1) { active = i; activeK = k; }
   }
   if (active >= 0) {
@@ -802,7 +738,7 @@ function updatePegConstruction(t) {
     }
     return { impact, active: active + activeK };
   }
-  return { impact: 0, active: pegs.length };
+  return { impact: 0, active: completed };
 }
 
 const MUD_WINDOWS = [
@@ -1055,7 +991,8 @@ function updateConstruction(t) {
 
   const d = excavationDescriptor(t);
   const blocks = updateExcavationBlocks(t, d);
-  updateDustCloud(t, d);
+  const movingLayers = 0;
+  const excavationDustCount = updateDustCloud(t, d);
   const impactExc = updateExcavationTools(t, d);
   updateSectionAndFront(t, d);
 
@@ -1082,7 +1019,7 @@ function updateConstruction(t) {
   let stage = 'complete', progress = 1;
   if (t < 15.2) { stage = 'tower-reveal'; progress = CURVE_TOWER(t); }
   else if (t < 20.2) { stage = 'bare-cliff'; progress = windowK(t, 15.2, 20.2); }
-  else if (t < 24.8) { stage = 'walkway-assembly'; progress = CURVE_WALK(t); }
+  else if (t < 24.55) { stage = 'walkway-assembly'; progress = CURVE_WALK(t); }
   else if (d) { stage = 'excavate-' + d.stage; progress = d.k; }
   else if (t < 56.2) { stage = 'stone-core'; progress = windowK(t, 52, 56.2); }
   else if (t < 64.8) { stage = 'peg-insertion'; progress = peg.active / Math.max(1, (BUDDHA.parts.pegList || []).length); }
@@ -1099,12 +1036,13 @@ function updateConstruction(t) {
     stage,
     progress,
     impact,
-    activeGeometry: blocks + mudCount,
+    activeGeometry: blocks + movingLayers + mudCount,
+    excavationLayers: movingLayers,
     movingPieces: towerState.moving + walkState.moving,
     towerProgress: towerState.k,
     walkwayProgress: walkState.k,
     walkwayBuilt: walkState.built,
-    dustCount: d ? CONSTRUCTION.dust.count : ((w || wall) ? CONSTRUCTION.pigment.count : 0),
+    dustCount: d ? excavationDustCount : ((w || wall) ? CONSTRUCTION.pigment.count : 0),
   };
   return CONSTRUCTION.state;
 }

@@ -222,11 +222,16 @@ function applySculptState(t, carveY) {
 
 function applyCarveState(t) {
   const carveY = CURVE_CARVE(t);
-  setCarveY(carveY);
+  const excavationV2 = t >= 24.55 && t < 51.6;
+  setCarveY(carveY, excavationV2);
+  // V2 exposes the cavity through the cliff mask itself. Hiding the legacy
+  // 70m moving fill removes the descending-box artifact without replacing
+  // the cave, wall, or Buddha state contracts.
+  if (WORLD.rockFill && excavationV2) WORLD.rockFill.visible = false;
 
   let doorProgress = 0;
-  if (t < 15.2 || t >= 27.0) doorProgress = 1;
-  else if (t >= 24.55) doorProgress = easeOut(windowK(t, 24.55, 27.0));
+  if (t < 15.2 || t >= 30.2) doorProgress = 1;
+  else if (t >= 24.55) doorProgress = easeOut(windowK(t, 24.55, 30.2));
   setDoorProgress(doorProgress);
   const unobstructedFaceShot = (t >= 2.6 && t < 5.6) || (t >= 87.2 && t < 93.0);
   if (WORLD.doorTunnel) WORLD.doorTunnel.visible = doorProgress > 0.035 && !unobstructedFaceShot;
@@ -239,14 +244,16 @@ function applyCarveState(t) {
     lower2 = easeInOut(windowK(t, 49.0, 51.6));
   }
   setLowerCaveProgress(lower1, lower2);
-  setSectionX(CURVE_SECTION(t));
+  // The moving cutaway was the main source of black slabs and visual seams.
+  // Keep the established API, but hold it in its disabled state for V2.
+  setSectionX(99999);
 
-  return { carveY, doorProgress, lower1, lower2, complete };
+  return { carveY, doorProgress, lower1, lower2, complete, excavationV2, sectionX: 99999 };
 }
 
 function applyState(t, dt) {
   const carve = applyCarveState(t);
-  const sectionOn = t >= 26.7 && t < 51.6 && CURVE_SECTION(t) < 9000;
+  const sectionOn = false;
   scene.background = sectionOn ? APP.sectionBackground : APP.skyBackground;
   scene.fog.color.copy(sectionOn ? APP.sectionFogColor : APP.skyFogColor);
   const sculpt = applySculptState(t, carve.carveY);
@@ -571,6 +578,23 @@ function visualState() {
     referencePaintProgress: BUDDHA.referencePaintProgress,
     referenceStats: BUDDHA.referenceStats,
     construction: { ...CONSTRUCTION.state },
+    excavation: {
+      stage: CONSTRUCTION.state.stage,
+      progress: CONSTRUCTION.state.progress,
+      carveY: CARVE_U.uCarveY.value,
+      doorProgress: CARVE_U.uDoorProgress.value,
+      lower1: APP.lastVisualState?.lower1 ?? 0,
+      lower2: APP.lastVisualState?.lower2 ?? 0,
+      complete: APP.lastVisualState?.complete ?? false,
+      sectionX: CARVE_U.uSectionX.value,
+      sectionVisible: !!CONSTRUCTION.sectionPlane?.visible || !!CONSTRUCTION.sectionBackdrop?.visible,
+      rockFillVisible: !!WORLD.rockFill?.visible,
+      floorVisible: !!WORLD.excavationFloor?.visible,
+      activeTools: visibleCount(CONSTRUCTION.tools),
+      movingLayers: visibleCount(CONSTRUCTION.excavationLayers),
+      dustVisible: !!CONSTRUCTION.dust?.points.visible && CONSTRUCTION.dust.points.material.opacity > 0.001,
+      cutFrontVisible: !!CONSTRUCTION.cutFront?.visible,
+    },
     camera: {
       x: (APP.free ? freeCam : camera).position.x,
       y: (APP.free ? freeCam : camera).position.y,
