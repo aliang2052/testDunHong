@@ -1,8 +1,8 @@
 {
   "input": "/Users/sniper/Desktop/temp/testDunHong/index.html",
-  "inputBytes": 15236629,
-  "inputSha256": "c679a30c6263e998a6381e3823f8fda6b9c88d34d6506a7f70cb13b5a02bb34f",
-  "startedAt": "2026-08-06T02:45:53.523Z",
+  "inputBytes": 15238811,
+  "inputSha256": "dc37bd5392798347f7e95e5efa29725c99277c8081434c4b46d123f3b9e89711",
+  "startedAt": "2026-08-06T03:03:38.381Z",
   "checks": {
     "ready-hook": {
       "pass": true,
@@ -102,7 +102,8 @@
         },
         "meshCount": 2,
         "materialCount": 2,
-        "hasVertexColors": true
+        "hasColorAccessor": true,
+        "usesLegacyVertexColors": false
       }
     },
     "reference-glb-sha256": {
@@ -261,7 +262,8 @@
         },
         "meshCount": 2,
         "materialCount": 2,
-        "hasVertexColors": true
+        "hasColorAccessor": true,
+        "usesLegacyVertexColors": false
       }
     },
     "reference-glb-geometry": {
@@ -315,7 +317,7 @@
         "frontAxis": "+Z"
       }
     },
-    "reference-glb-vertex-colors": {
+    "reference-glb-color-accessor": {
       "pass": true,
       "detail": {
         "ready": true,
@@ -369,7 +371,66 @@
         },
         "meshCount": 2,
         "materialCount": 2,
-        "hasVertexColors": true
+        "hasColorAccessor": true,
+        "usesLegacyVertexColors": false
+      }
+    },
+    "reference-position-shader-replaces-legacy-colors": {
+      "pass": true,
+      "detail": {
+        "ready": true,
+        "stats": {
+          "glbVersion": 2,
+          "meshCount": 2,
+          "vertexCount": 171419,
+          "triangleCount": 342684,
+          "coloredMeshCount": 1,
+          "nodeCount": 2,
+          "materialCount": 2,
+          "extensionsRequired": [],
+          "bytes": 10279844,
+          "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376",
+          "sourceBounds": {
+            "min": [
+              -0.3480651378631592,
+              -0.9504237771034241,
+              -0.28410694003105164
+            ],
+            "max": [
+              0.3474860191345215,
+              0.9483323693275452,
+              0.28188666701316833
+            ],
+            "size": [
+              0.6955511569976807,
+              1.8987561464309692,
+              0.56599360704422
+            ]
+          },
+          "fittedBounds": {
+            "min": [
+              -6.502168832956918,
+              0,
+              -4.891035683501946
+            ],
+            "max": [
+              6.502168832956919,
+              35.5,
+              5.691035683501945
+            ],
+            "size": [
+              13.004337665913837,
+              35.5,
+              10.582071367003891
+            ]
+          },
+          "scale": 18.6964503402547,
+          "frontAxis": "+Z"
+        },
+        "meshCount": 2,
+        "materialCount": 2,
+        "hasColorAccessor": true,
+        "usesLegacyVertexColors": false
       }
     },
     "reference-glb-height": {
@@ -395,6 +456,198 @@
     "reference-glb-no-extensions": {
       "pass": true,
       "detail": []
+    },
+    "reference-position-shader-configured": {
+      "pass": true,
+      "detail": {
+        "cacheKey": "reference-buddha-position-paint-v2",
+        "vertexColors": false,
+        "roughness": 0.72,
+        "metalness": 0.02,
+        "side": 2,
+        "doubleSide": 2,
+        "uniformKeys": [
+          "uBuddhaMin",
+          "uBuddhaSize",
+          "uReferenceClay",
+          "uReferencePaintFront",
+          "uReferencePaintSoft"
+        ],
+        "syntheticUniformKeys": [
+          "uBuddhaMin",
+          "uBuddhaSize",
+          "uReferenceClay",
+          "uReferencePaintFront",
+          "uReferencePaintSoft"
+        ],
+        "vertexInjected": true,
+        "fragmentTokens": {
+          "vBuddhaPos": true,
+          "uBuddhaMin": true,
+          "uBuddhaSize": true,
+          "vec3 blue": true,
+          "vec3 red": true,
+          "vec3 ochre": true,
+          "chestMask": true,
+          "weave": true,
+          "mix(uReferenceClay, robe, referencePaint)": true
+        },
+        "mapFragmentReplaced": true,
+        "programCompiled": true,
+        "boxMin": [
+          -0.3480651378631592,
+          -0.9504237771034241,
+          -0.28410694003105164
+        ],
+        "boxSize": [
+          0.6955511569976807,
+          1.8987561464309692,
+          0.56599360704422
+        ],
+        "uniformMin": [
+          -0.3480651378631592,
+          -0.9504237771034241,
+          -0.28410694003105164
+        ],
+        "uniformSize": [
+          0.6955511569976807,
+          1.8987561464309692,
+          0.56599360704422
+        ]
+      }
+    },
+    "reference-position-shader-compiled": {
+      "pass": true,
+      "detail": {
+        "cacheKey": "reference-buddha-position-paint-v2",
+        "vertexColors": false,
+        "roughness": 0.72,
+        "metalness": 0.02,
+        "side": 2,
+        "doubleSide": 2,
+        "uniformKeys": [
+          "uBuddhaMin",
+          "uBuddhaSize",
+          "uReferenceClay",
+          "uReferencePaintFront",
+          "uReferencePaintSoft"
+        ],
+        "syntheticUniformKeys": [
+          "uBuddhaMin",
+          "uBuddhaSize",
+          "uReferenceClay",
+          "uReferencePaintFront",
+          "uReferencePaintSoft"
+        ],
+        "vertexInjected": true,
+        "fragmentTokens": {
+          "vBuddhaPos": true,
+          "uBuddhaMin": true,
+          "uBuddhaSize": true,
+          "vec3 blue": true,
+          "vec3 red": true,
+          "vec3 ochre": true,
+          "chestMask": true,
+          "weave": true,
+          "mix(uReferenceClay, robe, referencePaint)": true
+        },
+        "mapFragmentReplaced": true,
+        "programCompiled": true,
+        "boxMin": [
+          -0.3480651378631592,
+          -0.9504237771034241,
+          -0.28410694003105164
+        ],
+        "boxSize": [
+          0.6955511569976807,
+          1.8987561464309692,
+          0.56599360704422
+        ],
+        "uniformMin": [
+          -0.3480651378631592,
+          -0.9504237771034241,
+          -0.28410694003105164
+        ],
+        "uniformSize": [
+          0.6955511569976807,
+          1.8987561464309692,
+          0.56599360704422
+        ]
+      }
+    },
+    "reference-position-shader-bounds": {
+      "pass": true,
+      "detail": {
+        "cacheKey": "reference-buddha-position-paint-v2",
+        "vertexColors": false,
+        "roughness": 0.72,
+        "metalness": 0.02,
+        "side": 2,
+        "doubleSide": 2,
+        "uniformKeys": [
+          "uBuddhaMin",
+          "uBuddhaSize",
+          "uReferenceClay",
+          "uReferencePaintFront",
+          "uReferencePaintSoft"
+        ],
+        "syntheticUniformKeys": [
+          "uBuddhaMin",
+          "uBuddhaSize",
+          "uReferenceClay",
+          "uReferencePaintFront",
+          "uReferencePaintSoft"
+        ],
+        "vertexInjected": true,
+        "fragmentTokens": {
+          "vBuddhaPos": true,
+          "uBuddhaMin": true,
+          "uBuddhaSize": true,
+          "vec3 blue": true,
+          "vec3 red": true,
+          "vec3 ochre": true,
+          "chestMask": true,
+          "weave": true,
+          "mix(uReferenceClay, robe, referencePaint)": true
+        },
+        "mapFragmentReplaced": true,
+        "programCompiled": true,
+        "boxMin": [
+          -0.3480651378631592,
+          -0.9504237771034241,
+          -0.28410694003105164
+        ],
+        "boxSize": [
+          0.6955511569976807,
+          1.8987561464309692,
+          0.56599360704422
+        ],
+        "uniformMin": [
+          -0.3480651378631592,
+          -0.9504237771034241,
+          -0.28410694003105164
+        ],
+        "uniformSize": [
+          0.6955511569976807,
+          1.8987561464309692,
+          0.56599360704422
+        ]
+      }
+    },
+    "reference-urna-material-preserved": {
+      "pass": true,
+      "detail": {
+        "meshName": "白毫红点",
+        "materialName": "白毫红点材质",
+        "color": [
+          0.520995557308197,
+          0.014443843625485897,
+          0.020288562402129173
+        ],
+        "paintY": 0.79,
+        "hasPositionShader": false,
+        "cacheKey": "onBeforeCompile( /* shaderobject, renderer */ ) {}"
+      }
     },
     "reference-used-at-opening": {
       "pass": true,
@@ -1140,6 +1393,232 @@
         }
       }
     },
+    "reference-paint-uniform-synchronized": {
+      "pass": true,
+      "detail": {
+        "0": {
+          "representation": "reference-glb",
+          "progress": 1,
+          "stateFront": -1.08,
+          "uniformFront": -1.08,
+          "soft": 0.055,
+          "minPaint": 1,
+          "maxPaint": 1,
+          "nearFullFraction": 1,
+          "bodyOpacity": 1,
+          "urnaOpacity": 1,
+          "urnaColor": [
+            0.520995557308197,
+            0.014443843625485897,
+            0.020288562402129173
+          ]
+        },
+        "93": {
+          "representation": "reference-glb",
+          "progress": 1,
+          "stateFront": -1.08,
+          "uniformFront": -1.08,
+          "soft": 0.055,
+          "minPaint": 1,
+          "maxPaint": 1,
+          "nearFullFraction": 1,
+          "bodyOpacity": 1,
+          "urnaOpacity": 1,
+          "urnaColor": [
+            0.520995557308197,
+            0.014443843625485897,
+            0.020288562402129173
+          ]
+        },
+        "90.2": {
+          "representation": "reference-glb",
+          "progress": 0,
+          "stateFront": 1.08,
+          "uniformFront": 1.08,
+          "soft": 0.055,
+          "minPaint": 0,
+          "maxPaint": 0,
+          "nearFullFraction": 0,
+          "bodyOpacity": 1,
+          "urnaOpacity": 0,
+          "urnaColor": [
+            0.520995557308197,
+            0.014443843625485897,
+            0.020288562402129173
+          ]
+        },
+        "92.9": {
+          "representation": "reference-glb",
+          "progress": 0.9642857142857163,
+          "stateFront": -1.074489795918368,
+          "uniformFront": -1.074489795918368,
+          "soft": 0.055,
+          "minPaint": 1,
+          "maxPaint": 1,
+          "nearFullFraction": 1,
+          "bodyOpacity": 1,
+          "urnaOpacity": 1,
+          "urnaColor": [
+            0.520995557308197,
+            0.014443843625485897,
+            0.020288562402129173
+          ]
+        }
+      }
+    },
+    "reference-opening-fully-painted": {
+      "pass": true,
+      "detail": {
+        "representation": "reference-glb",
+        "progress": 1,
+        "stateFront": -1.08,
+        "uniformFront": -1.08,
+        "soft": 0.055,
+        "minPaint": 1,
+        "maxPaint": 1,
+        "nearFullFraction": 1,
+        "bodyOpacity": 1,
+        "urnaOpacity": 1,
+        "urnaColor": [
+          0.520995557308197,
+          0.014443843625485897,
+          0.020288562402129173
+        ]
+      }
+    },
+    "reference-paint-start-is-clay": {
+      "pass": true,
+      "detail": {
+        "representation": "reference-glb",
+        "progress": 0,
+        "stateFront": 1.08,
+        "uniformFront": 1.08,
+        "soft": 0.055,
+        "minPaint": 0,
+        "maxPaint": 0,
+        "nearFullFraction": 0,
+        "bodyOpacity": 1,
+        "urnaOpacity": 0,
+        "urnaColor": [
+          0.520995557308197,
+          0.014443843625485897,
+          0.020288562402129173
+        ]
+      }
+    },
+    "reference-nearly-painted-before-cut": {
+      "pass": true,
+      "detail": {
+        "representation": "reference-glb",
+        "progress": 0.9642857142857163,
+        "stateFront": -1.074489795918368,
+        "uniformFront": -1.074489795918368,
+        "soft": 0.055,
+        "minPaint": 1,
+        "maxPaint": 1,
+        "nearFullFraction": 1,
+        "bodyOpacity": 1,
+        "urnaOpacity": 1,
+        "urnaColor": [
+          0.520995557308197,
+          0.014443843625485897,
+          0.020288562402129173
+        ]
+      }
+    },
+    "reference-full-paint-at-cut": {
+      "pass": true,
+      "detail": {
+        "representation": "reference-glb",
+        "progress": 1,
+        "stateFront": -1.08,
+        "uniformFront": -1.08,
+        "soft": 0.055,
+        "minPaint": 1,
+        "maxPaint": 1,
+        "nearFullFraction": 1,
+        "bodyOpacity": 1,
+        "urnaOpacity": 1,
+        "urnaColor": [
+          0.520995557308197,
+          0.014443843625485897,
+          0.020288562402129173
+        ]
+      }
+    },
+    "reference-urna-paint-sequence": {
+      "pass": true,
+      "detail": {
+        "0": {
+          "representation": "reference-glb",
+          "progress": 1,
+          "stateFront": -1.08,
+          "uniformFront": -1.08,
+          "soft": 0.055,
+          "minPaint": 1,
+          "maxPaint": 1,
+          "nearFullFraction": 1,
+          "bodyOpacity": 1,
+          "urnaOpacity": 1,
+          "urnaColor": [
+            0.520995557308197,
+            0.014443843625485897,
+            0.020288562402129173
+          ]
+        },
+        "93": {
+          "representation": "reference-glb",
+          "progress": 1,
+          "stateFront": -1.08,
+          "uniformFront": -1.08,
+          "soft": 0.055,
+          "minPaint": 1,
+          "maxPaint": 1,
+          "nearFullFraction": 1,
+          "bodyOpacity": 1,
+          "urnaOpacity": 1,
+          "urnaColor": [
+            0.520995557308197,
+            0.014443843625485897,
+            0.020288562402129173
+          ]
+        },
+        "90.2": {
+          "representation": "reference-glb",
+          "progress": 0,
+          "stateFront": 1.08,
+          "uniformFront": 1.08,
+          "soft": 0.055,
+          "minPaint": 0,
+          "maxPaint": 0,
+          "nearFullFraction": 0,
+          "bodyOpacity": 1,
+          "urnaOpacity": 0,
+          "urnaColor": [
+            0.520995557308197,
+            0.014443843625485897,
+            0.020288562402129173
+          ]
+        },
+        "92.9": {
+          "representation": "reference-glb",
+          "progress": 0.9642857142857163,
+          "stateFront": -1.074489795918368,
+          "uniformFront": -1.074489795918368,
+          "soft": 0.055,
+          "minPaint": 1,
+          "maxPaint": 1,
+          "nearFullFraction": 1,
+          "bodyOpacity": 1,
+          "urnaOpacity": 1,
+          "urnaColor": [
+            0.520995557308197,
+            0.014443843625485897,
+            0.020288562402129173
+          ]
+        }
+      }
+    },
     "reference-model-rendered": {
       "pass": true,
       "detail": {
@@ -1208,7 +1687,7 @@
     "chapter-seek-and-play": {
       "pass": true,
       "detail": {
-        "time": 20.732699999809263,
+        "time": 20.233199999809266,
         "playing": true
       }
     },
@@ -1247,7 +1726,7 @@
           "representation": "reference-glb",
           "referenceVisible": true,
           "triangles": 438154,
-          "renderMs": 100.29999995231628,
+          "renderMs": 97.20000004768372,
           "devicePixelRatio": 2,
           "rendererPixelRatio": 1.5,
           "canvas": {
@@ -1264,14 +1743,14 @@
             }
           },
           "file": "mobile-dpr2-t005.png",
-          "sha256": "105619b7e7ba1eab690abc25c277e1e7e974e488149fcb4fe7d29c36d64b508f"
+          "sha256": "ca09af46ca2e5bf0b7677983cc0f4578aa89fa3dc4f1065d68b6746f8e3160a1"
         },
         {
           "time": 93,
           "representation": "reference-glb",
           "referenceVisible": true,
           "triangles": 438346,
-          "renderMs": 1751,
+          "renderMs": 197.20000004768372,
           "devicePixelRatio": 2,
           "rendererPixelRatio": 1.5,
           "canvas": {
@@ -1300,7 +1779,7 @@
             }
           },
           "file": "mobile-dpr2-t093.png",
-          "sha256": "822ec91e06a894816aadf87a33b372b4cb738dcbf8ea759ca12c3b7bcc528fe0"
+          "sha256": "1bcb97e7c05e8889397580e10d411242f0201e82e68a98915ffe2b717f3e2cf5"
         }
       ]
     },
@@ -1312,7 +1791,7 @@
           "representation": "reference-glb",
           "referenceVisible": true,
           "triangles": 438154,
-          "renderMs": 100.29999995231628,
+          "renderMs": 97.20000004768372,
           "devicePixelRatio": 2,
           "rendererPixelRatio": 1.5,
           "canvas": {
@@ -1329,14 +1808,14 @@
             }
           },
           "file": "mobile-dpr2-t005.png",
-          "sha256": "105619b7e7ba1eab690abc25c277e1e7e974e488149fcb4fe7d29c36d64b508f"
+          "sha256": "ca09af46ca2e5bf0b7677983cc0f4578aa89fa3dc4f1065d68b6746f8e3160a1"
         },
         {
           "time": 93,
           "representation": "reference-glb",
           "referenceVisible": true,
           "triangles": 438346,
-          "renderMs": 1751,
+          "renderMs": 197.20000004768372,
           "devicePixelRatio": 2,
           "rendererPixelRatio": 1.5,
           "canvas": {
@@ -1365,7 +1844,7 @@
             }
           },
           "file": "mobile-dpr2-t093.png",
-          "sha256": "822ec91e06a894816aadf87a33b372b4cb738dcbf8ea759ca12c3b7bcc528fe0"
+          "sha256": "1bcb97e7c05e8889397580e10d411242f0201e82e68a98915ffe2b717f3e2cf5"
         }
       ]
     },
@@ -1469,7 +1948,7 @@
         }
       },
       "file": "t005.png",
-      "sha256": "b92d31a5de0742e2aaa82d0a6c3b761a38077b51a669325f2c90533d86ce96e6"
+      "sha256": "746e8a6265b918f7ef35f2042d2c858a3f1bffdf5a5e341bb97d0b1249ad9394"
     },
     {
       "requestedTime": 9,
@@ -1500,7 +1979,7 @@
         }
       },
       "file": "t009.png",
-      "sha256": "f28f815a893e4c7cc0bfd4653170d7d187c26e3a662ad46e133bfa85a027eb2b"
+      "sha256": "cd84acde86b82428075910901d1df9a53620c55e2380f674ca878803b72d1cab"
     },
     {
       "requestedTime": 14.7,
@@ -1531,7 +2010,7 @@
         }
       },
       "file": "t14.7.png",
-      "sha256": "a8a948dc16e03a8eb77101cf58d852e3484be7cbc4a73329c7201d99e04819d7"
+      "sha256": "a88f0038072f129cfe089b665b5c410858fd4c95143ef06aadd391e36d64f522"
     },
     {
       "requestedTime": 16.2,
@@ -1903,7 +2382,7 @@
         }
       },
       "file": "t90.2.png",
-      "sha256": "54f9f00a36aa9c4f6d2503bddc64974e3b4b6f7fcc170a987bc8fe495a75aeb6"
+      "sha256": "387a995ca781f2201bdbadde1cbf04d30dfd38b06b3ee98d524f28a4c446226f"
     },
     {
       "requestedTime": 92.9,
@@ -1934,7 +2413,7 @@
         }
       },
       "file": "t92.9.png",
-      "sha256": "d9747db825f1ef6b58a7b8a711f46c8b4480a78625397b24886993e0784d289a"
+      "sha256": "ae376c88323601d72f2aab09f2c5c1ba719b9d966fef0e227a0a39a945386878"
     },
     {
       "requestedTime": 93,
@@ -1965,7 +2444,7 @@
         }
       },
       "file": "t093.png",
-      "sha256": "6688a8ad135f29709ec33f257f128ea7b224d6d9f5ad4942529691ff992b96db"
+      "sha256": "6333df7a9ed8fb433aab262cb5422596ff2afc9a82a8b470815a8769d0c3fc0d"
     },
     {
       "requestedTime": 95.4,
@@ -1996,7 +2475,7 @@
         }
       },
       "file": "t95.4.png",
-      "sha256": "24bf749f4530318e868df13c7b23586a7ce2642daf617eed756d40b3892c89f8"
+      "sha256": "14744a435200efcc5200c701bea53a65ea163d1a504f1db2d4998f05d9279176"
     },
     {
       "requestedTime": 101,
@@ -2027,7 +2506,7 @@
         }
       },
       "file": "t101.png",
-      "sha256": "e4f102673f291b12f340918f65583a9c75170abbba0f810a0d1f5544c86f34e5"
+      "sha256": "e0c43e33bbf732c6c92e5d291bc872727155e1e4e92461a3e99201d367af6675"
     },
     {
       "requestedTime": 106,
@@ -2058,7 +2537,7 @@
         }
       },
       "file": "t106.png",
-      "sha256": "6c965dfd2eef8b569cb2c3bb62e6d353d1302f4500baf8cdbf79e2c0221a0380"
+      "sha256": "949aa3905551dde1e107669be27f7a48fc87f00aad301d7f6fda1f835ae800d6"
     },
     {
       "requestedTime": 112,
@@ -2089,7 +2568,7 @@
         }
       },
       "file": "t112.png",
-      "sha256": "640e2e71f210847a7f981a7ef37cf1243d8146dd7327be9d0f5ee70012cb6fab"
+      "sha256": "f8579623e634a9fe1d9b6d9dc1271bf381f2269118ea1d2bf7afc8e847f2d6c2"
     },
     {
       "requestedTime": 116,
@@ -2126,19 +2605,19 @@
   "console": [
     {
       "type": "warn",
-      "text": "[.WebGL-0x124001ae600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x10c001b0400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x124001ae600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x10c001b0400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x124001ae600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x10c001b0400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x124001ae600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+      "text": "[.WebGL-0x10c001b0400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
     }
   ],
   "pageErrors": [],
@@ -2154,9 +2633,9 @@
     "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376"
   },
   "performance": {
-    "readyMs": 52874.200000047684,
-    "mobileReadyMs": 25578.89999985695,
-    "mobileDpr2ReadyMs": 16619.5
+    "readyMs": 71631.70000004768,
+    "mobileReadyMs": 32656,
+    "mobileDpr2ReadyMs": 17408.60000014305
   },
   "referenceRuntime": {
     "ready": true,
@@ -2210,7 +2689,80 @@
     },
     "meshCount": 2,
     "materialCount": 2,
-    "hasVertexColors": true
+    "hasColorAccessor": true,
+    "usesLegacyVertexColors": false
+  },
+  "referenceShader": {
+    "bodyFound": true,
+    "urnaFound": true,
+    "body": {
+      "cacheKey": "reference-buddha-position-paint-v2",
+      "vertexColors": false,
+      "roughness": 0.72,
+      "metalness": 0.02,
+      "side": 2,
+      "doubleSide": 2,
+      "uniformKeys": [
+        "uBuddhaMin",
+        "uBuddhaSize",
+        "uReferenceClay",
+        "uReferencePaintFront",
+        "uReferencePaintSoft"
+      ],
+      "syntheticUniformKeys": [
+        "uBuddhaMin",
+        "uBuddhaSize",
+        "uReferenceClay",
+        "uReferencePaintFront",
+        "uReferencePaintSoft"
+      ],
+      "vertexInjected": true,
+      "fragmentTokens": {
+        "vBuddhaPos": true,
+        "uBuddhaMin": true,
+        "uBuddhaSize": true,
+        "vec3 blue": true,
+        "vec3 red": true,
+        "vec3 ochre": true,
+        "chestMask": true,
+        "weave": true,
+        "mix(uReferenceClay, robe, referencePaint)": true
+      },
+      "mapFragmentReplaced": true,
+      "programCompiled": true,
+      "boxMin": [
+        -0.3480651378631592,
+        -0.9504237771034241,
+        -0.28410694003105164
+      ],
+      "boxSize": [
+        0.6955511569976807,
+        1.8987561464309692,
+        0.56599360704422
+      ],
+      "uniformMin": [
+        -0.3480651378631592,
+        -0.9504237771034241,
+        -0.28410694003105164
+      ],
+      "uniformSize": [
+        0.6955511569976807,
+        1.8987561464309692,
+        0.56599360704422
+      ]
+    },
+    "urna": {
+      "meshName": "白毫红点",
+      "materialName": "白毫红点材质",
+      "color": [
+        0.520995557308197,
+        0.014443843625485897,
+        0.020288562402129173
+      ],
+      "paintY": 0.79,
+      "hasPositionShader": false,
+      "cacheKey": "onBeforeCompile( /* shaderobject, renderer */ ) {}"
+    }
   },
   "representations": {
     "0": {
@@ -2934,13 +3486,83 @@
       }
     }
   },
+  "referencePaintFrames": {
+    "0": {
+      "representation": "reference-glb",
+      "progress": 1,
+      "stateFront": -1.08,
+      "uniformFront": -1.08,
+      "soft": 0.055,
+      "minPaint": 1,
+      "maxPaint": 1,
+      "nearFullFraction": 1,
+      "bodyOpacity": 1,
+      "urnaOpacity": 1,
+      "urnaColor": [
+        0.520995557308197,
+        0.014443843625485897,
+        0.020288562402129173
+      ]
+    },
+    "93": {
+      "representation": "reference-glb",
+      "progress": 1,
+      "stateFront": -1.08,
+      "uniformFront": -1.08,
+      "soft": 0.055,
+      "minPaint": 1,
+      "maxPaint": 1,
+      "nearFullFraction": 1,
+      "bodyOpacity": 1,
+      "urnaOpacity": 1,
+      "urnaColor": [
+        0.520995557308197,
+        0.014443843625485897,
+        0.020288562402129173
+      ]
+    },
+    "90.2": {
+      "representation": "reference-glb",
+      "progress": 0,
+      "stateFront": 1.08,
+      "uniformFront": 1.08,
+      "soft": 0.055,
+      "minPaint": 0,
+      "maxPaint": 0,
+      "nearFullFraction": 0,
+      "bodyOpacity": 1,
+      "urnaOpacity": 0,
+      "urnaColor": [
+        0.520995557308197,
+        0.014443843625485897,
+        0.020288562402129173
+      ]
+    },
+    "92.9": {
+      "representation": "reference-glb",
+      "progress": 0.9642857142857163,
+      "stateFront": -1.074489795918368,
+      "uniformFront": -1.074489795918368,
+      "soft": 0.055,
+      "minPaint": 1,
+      "maxPaint": 1,
+      "nearFullFraction": 1,
+      "bodyOpacity": 1,
+      "urnaOpacity": 1,
+      "urnaColor": [
+        0.520995557308197,
+        0.014443843625485897,
+        0.020288562402129173
+      ]
+    }
+  },
   "mobileDpr2": [
     {
       "time": 5,
       "representation": "reference-glb",
       "referenceVisible": true,
       "triangles": 438154,
-      "renderMs": 100.29999995231628,
+      "renderMs": 97.20000004768372,
       "devicePixelRatio": 2,
       "rendererPixelRatio": 1.5,
       "canvas": {
@@ -2957,14 +3579,14 @@
         }
       },
       "file": "mobile-dpr2-t005.png",
-      "sha256": "105619b7e7ba1eab690abc25c277e1e7e974e488149fcb4fe7d29c36d64b508f"
+      "sha256": "ca09af46ca2e5bf0b7677983cc0f4578aa89fa3dc4f1065d68b6746f8e3160a1"
     },
     {
       "time": 93,
       "representation": "reference-glb",
       "referenceVisible": true,
       "triangles": 438346,
-      "renderMs": 1751,
+      "renderMs": 197.20000004768372,
       "devicePixelRatio": 2,
       "rendererPixelRatio": 1.5,
       "canvas": {
@@ -2993,9 +3615,9 @@
         }
       },
       "file": "mobile-dpr2-t093.png",
-      "sha256": "822ec91e06a894816aadf87a33b372b4cb738dcbf8ea759ca12c3b7bcc528fe0"
+      "sha256": "1bcb97e7c05e8889397580e10d411242f0201e82e68a98915ffe2b717f3e2cf5"
     }
   ],
-  "finishedAt": "2026-08-06T02:48:28.725Z",
+  "finishedAt": "2026-08-06T03:07:57.323Z",
   "pass": true
 }

@@ -96,12 +96,14 @@ function assert(name, condition, detail) {
 
     const reference = await page.evaluate(() => {
       const b = window.MOGAO.BUDDHA;
+      const body = b.referenceMeshes.find((mesh) => !!mesh.geometry?.attributes?.color);
       return {
         ready: b.referenceReady,
         stats: b.referenceStats,
         meshCount: b.referenceMeshes.length,
         materialCount: b.referenceMaterials.length,
-        hasVertexColors: b.referenceMeshes.some((mesh) => !!mesh.geometry?.attributes?.color && mesh.material?.vertexColors === true),
+        hasColorAccessor: !!body,
+        usesLegacyVertexColors: body?.material?.vertexColors === true,
       };
     });
     report.referenceRuntime = reference;
@@ -110,13 +112,117 @@ function assert(name, condition, detail) {
     assert('reference-glb-bytes', reference.stats.bytes === referenceBytes, reference.stats);
     assert('reference-glb-meshes', reference.meshCount === 2 && reference.stats.meshCount === 2, reference);
     assert('reference-glb-geometry', reference.stats.vertexCount === 171419 && reference.stats.triangleCount === 342684, reference.stats);
-    assert('reference-glb-vertex-colors', reference.hasVertexColors && reference.stats.coloredMeshCount === 1, reference);
+    assert('reference-glb-color-accessor', reference.hasColorAccessor && reference.stats.coloredMeshCount === 1, reference);
+    assert('reference-position-shader-replaces-legacy-colors', reference.usesLegacyVertexColors === false, reference);
     assert(
       'reference-glb-height',
       Math.abs(reference.stats.fittedBounds.size[1] - 35.5) < 0.01,
       reference.stats.fittedBounds
     );
     assert('reference-glb-no-extensions', reference.stats.extensionsRequired.length === 0, reference.stats.extensionsRequired);
+
+    const shaderAudit = await page.evaluate(() => {
+      const M = window.MOGAO;
+      const b = M.BUDDHA;
+      M.seek(0);
+      M.renderer.compile(M.scene, M.camera);
+      const body = b.referenceMeshes.find((mesh) => !!mesh.geometry?.attributes?.color);
+      const urna = b.referenceMeshes.find((mesh) => /白毫/.test(`${mesh.name} ${mesh.material?.name || ''}`));
+      if (!body || !urna) return { bodyFound: !!body, urnaFound: !!urna };
+
+      const material = body.material;
+      const uniforms = material.userData.referencePaintUniforms || {};
+      const box = body.geometry.boundingBox;
+      const boxSize = box?.getSize(new M.THREE.Vector3());
+      const synthetic = {
+        uniforms: {},
+        vertexShader: '#include <begin_vertex>',
+        fragmentShader: '#include <map_fragment>',
+      };
+      material.onBeforeCompile(synthetic, M.renderer);
+      const fragmentTokens = [
+        'vBuddhaPos', 'uBuddhaMin', 'uBuddhaSize',
+        'vec3 blue', 'vec3 red', 'vec3 ochre',
+        'chestMask', 'weave', 'mix(uReferenceClay, robe, referencePaint)',
+      ];
+      const programCacheKeys = M.renderer.info.programs.map((program) => String(program.cacheKey || ''));
+      return {
+        bodyFound: true,
+        urnaFound: true,
+        body: {
+          cacheKey: material.customProgramCacheKey(),
+          vertexColors: material.vertexColors,
+          roughness: material.roughness,
+          metalness: material.metalness,
+          side: material.side,
+          doubleSide: M.THREE.DoubleSide,
+          uniformKeys: Object.keys(uniforms).sort(),
+          syntheticUniformKeys: Object.keys(synthetic.uniforms).sort(),
+          vertexInjected: synthetic.vertexShader.includes('vBuddhaPos = position;'),
+          fragmentTokens: Object.fromEntries(fragmentTokens.map((token) => [token, synthetic.fragmentShader.includes(token)])),
+          mapFragmentReplaced: !synthetic.fragmentShader.includes('#include <map_fragment>'),
+          programCompiled: programCacheKeys.some((key) => key.includes('reference-buddha-position-paint-v2')),
+          boxMin: box?.min.toArray() || null,
+          boxSize: boxSize?.toArray() || null,
+          uniformMin: uniforms.uBuddhaMin?.value?.toArray() || null,
+          uniformSize: uniforms.uBuddhaSize?.value?.toArray() || null,
+        },
+        urna: {
+          meshName: urna.name,
+          materialName: urna.material?.name || '',
+          color: urna.material?.color?.toArray() || null,
+          paintY: urna.material?.userData?.referencePaintY,
+          hasPositionShader: !!urna.material?.userData?.referencePaintUniforms,
+          cacheKey: urna.material?.customProgramCacheKey?.() || '',
+        },
+      };
+    });
+    report.referenceShader = shaderAudit;
+    const requiredPaintUniforms = ['uBuddhaMin', 'uBuddhaSize', 'uReferenceClay', 'uReferencePaintFront', 'uReferencePaintSoft'];
+    const vectorsClose = (a, b, tolerance = 1e-6) => Array.isArray(a)
+      && Array.isArray(b)
+      && a.length === b.length
+      && a.every((value, index) => Math.abs(value - b[index]) <= tolerance);
+    assert(
+      'reference-position-shader-configured',
+      shaderAudit.bodyFound
+        && shaderAudit.body.cacheKey === 'reference-buddha-position-paint-v2'
+        && shaderAudit.body.vertexColors === false
+        && Math.abs(shaderAudit.body.roughness - 0.72) < 1e-9
+        && Math.abs(shaderAudit.body.metalness - 0.02) < 1e-9
+        && shaderAudit.body.side === shaderAudit.body.doubleSide
+        && requiredPaintUniforms.every((key) => shaderAudit.body.uniformKeys.includes(key)),
+      shaderAudit.body || shaderAudit
+    );
+    assert(
+      'reference-position-shader-compiled',
+      shaderAudit.bodyFound
+        && shaderAudit.body.programCompiled
+        && shaderAudit.body.vertexInjected
+        && shaderAudit.body.mapFragmentReplaced
+        && requiredPaintUniforms.every((key) => shaderAudit.body.syntheticUniformKeys.includes(key))
+        && Object.values(shaderAudit.body.fragmentTokens).every(Boolean),
+      shaderAudit.body || shaderAudit
+    );
+    assert(
+      'reference-position-shader-bounds',
+      shaderAudit.bodyFound
+        && vectorsClose(shaderAudit.body.boxMin, shaderAudit.body.uniformMin)
+        && vectorsClose(shaderAudit.body.boxSize, shaderAudit.body.uniformSize)
+        && shaderAudit.body.uniformSize.every((value) => Number.isFinite(value) && value > 0),
+      shaderAudit.body || shaderAudit
+    );
+    const expectedUrnaColor = [0.520995557308197, 0.014443843625485897, 0.020288562402129173];
+    assert(
+      'reference-urna-material-preserved',
+      shaderAudit.urnaFound
+        && /白毫/.test(`${shaderAudit.urna.meshName} ${shaderAudit.urna.materialName}`)
+        && vectorsClose(shaderAudit.urna.color, expectedUrnaColor)
+        && Math.abs(shaderAudit.urna.paintY - 0.79) < 1e-6
+        && shaderAudit.urna.hasPositionShader === false
+        && shaderAudit.urna.cacheKey !== 'reference-buddha-position-paint-v2',
+      shaderAudit.urna || shaderAudit
+    );
 
     const representations = {};
     for (const t of [0, 16.2, 31, 90.19, 90.2, 92.9, 93, 108.6]) {
@@ -139,6 +245,94 @@ function assert(name, condition, detail) {
     );
     assert('reference-used-after-hard-cut', representations['93'].representation === 'reference-glb', representations['93']);
     assert('reference-used-in-finished-cave', representations['108.6'].representation === 'reference-glb', representations['108.6']);
+
+    const paintFrames = {};
+    for (const t of [0, 90.2, 92.9, 93]) {
+      paintFrames[String(t)] = await page.evaluate((time) => {
+        const M = window.MOGAO;
+        const state = M.seek(time);
+        const body = M.BUDDHA.referenceMeshes.find((mesh) => !!mesh.geometry?.attributes?.color);
+        const urna = M.BUDDHA.referenceMeshes.find((mesh) => /白毫/.test(`${mesh.name} ${mesh.material?.name || ''}`));
+        const uniforms = body.material.userData.referencePaintUniforms;
+        const front = uniforms.uReferencePaintFront.value;
+        const soft = uniforms.uReferencePaintSoft.value;
+        const position = body.geometry.attributes.position;
+        let minPaint = 1;
+        let maxPaint = 0;
+        let nearFullCount = 0;
+        const smoothstep = (a, b, value) => {
+          const x = Math.max(0, Math.min(1, (value - a) / (b - a)));
+          return x * x * (3 - 2 * x);
+        };
+        for (let i = 0; i < position.count; i++) {
+          const painted = smoothstep(front - soft, front + soft, position.getY(i));
+          minPaint = Math.min(minPaint, painted);
+          maxPaint = Math.max(maxPaint, painted);
+          if (painted >= 0.98) nearFullCount++;
+        }
+        return {
+          representation: state.representation,
+          progress: M.BUDDHA.referencePaintProgress,
+          stateFront: M.BUDDHA.referencePaintFront,
+          uniformFront: front,
+          soft,
+          minPaint,
+          maxPaint,
+          nearFullFraction: nearFullCount / position.count,
+          bodyOpacity: body.material.opacity,
+          urnaOpacity: urna.material.opacity,
+          urnaColor: urna.material.color.toArray(),
+        };
+      }, t);
+    }
+    report.referencePaintFrames = paintFrames;
+    const frontsSynchronized = Object.values(paintFrames).every((frame) => (
+      Math.abs(frame.stateFront - frame.uniformFront) < 1e-9
+    ));
+    assert('reference-paint-uniform-synchronized', frontsSynchronized, paintFrames);
+    assert(
+      'reference-opening-fully-painted',
+      paintFrames['0'].representation === 'reference-glb'
+        && paintFrames['0'].progress === 1
+        && Math.abs(paintFrames['0'].uniformFront + 1.08) < 1e-9
+        && paintFrames['0'].minPaint > 0.999
+        && paintFrames['0'].bodyOpacity > 0.99,
+      paintFrames['0']
+    );
+    assert(
+      'reference-paint-start-is-clay',
+      paintFrames['90.2'].representation === 'reference-glb'
+        && paintFrames['90.2'].progress === 0
+        && Math.abs(paintFrames['90.2'].uniformFront - 1.08) < 1e-9
+        && paintFrames['90.2'].maxPaint < 0.001
+        && paintFrames['90.2'].bodyOpacity > 0.99,
+      paintFrames['90.2']
+    );
+    assert(
+      'reference-nearly-painted-before-cut',
+      paintFrames['92.9'].representation === 'reference-glb'
+        && paintFrames['92.9'].progress > 0.96
+        && paintFrames['92.9'].uniformFront < -1.07
+        && paintFrames['92.9'].nearFullFraction > 0.98,
+      paintFrames['92.9']
+    );
+    assert(
+      'reference-full-paint-at-cut',
+      paintFrames['93'].representation === 'reference-glb'
+        && paintFrames['93'].progress === 1
+        && Math.abs(paintFrames['93'].uniformFront + 1.08) < 1e-9
+        && paintFrames['93'].minPaint > 0.999,
+      paintFrames['93']
+    );
+    assert(
+      'reference-urna-paint-sequence',
+      paintFrames['0'].urnaOpacity > 0.99
+        && paintFrames['90.2'].urnaOpacity < 0.001
+        && paintFrames['92.9'].urnaOpacity > 0.99
+        && paintFrames['93'].urnaOpacity > 0.99
+        && Object.values(paintFrames).every((frame) => vectorsClose(frame.urnaColor, expectedUrnaColor)),
+      paintFrames
+    );
     const finishedFrame = await page.evaluate(() => {
       window.MOGAO.seek(93);
       return {

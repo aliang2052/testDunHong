@@ -108,62 +108,99 @@ function parseBuddhaGLB(bytes) {
   let triangleCount = 0;
   let coloredMeshCount = 0;
 
-  function makeMaterial(index, hasVertexColors) {
+  function makeMaterial(index, hasVertexColors, localBounds) {
     const definition = json.materials?.[index] || {};
     const pbr = definition.pbrMetallicRoughness || {};
     const factor = pbr.baseColorFactor || [1, 1, 1, 1];
+    const isPaintedBody = hasVertexColors && localBounds && !localBounds.isEmpty();
     const material = new THREE.MeshStandardMaterial({
-      color: new THREE.Color().setRGB(factor[0], factor[1], factor[2]),
+      color: isPaintedBody
+        ? new THREE.Color(0xffffff)
+        : new THREE.Color().setRGB(factor[0], factor[1], factor[2]),
       opacity: factor[3],
       transparent: factor[3] < 0.999,
-      vertexColors: hasVertexColors,
-      metalness: pbr.metallicFactor ?? 1,
-      roughness: pbr.roughnessFactor ?? 1,
-      side: definition.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
+      // The supplied showcase does not read COLOR_0 at render time. Its final
+      // appearance is a local-position shader, so keep the richer v3 color
+      // accessor in the geometry without multiplying it into the material.
+      vertexColors: false,
+      metalness: isPaintedBody ? 0.02 : (pbr.metallicFactor ?? 1),
+      roughness: isPaintedBody ? 0.72 : (pbr.roughnessFactor ?? 1),
+      side: isPaintedBody || definition.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
       dithering: true,
     });
     material.name = definition.name || `ReferenceMaterial${index}`;
     material.userData.referenceBaseOpacity = factor[3];
-    if (hasVertexColors) {
+    if (isPaintedBody) {
+      const localSize = localBounds.getSize(new THREE.Vector3());
       const paintUniforms = {
         uReferencePaintFront: { value: -1.08 },
         uReferencePaintSoft: { value: 0.055 },
         uReferenceClay: { value: new THREE.Color(0xDCC7A5) },
+        uBuddhaMin: { value: localBounds.min.clone() },
+        uBuddhaSize: { value: localSize },
       };
       material.userData.referencePaintUniforms = paintUniforms;
       material.onBeforeCompile = (shader) => {
         Object.assign(shader.uniforms, paintUniforms);
-        shader.vertexShader = `varying float vReferenceY;\n` + shader.vertexShader;
+        shader.vertexShader = `varying vec3 vBuddhaPos;\n` + shader.vertexShader;
         shader.vertexShader = shader.vertexShader.replace(
           '#include <begin_vertex>',
-          `vReferenceY = position.y;\n#include <begin_vertex>`
+          `vBuddhaPos = position;\n#include <begin_vertex>`
         );
         shader.fragmentShader = `
-          varying float vReferenceY;
+          varying vec3 vBuddhaPos;
           uniform float uReferencePaintFront;
           uniform float uReferencePaintSoft;
           uniform vec3 uReferenceClay;
+          uniform vec3 uBuddhaMin;
+          uniform vec3 uBuddhaSize;
         ` + shader.fragmentShader;
         shader.fragmentShader = shader.fragmentShader.replace(
-          '#include <color_fragment>',
+          '#include <map_fragment>',
           `
+          vec3 bp = (vBuddhaPos - uBuddhaMin) / uBuddhaSize;
+          float yn = bp.y;
+          float xn = (bp.x - .5) * 2.;
+          float front = bp.z;
+          vec3 blue = vec3(.009, .147, .223);
+          vec3 red = vec3(.397, .078, .055);
+          vec3 ochre = vec3(.591, .323, .078);
+          vec3 skin = vec3(.720, .420, .280);
+          vec3 hair = vec3(.033, .021, .020);
+          vec3 jade = vec3(.017, .263, .243);
+          vec3 gold = vec3(.784, .510, .135);
+          vec3 robe = xn < -.10 ? blue : (xn > .20 ? red : ochre);
+
+          if (yn > .95 || (yn > .84 && abs(xn) > .57) || (yn > .87 && front < .25)) robe = hair;
+          else if (yn > .79 && yn < .94 && abs(xn) > .16 && abs(xn) < .38 && front > .10 && front < .65) robe = skin;
+          else if (yn > .81 && abs(xn) < mix(.14, .48, smoothstep(.81, .90, yn)) && front > .20) robe = skin;
+          else if (yn > .56 && yn < .84 && xn > .52 && front > .66) robe = skin;
+          else if (yn > .16 && yn < .56 && xn < -.56 && front > .70) robe = skin;
+          else if (yn > .12 && yn < .34 && xn > .72 && front > .72) robe = skin;
+
+          float chestProgress = smoothstep(.64, .82, yn);
+          float chestWidth = .255 * pow(chestProgress, .72);
+          float chestEdge = 1. - smoothstep(-.008, .018, abs(xn) - chestWidth);
+          float chestMask = smoothstep(.64, .675, yn) * (1. - smoothstep(.82, .835, yn)) * chestEdge;
+          robe = mix(robe, skin, chestMask);
+
+          if (yn > .08 && yn < .60 && abs(xn) < .34 && front > .50) {
+            float weave = sin(vBuddhaPos.x * 92. + vBuddhaPos.y * 38.)
+              + sin(vBuddhaPos.x * 168. - vBuddhaPos.y * 34.);
+            if (weave > 1.28) robe = jade;
+            else if (weave < -.98) robe = gold;
+          }
+
           float referencePaint = smoothstep(
             uReferencePaintFront - uReferencePaintSoft,
             uReferencePaintFront + uReferencePaintSoft,
-            vReferenceY
+            vBuddhaPos.y
           );
-          #if defined( USE_COLOR_ALPHA )
-            diffuseColor.rgb *= mix(uReferenceClay, vColor.rgb, referencePaint);
-            diffuseColor.a *= vColor.a;
-          #elif defined( USE_COLOR )
-            diffuseColor.rgb *= mix(uReferenceClay, vColor, referencePaint);
-          #else
-            diffuseColor.rgb *= uReferenceClay;
-          #endif
+          diffuseColor.rgb = mix(uReferenceClay, robe, referencePaint);
           `
         );
       };
-      material.customProgramCacheKey = () => 'reference-buddha-vertex-paint-v1';
+      material.customProgramCacheKey = () => 'reference-buddha-position-paint-v2';
     }
     if ((definition.name || '').includes('白毫')) material.userData.referencePaintY = 0.79;
     referenceMaterials.push(material);
@@ -202,7 +239,7 @@ function parseBuddhaGLB(bytes) {
     geometry.computeBoundingBox();
     geometry.computeBoundingSphere();
 
-    const material = makeMaterial(primitive.material, hasVertexColors);
+    const material = makeMaterial(primitive.material, hasVertexColors, geometry.boundingBox);
     const mesh = new THREE.Mesh(geometry, material);
     mesh.name = primitiveIndex ? `${meshName}.${primitiveIndex}` : meshName;
     mesh.castShadow = true;
