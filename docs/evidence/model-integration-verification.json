@@ -1,8 +1,8 @@
 {
   "input": "/Users/sniper/Desktop/temp/testDunHong/index.html",
-  "inputBytes": 15236508,
-  "inputSha256": "24adc3c249f669345d2ff7b8e99867ad9b82842311cb3ee0b2bb28f40f99b9ae",
-  "startedAt": "2026-08-05T13:55:26.081Z",
+  "inputBytes": 15236629,
+  "inputSha256": "c679a30c6263e998a6381e3823f8fda6b9c88d34d6506a7f70cb13b5a02bb34f",
+  "startedAt": "2026-08-06T02:45:53.523Z",
   "checks": {
     "ready-hook": {
       "pass": true,
@@ -1208,7 +1208,7 @@
     "chapter-seek-and-play": {
       "pass": true,
       "detail": {
-        "time": 20.716600000143053,
+        "time": 20.732699999809263,
         "playing": true
       }
     },
@@ -1247,7 +1247,7 @@
           "representation": "reference-glb",
           "referenceVisible": true,
           "triangles": 438154,
-          "renderMs": 361.60000014305115,
+          "renderMs": 100.29999995231628,
           "devicePixelRatio": 2,
           "rendererPixelRatio": 1.5,
           "canvas": {
@@ -1264,14 +1264,14 @@
             }
           },
           "file": "mobile-dpr2-t005.png",
-          "sha256": "be35b057c2c70ec2908f16746480f0c8e9db3f309de011c3e80f3db32b22fcc7"
+          "sha256": "105619b7e7ba1eab690abc25c277e1e7e974e488149fcb4fe7d29c36d64b508f"
         },
         {
           "time": 93,
           "representation": "reference-glb",
           "referenceVisible": true,
           "triangles": 438346,
-          "renderMs": 199.39999985694885,
+          "renderMs": 1751,
           "devicePixelRatio": 2,
           "rendererPixelRatio": 1.5,
           "canvas": {
@@ -1300,7 +1300,7 @@
             }
           },
           "file": "mobile-dpr2-t093.png",
-          "sha256": "d8787ef1920687c789d2fc6f51784a5a4927aff86df72ed8e90a9bf5c0611600"
+          "sha256": "822ec91e06a894816aadf87a33b372b4cb738dcbf8ea759ca12c3b7bcc528fe0"
         }
       ]
     },
@@ -1312,7 +1312,7 @@
           "representation": "reference-glb",
           "referenceVisible": true,
           "triangles": 438154,
-          "renderMs": 361.60000014305115,
+          "renderMs": 100.29999995231628,
           "devicePixelRatio": 2,
           "rendererPixelRatio": 1.5,
           "canvas": {
@@ -1329,14 +1329,14 @@
             }
           },
           "file": "mobile-dpr2-t005.png",
-          "sha256": "be35b057c2c70ec2908f16746480f0c8e9db3f309de011c3e80f3db32b22fcc7"
+          "sha256": "105619b7e7ba1eab690abc25c277e1e7e974e488149fcb4fe7d29c36d64b508f"
         },
         {
           "time": 93,
           "representation": "reference-glb",
           "referenceVisible": true,
           "triangles": 438346,
-          "renderMs": 199.39999985694885,
+          "renderMs": 1751,
           "devicePixelRatio": 2,
           "rendererPixelRatio": 1.5,
           "canvas": {
@@ -1365,7 +1365,7 @@
             }
           },
           "file": "mobile-dpr2-t093.png",
-          "sha256": "d8787ef1920687c789d2fc6f51784a5a4927aff86df72ed8e90a9bf5c0611600"
+          "sha256": "822ec91e06a894816aadf87a33b372b4cb738dcbf8ea759ca12c3b7bcc528fe0"
         }
       ]
     },
@@ -1412,7 +1412,7 @@
     {
       "requestedTime": 0,
       "actualTime": 0,
-      "subtitle": "如果你把敦煌莫高窟撕下来",
+      "subtitle": "九层楼缓缓拆解",
       "stats": {
         "drawCalls": 495,
         "triangles": 453962,
@@ -1438,12 +1438,12 @@
         }
       },
       "file": "t000.png",
-      "sha256": "5337530771706be0250a65131125b056e119d60cd2abe1b9fcf08396328c8984"
+      "sha256": "aea2632e73a4c54a6749095076a300c766e314644711cf63969b6fc869c1a26c"
     },
     {
       "requestedTime": 5,
       "actualTime": 5,
-      "subtitle": "神秘的巨型佛像",
+      "subtitle": "它几乎占满整座佛窟",
       "stats": {
         "drawCalls": 21,
         "triangles": 438154,
@@ -1469,12 +1469,12 @@
         }
       },
       "file": "t005.png",
-      "sha256": "1561d39daaecd4d7fb49f05a4ec20fdcb89a2e24d8b303f0da4a031282066039"
+      "sha256": "b92d31a5de0742e2aaa82d0a6c3b761a38077b51a669325f2c90533d86ce96e6"
     },
     {
       "requestedTime": 9,
       "actualTime": 9,
-      "subtitle": "相当于10层高楼",
+      "subtitle": "接近十层楼的高度",
       "stats": {
         "drawCalls": 26,
         "triangles": 438210,
@@ -1500,12 +1500,12 @@
         }
       },
       "file": "t009.png",
-      "sha256": "21c809c1206516e433c259221ba1d21aa14e1d6043a49cfcef287f2de9f85f06"
+      "sha256": "f28f815a893e4c7cc0bfd4653170d7d187c26e3a662ad46e133bfa85a027eb2b"
     },
     {
       "requestedTime": 14.7,
       "actualTime": 14.7,
-      "subtitle": "可一尊如此高大",
+      "subtitle": "如此庞大的造像",
       "stats": {
         "drawCalls": 26,
         "triangles": 780870,
@@ -1531,12 +1531,12 @@
         }
       },
       "file": "t14.7.png",
-      "sha256": "19c70ce7e38e98b40d6ac028910fb7d57f7415182159e9bef9ecb8ec4f3d3d20"
+      "sha256": "a8a948dc16e03a8eb77101cf58d852e3484be7cbc4a73329c7201d99e04819d7"
     },
     {
       "requestedTime": 16.2,
       "actualTime": 16.2,
-      "subtitle": "且深藏在崖壁内部的佛像",
+      "subtitle": "是怎样在崖壁中建成的？",
       "stats": {
         "drawCalls": 141,
         "triangles": 99062,
@@ -1562,12 +1562,12 @@
         }
       },
       "file": "t16.2.png",
-      "sha256": "64484029d55322465bfd66ce4d8bfd1084d5f452b0a42379febe96862435567f"
+      "sha256": "3136d42a717a45ff916608cc73821442c8b44ef690c87b36b70ef5eba7be69d7"
     },
     {
       "requestedTime": 20,
       "actualTime": 20,
-      "subtitle": "聪明的你",
+      "subtitle": "工程开始之前",
       "stats": {
         "drawCalls": 143,
         "triangles": 98294,
@@ -1593,12 +1593,12 @@
         }
       },
       "file": "t020.png",
-      "sha256": "2ece02c76a8e0a847008c8c21a069f07261989028847e95a949a37f23719340f"
+      "sha256": "ddc1001485892d8b2308184b090867f7306b990fe669b8ebbb182adc6c1f326b"
     },
     {
       "requestedTime": 25,
       "actualTime": 25,
-      "subtitle": "并在合适的位置凿出一道窟门",
+      "subtitle": "随后在崖壁上凿开窟门",
       "stats": {
         "drawCalls": 34,
         "triangles": 95746,
@@ -1624,12 +1624,12 @@
         }
       },
       "file": "t025.png",
-      "sha256": "77c8db28c8bff92f70a2c4c4acf07b25b5efccff2de7a83676531c53e536289d"
+      "sha256": "6355455ffb6e1b03f9e6795dd1a44b89c9f7e47d44901f57ec6c49079fcccab2"
     },
     {
       "requestedTime": 33,
       "actualTime": 33,
-      "subtitle": "先凿出拱形的天花板",
+      "subtitle": "凿出完整的拱形窟顶",
       "stats": {
         "drawCalls": 55,
         "triangles": 226588,
@@ -1655,12 +1655,12 @@
         }
       },
       "file": "t033.png",
-      "sha256": "09d0f451b4a7400d4203954c9556ce7d2d9c47d8653fb35535611be5bd9e6dcf"
+      "sha256": "a56cf4fd43f278e64b975afb1c1bf76486061e9e963975b6260f19e7b502b73d"
     },
     {
       "requestedTime": 40,
       "actualTime": 40,
-      "subtitle": "同时还预留出大佛的岩石雏形",
+      "subtitle": "中央岩体被有意保留下来",
       "stats": {
         "drawCalls": 75,
         "triangles": 228968,
@@ -1686,12 +1686,12 @@
         }
       },
       "file": "t040.png",
-      "sha256": "cc3c1a0fc73a91db5f4f812d007335ad42bfeb4726aaf6d5c8c0484902a04612"
+      "sha256": "0ce72b789870cf371f25b1ec7837ce48fb4c160ba8b0f753a08b1603232bfa9a"
     },
     {
       "requestedTime": 49,
       "actualTime": 49,
-      "subtitle": "在下方增加两个洞窟",
+      "subtitle": "增设两处施工与运土洞口",
       "stats": {
         "drawCalls": 61,
         "triangles": 232152,
@@ -1717,12 +1717,12 @@
         }
       },
       "file": "t049.png",
-      "sha256": "1e6f07788af222b8e448cdd736973c7921fe419697f49254d13d5ff301db2df4"
+      "sha256": "4e121b90d724291ab002918a35ad6b898cf618e4505d8bb4e5cbe60a07a77e4e"
     },
     {
       "requestedTime": 60,
       "actualTime": 60,
-      "subtitle": "因此你在岩石上凿孔插桩",
+      "subtitle": "工匠在岩面凿孔并嵌入木桩",
       "stats": {
         "drawCalls": 59,
         "triangles": 226272,
@@ -1748,12 +1748,12 @@
         }
       },
       "file": "t060.png",
-      "sha256": "9331c1897d8d83a9a255ed74e1de2baeed5aa3297856e4e2acc04eb768b8892e"
+      "sha256": "28bfe2e52f0ebd001098e9e9f59a3ba13f22247b786f82d0314985161f4b4473"
     },
     {
       "requestedTime": 65,
       "actualTime": 65,
-      "subtitle": "由于普通的泥土会开裂",
+      "subtitle": "泥层干燥时容易收缩开裂",
       "stats": {
         "drawCalls": 45,
         "triangles": 225300,
@@ -1779,12 +1779,12 @@
         }
       },
       "file": "t065.png",
-      "sha256": "b9f0dbdd09bc371f20d8438d9ee6b1260b2bf4f584527a64f20fb69cd5d4b68c"
+      "sha256": "a9770a031b56a82c69395a5eb82c9e3f724cacec83a6e55b7a1328344acb0a91"
     },
     {
       "requestedTime": 70,
       "actualTime": 70,
-      "subtitle": "土中加入麦秆",
+      "subtitle": "再掺入切碎的麦秆纤维",
       "stats": {
         "drawCalls": 48,
         "triangles": 224970,
@@ -1810,12 +1810,12 @@
         }
       },
       "file": "t070.png",
-      "sha256": "c28c25c8c165ea8545efadbc948d9ab293fbb338c04ee0b77c64ced5beaccfa1"
+      "sha256": "a49f5eb6deb931fbe05954a2f0b40f6b6e1c526911ecad368a2925c74c2649e4"
     },
     {
       "requestedTime": 79,
       "actualTime": 79,
-      "subtitle": "并随之加入棉花等植物",
+      "subtitle": "掺入棉纤维等柔性材料",
       "stats": {
         "drawCalls": 47,
         "triangles": 227344,
@@ -1841,12 +1841,12 @@
         }
       },
       "file": "t079.png",
-      "sha256": "5fbd01795cf111d5e4bd6ca6e1f7a1e62898e795b0cbebc003f39be54c2d9dbf"
+      "sha256": "5be9e5abeb6be92719dd0190f27e2ecfacc905d236d88a6d16cfa2af62c24787"
     },
     {
       "requestedTime": 86,
       "actualTime": 86,
-      "subtitle": "阴干时还不停地用塑刀按压收紧",
+      "subtitle": "随后用塑刀反复压实修整",
       "stats": {
         "drawCalls": 42,
         "triangles": 223352,
@@ -1872,12 +1872,12 @@
         }
       },
       "file": "t086.png",
-      "sha256": "9b9269825f0fc21db3d2d6ddf86e43bf1d8c624d35575739db3cc836813a6968"
+      "sha256": "2fba4557d2daf5b105726f0f57c618df26e813cc6b1a028f515908df4d8ed328"
     },
     {
       "requestedTime": 90.2,
       "actualTime": 90.2,
-      "subtitle": "之后再给佛像上个色",
+      "subtitle": "彩绘从面部与衣纹开始",
       "stats": {
         "drawCalls": 22,
         "triangles": 438910,
@@ -1903,12 +1903,12 @@
         }
       },
       "file": "t90.2.png",
-      "sha256": "602cbe34b5ac4a1216cca33488070a4e665ac8da09386ed61da2990473e42598"
+      "sha256": "54f9f00a36aa9c4f6d2503bddc64974e3b4b6f7fcc170a987bc8fe495a75aeb6"
     },
     {
       "requestedTime": 92.9,
       "actualTime": 92.9,
-      "subtitle": "一身庄严肃穆的超级大佛",
+      "subtitle": "矿物色层层显现",
       "stats": {
         "drawCalls": 22,
         "triangles": 438154,
@@ -1934,12 +1934,12 @@
         }
       },
       "file": "t92.9.png",
-      "sha256": "72261e5240e92b5f8b1da672f2e4130979b0739e4ac404c1c45d01bc2b3b2c42"
+      "sha256": "d9747db825f1ef6b58a7b8a711f46c8b4480a78625397b24886993e0784d289a"
     },
     {
       "requestedTime": 93,
       "actualTime": 93,
-      "subtitle": "一身庄严肃穆的超级大佛",
+      "subtitle": "矿物色层层显现",
       "stats": {
         "drawCalls": 35,
         "triangles": 438334,
@@ -1965,12 +1965,12 @@
         }
       },
       "file": "t093.png",
-      "sha256": "724f5a2a159c6ebbd04d7165c09cf73b1c09f92d4d8140a3725fcb86e8b620d4"
+      "sha256": "6688a8ad135f29709ec33f257f128ea7b224d6d9f5ad4942529691ff992b96db"
     },
     {
       "requestedTime": 95.4,
       "actualTime": 95.4,
-      "subtitle": "但此时你发现周围的墙壁过于简陋",
+      "subtitle": "洞窟四壁仍需继续处理",
       "stats": {
         "drawCalls": 52,
         "triangles": 438614,
@@ -1996,12 +1996,12 @@
         }
       },
       "file": "t95.4.png",
-      "sha256": "6785d8759a63f3de4613034b467cd1f590865371f2cddd71a8419e2502e5735e"
+      "sha256": "24bf749f4530318e868df13c7b23586a7ce2642daf617eed756d40b3892c89f8"
     },
     {
       "requestedTime": 101,
       "actualTime": 101,
-      "subtitle": "一层比一层细腻的软土",
+      "subtitle": "再铺设更细的壁画地仗",
       "stats": {
         "drawCalls": 34,
         "triangles": 438366,
@@ -2027,12 +2027,12 @@
         }
       },
       "file": "t101.png",
-      "sha256": "23bb1de428b9d014d27278596edf65e53113a63828f18ee1954561e0d96c7c6d"
+      "sha256": "e4f102673f291b12f340918f65583a9c75170abbba0f810a0d1f5544c86f34e5"
     },
     {
       "requestedTime": 106,
       "actualTime": 106,
-      "subtitle": "绘制出一张张栩栩如生的壁画",
+      "subtitle": "壁画在洞窟四周渐次铺开",
       "stats": {
         "drawCalls": 34,
         "triangles": 438366,
@@ -2058,12 +2058,12 @@
         }
       },
       "file": "t106.png",
-      "sha256": "71132d364b7f6e14e1552db2406e37bea723d028119666eebe58362c4a57f451"
+      "sha256": "6c965dfd2eef8b569cb2c3bb62e6d353d1302f4500baf8cdbf79e2c0221a0380"
     },
     {
       "requestedTime": 112,
       "actualTime": 112,
-      "subtitle": "关注扇子有画",
+      "subtitle": "最后，崖前的九层楼重新合拢",
       "stats": {
         "drawCalls": 508,
         "triangles": 454274,
@@ -2089,12 +2089,12 @@
         }
       },
       "file": "t112.png",
-      "sha256": "db7a46dbca2d065c9b4562d66e5a1353d30d906bea6bbb7b4a0c417e61650256"
+      "sha256": "640e2e71f210847a7f981a7ef37cf1243d8146dd7327be9d0f5ee70012cb6fab"
     },
     {
       "requestedTime": 116,
       "actualTime": 116,
-      "subtitle": "用3D解锁更多华夏瑰宝",
+      "subtitle": "一座石窟，凝结千年的营造智慧",
       "stats": {
         "drawCalls": 614,
         "triangles": 455606,
@@ -2120,25 +2120,25 @@
         }
       },
       "file": "t116.png",
-      "sha256": "d066400bb5488c76543f3b4bddde851de06cd200e6b8c2f53b39c424d7fe5989"
+      "sha256": "131971dffab78de055f749b2d6b5e7117de1f8ff246ba833f0d6c07992852987"
     }
   ],
   "console": [
     {
       "type": "warn",
-      "text": "[.WebGL-0x11c079f2c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x124001ae600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x11c079f2c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x124001ae600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x11c079f2c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+      "text": "[.WebGL-0x124001ae600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
     },
     {
       "type": "warn",
-      "text": "[.WebGL-0x11c079f2c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+      "text": "[.WebGL-0x124001ae600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
     }
   ],
   "pageErrors": [],
@@ -2154,8 +2154,9 @@
     "sha256": "372735bf02afb83ad10844f0721c351f1be2605e5253420ca6c27633605d1376"
   },
   "performance": {
-    "readyMs": 54866.799999952316,
-    "mobileDpr2ReadyMs": 23801
+    "readyMs": 52874.200000047684,
+    "mobileReadyMs": 25578.89999985695,
+    "mobileDpr2ReadyMs": 16619.5
   },
   "referenceRuntime": {
     "ready": true,
@@ -2939,7 +2940,7 @@
       "representation": "reference-glb",
       "referenceVisible": true,
       "triangles": 438154,
-      "renderMs": 361.60000014305115,
+      "renderMs": 100.29999995231628,
       "devicePixelRatio": 2,
       "rendererPixelRatio": 1.5,
       "canvas": {
@@ -2956,14 +2957,14 @@
         }
       },
       "file": "mobile-dpr2-t005.png",
-      "sha256": "be35b057c2c70ec2908f16746480f0c8e9db3f309de011c3e80f3db32b22fcc7"
+      "sha256": "105619b7e7ba1eab690abc25c277e1e7e974e488149fcb4fe7d29c36d64b508f"
     },
     {
       "time": 93,
       "representation": "reference-glb",
       "referenceVisible": true,
       "triangles": 438346,
-      "renderMs": 199.39999985694885,
+      "renderMs": 1751,
       "devicePixelRatio": 2,
       "rendererPixelRatio": 1.5,
       "canvas": {
@@ -2992,9 +2993,9 @@
         }
       },
       "file": "mobile-dpr2-t093.png",
-      "sha256": "d8787ef1920687c789d2fc6f51784a5a4927aff86df72ed8e90a9bf5c0611600"
+      "sha256": "822ec91e06a894816aadf87a33b372b4cb738dcbf8ea759ca12c3b7bcc528fe0"
     }
   ],
-  "finishedAt": "2026-08-05T13:57:46.413Z",
+  "finishedAt": "2026-08-06T02:48:28.725Z",
   "pass": true
 }

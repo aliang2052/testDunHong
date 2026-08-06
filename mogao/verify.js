@@ -201,7 +201,9 @@ function assert(name, condition, detail) {
     assert('free-camera-toggle', await page.evaluate(() => window.MOGAO.APP.free === true), '自由视角应开启');
 
     await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 1 });
-    await new Promise((r) => setTimeout(r, 150));
+    await page.reload({ waitUntil: 'load', timeout: 120000 });
+    await page.waitForFunction('window.__READY__ === true', { timeout: 180000 });
+    report.performance.mobileReadyMs = await page.evaluate(() => performance.now());
     const mobile = await page.evaluate(() => {
       const c = document.querySelector('#c').getBoundingClientRect();
       return { width: c.width, height: c.height, aspect: c.width / c.height, viewport: [innerWidth, innerHeight] };
